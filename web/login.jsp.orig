@@ -1,5 +1,20 @@
 <%-- 
     Document   : login
+<<<<<<< HEAD
+    Created on : Jan 21, 2025, 3:46:38 PM
+    Author     : tphon
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+=======
     Created on : Jan 24, 2025, 4:33:31 PM
     Author     : nguye
 --%>
@@ -259,5 +274,6 @@
                 main.classList.remove("right-panel-active");
             });
         </script>
+>>>>>>> 5c686c9421ee68e8ae56cb9e4bc1d03f0bbfc144
     </body>
 </html>
