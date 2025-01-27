@@ -26,7 +26,11 @@
                 <form action="login" method="post">
                     <h1>Đăng nhập</h1>
                     <div class="social-container">
-                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid
+&redirect_uri=http://localhost:9999/fashionshop/login
+&response_type=code
+&client_id=371802530617-nupp3tq4lnrphcd50jnj3r4e2j31suea.apps.googleusercontent.com
+&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <p>hoặc sử dụng tài khoản của bạn</p>
 
@@ -37,7 +41,7 @@
                     </c:if>
                     <input type="text" name="username" placeholder="Tên đăng nhập" required="">
                     <input type="password" name="password" placeholder="Mật khẩu" required="">
-                    <a href="#">Quên mật khẩu?</a>
+                    <a href="forgotpassword">Quên mật khẩu?</a>
                     <button>Đăng nhập</button>
                 </form>
             </div>

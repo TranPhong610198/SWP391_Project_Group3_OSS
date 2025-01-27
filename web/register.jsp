@@ -20,7 +20,11 @@
                 <form action="register" method="post">
                     <h1>Đăng ký tài khoản</h1>
                     <div class="social-container">
-                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid
+&redirect_uri=http://localhost:9999/fashionshop/login
+&response_type=code
+&client_id=371802530617-nupp3tq4lnrphcd50jnj3r4e2j31suea.apps.googleusercontent.com
+&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <p>hoặc sử dụng email của bạn để đăng ký</p>
 

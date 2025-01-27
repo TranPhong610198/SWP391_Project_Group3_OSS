@@ -190,13 +190,18 @@ public class UserDAO extends DBContext {
         return false;
     }
 
+    /**
+     * *****************************************************
+     */
+    /**
+     * *****************************************************
+     */
     public User getUserById(int userId) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userId);
             ResultSet rs = st.executeQuery();
-
             if (rs.next()) {
                 return new User(
                         rs.getInt(1),
@@ -220,9 +225,51 @@ public class UserDAO extends DBContext {
         return null;
     }
 
+    /**
+     * *****************************************************
+     */
+    /**
+     * *****************************************************
+     */
+    
+    private String generateUniqueUsername(String baseUsername) {
+        String username = baseUsername;
+        int counter = 1;
+        UserDAO UserDAO = new UserDAO();
+        while (UserDAO.checkExistUsername(username) != null) {
+            username = baseUsername + counter;
+            counter++;
+        }
+
+        return username;
+    }
+        
+        public void insertGoogleUser(String googleId, String email, String fullName, String picture) {
+        String sql = "INSERT INTO users (username, email, password_hash, full_name, gender, avatar, role, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            // Tách username từ @ trc email 
+            String baseUsername = email.substring(0, email.indexOf('@'));
+            String username = generateUniqueUsername(baseUsername);
+            
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            st.setString(2, email);
+            st.setString(3, BCrypt.hashpw(googleId, BCrypt.gensalt()));
+            st.setString(4, fullName);
+            st.setString(5, "other");
+            st.setString(6, picture);
+            st.setString(7, "customer");
+            st.setString(8, "active");
+            
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));
     }
-
 }

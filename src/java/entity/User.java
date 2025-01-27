@@ -23,7 +23,7 @@ public class User {
     private String updatedAt;      
 
     public User() {}
-
+    
     public User(String username, String email, String passwordHash, String fullName, String gender, String mobile) {
         this.username = username;
         this.email = email;
@@ -32,7 +32,16 @@ public class User {
         this.gender = gender;
         this.mobile = mobile;
     }
-
+    
+//    public User(String username, String email, String fullName, String avatar, String role, String status) {
+//        this.username = username;
+//        this.email = email;
+//        this.fullName = fullName;
+//        this.avatar = avatar;
+//        this.role = role;
+//        this.status = status;
+//    }
+    
 
     public User(int id, String username, String email, String passwordHash, String fullName,
             String gender, String mobile, String avatar, String role,
