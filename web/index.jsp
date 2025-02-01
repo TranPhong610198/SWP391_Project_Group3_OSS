@@ -25,8 +25,10 @@
                                 <span class="username">username: ${sessionScope.acc.username}</span>
                             </div>
                         </button>
+                            
                         <div class="dropdown-content">
                             <a href="logout">Đăng xuất</a>
+                            <a href="profile">Profile</a>
                         </div>
                     </div>
                 </c:if>

@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import entity.User;
 import Context.DBContext;
+import entity.UserAddress;
+import java.util.ArrayList;
+import java.util.List;
 import utils.BCrypt;
 
 /**
@@ -267,7 +270,117 @@ public class UserDAO extends DBContext {
             System.out.println(e);
         }
     }
-
+        public boolean updatePassword(int userId, String newPasswordHash) {
+    String sql = "UPDATE users SET password_hash=? WHERE id=?";
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setString(1, newPasswordHash);
+        st.setInt(2, userId);
+        return st.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+ public boolean updateUser(User user) {
+        String sql = "UPDATE users SET full_name=?, gender=?, mobile=?, avatar=?, updated_at=GETDATE() WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, user.getFullName());
+            st.setString(2, user.getGender());
+            st.setString(3, user.getMobile());
+            st.setString(4, user.getAvatar());
+            st.setInt(5, user.getId());
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
+    public List<UserAddress> getUserAddresses(int userId) {
+        List<UserAddress> addresses = new ArrayList<>();
+        String sql = "SELECT * FROM user_addresses WHERE user_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                UserAddress address = new UserAddress(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getString("recipient_name"),
+                    rs.getString("phone"),
+                    rs.getString("address"),
+                    rs.getBoolean("is_default")
+                );
+                addresses.add(address);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return addresses;
+    }
+    
+    public boolean addUserAddress(UserAddress address) {
+        String sql = "INSERT INTO user_addresses (user_id, recipient_name, phone, address, is_default) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, address.getUserId());
+            st.setString(2, address.getRecipientName());
+            st.setString(3, address.getPhone());
+            st.setString(4, address.getAddress());
+            st.setBoolean(5, address.isDefault());
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
+    public boolean deleteUserAddress(int addressId, int userId) {
+        String sql = "DELETE FROM user_addresses WHERE id = ? AND user_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, addressId);
+            st.setInt(2, userId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
+    public boolean setDefaultAddress(int addressId, int userId) {
+        try {
+            // First, remove default from all addresses
+            String sql1 = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
+            PreparedStatement st1 = connection.prepareStatement(sql1);
+            st1.setInt(1, userId);
+            st1.executeUpdate();
+            
+            // Then set the new default
+            String sql2 = "UPDATE user_addresses SET is_default = 1 WHERE id = ? AND user_id = ?";
+            PreparedStatement st2 = connection.prepareStatement(sql2);
+            st2.setInt(1, addressId);
+            st2.setInt(2, userId);
+            return st2.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    public boolean updateAvatar(int userId, String avatarPath) {
+    String sql = "UPDATE users SET avatar = ? WHERE id = ?";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setString(1, avatarPath);
+        st.setInt(2, userId);
+        return st.executeUpdate() > 0;
+    } catch (SQLException e) {
+        // Handle the exception
+        return false;
+    }
+}
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));
