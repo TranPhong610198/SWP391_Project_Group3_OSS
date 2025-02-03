@@ -269,7 +269,7 @@
                                 </div>
                             </div>
                         </form>
-
+                                 
                         <div class="user-info">
                             <h4>${requestScope.user.fullName}</h4>
                             <div class="contact-info">
@@ -277,6 +277,9 @@
                                 <span><i class="fas fa-phone"></i>${requestScope.user.mobile}</span>
                             </div>
                         </div>
+                                <a href="changepassword" class="btn btn-primary flex-grow-1 me-2">
+                                        <i class="fas fa-check me-2"></i>Change Password
+                                    </a>
                     </div>
                 </div>
 
