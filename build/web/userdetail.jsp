@@ -1,8 +1,4 @@
-<%-- 
-    Document   : userdetail
-    Created on : Feb 3, 2025, 9:16:34 PM
-    Author     : VuxD4t
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
