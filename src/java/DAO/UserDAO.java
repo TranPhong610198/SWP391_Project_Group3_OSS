@@ -9,6 +9,7 @@ import entity.UserAddress;
 import java.util.ArrayList;
 import java.util.List;
 import utils.BCrypt;
+import java.sql.Connection;
 
 /**
  *
@@ -270,17 +271,30 @@ public class UserDAO extends DBContext {
         }
     }
 
+<<<<<<< HEAD
     public boolean updatePassword(int userId, String newPasswordHash) {
         String sql = "UPDATE users SET password_hash=? WHERE id=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, newPasswordHash);
+=======
+    public boolean updatePassword(int userId, String newPassword) {
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        String sql = "UPDATE users SET password_hash=? WHERE id=?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, hashedPassword);
+>>>>>>> c60c8f978c6f7a590e26bbc6c99f1b91f7f2a4a6
             st.setInt(2, userId);
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+<<<<<<< HEAD
             return false;
         }
+=======
+        }
+        return false;
+>>>>>>> c60c8f978c6f7a590e26bbc6c99f1b91f7f2a4a6
     }
 
     public boolean updateUser(User user) {
@@ -353,21 +367,23 @@ public class UserDAO extends DBContext {
     }
 
     public boolean setDefaultAddress(int addressId, int userId) {
-        try {
-            // First, remove default from all addresses
-            String sql1 = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
-            PreparedStatement st1 = connection.prepareStatement(sql1);
+        String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
+        String setDefault = "UPDATE user_addresses SET is_default = 1 WHERE id = ? AND user_id = ?";
+        try (PreparedStatement st1 = connection.prepareStatement(clearDefaults); PreparedStatement st2 = connection.prepareStatement(setDefault)) {
             st1.setInt(1, userId);
             st1.executeUpdate();
 
+<<<<<<< HEAD
             // Then set the new default
             String sql2 = "UPDATE user_addresses SET is_default = 1 WHERE id = ? AND user_id = ?";
             PreparedStatement st2 = connection.prepareStatement(sql2);
+=======
+>>>>>>> c60c8f978c6f7a590e26bbc6c99f1b91f7f2a4a6
             st2.setInt(1, addressId);
             st2.setInt(2, userId);
             return st2.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return false;
         }
     }
@@ -384,6 +400,11 @@ public class UserDAO extends DBContext {
         }
     }
 
+<<<<<<< HEAD
+=======
+   
+
+>>>>>>> c60c8f978c6f7a590e26bbc6c99f1b91f7f2a4a6
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));

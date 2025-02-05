@@ -1,8 +1,4 @@
-<%-- 
-    Document   : userlist
-    Created on : Feb 2, 2025, 9:00:02 PM
-    Author     : VuxD4t
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
