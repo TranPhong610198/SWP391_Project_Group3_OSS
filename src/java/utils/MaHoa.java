@@ -4,22 +4,17 @@
  */
 package utils;
 
-import java.security.MessageDigest;
-import org.apache.tomcat.util.codec.binary.Base64;
-import utils.BCrypt;
-
 /**
  *
  * @author nguye
  */
 
-
 public class MaHoa {
     public static String toBcrypt(String pass){
         String result = null;
         try {
-              BCrypt bCrypt = new BCrypt();
-              result = bCrypt.hashpw(pass, bCrypt.gensalt());
+              BCrypt b = new BCrypt();
+              result = b.hashpw(pass, b.gensalt());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -28,6 +23,7 @@ public class MaHoa {
     public static void main(String[] args) {
         System.out.println(toBcrypt("123"));
         System.out.println(toBcrypt("123"));
-        System.out.println(toBcrypt("123"));
+        
+        System.out.println(BCrypt.checkpw("123","$2a$10$coNWWiUvQoYVI.WGi0s3h.LUeMK5ODMRtMjN0IV0Il8cazSRb4sGW"));
     }
 }
