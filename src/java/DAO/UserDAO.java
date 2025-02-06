@@ -299,7 +299,20 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-
+    public boolean updateProfile(User user) {
+    String sql = "UPDATE users SET full_name=?, gender=?, mobile=?, updated_at=GETDATE()  WHERE id=?";
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setString(1, user.getFullName());
+        st.setString(2, user.getGender());
+        st.setInt(4, user.getId());
+        st.setString(3, user.getMobile());
+        return st.executeUpdate() > 0;
+    } catch (SQLException e) {
+        System.out.println(e);
+        return false;
+    }
+}
     public List<UserAddress> getUserAddresses(int userId) {
         List<UserAddress> addresses = new ArrayList<>();
         String sql = "SELECT * FROM user_addresses WHERE user_id = ?";
@@ -370,13 +383,13 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updateAvatar(int userId, String avatarPath) {
-        String sql = "UPDATE users SET avatar = ? WHERE id = ?";
+        String sql = "UPDATE users SET avatar=?, updated_at=GETDATE() WHERE id=?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, avatarPath);
             st.setInt(2, userId);
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            // Handle the exception
+            System.out.println(e);
             return false;
         }
     }

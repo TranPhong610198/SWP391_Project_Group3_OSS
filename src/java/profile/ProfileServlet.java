@@ -103,7 +103,18 @@ public class ProfileServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         UserDAO userDAO = new UserDAO();
-
+        switch (action) {
+            case "update_profile":
+                handleProfileUpdate(request, response, user, userDAO, session);
+                break;
+            case "update_avatar":
+                handleAvatarUpdate(request, response, user, userDAO, session);
+                break;
+            default:
+                response.sendRedirect("profile");
+                break;
+        }
+        
         if ("add".equals(action)) {
            
             String recipientName = request.getParameter("recipient_name");
@@ -160,6 +171,58 @@ public class ProfileServlet extends HttpServlet {
             }
         }
         return "";
+    }
+ private void handleProfileUpdate(HttpServletRequest request, HttpServletResponse response, 
+            User user, UserDAO userDAO, HttpSession session) throws ServletException, IOException {
+        String fullName = request.getParameter("fullName");
+        String gender = request.getParameter("gender");
+        String mobile = request.getParameter("mobile");
+        user.setFullName(fullName);
+        user.setGender(gender);
+        user.setMobile(mobile);
+        if (userDAO.updateProfile(user)) {
+            session.setAttribute("acc", user);
+            response.sendRedirect("profile");
+        } else {
+            request.setAttribute("error", "Failed to update profile");
+            doGet(request, response);
+        }
+    }
+ private String getFileExtension(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        if (contentDisp != null) {
+            String[] tokens = contentDisp.split(";");
+            for (String token : tokens) {
+                if (token.trim().startsWith("filename")) {
+                    String fileName = token.substring(token.indexOf("=") + 2, token.length() - 1);
+                    return fileName.substring(fileName.lastIndexOf("."));
+                }
+            }
+        }
+        return "";
+    }
+    private void handleAvatarUpdate(HttpServletRequest request, HttpServletResponse response, 
+            User user, UserDAO userDAO, HttpSession session) throws ServletException, IOException {
+        Part filePart = request.getPart("avatar");
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName = user.getId() + "_" + System.currentTimeMillis() + getFileExtension(filePart);
+            String uploadPath = getServletContext().getRealPath("/uploads/avatars");
+            
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+            
+            String filePath = uploadPath + File.separator + fileName;
+            filePart.write(filePath);
+            
+            String dbPath = "uploads/avatars/" + fileName;
+            if (userDAO.updateAvatar(user.getId(), dbPath)) {
+                user.setAvatar(dbPath);
+                session.setAttribute("acc", user);
+            }
+        }
+        response.sendRedirect("profile");
     }
     /**
      * Returns a short description of the servlet.

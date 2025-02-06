@@ -32,7 +32,6 @@
                 min-height: 100vh;
             }
 
-            /* Card Styles */
             .profile-card {
                 background: #ffffff;
                 padding: 2rem;
@@ -47,7 +46,6 @@
                 box-shadow: 0 12px 25px var(--shadow-hover-color);
             }
 
-            /* Avatar Container */
             .avatar-container {
                 position: relative;
                 width: 180px;
@@ -87,7 +85,6 @@
                 font-size: 2rem;
             }
 
-            /* Preview Container */
             .preview-container {
                 display: none;
                 margin-top: 1rem;
@@ -105,12 +102,6 @@
                 margin-top: 1rem;
             }
 
-            .btn-upload {
-                width: 100%;
-                margin-top: 0.5rem;
-            }
-
-            /* User Info */
             .user-info {
                 padding: 1.5rem 0;
             }
@@ -134,28 +125,14 @@
                 color: var(--primary-color);
             }
 
-            /* Address Items */
-            .address-item {
-                background: #fff;
-                padding: 1.5rem;
-                border-radius: 12px;
-                border: 1px solid var(--border-color);
-                margin-bottom: 1rem;
-                transition: all 0.3s ease;
+            .section-title {
+                color: var(--primary-color);
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--border-color);
             }
 
-            .address-item:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 15px var(--shadow-color);
-                border-color: var(--primary-color);
-            }
-
-            .address-item p {
-                margin-bottom: 0.5rem;
-                color: var(--text-secondary);
-            }
-
-            /* Form Elements */
             .form-control {
                 border-radius: 8px;
                 padding: 0.75rem 1rem;
@@ -168,13 +145,6 @@
                 box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15);
             }
 
-            .form-label {
-                color: var(--primary-color);
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-
-            /* Buttons */
             .btn {
                 font-weight: 600;
                 padding: 0.75rem 1.5rem;
@@ -193,20 +163,21 @@
                 box-shadow: 0 5px 15px rgba(46, 89, 217, 0.2);
             }
 
-            .btn-danger {
-                padding: 0.5rem 1rem;
+            .address-item {
+                background: #fff;
+                padding: 1.5rem;
+                border-radius: 12px;
+                border: 1px solid var(--border-color);
+                margin-bottom: 1rem;
+                transition: all 0.3s ease;
             }
 
-            /* Section Titles */
-            .section-title {
-                color: var(--primary-color);
-                font-weight: 700;
-                margin-bottom: 1.5rem;
-                padding-bottom: 0.5rem;
-                border-bottom: 2px solid var(--border-color);
+            .address-item:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px var(--shadow-color);
+                border-color: var(--primary-color);
             }
 
-            /* Responsive Design */
             @media (max-width: 768px) {
                 .container {
                     padding: 1rem;
@@ -219,10 +190,6 @@
                 .avatar-container {
                     width: 150px;
                     height: 150px;
-                }
-
-                .section-title {
-                    font-size: 1.5rem;
                 }
             }
 
@@ -248,14 +215,14 @@
                         <div class="avatar-container">
                             <img src="${requestScope.user.avatar == null ? 'https://via.placeholder.com/150' : requestScope.user.avatar}" 
                                  alt="Profile Picture" class="profile-image">
-                            <div class="avatar-overlay" onclick="triggerFileInput()">
+                            <div class="avatar-overlay" onclick="document.getElementById('avatar').click()">
                                 <i class="fas fa-camera"></i>
                             </div>
                         </div>
 
                         <form action="profile" method="post" enctype="multipart/form-data" class="upload-form" id="avatarForm">
                             <input type="hidden" name="action" value="update_avatar">
-                            <input type="file" class="form-control" id="avatar" name="avatar" 
+                            <input type="file" class="form-control d-none" id="avatar" name="avatar" 
                                    accept="image/*" onchange="previewImage(this)">
                             <div class="preview-container">
                                 <img id="preview" src="#" alt="Preview">
@@ -277,9 +244,9 @@
                                 <span><i class="fas fa-phone"></i>${requestScope.user.mobile}</span>
                             </div>
                         </div>
-                                <a href="changepassword" class="btn btn-primary flex-grow-1 me-2">
-                                        <i class="fas fa-check me-2"></i>Change Password
-                                    </a>
+                        <a href="changepassword" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
                     </div>
                 </div>
 
@@ -288,35 +255,66 @@
                     <div class="profile-card">
                         <!-- Personal Information Section -->
                         <h2 class="section-title">
-                            <i class="fas fa-user-circle me-2"></i>Thông tin cá nhân
+                            <i class="fas fa-user-circle me-2"></i>Personal Information
                         </h2>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <p><strong><i class="fas fa-user me-2"></i>Username:</strong> ${requestScope.user.username}</p>
+                        <form action="profile" method="post" class="needs-validation mb-4" novalidate>
+                            <input type="hidden" name="action" value="update_profile">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" class="form-control" value="${requestScope.user.username}" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="fullName">Full Name</label>
+                                    <input type="text" class="form-control" id="fullName" name="fullName" 
+                                           value="${requestScope.user.fullName}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter your full name
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="gender">Gender</label>
+                                    <select class="form-control" id="gender" name="gender" required>
+                                        <option value="male" ${requestScope.user.gender == 'male' ? 'selected' : ''}>Male</option>
+                                        <option value="female" ${requestScope.user.gender == 'female' ? 'selected' : ''}>Female</option>
+                                        <option value="other" ${requestScope.user.gender == 'other' ? 'selected' : ''}>Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select your gender
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="mobile">Mobile</label>
+                                    <input type="text" class="form-control" id="mobile" name="mobile" 
+                                           value="${requestScope.user.mobile}" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Save Changes
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <p><strong><i class="fas fa-venus-mars me-2"></i>Giới tính:</strong> ${requestScope.user.gender}</p>
-                            </div>
-                        </div>
+                        </form>
 
                         <!-- Shipping Addresses Section -->
                         <h3 class="section-title">
-                            <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ giao hàng
+                            <i class="fas fa-map-marker-alt me-2"></i>Shipping Addresses
                         </h3>
                         <div class="addresses-container mb-4">
                             <c:forEach var="address" items="${addresses}">
                                 <div class="address-item">
                                     <div class="row align-items-center">
                                         <div class="col-md-10">
-                                            <p><strong><i class="fas fa-user me-2"></i>Người nhận:</strong> ${address.recipientName}</p>
-                                            <p><strong><i class="fas fa-phone me-2"></i>SĐT:</strong> ${address.phone}</p>
-                                            <p class="mb-0"><strong><i class="fas fa-home me-2"></i>Địa chỉ:</strong> ${address.address}</p>
+                                            <p><strong><i class="fas fa-user me-2"></i>Recipient:</strong> ${address.recipientName}</p>
+                                            <p><strong><i class="fas fa-phone me-2"></i>Phone:</strong> ${address.phone}</p>
+                                            <p class="mb-0"><strong><i class="fas fa-home me-2"></i>Address:</strong> ${address.address}</p>
                                         </div>
-                                        <div class="col-md-2 d-flex justify-content-end">
-                                            <form action="profile" method="post" onsubmit="return confirmDelete()">
+                                        <div class="col-md-2 text-end">
+                                            <form action="profile" method="post" class="d-inline">
                                                 <input type="hidden" name="action" value="delete">
                                                 <input type="hidden" name="address_id" value="${address.id}">
-                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                <button type="submit" class="btn btn-danger btn-sm" 
+                                                        onclick="return confirm('Are you sure you want to delete this address?')">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>
@@ -328,33 +326,33 @@
 
                         <!-- Add New Address Section -->
                         <h3 class="section-title">
-                            <i class="fas fa-plus-circle me-2"></i>Thêm địa chỉ mới
+                            <i class="fas fa-plus-circle me-2"></i>Add New Address
                         </h3>
                         <form action="profile" method="post" class="needs-validation" novalidate>
                             <input type="hidden" name="action" value="add">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label" for="recipient_name">Người nhận</label>
+                                    <label class="form-label" for="recipient_name">Recipient Name</label>
                                     <input type="text" class="form-control" id="recipient_name" 
                                            name="recipient_name" required>
                                     <div class="invalid-feedback">
-                                        Vui lòng nhập tên người nhận
+                                        Please enter recipient name
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" for="phone">SĐT</label>
+                                    <label class="form-label" for="phone">Phone Number</label>
                                     <input type="tel" class="form-control" id="phone" 
                                            name="phone" pattern="[0-9]{10}" required>
                                     <div class="invalid-feedback">
-                                        Vui lòng nhập số điện thoại hợp lệ
+                                        Please enter a valid phone number
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label" for="address">Địa chỉ</label>
+                                    <label class="form-label" for="address">Address</label>
                                     <textarea class="form-control" id="address" 
                                               name="address" rows="3" required></textarea>
                                     <div class="invalid-feedback">
-                                        Vui lòng nhập địa chỉ
+                                        Please enter the address
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -362,11 +360,11 @@
                                         <input type="checkbox" class="form-check-input" 
                                                name="is_default" id="defaultAddress">
                                         <label class="form-check-label" for="defaultAddress">
-                                            <i class="fas fa-star me-2"></i>Đặt làm địa chỉ mặc định
+                                            <i class="fas fa-star me-2"></i>Set as default address
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12 d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-2"></i>Lưu địa chỉ
                                     </button>
