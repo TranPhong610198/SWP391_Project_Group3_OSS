@@ -286,7 +286,10 @@
                                 <div class="col-md-6">
                                     <label class="form-label" for="mobile">Mobile</label>
                                     <input type="text" class="form-control" id="mobile" name="mobile" 
-                                           value="${requestScope.user.mobile}" required>
+                                           value="${requestScope.user.mobile}" pattern="[0-9]{10}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid phone number
+                                    </div>
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary">
