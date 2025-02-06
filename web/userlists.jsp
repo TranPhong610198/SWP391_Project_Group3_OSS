@@ -9,47 +9,47 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h2>User Lists</h2>
+        <h2>Danh Sách Người Dùng</h2>
         
         <!-- Filter and Search Form -->
         <form action="userlists" method="get" class="mb-4">
             <div class="row g-3">
                 <div class="col-md-2">
                     <select name="gender" class="form-select">
-                        <option value="">All Genders</option>
-                        <option value="Male" ${gender == 'Male' ? 'selected' : ''}>Male</option>
-                        <option value="Female" ${gender == 'Female' ? 'selected' : ''}>Female</option>
+                        <option value="">Tất cả giới tính</option>
+                        <option value="Male" ${gender == 'Male' ? 'selected' : ''}>Nam</option>
+                        <option value="Female" ${gender == 'Female' ? 'selected' : ''}>Nữ</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select name="role" class="form-select">
-                        <option value="">All Roles</option>
+                        <option value="">Tất cả vai trò</option>
                         <option value="Admin" ${role == 'Admin' ? 'selected' : ''}>Admin</option>
                         <option value="Customer" ${role == 'Customer' ? 'selected' : ''}>Customer</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select name="status" class="form-select">
-                        <option value="">All Status</option>
+                        <option value="">Tất cả trạng thái</option>
                         <option value="Active" ${status == 'Active' ? 'selected' : ''}>Active</option>
                         <option value="Inactive" ${status == 'Inactive' ? 'selected' : ''}>Inactive</option>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <input type="text" name="search" value="${search}" class="form-control" 
-                           placeholder="Search by name, email, or mobile">
+                           placeholder="Tìm kiếm theo tên, gmail, số điện thoại">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
                 </div>
             </div>
         </form>
 
         <!-- Export Buttons -->
         <div class="mb-3">
-            <a href="userlists?action=export&format=excel" class="btn btn-success">Export to Excel</a>
-            <a href="userlists?action=export&format=pdf" class="btn btn-danger">Export to PDF</a>
-            <a href="userform.jsp" class="btn btn-primary float-end">Add New User</a>
+            <a href="userlists?action=export&format=excel" class="btn btn-success">Xuất sang Excel</a>
+            <a href="userlists?action=export&format=pdf" class="btn btn-danger">Xuất sang PDF</a>
+            <a href="userform.jsp" class="btn btn-primary float-end">Thêm người dùng mới</a>
         </div>
 
         <!-- Users Table -->
@@ -63,12 +63,12 @@
                     </th>
                     <th>
                         <a href="userlists?sortField=full_name&sortDir=${sortField == 'full_name' && sortDir == 'asc' ? 'desc' : 'asc'}">
-                            Full Name ${sortField == 'full_name' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                            Tên ${sortField == 'full_name' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                         </a>
                     </th>
                     <th>
                         <a href="userlists?sortField=gender&sortDir=${sortField == 'gender' && sortDir == 'asc' ? 'desc' : 'asc'}">
-                            Gender ${sortField == 'gender' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                            Giới tính ${sortField == 'gender' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                         </a>
                     </th>
                     <th>
@@ -78,20 +78,20 @@
                     </th>
                     <th>
                         <a href="userlists?sortField=mobile&sortDir=${sortField == 'mobile' && sortDir == 'asc' ? 'desc' : 'asc'}">
-                            Mobile ${sortField == 'mobile' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                            Số điện thoại ${sortField == 'mobile' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                         </a>
                     </th>
                     <th>
                         <a href="userlists?sortField=role&sortDir=${sortField == 'role' && sortDir == 'asc' ? 'desc' : 'asc'}">
-                            Role ${sortField == 'role' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                            Vai trò ${sortField == 'role' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                         </a>
                     </th>
                     <th>
                         <a href="userlists?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}">
-                            Status ${sortField == 'status' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                            Trạng thái ${sortField == 'status' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                         </a>
                     </th>
-                    <th>Actions</th>
+                    <th>Hoạt động</th>
                 </tr>
             </thead>
             <tbody>
@@ -106,7 +106,8 @@
                         <td>${user.status}</td>
                         <td>
                             <a href="userdetail/view?id=${user.id}" class="btn btn-info btn-sm">View</a>
-                            <a href="userdetail/edit?id=${user.id}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Delete</a>
+
                         </td>
                     </tr>
                 </c:forEach>
