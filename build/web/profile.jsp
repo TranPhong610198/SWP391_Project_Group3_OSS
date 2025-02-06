@@ -245,7 +245,7 @@
                             </div>
                         </div>
                         <a href="changepassword" class="btn btn-primary w-100 mb-2">
-                            <i class="fas fa-key me-2"></i>Change Password
+                            <i class="fas fa-key me-2"></i>Đổi mật khẩu
                         </a>
                     </div>
                 </div>
@@ -255,45 +255,45 @@
                     <div class="profile-card">
                         <!-- Personal Information Section -->
                         <h2 class="section-title">
-                            <i class="fas fa-user-circle me-2"></i>Personal Information
+                            <i class="fas fa-user-circle me-2"></i>Thông tin cá nhân
                         </h2>
                         <form action="profile" method="post" class="needs-validation mb-4" novalidate>
                             <input type="hidden" name="action" value="update_profile">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Username</label>
+                                    <label class="form-label">Tài khoản</label>
                                     <input type="text" class="form-control" value="${requestScope.user.username}" readonly>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" for="fullName">Full Name</label>
+                                    <label class="form-label" for="fullName">Tên đầy đủ</label>
                                     <input type="text" class="form-control" id="fullName" name="fullName" 
                                            value="${requestScope.user.fullName}" required>
                                     <div class="invalid-feedback">
-                                        Please enter your full name
+                                        Vui lòng nhập tên của bạn
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" for="gender">Gender</label>
+                                    <label class="form-label" for="gender">Giới tính</label>
                                     <select class="form-control" id="gender" name="gender" required>
                                         <option value="male" ${requestScope.user.gender == 'male' ? 'selected' : ''}>Male</option>
                                         <option value="female" ${requestScope.user.gender == 'female' ? 'selected' : ''}>Female</option>
                                         <option value="other" ${requestScope.user.gender == 'other' ? 'selected' : ''}>Other</option>
                                     </select>
                                     <div class="invalid-feedback">
-                                        Please select your gender
+                                        Vui lòng chọn giới tính
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" for="mobile">Mobile</label>
+                                    <label class="form-label" for="mobile">Số điênj thoại</label>
                                     <input type="text" class="form-control" id="mobile" name="mobile" 
                                            value="${requestScope.user.mobile}" pattern="[0-9]{10}" required>
                                     <div class="invalid-feedback">
-                                        Please enter a valid phone number
+                                        Hãy nhập đúng số điện thoại
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Save Changes
+                                        <i class="fas fa-save me-2"></i>Lưu
                                     </button>
                                 </div>
                             </div>
@@ -301,23 +301,23 @@
 
                         <!-- Shipping Addresses Section -->
                         <h3 class="section-title">
-                            <i class="fas fa-map-marker-alt me-2"></i>Shipping Addresses
+                            <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ vận chuyển 
                         </h3>
                         <div class="addresses-container mb-4">
                             <c:forEach var="address" items="${addresses}">
                                 <div class="address-item">
                                     <div class="row align-items-center">
                                         <div class="col-md-10">
-                                            <p><strong><i class="fas fa-user me-2"></i>Recipient:</strong> ${address.recipientName}</p>
-                                            <p><strong><i class="fas fa-phone me-2"></i>Phone:</strong> ${address.phone}</p>
-                                            <p class="mb-0"><strong><i class="fas fa-home me-2"></i>Address:</strong> ${address.address}</p>
+                                            <p><strong><i class="fas fa-user me-2"></i>Người nhận:</strong> ${address.recipientName}</p>
+                                            <p><strong><i class="fas fa-phone me-2"></i>SĐT:</strong> ${address.phone}</p>
+                                            <p class="mb-0"><strong><i class="fas fa-home me-2"></i>Địa chỉ:</strong> ${address.address}</p>
                                         </div>
                                         <div class="col-md-2 text-end">
                                             <form action="profile" method="post" class="d-inline">
                                                 <input type="hidden" name="action" value="delete">
                                                 <input type="hidden" name="address_id" value="${address.id}">
                                                 <button type="submit" class="btn btn-danger btn-sm" 
-                                                        onclick="return confirm('Are you sure you want to delete this address?')">
+                                                        onclick="return confirm('Bạn có muốn xóa địa chỉ này không ?')">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>
@@ -329,33 +329,33 @@
 
                         <!-- Add New Address Section -->
                         <h3 class="section-title">
-                            <i class="fas fa-plus-circle me-2"></i>Add New Address
+                            <i class="fas fa-plus-circle me-2"></i>Thêm địa chỉ mới
                         </h3>
                         <form action="profile" method="post" class="needs-validation" novalidate>
                             <input type="hidden" name="action" value="add">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label" for="recipient_name">Recipient Name</label>
+                                    <label class="form-label" for="recipient_name">Tên người nhận</label>
                                     <input type="text" class="form-control" id="recipient_name" 
                                            name="recipient_name" required>
                                     <div class="invalid-feedback">
-                                        Please enter recipient name
+                                        Vui lòng nhập tên người nhận
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" for="phone">Phone Number</label>
+                                    <label class="form-label" for="phone">Số điện thoại</label>
                                     <input type="tel" class="form-control" id="phone" 
                                            name="phone" pattern="[0-9]{10}" required>
                                     <div class="invalid-feedback">
-                                        Please enter a valid phone number
+                                        Vui lòng nhập số điện thoại
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label" for="address">Address</label>
+                                    <label class="form-label" for="address">Địa chỉ nhận</label>
                                     <textarea class="form-control" id="address" 
                                               name="address" rows="3" required></textarea>
                                     <div class="invalid-feedback">
-                                        Please enter the address
+                                        Vui lòng nhập địa chỉ
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -363,7 +363,7 @@
                                         <input type="checkbox" class="form-check-input" 
                                                name="is_default" id="defaultAddress">
                                         <label class="form-check-label" for="defaultAddress">
-                                            <i class="fas fa-star me-2"></i>Set as default address
+                                            <i class="fas fa-star me-2"></i>Đặt làm mặc định
                                         </label>
                                     </div>
                                 </div>
@@ -372,7 +372,7 @@
                                         <i class="fas fa-save me-2"></i>Lưu địa chỉ
                                     </button>
                                     <a href="index.jsp" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Back to Home Page
+                                        <i class="fas fa-save me-2"></i>Quay lại trang chính
                                     </a>
                                 </div>
                             </div>
