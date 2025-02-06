@@ -87,7 +87,7 @@ public class ChangePassword extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        // Validate inputs
+        
         if (oldPassword == null || oldPassword.trim().isEmpty()) {
             request.setAttribute("errorMessage", "Vui lòng nhập mật khẩu cũ.");
             request.getRequestDispatcher("changepassword.jsp").forward(request, response);
@@ -108,7 +108,7 @@ public class ChangePassword extends HttpServlet {
 
         UserDAO userDAO = new UserDAO();
         
-        // First, verify the current password
+        
         User verifiedUser = userDAO.checkAccount(user.getUsername(), oldPassword);
         
         if (verifiedUser == null) {
@@ -117,7 +117,7 @@ public class ChangePassword extends HttpServlet {
             return;
         }
 
-        // Update password
+        
         boolean isUpdated = userDAO.updatePassword(user.getId(), newPassword);
 
         if (isUpdated) {
