@@ -9,21 +9,23 @@ package entity;
  * @author nguye
  */
 public class User {
-    private int id;              
-    private String username;       
-    private String email;         
-    private String passwordHash;   
-    private String fullName;      
-    private String gender;        
-    private String mobile;         
-    private String avatar;        
+
+    private int id;
+    private String username;
+    private String email;
+    private String passwordHash;
+    private String fullName;
+    private String gender;
+    private String mobile;
+    private String avatar;
     private String role;           // Vai trò (admin, sale, marketing, customer)
     private String status;         // Trạng thái (active, inactive, pending)
-    private String createdAt;      
-    private String updatedAt;      
+    private String createdAt;
+    private String updatedAt;
 
-    public User() {}
-    
+    public User() {
+    }
+
     public User(String username, String email, String passwordHash, String fullName, String gender, String mobile) {
         this.username = username;
         this.email = email;
@@ -32,16 +34,6 @@ public class User {
         this.gender = gender;
         this.mobile = mobile;
     }
-    
-//    public User(String username, String email, String fullName, String avatar, String role, String status) {
-//        this.username = username;
-//        this.email = email;
-//        this.fullName = fullName;
-//        this.avatar = avatar;
-//        this.role = role;
-//        this.status = status;
-//    }
-    
 
     public User(int id, String username, String email, String passwordHash, String fullName,
             String gender, String mobile, String avatar, String role,
@@ -72,8 +64,6 @@ public class User {
         this.status = status;
     }
 
-    
-    
     public int getId() {
         return id;
     }
@@ -172,20 +162,19 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-               "id=" + id +
-               ", username='" + username + '\'' +
-               ", email='" + email + '\'' +
-               ", passwordHash='" + passwordHash + '\'' +
-               ", fullName='" + fullName + '\'' +
-               ", gender='" + gender + '\'' +
-               ", mobile='" + mobile + '\'' +
-               ", avatar='" + avatar + '\'' +
-               ", role='" + role + '\'' +
-               ", status='" + status + '\'' +
-               ", createdAt='" + createdAt + '\'' +
-               ", updatedAt='" + updatedAt + '\'' +
-               '}';
+        return "User{"
+                + "id=" + id
+                + ", username='" + username + '\''
+                + ", email='" + email + '\''
+                + ", passwordHash='" + passwordHash + '\''
+                + ", fullName='" + fullName + '\''
+                + ", gender='" + gender + '\''
+                + ", mobile='" + mobile + '\''
+                + ", avatar='" + avatar + '\''
+                + ", role='" + role + '\''
+                + ", status='" + status + '\''
+                + ", createdAt='" + createdAt + '\''
+                + ", updatedAt='" + updatedAt + '\''
+                + '}';
     }
 }
-

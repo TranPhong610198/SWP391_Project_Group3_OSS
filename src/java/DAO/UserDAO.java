@@ -394,8 +394,6 @@ public class UserDAO extends DBContext {
         }
     }
 
-   
-
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));
