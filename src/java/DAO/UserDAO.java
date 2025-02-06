@@ -380,7 +380,68 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
+///////VTD
+    public List<User> getUsersByFilter(String sql, List<Object> params) {
+        List<User> users = new ArrayList<>();
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
 
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password_hash"),
+                        rs.getString("full_name"),
+                        rs.getString("gender"),
+                        rs.getString("mobile"),
+                        rs.getString("avatar"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at"),
+                        rs.getString("updated_at")
+                );
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public int getTotalFilteredRecords(String sql, List<Object> params) {
+        // Chuyển đổi câu SQL để đếm tổng số bản ghi
+        String countSql = sql.replaceFirst("SELECT \\*", "SELECT COUNT(*)");
+        // Loại bỏ phần ORDER BY và OFFSET ... FETCH
+        int orderByIndex = countSql.toLowerCase().indexOf("order by");
+        if (orderByIndex != -1) {
+            countSql = countSql.substring(0, orderByIndex);
+        }
+        int offsetIndex = countSql.toLowerCase().indexOf("offset");
+        if (offsetIndex != -1) {
+            countSql = countSql.substring(0, offsetIndex);
+        }
+
+        try (PreparedStatement st = connection.prepareStatement(countSql)) {
+            // Set parameters (bỏ qua 2 tham số cuối cùng là offset và limit)
+            for (int i = 0; i < params.size() - 2; i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+////////
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));
