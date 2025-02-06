@@ -44,10 +44,21 @@ public class LoginControl extends HttpServlet {
                 String picture = userInfo.get("picture").getAsString();
 
                 UserDAO userDao = new UserDAO();
+                TokenDAO tokenDao = new TokenDAO();
                 User existingUser = userDao.checkExistEmail(email);
 
-                if (existingUser == null) {
-                    // New user  
+                if (existingUser != null) {
+                    if ("pending".equals(existingUser.getStatus())) {
+                        userDao.activateUser(existingUser.getId());
+                        tokenDao.deleteUserTokens(existingUser.getId()); 
+                    }
+
+                    HttpSession session = request.getSession();
+                    session.setAttribute("acc", existingUser);
+                    session.setAttribute("userID", existingUser.getId());
+                    response.sendRedirect("index.jsp");
+                    return;
+                } else {
                     userDao.insertGoogleUser(googleId, email, fullName, picture);
                     existingUser = userDao.checkExistEmail(email);
                 }
