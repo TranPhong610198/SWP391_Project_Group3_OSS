@@ -1,180 +1,183 @@
-
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management System</title>
+    <title>User Details</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
         .container {
             max-width: 800px;
-            margin: auto;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        table {
+        .user-profile {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .avatar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
-        th {
-            background-color: #f2f2f2;
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            margin-top: 20px;
+            text-align: right;
         }
 
         button {
-            margin: 10px 0;
-        }
-
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.4); 
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; 
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; 
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .btn-cancel {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-left: 10px;
+            text-decoration: none;
+            color: #666;
+            background: #eee;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #ddd;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>User Management System</h1>
+        <h1>User Details</h1>
         
-        <!-- Button to Add New User -->
-        <button onclick="document.getElementById('addUser Modal').style.display='block'">Add New User</button>
-
-        <!-- User List Table -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Avatar</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="userTableBody">
-                <!-- User rows will be dynamically added here -->
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Add New User Modal -->
-    <div id="addUser Modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="document.getElementById('addUser Modal').style.display='none'">&times;</span>
-            <h2>Add New User</h2>
-            <form id="addUser Form">
-                <label for="avatar">Avatar:</label>
-                <input type="file" id="avatar" name="avatar"><br>
-
-                <label for="fullName">Full Name:</label>
-                <input type="text" id="fullName" name="fullName" required><br>
-
-                <label for="gender">Gender:</label>
-                <select id="gender" name="gender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select><br>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br>
-
-                <label for="mobilePhone">Mobile Phone:</label>
-                <input type="tel" id="mobilePhone" name="mobilePhone" required><br>
-
-                <label for="role">Role:</label>
-                <select id="role" name="role">
-                    <option value="admin">Admin</option>
-                    <option value="user">User </option>
-                </select><br>
-
-                <label for="address">Address:</label>
-                <textarea id="address" name="address"></textarea><br>
-
-                <button type="submit">Create User</button>
-                <button type="button" onclick="document.getElementById('addUser Modal').style.display='none'">Cancel</button>
+        <div class="user-profile">
+            <div class="avatar">
+                <img src="${user.avatar}" alt="User Avatar">
+            </div>
+            
+            <form action="${pageContext.request.contextPath}/user" method="post">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="${user.id}">
+                
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <input type="text" name="fullName" value="${user.fullName}" 
+                           ${sessionScope.currentUser.admin ? 'readonly' : ''}>
+                </div>
+                
+                <div class="form-group">
+                    <label>Gender:</label>
+                    <select name="gender" ${sessionScope.currentUser.admin ? 'disabled' : ''}>
+                        <option value="M" ${user.gender == 'M' ? 'selected' : ''}>Male</option>
+                        <option value="F" ${user.gender == 'F' ? 'selected' : ''}>Female</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="${user.email}" 
+                           ${sessionScope.currentUser.admin ? 'readonly' : ''}>
+                </div>
+                
+                <div class="form-group">
+                    <label>Mobile:</label>
+                    <input type="tel" name="mobile" value="${user.mobile}"
+                           ${sessionScope.currentUser.admin ? 'readonly' : ''}>
+                </div>
+                
+                <div class="form-group">
+                    <label>Address:</label>
+                    <textarea name="address" ${sessionScope.currentUser.admin ? 'readonly' : ''}>
+                        ${user.address}
+                    </textarea>
+                </div>
+                
+                <c:if test="${sessionScope.currentUser.admin}">
+                    <div class="form-group">
+                        <label>Role:</label>
+                        <select name="role">
+                            <option value="USER" ${user.role == 'USER' ? 'selected' : ''}>User</option>
+                            <option value="ADMIN" ${user.role == 'ADMIN' ? 'selected' : ''}>Admin</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select name="status">
+                            <option value="ACTIVE" ${user.status == 'ACTIVE' ? 'selected' : ''}>Active</option>
+                            <option value="INACTIVE" ${user.status == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                        </select>
+                    </div>
+                </c:if>
+                
+                <div class="form-actions">
+                    <button type="submit">Save Changes</button>
+                    <a href="${pageContext.request.contextPath}/users" class="btn-cancel">Cancel</a>
+                </div>
             </form>
         </div>
     </div>
-
-    <script>
-        document.getElementById('addUser Form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const role = document.getElementById('role').value;
-            const status = 'Active'; // Default status for new users
-
-            const userTableBody = document.getElementById('userTableBody');
-            const newRow = userTableBody.insertRow();
-
-            newRow.innerHTML = `
-                <td><img src="default-avatar.png" alt="Avatar" width="50"></td>
-                <td>${fullName}</td>
-                <td>${email}</td>
-                <td>${role}</td>
-                <td>${status}</td>
-                <td>
-                    <button onclick="editUser (this)">Edit</button>
-                    <button onclick="deleteUser (this)">Delete</button>
-                </td>
-            `;
-
-            document.getElementById('addUser  Modal').style.display = 'none';
-            this.reset(); // Reset the form fields
-        });
-
-        function editUser (button) {
-            // Logic to edit user information
-        }
-
-        function deleteUser (button) {
-            const row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-        }
-    </script>
 </body>
 </html>

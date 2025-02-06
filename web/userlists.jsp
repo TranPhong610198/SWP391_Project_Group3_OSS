@@ -49,7 +49,7 @@
         <div class="mb-3">
             <a href="userlists?action=export&format=excel" class="btn btn-success">Export to Excel</a>
             <a href="userlists?action=export&format=pdf" class="btn btn-danger">Export to PDF</a>
-            <a href="userlists/new" class="btn btn-primary float-end">Add New User</a>
+            <a href="userform.jsp" class="btn btn-primary float-end">Add New User</a>
         </div>
 
         <!-- Users Table -->
@@ -105,8 +105,8 @@
                         <td>${user.role}</td>
                         <td>${user.status}</td>
                         <td>
-                            <a href="userlists/view?id=${user.id}" class="btn btn-info btn-sm">View</a>
-                            <a href="userlists/edit?id=${user.id}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="userdetail/view?id=${user.id}" class="btn btn-info btn-sm">View</a>
+                            <a href="userdetail/edit?id=${user.id}" class="btn btn-warning btn-sm">Edit</a>
                         </td>
                     </tr>
                 </c:forEach>
