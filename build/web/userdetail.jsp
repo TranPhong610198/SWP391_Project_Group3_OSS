@@ -117,7 +117,7 @@
                     <img src="${user.avatar}" alt="User Avatar">
                 </div>
 
-                <form action="${pageContext.request.contextPath}/user" method="post">
+                <form action="${pageContext.request.contextPath}/userdetail" method="post">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="id" value="${user.id}">
 

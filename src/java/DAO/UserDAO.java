@@ -235,7 +235,7 @@ public class UserDAO extends DBContext {
     /**
      * *****************************************************
      */
-    private String generateUniqueUsername(String baseUsername) {
+    public String generateUniqueUsername(String baseUsername) {
         String username = baseUsername;
         int counter = 1;
         UserDAO UserDAO = new UserDAO();
@@ -299,20 +299,22 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
+
     public boolean updateProfile(User user) {
-    String sql = "UPDATE users SET full_name=?, gender=?, mobile=?, updated_at=GETDATE()  WHERE id=?";
-    try {
-        PreparedStatement st = connection.prepareStatement(sql);
-        st.setString(1, user.getFullName());
-        st.setString(2, user.getGender());
-        st.setInt(4, user.getId());
-        st.setString(3, user.getMobile());
-        return st.executeUpdate() > 0;
-    } catch (SQLException e) {
-        System.out.println(e);
-        return false;
+        String sql = "UPDATE users SET full_name=?, gender=?, mobile=?, updated_at=GETDATE()  WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, user.getFullName());
+            st.setString(2, user.getGender());
+            st.setInt(4, user.getId());
+            st.setString(3, user.getMobile());
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
     }
-}
+
     public List<UserAddress> getUserAddresses(int userId) {
         List<UserAddress> addresses = new ArrayList<>();
         String sql = "SELECT * FROM user_addresses WHERE user_id = ?";
@@ -394,6 +396,7 @@ public class UserDAO extends DBContext {
         }
     }
 ///////VTD
+
     public List<User> getUsersByFilter(String sql, List<Object> params) {
         List<User> users = new ArrayList<>();
         try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -454,7 +457,20 @@ public class UserDAO extends DBContext {
         }
         return 0;
     }
+
+    public boolean deleteUser(int userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, userId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
 ////////
+
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));

@@ -6,6 +6,20 @@
     <meta charset="UTF-8">
     <title>User Lists</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .password-column {
+            max-width: 150px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .password-column:hover {
+            max-width: none;
+            white-space: normal;
+            overflow: visible;
+            word-break: break-word;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -67,6 +81,10 @@
                         </a>
                     </th>
                     <th>
+                        <a>Username</a></th>
+                    <th>
+                        <a>Password</a></th>
+                    <th>
                         <a href="userlists?sortField=gender&sortDir=${sortField == 'gender' && sortDir == 'asc' ? 'desc' : 'asc'}">
                             Giới tính ${sortField == 'gender' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                         </a>
@@ -99,6 +117,8 @@
                     <tr>
                         <td>${user.id}</td>
                         <td>${user.fullName}</td>
+                        <td>${user.username}</td>
+                        <td class="password-column">${user.passwordHash}</td>
                         <td>${user.gender}</td>
                         <td>${user.email}</td>
                         <td>${user.mobile}</td>
