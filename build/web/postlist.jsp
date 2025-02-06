@@ -121,6 +121,10 @@
             margin-right: 0.3rem;
             color: var(--accent-color);
         }
+
+        .action-btns a {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -131,13 +135,23 @@
                 <div class="col-md-8">
                     <form method="get" action="${pageContext.request.contextPath}/post" class="search-form">
                         <div class="row g-3">
-                            <div class="col-md-5">
-                                <input type="text" name="search" value="${search}" class="form-control" placeholder="Search posts...">
+                            <div class="col-md-3">
+                                <input type="text" name="search" value="${search}" class="form-control" placeholder="Search by title...">
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <input type="text" name="category" value="${category}" class="form-control" placeholder="Category...">
                             </div>
+                            <div class="col-md-3">
+                                <input type="text" name="author" value="${author}" class="form-control" placeholder="Author...">
+                            </div>
                             <div class="col-md-2">
+                                <select name="status" class="form-select">
+                                    <option value="">Status</option>
+                                    <option value="published" ${status == 'published' ? 'selected' : ''}>Published</option>
+                                    <option value="draft" ${status == 'draft' ? 'selected' : ''}>Draft</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
                                 <button type="submit" class="btn btn-light w-100">Search</button>
                             </div>
                         </div>
@@ -160,32 +174,16 @@
                             <div class="meta-info">
                                 <i class="fas fa-user"></i> ${post.author}
                                 <i class="fas fa-clock ms-2"></i> ${post.updatedAt}
+                                <i class="fas fa-tag ms-2"></i> ${post.category}
+                                <i class="fas fa-star ms-2"></i> ${post.isFeatured ? 'Featured' : 'Not Featured'}
                             </div>
                             <p class="card-text">${post.summary}</p>
                             <span class="category-badge">${post.category}</span>
-                            <a href="${pageContext.request.contextPath}/postdetail.jsp?id=${post.id}" class="btn btn-outline-primary mt-3">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
-        </div>
-
-        <!-- All Posts Section -->
-        <h2 class="section-title">All Posts</h2>
-        <div class="row g-4 mb-5">
-            <c:forEach var="post" items="${posts}">
-                <div class="col-md-4">
-                    <div class="post-card card">
-                        <img src="${post.thumbnail}" class="card-img-top" alt="${post.title}">
-                        <div class="card-body">
-                            <h5 class="card-title">${post.title}</h5>
-                            <div class="meta-info">
-                                <i class="fas fa-user"></i> ${post.author}
-                                <i class="fas fa-clock ms-2"></i> ${post.updatedAt}
+                            <div class="action-btns mt-3">
+                                <a href="${pageContext.request.contextPath}/postdetail.jsp?id=${post.id}" class="btn btn-outline-primary">View</a>
+                                <a href="${pageContext.request.contextPath}/post/edit?id=${post.id}" class="btn btn-outline-warning">Edit</a>
+                                <a href="${pageContext.request.contextPath}/post/toggleVisibility?id=${post.id}" class="btn btn-outline-danger">${post.isVisible ? 'Hide' : 'Show'}</a>
                             </div>
-                            <p class="card-text">${post.summary}</p>
-                            <span class="category-badge">${post.category}</span>
-                            <a href="${pageContext.request.contextPath}/postdetail.jsp?id=${post.id}" class="btn btn-outline-primary mt-3">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -197,11 +195,16 @@
             <ul class="pagination justify-content-center">
                 <c:forEach var="i" begin="1" end="${totalPages}">
                     <li class="page-item ${currentPage == i ? 'active' : ''}">
-                        <a class="page-link" href="${pageContext.request.contextPath}/post?page=${i}&search=${search}&category=${category}">${i}</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/post?page=${i}&search=${search}&category=${category}&author=${author}&status=${status}">${i}</a>
                     </li>
                 </c:forEach>
             </ul>
         </nav>
+
+        <!-- Add New Post Button -->
+        <div class="text-center">
+            <a href="${pageContext.request.contextPath}/post/new" class="btn btn-primary">Add New Post</a>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
