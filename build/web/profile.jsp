@@ -2,7 +2,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="vi">
-<<<<<<< HEAD
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,30 +24,6 @@
             --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
-=======
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="User Profile Management">
-        <title>User Profile</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-        <style>
-            :root {
-                --primary-color: #4e73df;
-                --secondary-color: #858796;
-                --success-color: #1cc88a;
-                --hover-color: #2e59d9;
-                --bg-gradient-start: #f8f9fc;
-                --bg-gradient-end: #f1f3f9;
-                --border-color: rgba(78, 115, 223, 0.1);
-                --shadow-color: rgba(78, 115, 223, 0.1);
-                --shadow-hover-color: rgba(78, 115, 223, 0.15);
-                --text-primary: #333;
-                --text-secondary: #555;
-            }
->>>>>>> 001d2ee495dcc44a3a6f2cfa009caadd7005f1ef
 
         body {
             background: var(--background);
