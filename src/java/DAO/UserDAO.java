@@ -383,17 +383,19 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public boolean updateAvatar(int userId, String avatarPath) {
-        String sql = "UPDATE users SET avatar=?, updated_at=GETDATE() WHERE id=?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setString(1, avatarPath);
-            st.setInt(2, userId);
-            return st.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println(e);
-            return false;
-        }
+public boolean updateAvatar(int userId, String avatarPath) {
+    String sql = "UPDATE users SET avatar = ?, updated_at = GETDATE() WHERE id = ?;";
+    try ( 
+         PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setString(1, avatarPath);
+        st.setInt(2, userId);
+        return st.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();  // Ghi log lỗi thay vì chỉ in
+        return false;
     }
+}
+
 ///////VTD
 
     public List<User> getUsersByFilter(String sql, List<Object> params) {

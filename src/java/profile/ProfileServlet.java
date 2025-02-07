@@ -3,48 +3,49 @@ package profile;
 import DAO.UserDAO;
 import entity.User;
 import entity.UserAddress;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import java.io.File;
-import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 @WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
 public class ProfileServlet extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
-
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
         UserDAO userDAO = new UserDAO();
-        User userDetails = userDAO.getUserById(user.getId());
-        request.setAttribute("user", userDetails);
-
-        List<UserAddress> addresses = userDAO.getUserAddresses(user.getId());
-        request.setAttribute("addresses", addresses);
-
+        request.setAttribute("user", userDAO.getUserById(user.getId()));
+        request.setAttribute("addresses", userDAO.getUserAddresses(user.getId()));
         request.getRequestDispatcher("profile.jsp").forward(request, response);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
-
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -78,120 +79,88 @@ public class ProfileServlet extends HttpServlet {
                 break;
         }
     }
-    
-    private void handleAddAddress(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO) throws IOException {
-        String recipientName = request.getParameter("recipient_name");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        boolean isDefault = request.getParameter("is_default") != null;
 
-        if (recipientName == null || phone == null || address == null) {
-            response.sendRedirect("profile?error=missing_parameters");
-            return;
-        }
-
-        UserAddress newAddress = new UserAddress();
-        newAddress.setUserId(user.getId());
-        newAddress.setRecipientName(recipientName);
-        newAddress.setPhone(phone);
-        newAddress.setAddress(address);
-        newAddress.setDefault(isDefault);
-
-        userDAO.addUserAddress(newAddress);
-        response.sendRedirect("profile");
-    }
-    
-    private void handleSetDefaultAddress(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO) throws IOException {
-        String addressIdStr = request.getParameter("address_id");
-        if (addressIdStr == null) {
-            response.sendRedirect("profile?error=missing_address_id");
-            return;
-        }
-        int addressId = Integer.parseInt(addressIdStr);
-        userDAO.setDefaultAddress(addressId, user.getId());
-        response.sendRedirect("profile");
-    }
-    
-    private void handleDeleteAddress(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO) throws IOException {
-        String addressIdStr = request.getParameter("address_id");
-        if (addressIdStr == null) {
-            response.sendRedirect("profile?error=missing_address_id");
-            return;
-        }
-        int addressId = Integer.parseInt(addressIdStr);
-        userDAO.deleteUserAddress(addressId, user.getId());
-        response.sendRedirect("profile");
-    }
-    
     private void handleProfileUpdate(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO, HttpSession session)
             throws IOException {
-
-        String fullName = request.getParameter("fullName");
-        String gender = request.getParameter("gender");
-        String mobile = request.getParameter("mobile");
-
-        if (fullName == null || gender == null || mobile == null) {
-            // Handle missing parameters appropriately, e.g., with error message
-            response.sendRedirect("profile?error=missing_profile_fields");
-            return;
-        }
-
-        user.setFullName(fullName);
-        user.setGender(gender);
-        user.setMobile(mobile);
+        user.setFullName(request.getParameter("fullName"));
+        user.setGender(request.getParameter("gender"));
+        user.setMobile(request.getParameter("mobile"));
 
         if (userDAO.updateProfile(user)) {
             session.setAttribute("acc", user);
         }
-
-        response.sendRedirect("profile"); // Redirect to the profile page
+        response.sendRedirect("profile");
     }
 
     private void handleAvatarUpdate(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO, HttpSession session)
             throws ServletException, IOException {
-
         Part filePart = request.getPart("avatar");
+        if (filePart == null || filePart.getSize() == 0) {
+            response.sendRedirect("profile?error=no_file");
+            return;
+        }
 
-        if (filePart != null && filePart.getSize() > 0) {
-            String fileName = extractFilename(filePart); // Use a helper method
-            String uploadPath = getServletContext().getRealPath("/uploads/avatars");
+        String fileName = extractFilename(filePart);
+        if (fileName.isEmpty()) {
+            response.sendRedirect("profile?error=invalid_file");
+            return;
+        }
 
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
+        String uploadPath = getServletContext().getRealPath("/") + File.separator + UPLOAD_DIR;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        String filePath = uploadPath + File.separator + fileName;
+        try {
+            filePart.write(filePath);
+            String dbPath = UPLOAD_DIR + "/" + fileName;
+            if (userDAO.updateAvatar(user.getId(), dbPath)) {
+                user.setAvatar(dbPath);
+                session.setAttribute("acc", user);
             }
-
-            String filePath = uploadPath + File.separator + fileName;
-
-            try {
-                filePart.write(filePath);
-
-                String dbPath = "uploads/avatars/" + fileName;
-                if (userDAO.updateAvatar(user.getId(), dbPath)) {
-                    user.setAvatar(dbPath);
-                    session.setAttribute("acc", user);
-                } else {
-                    // Handle database update error
-                }
-
-            } catch (IOException e) {
-                // Handle file write exception
-                e.printStackTrace(); // Or log the error appropriately
-            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error uploading avatar", e);
         }
 
         response.sendRedirect("profile");
     }
 
-    // Helper method to extract filename from Part
+    private void handleAddAddress(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO) throws IOException {
+        UserAddress newAddress = new UserAddress();
+        newAddress.setUserId(user.getId());
+        newAddress.setRecipientName(request.getParameter("recipient_name"));
+        newAddress.setPhone(request.getParameter("phone"));
+        newAddress.setAddress(request.getParameter("address"));
+        newAddress.setDefault(request.getParameter("is_default") != null);
+
+        userDAO.addUserAddress(newAddress);
+        response.sendRedirect("profile");
+    }
+
+    private void handleSetDefaultAddress(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO) throws IOException {
+        int addressId = Integer.parseInt(request.getParameter("address_id"));
+        userDAO.setDefaultAddress(addressId, user.getId());
+        response.sendRedirect("profile");
+    }
+
+    private void handleDeleteAddress(HttpServletRequest request, HttpServletResponse response, User user, UserDAO userDAO) throws IOException {
+        int addressId = Integer.parseInt(request.getParameter("address_id"));
+        userDAO.deleteUserAddress(addressId, user.getId());
+        response.sendRedirect("profile");
+    }
+
     private String extractFilename(Part part) {
         String contentDisp = part.getHeader("content-disposition");
-        String[] items = contentDisp.split(";");
-        for (String s : items) {
+        for (String s : contentDisp.split(";")) {
             if (s.trim().startsWith("filename")) {
-                return s.substring(s.indexOf("=") + 2, s.length() - 1);
+                return s.substring(s.indexOf('=') + 2, s.length() - 1);
             }
         }
-        return ""; // Or handle the case where filename is not found
+        return "";
     }
+    private static final String UPLOAD_DIR = "uploads/avatars";
+    private static final Logger LOGGER = Logger.getLogger(ProfileServlet.class.getName());
+
 }
