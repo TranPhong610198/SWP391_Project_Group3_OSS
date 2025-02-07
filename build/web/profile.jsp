@@ -12,10 +12,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
             :root {
-                --primary-color: #4e73df;
+                --primary-color:rgb(131, 41, 41);
                 --secondary-color: #858796;
                 --success-color: #1cc88a;
-                --hover-color: #2e59d9;
+                --hover-color: #b11616;
                 --bg-gradient-start: #f8f9fc;
                 --bg-gradient-end: #f1f3f9;
                 --border-color: rgba(78, 115, 223, 0.1);
@@ -284,7 +284,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" for="mobile">Số điênj thoại</label>
+                                    <label class="form-label" for="mobile">Số điện thoại</label>
                                     <input type="text" class="form-control" id="mobile" name="mobile" 
                                            value="${requestScope.user.mobile}" pattern="[0-9]{10}" required>
                                     <div class="invalid-feedback">
