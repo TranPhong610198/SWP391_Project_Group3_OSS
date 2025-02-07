@@ -12,10 +12,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
             :root {
-                --primary-color:rgb(131, 41, 41);
+                --primary-color: #4e73df;
                 --secondary-color: #858796;
                 --success-color: #1cc88a;
-                --hover-color: #b11616;
+                --hover-color: #2e59d9;
                 --bg-gradient-start: #f8f9fc;
                 --bg-gradient-end: #f1f3f9;
                 --border-color: rgba(78, 115, 223, 0.1);
