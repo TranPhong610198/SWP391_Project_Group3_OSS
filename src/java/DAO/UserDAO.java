@@ -468,7 +468,32 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-    
+
+    public int insertUser(User user) {
+        String sql = "INSERT INTO users (username, email, password_hash, full_name, gender, mobile, role, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, 'active')";
+        try (PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            st.setString(1, user.getUsername());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPasswordHash());
+            st.setString(4, user.getFullName());
+            st.setString(5, user.getGender());
+            st.setString(6, user.getMobile());
+            st.setString(7, user.getRole().toLowerCase());
+
+            int affectedRows = st.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = st.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 ////////
 
     public static void main(String[] args) {

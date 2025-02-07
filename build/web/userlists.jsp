@@ -61,7 +61,7 @@
 
         <!-- Export Buttons -->
         <div class="mb-3">
-            <a href="userlists?action=export&format=excel" class="btn btn-success">Xuất sang Excel</a>
+            <a href="export" class="btn btn-success">Xuất sang Excel</a>
             <a href="userlists?action=export&format=pdf" class="btn btn-danger">Xuất sang PDF</a>
             <a href="userform.jsp" class="btn btn-primary float-end">Thêm người dùng mới</a>
         </div>

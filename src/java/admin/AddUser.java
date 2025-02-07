@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package admin;
 
 import DAO.UserDAO;
@@ -14,16 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import utils.BCrypt;
 
-/**
- *
- * @author VuxD4t
- */
 @WebServlet(name="AddUser", urlPatterns={"/userdetail/add"})
 @MultipartConfig
 public class AddUser extends HttpServlet {
@@ -55,30 +42,14 @@ public class AddUser extends HttpServlet {
             String mobile = request.getParameter("mobile");
             String role = request.getParameter("role");
             
-            // Handle avatar upload
-            String avatarPath = null;
-            Part avatarPart = request.getPart("avatar");
-            if (avatarPart != null && avatarPart.getSize() > 0) {
-                String uploadPath = getServletContext().getRealPath("/uploads/avatars");
-                Files.createDirectories(Paths.get(uploadPath));
-                
-                String fileName = System.currentTimeMillis() + "_" + 
-                                Paths.get(avatarPart.getSubmittedFileName()).getFileName().toString();
-                avatarPath = "uploads/avatars/" + fileName;
-                
-                Files.copy(avatarPart.getInputStream(),
-                          Paths.get(uploadPath, fileName),
-                          StandardCopyOption.REPLACE_EXISTING);
-            }
-            
             // Create user object
             User user = new User();
+            user.setStatus("Active"); // hoặc status mặc định phù hợp
             user.setFullName(fullName);
             user.setGender(gender);
             user.setEmail(email);
             user.setMobile(mobile);
             user.setRole(role);
-            user.setAvatar(avatarPath);
             
             // Generate username from email
             String username = email.substring(0, email.indexOf('@'));
@@ -90,8 +61,13 @@ public class AddUser extends HttpServlet {
             user.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
             
             // Insert user
-            if (userDAO.insertUserWithPendingStatus(user) > 0) {
-                response.sendRedirect(request.getContextPath() + "/userlists");
+            int result = userDAO.insertUserWithPendingStatus(user);
+            
+            if (result > 0) {
+                // Sử dụng đường dẫn tuyệt đối để redirect
+                String contextPath = request.getContextPath();
+                response.sendRedirect(contextPath + "/userlists");
+                return;  // Thêm return để kết thúc method sau khi redirect
             } else {
                 request.setAttribute("error", "Failed to create user");
                 request.getRequestDispatcher("/userform.jsp").forward(request, response);
@@ -99,7 +75,7 @@ public class AddUser extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "An error occurred: " + e.getMessage());
+            request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/userform.jsp").forward(request, response);
         }
     }

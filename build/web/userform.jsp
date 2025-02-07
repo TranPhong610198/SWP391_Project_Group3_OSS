@@ -113,14 +113,23 @@
     <body>
         <div class="container">
             <h1>Create New User</h1>
-
-            <form action="${pageContext.request.contextPath}/userdetail/add" method="post" enctype="multipart/form-data">
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger" role="alert">
+                    ${error}
+                </div>
+            </c:if>
+            <c:if test="${not empty param.message}">
+                <div class="alert alert-success" role="alert">
+                    ${param.message}
+                </div>
+            </c:if>
+            <form action="userdetail/add" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create">
 
-                <div class="form-group">
-                    <label>Avatar:</label>
-                    <input type="file" name="avatar" accept="image/*">
-                </div>
+                <!--                <div class="form-group">
+                                    <label>Avatar:</label>
+                                    <input type="file" name="avatar" accept="image/*">
+                                </div>-->
 
                 <div class="form-group">
                     <label class="required">Full Name:</label>
