@@ -136,9 +136,48 @@
                     <img src="${post.thumbnail}" alt="${post.title}" class="post-thumbnail">
                     <span class="category-badge">${post.category}</span>
                     <div class="content">
-                        ${post.content}
+                        <p><strong>Summary:</strong> ${post.summary}</p>
+                        <p><strong>Description:</strong> ${post.content}</p>
                     </div>
+
+                    <!-- Edit Form (if user has permission) -->
+                    <c:if test="${user != null && user.isAdmin()}">
+                        <hr>
+                        <h3>Edit Post</h3>
+                        <form method="POST" action="${pageContext.request.contextPath}/updatePost">
+                            <input type="hidden" name="id" value="${post.id}">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" value="${post.title}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <input type="text" class="form-control" id="category" name="category" value="${post.category}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="thumbnail" class="form-label">Thumbnail URL</label>
+                                <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="${post.thumbnail}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="summary" class="form-label">Summary</label>
+                                <textarea class="form-control" id="summary" name="summary" required>${post.summary}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Content</label>
+                                <textarea class="form-control" id="content" name="content" rows="6" required>${post.content}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="Published" ${post.status == 'Published' ? 'selected' : ''}>Published</option>
+                                    <option value="Draft" ${post.status == 'Draft' ? 'selected' : ''}>Draft</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </c:if>
                 </article>
+
                 <div class="back-button">
                     <a href="${pageContext.request.contextPath}/post" class="btn btn-primary">
                         <i class="fas fa-arrow-left me-2"></i>Back to Posts
@@ -167,7 +206,7 @@
                         <h3 class="sidebar-title">Related Posts</h3>
                         <c:forEach var="relatedPost" items="${relatedPosts}">
                             <div class="related-post">
-                                <a href="${pageContext.request.contextPath}/postdetail.jsp?id=${relatedPost.id}">
+                                <a href="${pageContext.request.contextPath}/postDetails?id=${relatedPost.id}">
                                     <h6 class="mb-1">${relatedPost.title}</h6>
                                     <small class="text-muted">
                                         <i class="fas fa-calendar-alt me-1"></i>${relatedPost.updatedAt}

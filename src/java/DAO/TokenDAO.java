@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class TokenDAO extends DBContext {
 
     public boolean insertTokenForget(Token token) {
-        invalidateUserTokens(token.getUserId()); //vô hiệu quá các token cũ cùng userID
+        deleteUserTokens(token.getUserId()); //Xóa các token cũ của user trước khi thêm mới
 
-        String sql = "INSERT INTO [dbo].[tokenPassword] "
-                + "([token], [expiryTime], [isUsed], [UserID]) "
+        String sql = "INSERT INTO tokenPassword "
+                + "(token, expiryTime, isUsed, UserID) "
                 + "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -43,15 +43,14 @@ public class TokenDAO extends DBContext {
         }
     }
 
-    public void invalidateUserTokens(int userId) {
-        String sql = "UPDATE [dbo].[tokenPassword] SET [isUsed] = 1 "
-                + "WHERE [UserID] = ? AND [isUsed] = 0";
+    public void deleteUserTokens(int userId) {
+        String sql = "DELETE FROM tokenPassword WHERE UserID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error invalidating previous tokens: " + e.getMessage());
+            System.out.println("Error deleting previous tokens: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -79,7 +78,7 @@ public class TokenDAO extends DBContext {
 
     public void updateStatus(Token token) {
         System.out.println("token = " + token);
-        String sql = "UPDATE [dbo].[tokenPassword]\n"
+        String sql = "UPDATE tokenPassword\n"
                 + "   SET [isUsed] = ?\n"
                 + " WHERE token = ?";
         try {

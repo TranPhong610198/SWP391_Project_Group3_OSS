@@ -234,7 +234,7 @@ public class UserDAO extends DBContext {
     /**
      * *****************************************************
      */
-    private String generateUniqueUsername(String baseUsername) {
+    public String generateUniqueUsername(String baseUsername) {
         String username = baseUsername;
         int counter = 1;
         UserDAO UserDAO = new UserDAO();
@@ -455,6 +455,43 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public boolean deleteUser(int userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, userId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public int insertUser(User user) {
+        String sql = "INSERT INTO users (username, email, password_hash, full_name, gender, mobile, role, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, 'active')";
+        try (PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            st.setString(1, user.getUsername());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPasswordHash());
+            st.setString(4, user.getFullName());
+            st.setString(5, user.getGender());
+            st.setString(6, user.getMobile());
+            st.setString(7, user.getRole().toLowerCase());
+
+            int affectedRows = st.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = st.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 ////////
 
