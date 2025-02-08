@@ -48,9 +48,13 @@ public class LoginControl extends HttpServlet {
                 User existingUser = userDao.checkExistEmail(email);
 
                 if (existingUser != null) {
-                    if ("pending".equals(existingUser.getStatus())) {
+                    if ("inactive".equals(existingUser.getStatus())) {
+                        request.setAttribute("mess", "Tài khoản của bạn đã bị chặn.");
+                        request.getRequestDispatcher("login.jsp").forward(request, response);
+                        return;
+                    } else if ("pending".equals(existingUser.getStatus())) {
                         userDao.activateUser(existingUser.getId());
-                        tokenDao.deleteUserTokens(existingUser.getId()); 
+                        tokenDao.deleteUserTokens(existingUser.getId());
                     }
 
                     HttpSession session = request.getSession();
@@ -63,7 +67,6 @@ public class LoginControl extends HttpServlet {
                     existingUser = userDao.checkExistEmail(email);
                 }
 
-                // lưu session
                 HttpSession session = request.getSession();
                 session.setAttribute("acc", existingUser);
                 session.setAttribute("userID", existingUser.getId());
@@ -101,17 +104,19 @@ public class LoginControl extends HttpServlet {
         User account = userDao.checkAccount(username, password);
 
         if (account == null) {
-            // Sai tên đăng nhập hoặc mật khẩu
             request.setAttribute("mess", "Tên đăng nhập hoặc mật khẩu không đúng.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-            if ("pending".equals(account.getStatus())) {
+            if ("inactive".equals(account.getStatus())) {
+                request.setAttribute("mess", "Tài khoản của bạn đã bị chặn.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            } else if ("pending".equals(account.getStatus())) {
                 // Gửi token xác minh qua email
                 Email emailUtil = new Email();
                 String token = emailUtil.generateToken();
                 LocalDateTime expiryTime = emailUtil.expireDateTime();
 
-                // Lưu token mới vào database
                 Token verificationToken = new Token(account.getId(), false, token, expiryTime);
                 tokenDao.insertTokenForget(verificationToken);
 
@@ -125,13 +130,13 @@ public class LoginControl extends HttpServlet {
 
                 request.setAttribute("mess", "Email của bạn chưa được xác thực. Một email xác thực đã được gửi đến bạn.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                // Đăng nhập thành công
-                HttpSession session = request.getSession();
-                session.setAttribute("acc", account);
-                session.setAttribute("userID", account.getId());
-                response.sendRedirect("index.jsp");
+                return;
             }
+            
+            HttpSession session = request.getSession();
+            session.setAttribute("acc", account);
+            session.setAttribute("userID", account.getId());
+            response.sendRedirect("index.jsp");
         }
     }
 }

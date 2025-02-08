@@ -28,7 +28,6 @@ public class VerifyTokenControl extends HttpServlet {
         Token storedToken = tokenDao.getTokenPassword(token);
 
         if (storedToken == null) {
-            // ko có token trong database
             request.setAttribute("mess", "Mã xác thực không hợp lệ.");
             request.getRequestDispatcher("login").forward(request, response);
             return;
@@ -39,7 +38,7 @@ public class VerifyTokenControl extends HttpServlet {
             User user = userDao.getUserById(storedToken.getUserId());
             
             if (user != null) {
-                // tạo token mới và insert
+                // tạo token mới 
                 String newToken = emailUtil.generateToken();
                 LocalDateTime newExpiryTime = emailUtil.expireDateTime();
                 

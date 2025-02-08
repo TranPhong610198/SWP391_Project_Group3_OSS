@@ -105,7 +105,6 @@ public class RegisterControl extends HttpServlet {
             TokenDAO tokenDao = new TokenDAO();
             Email emailUtil = new Email();
 
-            // kiểm tra user tồn tại 
             User checkExistUsername = userDao.checkExistUsername(username);
             if (checkExistUsername != null) {
                 request.setAttribute("error", "Tên người dùng đã tồn tại!");
@@ -142,7 +141,6 @@ public class RegisterControl extends HttpServlet {
             String token = emailUtil.generateToken();
             LocalDateTime expiryTime = emailUtil.expireDateTime();
 
-            // insert token
             Token verificationToken = new Token(userId, false, token, expiryTime);
             tokenDao.insertTokenForget(verificationToken);
 
