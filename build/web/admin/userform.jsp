@@ -127,7 +127,7 @@
             <form action="addUser" method="post">
                 <div class="form-group">
                     <label class="required">Full Name:</label>
-                    <input type="text" name="fullName" required>
+                    <input type="text" name="fullname" required>
                 </div>
                 <div class="form-group">
                     <label class="required">Username:</label>
@@ -152,16 +152,16 @@
                 </div>
                 <div class="form-group">
                     <label class="required">Mobile:</label>
-                    <input type="tel" name="mobile" required
+                    <input type="tel" name="phone" required
                            pattern="[0-9]{10}"
                            title="Số điện thoại phải có 10 chữ số">
                 </div>    
                 <div class="form-group">
                     <label class="required">Gender:</label>
                     <select name="gender" required>
-                        <option value="">Select Gender</option>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="other">Khác</option>
                     </select>
                 </div>
                 <div class="form-group">

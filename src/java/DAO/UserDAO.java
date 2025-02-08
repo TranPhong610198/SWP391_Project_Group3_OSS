@@ -489,7 +489,7 @@ public class UserDAO extends DBContext {
     }
 
     public boolean createUser(User user) {
-        String sql = "INSERT INTO users (full_name, username, password_hash, email, mobile, gender, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (full_name, username, password_hash, email, mobile, gender, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getFullName());
@@ -498,9 +498,9 @@ public class UserDAO extends DBContext {
             ps.setString(4, user.getEmail());
             ps.setString(5, user.getMobile());
             ps.setString(6, user.getGender());
-
             ps.setString(7, user.getRole());
-
+            ps.setString(8, user.getStatus());
+            
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {

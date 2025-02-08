@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 import utils.BCrypt;
 
 @WebServlet(name = "UserAddServlet", urlPatterns = "/addUser")
@@ -19,61 +20,95 @@ public class AddUser extends HttpServlet {
         request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
     }
 
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Get parameters from the form
+            response.setContentType("text/html;charset=UTF-8");
+            String fullname = request.getParameter("fullname");
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            String repassword = request.getParameter("repassword");
+            String re_pass = request.getParameter("repassword");
             String email = request.getParameter("email");
-            String fullName = request.getParameter("fullName");
+            String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
-            String mobile = request.getParameter("mobile");
             String role = request.getParameter("role");
+ 
+            System.out.println("fullname: " + fullname);
+            System.out.println("username: " + username);
+            System.out.println("password: " + password);
+            System.out.println("re_pass: " + re_pass);
+            System.out.println("email: " + email);
+            System.out.println("phone: " + phone);
+            System.out.println("gender: " + gender);
+            System.out.println("role: " + role);
 
-            // Input validation
-            if (username == null || username.trim().isEmpty() ||
-                password == null || password.trim().isEmpty() ||
-                email == null || email.trim().isEmpty() ||
-                fullName == null || fullName.trim().isEmpty() ||
-                gender == null || gender.trim().isEmpty() ||
-                mobile == null || mobile.trim().isEmpty() ||
-                role == null || role.trim().isEmpty()) {
-                
-                request.setAttribute("error", "All fields are required");
+            request.setAttribute("fullname", fullname);
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.setAttribute("phone", phone);
+            request.setAttribute("gender", gender);
+            request.setAttribute("role", role);
+
+            // Validate input
+            if (isNullOrEmpty(fullname) || isNullOrEmpty(username)
+                    || isNullOrEmpty(password) || isNullOrEmpty(re_pass)
+                    || isNullOrEmpty(email) || isNullOrEmpty(phone)
+                    || isNullOrEmpty(gender) || isNullOrEmpty(role)) {
+                request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
                 return;
             }
 
-            // Check if passwords match
-            if (!password.equals(repassword)) {
-                request.setAttribute("error", "Passwords do not match");
+            // Validate fullname
+            if (!Pattern.matches("^([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+([ ]([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+)*$", fullname)) {
+                request.setAttribute("error", "Vui lòng nhập họ và tên hợp lệ.");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
                 return;
             }
 
-            // Create UserDAO instance
-            UserDAO userDAO = new UserDAO();
-
-            // Check if username already exists
-            if (userDAO.checkExistUsername(username) != null) {
-                request.setAttribute("error", "Username already exists");
+            // Validate username
+            if (!Pattern.matches("^[a-zA-Z0-9]{4,20}$", username)) {
+                request.setAttribute("error", "Tên người dùng phải dài từ 4-20 ký tự và không được chứa ký tự đặc biệt.");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
                 return;
             }
 
-            // Check if email already exists
-            if (userDAO.checkExistEmail(email) != null) {
-                request.setAttribute("error", "Email already exists");
+            // Validate password match
+            if (!password.equals(re_pass)) {
+                request.setAttribute("error", "Mật khẩu không khớp!");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
                 return;
             }
 
-            // Check if mobile already exists
-            if (userDAO.checkExistPhone(mobile) != null) {
-                request.setAttribute("error", "Phone number already exists");
+            // Validate phone
+            if (!Pattern.matches("^(\\+84|0)[1-9][0-9]{8,9}$", phone)) {
+                request.setAttribute("error", "Vui lòng nhập số điện thoại Việt Nam hợp lệ.");
+                request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
+                return;
+            }
+
+            UserDAO userDao = new UserDAO();
+
+            User checkExistUsername = userDao.checkExistUsername(username);
+            if (checkExistUsername != null) {
+                request.setAttribute("error", "Tên người dùng đã tồn tại!");
+                request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
+                return;
+            }
+            User checkExistEmail = userDao.checkExistEmail(email);
+            if (checkExistEmail != null) {
+                request.setAttribute("error", "Email đã được đăng ký!");
+                request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
+                return;
+            }
+            User checkExistPhone = userDao.checkExistPhone(phone);
+            if (checkExistPhone != null) {
+                request.setAttribute("error", "Số điện thoại đã được đăng ký!");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
                 return;
             }
@@ -83,14 +118,14 @@ public class AddUser extends HttpServlet {
             newUser.setUsername(username);
             newUser.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
             newUser.setEmail(email);
-            newUser.setFullName(fullName);
+            newUser.setFullName(fullname);
             newUser.setGender(gender);
-            newUser.setMobile(mobile);
+            newUser.setMobile(phone);
             newUser.setRole(role);
             newUser.setStatus("active");
 
             // Add user to database
-            boolean success = userDAO.createUser(newUser);
+            boolean success = userDao.createUser(newUser);
 
             if (success) {
                 // Redirect to user list with success message
