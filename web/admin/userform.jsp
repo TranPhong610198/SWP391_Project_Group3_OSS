@@ -159,8 +159,8 @@
                 <div class="form-group">
                     <label class="required">Gender:</label>
                     <select name="gender" required>
-                        <option value="male">Nam</option>
-                        <option value="female">Nữ</option>
+                        <option value="Male">Nam</option>
+                        <option value="Female">Nữ</option>
                         <option value="other">Khác</option>
                     </select>
                 </div>

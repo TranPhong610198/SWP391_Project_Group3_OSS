@@ -93,20 +93,16 @@ public class UserDetailServlet extends HttpServlet {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
             UserDAO userDAO = new UserDAO();
-
+            
             if (userDAO.deleteUser(userId)) {
+                // Thêm thông báo thành công nếu cần
                 request.getSession().setAttribute("successMessage", "Xóa người dùng thành công!");
             } else {
-                request.getSession().setAttribute("errorMessage", "Không thể xóa người dùng! Có thể user này có dữ liệu liên quan.");
+                request.getSession().setAttribute("errorMessage", "Không thể xóa người dùng!");
             }
-
+            
             response.sendRedirect(request.getContextPath() + "/userlists");
         } catch (NumberFormatException e) {
-            request.getSession().setAttribute("errorMessage", "ID không hợp lệ!");
-            response.sendRedirect(request.getContextPath() + "/userlists");
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("errorMessage", "Lỗi hệ thống khi xóa người dùng!");
             response.sendRedirect(request.getContextPath() + "/userlists");
         }
     }

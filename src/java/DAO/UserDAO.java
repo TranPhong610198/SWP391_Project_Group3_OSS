@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import entity.User;
 import Context.DBContext;
 import entity.UserAddress;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 import utils.BCrypt;
-import java.sql.Connection;
+
 
 /**
  *
@@ -459,40 +459,16 @@ public class UserDAO extends DBContext {
         return 0;
     }
 
-    private String getUserImagePath(int userId) {
-        String sql = "SELECT avatar FROM users WHERE ID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("avatar"); // Trả về đường dẫn ảnh
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null; // Không có ảnh hoặc lỗi xảy ra
-    }
+    
 
     public boolean deleteUser(int userID) {
-        String imagePath = getUserImagePath(userID); // Lấy đường dẫn ảnh trước khi xóa user
         String sql = "DELETE FROM users WHERE ID = ?";
-
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, userID);
-            int affectedRows = st.executeUpdate();
-
-            if (affectedRows > 0) {
-                // Xóa file ảnh khỏi thư mục
-                if (imagePath != null && !imagePath.isEmpty()) {
-                    File file = new File(imagePath);
-                    if (file.exists()) {
-                        file.delete(); // Xóa ảnh trên server
-                    }
-                }
-                return true;
-            }
+            st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return false;
     }

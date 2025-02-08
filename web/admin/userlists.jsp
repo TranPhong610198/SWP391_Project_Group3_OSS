@@ -23,7 +23,7 @@
     </head>
     <body>
         <div class="container mt-4">
-            
+
             <h2>Danh Sách Người Dùng</h2>
 
             <!-- Filter and Search Form -->
@@ -123,7 +123,13 @@
                             <td>${user.fullName}</td>
                             <td>${user.username}</td>
                             <td class="password-column">${user.passwordHash}</td>
-                            <td>${user.gender}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${user.gender == 'male' or user.gender == 'Male'}">Nam</c:when>
+                                    <c:when test="${user.gender == 'female' or user.gender == 'Female'}">Nữ</c:when>
+                                    <c:otherwise>Khác</c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>${user.email}</td>
                             <td>${user.mobile}</td>
                             <td>${user.role}</td>
@@ -161,8 +167,8 @@
                 </ul>
             </nav>
         </div>
-                            
-        
+
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </body>
