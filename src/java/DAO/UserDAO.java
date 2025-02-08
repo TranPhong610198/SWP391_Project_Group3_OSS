@@ -24,28 +24,28 @@ public class UserDAO extends DBContext {
      * *****************************************************
      */
     public User checkAccount(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username =?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);
-            try (ResultSet rs = st.executeQuery()) {
-                if (rs.next()) {
-                    String storedPasswordHash = rs.getString("password_hash");
-                    if (BCrypt.checkpw(password, storedPasswordHash)) {
-                        return new User(
-                                rs.getInt("id"),
-                                rs.getString("username"),
-                                rs.getString("email"),
-                                storedPasswordHash, // Important: Use the stored hash
-                                rs.getString("full_name"),
-                                rs.getString("gender"),
-                                rs.getString("mobile"),
-                                rs.getString("avatar"),
-                                rs.getString("role"),
-                                rs.getString("status"),
-                                rs.getString("created_at"),
-                                rs.getString("updated_at")
-                        );
-                    }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String storedHash = rs.getString("password_hash");
+                if (BCrypt.checkpw(password, storedHash)) {
+                    return new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        storedHash,
+                        rs.getString("full_name"),
+                        rs.getString("gender"),
+                        rs.getString("mobile"),
+                        rs.getString("avatar"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at"),
+                        rs.getString("updated_at")
+                    );
                 }
             }
         } catch (SQLException e) {

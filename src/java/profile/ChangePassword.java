@@ -61,7 +61,7 @@ public class ChangePassword extends HttpServlet {
     throws ServletException, IOException {
          HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("acc") == null) {
             response.sendRedirect("login.jsp");
             return;
         }
@@ -81,7 +81,7 @@ public class ChangePassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("acc");
 
         if (user == null) {
             response.sendRedirect("login.jsp");
@@ -107,7 +107,7 @@ public class ChangePassword extends HttpServlet {
                 if (updated) {
                     request.setAttribute("success", "Đổi mật khẩu thành công!");
                     user = userDAO.getUserById(user.getId()); 
-                    session.setAttribute("user", user); 
+                    session.setAttribute("acc", user); 
                 } else {
                     request.setAttribute("error", "Đã có lỗi xảy ra, vui lòng thử lại!");
                 }
