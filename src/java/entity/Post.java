@@ -11,8 +11,9 @@ public class Post {
     private String author;
     private Timestamp updatedAt;
     private String category;
+    private String status; // Nếu cần thiết, có thể thêm trường này cho status của bài viết
 
-    public Post(int id, String title, String thumbnail, String summary, String content, String author, Timestamp updatedAt, String category) {
+    public Post(int id, String title, String thumbnail, String summary, String content, String author, Timestamp updatedAt, String category, String status) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -21,6 +22,7 @@ public class Post {
         this.author = author;
         this.updatedAt = updatedAt;
         this.category = category;
+        this.status = status;
     }
 
     public Post(String title, String content, String category) {
@@ -91,5 +93,13 @@ public class Post {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
