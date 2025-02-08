@@ -123,7 +123,7 @@
                     ${param.message}
                 </div>
             </c:if>
-            <form action="userdetail/add" method="post" enctype="multipart/form-data">
+            <form action="userdetailAdd" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create">
 
                 <!--                <div class="form-group">
@@ -135,7 +135,30 @@
                     <label class="required">Full Name:</label>
                     <input type="text" name="fullName" required>
                 </div>
-
+                <div class="form-group">
+                    <label class="required">Username:</label>
+                    <input type="username" name="username" placeholder="Tên đăng nhập" required minlength="4" maxlength="20" 
+                           pattern="[A-Za-z0-9]+" title="Tên người dùng phải dài từ 4-20 ký tự và không được chứa ký tự đặc biệt." 
+                           value="${username != null ? username : ''}">
+                </div>
+                <div class="form-group">
+                    <label class="required">Password:</label>
+                    <input type="password" name="password" placeholder="Mật khẩu">
+                    
+                </div>
+                <div class="form-group">
+                    
+                    <label class="required">Re-Password:</label>
+                    <input type="password" name="repassword" placeholder="Nhập lại mật khẩu" required>
+                </div>    
+                <div class="form-group">
+                    <label class="required">Email:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">Mobile:</label>
+                    <input type="tel" name="mobile" required>
+                </div>    
                 <div class="form-group">
                     <label class="required">Gender:</label>
                     <select name="gender" required>
@@ -144,22 +167,10 @@
                         <option value="F">Female</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label class="required">Email:</label>
-                    <input type="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="required">Mobile:</label>
-                    <input type="tel" name="mobile" required>
-                </div>
                 <!--<div class="form-group">
                     <label>Address:</label>
                     <textarea name="address"></textarea>
                 </div> -->
-
-
                 <div class="form-group">
                     <label class="required">Role:</label>
                     <select name="role" required>
@@ -171,7 +182,7 @@
 
                 <div class="form-actions">
                     <button type="submit">Create User</button>
-                    <a href="${pageContext.request.contextPath}/userlists" class="btn-cancel">Cancel</a>
+                    <a href="userlists" class="btn-cancel">Cancel</a>
                 </div>
             </form>
         </div>

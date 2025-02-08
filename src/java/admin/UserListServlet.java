@@ -103,7 +103,7 @@ public class UserListServlet extends HttpServlet {
             request.setAttribute("sortDir", sortDir);
 
             // Forward đến trang JSP
-            request.getRequestDispatcher("userlists.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/userlists.jsp").forward(request, response);
             
         } catch (Exception e) {
             e.printStackTrace();

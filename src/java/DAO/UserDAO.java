@@ -495,6 +495,33 @@ public boolean updateAvatar(int userId, String avatarPath) {
         }
         return -1;
     }
+    public List<User> GetAllUsers(){
+        List<User> list = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM users";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                User user = new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10),
+                        rs.getString(11),
+                        rs.getString(12));
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
 ////////
 
     public static void main(String[] args) {

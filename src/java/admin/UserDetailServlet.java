@@ -22,8 +22,6 @@ public class UserDetailServlet extends HttpServlet {
         
         if (pathInfo.startsWith("/view")) {
             handleViewRequest(request, response);
-        } else if (pathInfo.startsWith("/edit")) {
-            handleEditRequest(request, response);
         }
     }
     
@@ -46,7 +44,6 @@ public class UserDetailServlet extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         
         try {
-            // Get user ID and validate it exists
             int userId = Integer.parseInt(request.getParameter("id"));
             User existingUser = userDAO.getUserById(userId);
             
@@ -55,20 +52,17 @@ public class UserDetailServlet extends HttpServlet {
                 return;
             }
             
-            // Update user fields
             existingUser.setFullName(request.getParameter("fullName"));
             existingUser.setGender(request.getParameter("gender"));
             existingUser.setEmail(request.getParameter("email"));
             existingUser.setMobile(request.getParameter("mobile"));
             
-            // Only admin can update role and status
             User currentUser = (User) session.getAttribute("currentUser");
             if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) {
                 existingUser.setRole(request.getParameter("role"));
                 existingUser.setStatus(request.getParameter("status"));
             }
             
-            // Validate fields
             if (existingUser.getFullName() == null || existingUser.getFullName().trim().isEmpty()) {
                 errors.put("fullName", "Full name is required");
             }
@@ -76,7 +70,6 @@ public class UserDetailServlet extends HttpServlet {
             if (existingUser.getEmail() == null || existingUser.getEmail().trim().isEmpty()) {
                 errors.put("email", "Email is required");
             } else {
-                // Check if email is already used by another user
                 User userWithEmail = userDAO.checkExistEmail(existingUser.getEmail());
                 if (userWithEmail != null && userWithEmail.getId() != userId) {
                     errors.put("email", "Email is already in use");
@@ -84,32 +77,27 @@ public class UserDetailServlet extends HttpServlet {
             }
             
             if (existingUser.getMobile() != null && !existingUser.getMobile().trim().isEmpty()) {
-                // Check if mobile is already used by another user
                 User userWithMobile = userDAO.checkExistPhone(existingUser.getMobile());
                 if (userWithMobile != null && userWithMobile.getId() != userId) {
                     errors.put("mobile", "Mobile number is already in use");
                 }
             }
             
-            // If there are validation errors
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
                 request.setAttribute("user", existingUser);
-                request.getRequestDispatcher("/userdetail.jsp").forward(request, response);
+                request.getRequestDispatcher("/admin/userdetail.jsp").forward(request, response);
                 return;
             }
             
-            // Update user in database
             boolean updateSuccess = userDAO.updateProfile(existingUser);
             
             if (updateSuccess) {
-                // Set success message
                 session.setAttribute("successMessage", "User details updated successfully");
             } else {
                 session.setAttribute("errorMessage", "Failed to update user details");
             }
             
-            // Redirect back to user detail page
             response.sendRedirect(request.getContextPath() + 
                 "/userdetail/view?id=" + userId);
             
@@ -127,7 +115,7 @@ public class UserDetailServlet extends HttpServlet {
             
             if (user != null) {
                 request.setAttribute("user", user);
-                request.getRequestDispatcher("/userdetail.jsp")
+                request.getRequestDispatcher("/admin/userdetail.jsp")
                       .forward(request, response);
             } else {
                 response.sendRedirect(request.getContextPath() + "/userlists");
@@ -135,10 +123,5 @@ public class UserDetailServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/userlists");
         }
-    }
-    
-    private void handleEditRequest(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        handleViewRequest(request, response);
     }
 }

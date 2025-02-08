@@ -168,7 +168,7 @@
                          alt="User Avatar" onerror="this.src='/assets/images/default-avatar.png'">
                 </div>
 
-                <form action="${pageContext.request.contextPath}/userdetail" method="post">
+                <form action="userdetail" method="post">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="id" value="${user.id}">
 
@@ -243,7 +243,7 @@
                     
                     <div class="form-actions">
                         <button type="submit">Save Changes</button>
-                        <a href="${pageContext.request.contextPath}/userlists" class="btn-cancel">Cancel</a>
+                        <a href="/fashionshop/userlists" class="btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>
