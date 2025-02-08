@@ -33,18 +33,18 @@ public class UserDAO extends DBContext {
                 String storedHash = rs.getString("password_hash");
                 if (BCrypt.checkpw(password, storedHash)) {
                     return new User(
-                        rs.getInt("id"),
-                        rs.getString("username"),
-                        rs.getString("email"),
-                        storedHash,
-                        rs.getString("full_name"),
-                        rs.getString("gender"),
-                        rs.getString("mobile"),
-                        rs.getString("avatar"),
-                        rs.getString("role"),
-                        rs.getString("status"),
-                        rs.getString("created_at"),
-                        rs.getString("updated_at")
+                            rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            storedHash,
+                            rs.getString("full_name"),
+                            rs.getString("gender"),
+                            rs.getString("mobile"),
+                            rs.getString("avatar"),
+                            rs.getString("role"),
+                            rs.getString("status"),
+                            rs.getString("created_at"),
+                            rs.getString("updated_at")
                     );
                 }
             }
@@ -271,7 +271,7 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updatePassword(int userId, String newPassword) {
-        String sql = "UPDATE users SET password_hash =?, updated_at = GETDATE() WHERE id =?"; 
+        String sql = "UPDATE users SET password_hash =?, updated_at = GETDATE() WHERE id =?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
             st.setString(1, hashedPassword);
@@ -488,30 +488,25 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public int insertUser(User user) {
-        String sql = "INSERT INTO users (username, email, password_hash, full_name, gender, mobile, role, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, 'active')";
-        try (PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            st.setString(1, user.getUsername());
-            st.setString(2, user.getEmail());
-            st.setString(3, user.getPasswordHash());
-            st.setString(4, user.getFullName());
-            st.setString(5, user.getGender());
-            st.setString(6, user.getMobile());
-            st.setString(7, user.getRole().toLowerCase());
+    public boolean createUser(User user) {
+        String sql = "INSERT INTO users (full_name, username, password_hash, email, mobile, gender, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getFullName());
+            ps.setString(2, user.getUsername());
+            ps.setString(3, user.getPasswordHash());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getMobile());
+            ps.setString(6, user.getGender());
 
-            int affectedRows = st.executeUpdate();
-            if (affectedRows > 0) {
-                try (ResultSet rs = st.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        return rs.getInt(1);
-                    }
-                }
-            }
+            ps.setString(7, user.getRole());
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return -1;
     }
 
     public List<User> GetAllUsers() {
