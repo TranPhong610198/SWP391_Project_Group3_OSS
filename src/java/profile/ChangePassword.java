@@ -112,18 +112,11 @@ public class ChangePassword extends HttpServlet {
                     request.setAttribute("error", "Đã có lỗi xảy ra, vui lòng thử lại!");
                 }
             }
-
         } else {
-            
             request.setAttribute("error", "Hành động không hợp lệ.");
         }
-
         request.getRequestDispatcher("changepassword.jsp").forward(request, response);
     }
-    
-    
-    
-
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description

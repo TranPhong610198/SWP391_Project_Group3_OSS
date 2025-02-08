@@ -271,9 +271,9 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updatePassword(int userId, String newPassword) {
-        String sql = "UPDATE users SET password_hash =?, updated_at = GETDATE() WHERE id =?"; // Or your database's equivalent for getting the current time
+        String sql = "UPDATE users SET password_hash =?, updated_at = GETDATE() WHERE id =?"; 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
-            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12)); // Hash the new password
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
             st.setString(1, hashedPassword);
             st.setInt(2, userId);
             return st.executeUpdate() > 0;
