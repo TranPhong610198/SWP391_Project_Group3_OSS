@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-4 text-center mb-3">
-                                    <img src="${sessionScope.acc.avatar}" alt="avatar"
+                                    <img src="${user.avatar}" alt="avatar"
                                          onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
                                          class="img-fluid rounded-circle"
                                          style="max-width: 150px;">

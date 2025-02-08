@@ -55,6 +55,7 @@ public class UserDetailServlet extends HttpServlet {
             int id = Integer.parseInt(userId);
             UserDAO userDAO = new UserDAO();
             User user = userDAO.getUserById(id);
+            request.setAttribute("avatar", user.getAvatar());
             
             if (user == null) {
                 response.sendRedirect(request.getContextPath() + "/userlists");
