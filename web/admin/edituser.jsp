@@ -62,6 +62,8 @@
                                     <select class="form-select" id="role" name="role" disabled>
                                         <option value="admin" ${user.role == 'admin' ? 'selected' : ''}>Admin</option>
                                         <option value="customer" ${user.role == 'customer' ? 'selected' : ''}>Customer</option>
+                                        <option value="sale" ${user.role == 'Sale' ? 'selected' : ''}>Sale</option>
+                                        <option value="marketing" ${user.role == 'Marketing' ? 'selected' : ''}>Marketing</option>
                                     </select>
                                     <input type="hidden" name="role" value="${user.role}">
                                 </div>
@@ -72,6 +74,7 @@
                                     <select class="form-select" id="status" name="status">
                                         <option value="active" ${user.status == 'active' ? 'selected' : ''}>Active</option>
                                         <option value="inactive" ${user.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                        <option value="pending" ${user.status == 'pending' ? 'selected' : ''}>Pending</option>
                                     </select>
                                 </div>
 

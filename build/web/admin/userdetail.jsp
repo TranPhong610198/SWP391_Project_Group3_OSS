@@ -58,48 +58,51 @@
                                         <tr>
                                             <th>Trạng thái:</th>
                                             <td>
-                                                <span class="badge ${user.status == 'active' ? 'bg-success' : 'bg-danger'}">
-                                                    ${user.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Ngày tạo:</th>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${not empty user.createdAt}">
-                                                        ${fn:substringBefore(user.createdAt, '.')}
-                                                    </c:when>
-                                                    <c:otherwise>Không có dữ liệu</c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                        </tr>
+                                                <span class="badge
+                                                      ${user.status == 'active' ? 'bg-success' : 
+                                                        (user.status == 'pending' ? 'bg-warning' : 'bg-danger')}">
+                                                          ${user.status}
+                                                      </span>
+                                                </td>
 
-                                        <tr>
-                                            <th>Cập nhật lần cuối:</th>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${not empty user.updatedAt}">
-                                                        ${fn:substringBefore(user.updatedAt, '.')}
-                                                    </c:when>
-                                                    <c:otherwise>Không có dữ liệu</c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <th>Ngày tạo:</th>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${not empty user.createdAt}">
+                                                            ${fn:substringBefore(user.createdAt, '.')}
+                                                        </c:when>
+                                                        <c:otherwise>Không có dữ liệu</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>Cập nhật lần cuối:</th>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${not empty user.updatedAt}">
+                                                            ${fn:substringBefore(user.updatedAt, '.')}
+                                                        </c:when>
+                                                        <c:otherwise>Không có dữ liệu</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="text-center mt-3">
-                                <a href="../userlists" class="btn btn-secondary">Quay lại danh sách</a>
-                                <a href="edit?id=${user.id}" class="btn btn-primary">Chỉnh sửa</a>
+                                <div class="text-center mt-3">
+                                    <a href="../userlists" class="btn btn-secondary">Quay lại danh sách</a>
+                                    <a href="edit?id=${user.id}" class="btn btn-primary">Chỉnh sửa</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        </body>
+    </html>

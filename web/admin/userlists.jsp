@@ -41,6 +41,8 @@
                             <option value="">Tất cả vai trò</option>
                             <option value="Admin" ${role == 'Admin' ? 'selected' : ''}>Admin</option>
                             <option value="Customer" ${role == 'Customer' ? 'selected' : ''}>Customer</option>
+                            <option value="Sale" ${role == 'Sale' ? 'selected' : ''}>Sale</option>
+                            <option value="Marleting" ${role == 'Marketing' ? 'selected' : ''}>Marketing</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -48,6 +50,7 @@
                             <option value="">Tất cả trạng thái</option>
                             <option value="Active" ${status == 'Active' ? 'selected' : ''}>Active</option>
                             <option value="Inactive" ${status == 'Inactive' ? 'selected' : ''}>Inactive</option>
+                            <option value="Pending" ${status == 'Pending' ? 'selected' : ''}>Pending</option>
                         </select>
                     </div>
                     <div class="col-md-4">

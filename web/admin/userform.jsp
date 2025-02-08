@@ -175,8 +175,10 @@
                     <label class="required">Role:</label>
                     <select name="role" required>
                         <option value="">Select Role</option>
-                        <option value="USER">User</option>
+                        <option value="CUSTOMER">Customer</option>
                         <option value="ADMIN">Admin</option>
+                        <option value="SALE">Sale</option>
+                        <option value="MARKETING">Marketing</option>
                     </select>
                 </div>
 
