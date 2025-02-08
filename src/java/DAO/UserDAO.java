@@ -383,21 +383,20 @@ public class UserDAO extends DBContext {
         }
     }
 
-public boolean updateAvatar(int userId, String avatarPath) {
-    String sql = "UPDATE users SET avatar = ?, updated_at = GETDATE() WHERE id = ?;";
-    try ( 
-         PreparedStatement st = connection.prepareStatement(sql)) {
-        st.setString(1, avatarPath);
-        st.setInt(2, userId);
-        return st.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();  // Ghi log lỗi thay vì chỉ in
-        return false;
+    public boolean updateAvatar(int userId, String avatarPath) {
+        String sql = "UPDATE users SET avatar = ?, updated_at = GETDATE() WHERE id = ?;";
+        try (
+                PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, avatarPath);
+            st.setInt(2, userId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();  // Ghi log lỗi thay vì chỉ in
+            return false;
+        }
     }
-}
 
 ///////VTD
-
     public List<User> getUsersByFilter(String sql, List<Object> params) {
         List<User> users = new ArrayList<>();
         try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -459,10 +458,29 @@ public boolean updateAvatar(int userId, String avatarPath) {
         return 0;
     }
 
-    public boolean deleteUser(int userId) {
-        String sql = "DELETE FROM users WHERE id = ?";
+    public boolean deleteUser(int userID) {
+        String sql = "DELETE FROM users WHERE UserID = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, userId);
+            st.setInt(1, userID);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public boolean updateUserInfo(User user) {
+        String sql = "UPDATE users SET full_name=?, email=?, mobile=?, gender=?, role=?, status=?, updated_at=GETDATE() WHERE id=?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, user.getFullName());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getMobile());
+            st.setString(4, user.getGender());
+            st.setString(5, user.getRole());
+            st.setString(6, user.getStatus());
+            st.setInt(7, user.getId());
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -495,13 +513,14 @@ public boolean updateAvatar(int userId, String avatarPath) {
         }
         return -1;
     }
-    public List<User> GetAllUsers(){
+
+    public List<User> GetAllUsers() {
         List<User> list = new ArrayList<>();
         try {
             String sql = "SELECT * FROM users";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 User user = new User(
                         rs.getInt(1),
                         rs.getString(2),
