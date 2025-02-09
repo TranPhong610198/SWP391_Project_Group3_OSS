@@ -85,9 +85,13 @@
                             </a>
                         </th>
                         <th>
-                            <a>Username</a></th>
-                        <th>
-                            <a>Password</a></th>
+                            <a href="userlists?sortField=username&sortDir=${sortField == 'username' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                                Tên đăng nhập ${sortField == 'username' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                            </a>
+                        </th>
+
+                        <!--                        <th>
+                                                    <a>Password</a></th>-->
                         <th>
                             <a href="userlists?sortField=gender&sortDir=${sortField == 'gender' && sortDir == 'asc' ? 'desc' : 'asc'}">
                                 Giới tính ${sortField == 'gender' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
@@ -122,7 +126,7 @@
                             <td>${user.id}</td>
                             <td>${user.fullName}</td>
                             <td>${user.username}</td>
-                            <td class="password-column">${user.passwordHash}</td>
+<!--                            <td class="password-column">${user.passwordHash}</td>-->
                             <td>
                                 <c:choose>
                                     <c:when test="${user.gender == 'male' or user.gender == 'Male'}">Nam</c:when>
