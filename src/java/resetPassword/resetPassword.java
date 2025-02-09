@@ -68,10 +68,11 @@ public class resetPassword extends HttpServlet {
             throws ServletException, IOException {
 //        processRequest(request, response);
         String token = request.getParameter("token");
-        request.setAttribute(token, token);
-        
-        request.getRequestDispatcher("resetPass.jsp").forward(request, response);
-        
+//        System.out.println(token);
+        request.setAttribute("token", token);
+
+        request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+
     }
 
     /**
@@ -86,8 +87,42 @@ public class resetPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        processRequest(request, response);
+
+        String token = request.getParameter("token");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
         
-              
+        if (!newPassword.equals(confirmPassword)) {
+            request.setAttribute("mess", "Mật khẩu xác nhận không khớp.");
+            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            return;
+        }
+
+        TokenDAO tokenDao = new TokenDAO();
+        UserDAO userDao = new UserDAO();
+
+        Token resetToken = tokenDao.getTokenPassword(token);
+
+        if (resetToken == null || resetToken.isIsUsed() || LocalDateTime.now().isAfter(resetToken.getExpiryTime())) {
+            request.setAttribute("mess", "Mã xác nhận không hợp lệ hoặc đã hết hạn.");
+            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            return;
+        }
+
+        // Cập nhật mật khẩu mới
+        String hashedPassword = MaHoa.toBcrypt(newPassword);
+        boolean updated = userDao.updatePassword(resetToken.getUserId(), hashedPassword);
+
+        if (updated) {
+            resetToken.setIsUsed(true);
+            tokenDao.updateStatus(resetToken);
+            request.setAttribute("mess", "Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.");
+        } else {
+            request.setAttribute("mess", "Không thể cập nhật mật khẩu, thử lại sau.");
+        }
+
+        request.getRequestDispatcher("login.jsp").forward(request, response);
 
     }
 

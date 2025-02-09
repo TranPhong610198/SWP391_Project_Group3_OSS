@@ -27,18 +27,26 @@
                     <h1>Đăng nhập</h1>
                     <div class="social-container">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid
-&redirect_uri=http://localhost:9999/fashionshop/login
-&response_type=code
-&client_id=371802530617-nupp3tq4lnrphcd50jnj3r4e2j31suea.apps.googleusercontent.com
-&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
+                           &redirect_uri=http://localhost:9999/fashionshop/login
+                           &response_type=code
+                           &client_id=371802530617-nupp3tq4lnrphcd50jnj3r4e2j31suea.apps.googleusercontent.com
+                           &approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <p>hoặc sử dụng tài khoản của bạn</p>
 
                     <c:if test="${not empty mess}">
-                        <div class="error-message" style="color: red; margin-bottom: 10px;">
-                            ${mess}
-                        </div>
+                        <c:if test="${mess.equals('Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.')}">
+                            <p style="color: green; margin-bottom: 10px;">
+                                ${mess}
+                            </p>
+                        </c:if>
+                        <c:if test="${!mess.equals('Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.')}">
+                            <div class="error-message" style="color: red; margin-bottom: 10px;">
+                                ${mess}
+                            </div>
+                        </c:if>
                     </c:if>
+
                     <input type="text" name="username" placeholder="Tên đăng nhập" required="">
                     <input type="password" name="password" placeholder="Mật khẩu" required="">
                     <a href="forgotpassword">Quên mật khẩu?</a>

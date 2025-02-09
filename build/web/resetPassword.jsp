@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -62,7 +63,18 @@
                                 <i class="fas fa-key form-icon"></i>
                                 <h3 class="fw-bold">Đặt Lại Mật Khẩu</h3>
                                 <p class="text-muted">Nhập mã xác nhận và mật khẩu mới</p>
-
+                                <c:if test="${!mess.isEmpty()}">
+                                    <c:if test="${mess.equals('Hệ thống đã gửi email xác nhận, vui lòng kiểm tra hộp thư.')}">
+                                        <p style="color: green; margin-bottom: 10px;">
+                                            ${mess}
+                                        </p>
+                                    </c:if>
+                                    <c:if test="${!(mess.equals('Hệ thống đã gửi email xác nhận, vui lòng kiểm tra hộp thư.'))}">
+                                        <p style="color: red; margin-bottom: 10px;">
+                                            ${mess}
+                                        </p>
+                                    </c:if>
+                                </c:if>
                             </div>
                             <div class="card-body p-4">
                                 <form action="resetpassword" method="POST">
