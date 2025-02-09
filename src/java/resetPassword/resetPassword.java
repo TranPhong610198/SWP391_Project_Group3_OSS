@@ -111,8 +111,8 @@ public class resetPassword extends HttpServlet {
         }
 
         // Cập nhật mật khẩu mới
-        String hashedPassword = MaHoa.toBcrypt(newPassword);
-        boolean updated = userDao.updatePassword(resetToken.getUserId(), hashedPassword);
+//        String hashedPassword = MaHoa.toBcrypt(newPassword);
+        boolean updated = userDao.updatePassword(resetToken.getUserId(), newPassword);
 
         if (updated) {
             resetToken.setIsUsed(true);
