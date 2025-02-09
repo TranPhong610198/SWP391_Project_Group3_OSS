@@ -41,7 +41,7 @@
                     </c:if>
                     <input type="text" name="username" placeholder="Tên đăng nhập" required="">
                     <input type="password" name="password" placeholder="Mật khẩu" required="">
-                    <a href="requestEmail">Quên mật khẩu?</a>
+                    <a href="forgotpassword">Quên mật khẩu?</a>
                     <button>Đăng nhập</button>
                 </form>
             </div>

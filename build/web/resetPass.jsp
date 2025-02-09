@@ -62,12 +62,12 @@
                                 <i class="fas fa-key form-icon"></i>
                                 <h3 class="fw-bold">Đặt Lại Mật Khẩu</h3>
                                 <p class="text-muted">Nhập mã xác nhận và mật khẩu mới</p>
+
                             </div>
                             <div class="card-body p-4">
-                                <form action="resetPassword.jsp" method="POST">
+                                <form action="resetpassword" method="POST">
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="verificationCode" 
-                                               placeholder="Nhập mã xác nhận" required>
+                                        <input type="hidden" class="form-control" name="token" value="${token}">
                                     </div>
                                     <div class="mb-3">
                                         <input type="password" class="form-control" name="newPassword" 
