@@ -11,8 +11,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
+            --primary:rgb(129, 33, 33);
+            --primary-dark: #b52626;
             --secondary: #64748b;
             --success: #10b981;
             --surface: #ffffff;
