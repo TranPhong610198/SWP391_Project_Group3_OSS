@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import entity.Token;
 import java.sql.ResultSet;
 import Context.DBContext;
-import java.time.LocalDateTime;
 
 public class TokenDAO extends DBContext {
 
@@ -62,6 +61,27 @@ public class TokenDAO extends DBContext {
             st.setString(1, token);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
+                return new Token(
+                        rs.getInt("id"),
+                        rs.getInt("userId"),
+                        rs.getBoolean("isUsed"),
+                        rs.getString("token"),
+                        rs.getTimestamp("expiryTime").toLocalDateTime()
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public Token getTokenByUserId(int userId) {
+        String sql = "Select * from [tokenPassword] where userId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
                 return new Token(
                         rs.getInt("id"),
                         rs.getInt("userId"),

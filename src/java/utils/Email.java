@@ -22,7 +22,7 @@ public class Email {
     private static final String USERNAME = "adswp391@gmail.com";
     private static final String PASSWORD = "njaf vowl xdlz rwsk";
 
-    private final int LIMIT_MINUS = 2; //2 minutes
+    private final int LIMIT_MINUS = 30;
 
     public String generateToken() {
         return UUID.randomUUID().toString();
@@ -75,7 +75,7 @@ public class Email {
                     + "<div class='content'><p>Xin chào %s,</p>"
                     + "<p>Fashion Shop xin thông bảo tài khoản của bạn đã được đăng ký thành công, vui lòng nhấp vào liên kết bên dưới để xác thực email của bạn.</p>"
                     + "<a href='%s' style='display:block;width:max-content;margin:0 auto;padding:10px;text-align:center;color:#ffffff;background-color:#4CAF50;border-radius:5px;text-decoration:none;'>Verify Account</a>"
-                    + "<p>Liên kết này sẽ hết hạn sau 2 phút.</p>"
+                    + "<p>Liên kết này sẽ hết hạn sau 30 phút.</p>"
                     + "<p>Trân trọng,<br>Từ Fashion Shop</p></div>"
                     + "</div>"
                     + "</body>"

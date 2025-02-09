@@ -20,6 +20,12 @@ public class VerifyTokenControl extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String token = request.getParameter("token");
+        
+        if (token == null || token.isEmpty()) {
+            request.setAttribute("mess", "Mã xác thực không hợp lệ.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
 
         TokenDAO tokenDao = new TokenDAO();
         UserDAO userDao = new UserDAO();
@@ -28,40 +34,17 @@ public class VerifyTokenControl extends HttpServlet {
         Token storedToken = tokenDao.getTokenPassword(token);
 
         if (storedToken == null) {
-            request.setAttribute("mess", "Mã xác thực không hợp lệ.");
-            request.getRequestDispatcher("login").forward(request, response);
+            request.setAttribute("mess", "Mã xác thực không hợp lệ hoặc đã hết hạn.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
 
         if (storedToken.isIsUsed()) {
-            // tìm user gắn với token
-            User user = userDao.getUserById(storedToken.getUserId());
-            
-            if (user != null) {
-                // tạo token mới 
-                String newToken = emailUtil.generateToken();
-                LocalDateTime newExpiryTime = emailUtil.expireDateTime();
-                
-                Token newVerificationToken = new Token(user.getId(), false, newToken, newExpiryTime);
-                tokenDao.insertTokenForget(newVerificationToken);
-                
-                // gửi mail
-                boolean emailSent = emailUtil.sendEmail(user, newToken);
-                
-                if (emailSent) {
-                    request.setAttribute("mess", "Mã xác thực trước đó của bạn đã hết hạn. Một email xác thực mới đã được gửi.");
-                } else {
-                    request.setAttribute("mess", "Không gửi được email xác thực mới. Vui lòng liên hệ bộ phận hỗ trợ.");
-                }
-            } else {
-                request.setAttribute("mess", "Không tìm thấy người dùng cho mã xác thực này.");
-            }
-            
+            request.setAttribute("mess", "Mã xác thực đã được sử dụng. Vui lòng đăng nhập.");
             request.getRequestDispatcher("login").forward(request, response);
             return;
         }
 
-        // Check token hết hạn
         if (LocalDateTime.now().isAfter(storedToken.getExpiryTime())) {
             User user = userDao.getUserById(storedToken.getUserId());
             
@@ -75,7 +58,7 @@ public class VerifyTokenControl extends HttpServlet {
                 boolean emailSent = emailUtil.sendEmail(user, newToken);
                 
                 if (emailSent) {
-                    request.setAttribute("mess", "Mã xác thực trước đó của bạn đã hết hạn. Một email xác thực mới đã được gửi.");
+                    request.setAttribute("mess", "Mã xác thực trước đó đã hết hạn. Một email xác thực mới đã được gửi. Vui lòng kiểm tra email.");
                 } else {
                     request.setAttribute("mess", "Không gửi được email xác thực mới. Vui lòng liên hệ bộ phận hỗ trợ.");
                 }
@@ -87,7 +70,7 @@ public class VerifyTokenControl extends HttpServlet {
             return;
         }
 
-        // đánh dấu token đã sử dụng và active tài khoản
+        // active tài khoản
         storedToken.setIsUsed(true);
         tokenDao.updateStatus(storedToken);
         
