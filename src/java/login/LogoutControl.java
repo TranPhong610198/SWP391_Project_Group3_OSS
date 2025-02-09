@@ -32,7 +32,7 @@ public class LogoutControl extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
-        session.removeAttribute("acc"); //xóa acc trên session
+        session.removeAttribute("acc");  
         session.removeAttribute("userID");
 //        session.invalidate();   //logout hoàn toàn, xóa tất cả dữ liệu session 
         response.sendRedirect("login");

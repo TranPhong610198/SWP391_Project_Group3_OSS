@@ -6,10 +6,11 @@ import java.sql.SQLException;
 import entity.User;
 import Context.DBContext;
 import entity.UserAddress;
+
 import java.util.ArrayList;
 import java.util.List;
 import utils.BCrypt;
-import java.sql.Connection;
+
 
 /**
  *
@@ -24,28 +25,28 @@ public class UserDAO extends DBContext {
      * *****************************************************
      */
     public User checkAccount(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username =?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);
-            try (ResultSet rs = st.executeQuery()) {
-                if (rs.next()) {
-                    String storedPasswordHash = rs.getString("password_hash");
-                    if (BCrypt.checkpw(password, storedPasswordHash)) {
-                        return new User(
-                                rs.getInt("id"),
-                                rs.getString("username"),
-                                rs.getString("email"),
-                                storedPasswordHash, // Important: Use the stored hash
-                                rs.getString("full_name"),
-                                rs.getString("gender"),
-                                rs.getString("mobile"),
-                                rs.getString("avatar"),
-                                rs.getString("role"),
-                                rs.getString("status"),
-                                rs.getString("created_at"),
-                                rs.getString("updated_at")
-                        );
-                    }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String storedHash = rs.getString("password_hash");
+                if (BCrypt.checkpw(password, storedHash)) {
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            storedHash,
+                            rs.getString("full_name"),
+                            rs.getString("gender"),
+                            rs.getString("mobile"),
+                            rs.getString("avatar"),
+                            rs.getString("role"),
+                            rs.getString("status"),
+                            rs.getString("created_at"),
+                            rs.getString("updated_at")
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -271,9 +272,9 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updatePassword(int userId, String newPassword) {
-        String sql = "UPDATE users SET password_hash =?, updated_at = GETDATE() WHERE id =?"; // Or your database's equivalent for getting the current time
+        String sql = "UPDATE users SET password_hash =?, updated_at = GETDATE() WHERE id =?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
-            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12)); // Hash the new password
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
             st.setString(1, hashedPassword);
             st.setInt(2, userId);
             return st.executeUpdate() > 0;
@@ -458,8 +459,10 @@ public class UserDAO extends DBContext {
         return 0;
     }
 
+    
+
     public boolean deleteUser(int userID) {
-        String sql = "DELETE FROM users WHERE UserID = ?";
+        String sql = "DELETE FROM users WHERE ID = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, userID);
             st.executeUpdate();
@@ -488,30 +491,25 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public int insertUser(User user) {
-        String sql = "INSERT INTO users (username, email, password_hash, full_name, gender, mobile, role, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, 'active')";
-        try (PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            st.setString(1, user.getUsername());
-            st.setString(2, user.getEmail());
-            st.setString(3, user.getPasswordHash());
-            st.setString(4, user.getFullName());
-            st.setString(5, user.getGender());
-            st.setString(6, user.getMobile());
-            st.setString(7, user.getRole().toLowerCase());
-
-            int affectedRows = st.executeUpdate();
-            if (affectedRows > 0) {
-                try (ResultSet rs = st.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        return rs.getInt(1);
-                    }
-                }
-            }
+    public boolean createUser(User user) {
+        String sql = "INSERT INTO users (full_name, username, password_hash, email, mobile, gender, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getFullName());
+            ps.setString(2, user.getUsername());
+            ps.setString(3, user.getPasswordHash());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getMobile());
+            ps.setString(6, user.getGender());
+            ps.setString(7, user.getRole());
+            ps.setString(8, user.getStatus());
+            
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return -1;
     }
 
     public List<User> GetAllUsers() {

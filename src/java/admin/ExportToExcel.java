@@ -25,7 +25,7 @@ public class ExportToExcel extends HttpServlet {
         List<User> userList = userDAO.GetAllUsers();
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=MeoMeo.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=UserList.xlsx");
 
         try (Workbook workbook = new XSSFWorkbook(); OutputStream out = response.getOutputStream()) {
             Sheet sheet = workbook.createSheet("User Data");

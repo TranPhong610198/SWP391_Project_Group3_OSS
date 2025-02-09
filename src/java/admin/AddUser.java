@@ -1,30 +1,29 @@
 package admin;
 
-import DAO.TokenDAO;
 import DAO.UserDAO;
-import entity.Token;
 import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import utils.BCrypt;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.regex.Pattern;
-import utils.Email;
-import utils.MaHoa;
+import utils.BCrypt;
 
-@WebServlet(name = "UserCreationServlet", urlPatterns = {"/userdetailAdd"})
+@WebServlet(name = "UserAddServlet", urlPatterns = "/addUser")
 public class AddUser extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
     }
-    
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,7 +37,15 @@ public class AddUser extends HttpServlet {
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
             String role = request.getParameter("role");
-            
+ 
+            System.out.println("fullname: " + fullname);
+            System.out.println("username: " + username);
+            System.out.println("password: " + password);
+            System.out.println("re_pass: " + re_pass);
+            System.out.println("email: " + email);
+            System.out.println("phone: " + phone);
+            System.out.println("gender: " + gender);
+            System.out.println("role: " + role);
 
             request.setAttribute("fullname", fullname);
             request.setAttribute("username", username);
@@ -46,6 +53,16 @@ public class AddUser extends HttpServlet {
             request.setAttribute("phone", phone);
             request.setAttribute("gender", gender);
             request.setAttribute("role", role);
+
+            // Validate input
+            if (isNullOrEmpty(fullname) || isNullOrEmpty(username)
+                    || isNullOrEmpty(password) || isNullOrEmpty(re_pass)
+                    || isNullOrEmpty(email) || isNullOrEmpty(phone)
+                    || isNullOrEmpty(gender) || isNullOrEmpty(role)) {
+                request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
+                request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
+                return;
+            }
 
             // Validate fullname
             if (!Pattern.matches("^([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+([ ]([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+)*$", fullname)) {
@@ -75,14 +92,8 @@ public class AddUser extends HttpServlet {
                 return;
             }
 
-            // Hash password
-            String hashedPassword = MaHoa.toBcrypt(password);
-
             UserDAO userDao = new UserDAO();
-            TokenDAO tokenDao = new TokenDAO();
-            Email emailUtil = new Email();
 
-            // kiểm tra user tồn tại 
             User checkExistUsername = userDao.checkExistUsername(username);
             if (checkExistUsername != null) {
                 request.setAttribute("error", "Tên người dùng đã tồn tại!");
@@ -102,30 +113,33 @@ public class AddUser extends HttpServlet {
                 return;
             }
 
-            // set đối tượng mới ở trang thái pending
-            User newUser = new User(username, email, hashedPassword, fullname, gender, phone);
-            newUser.setStatus("pending");
+            // Create new User object
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
+            newUser.setEmail(email);
+            newUser.setFullName(fullname);
+            newUser.setGender(gender);
+            newUser.setMobile(phone);
+            newUser.setRole(role);
+            newUser.setStatus("active");
 
-            // insert new user và lấy userID
-            int userId = userDao.insertUser(newUser);
+            // Add user to database
+            boolean success = userDao.createUser(newUser);
 
-            if (userId == -1) {
-                request.setAttribute("error", "Không tạo được tài khoản người dùng.");
+            if (success) {
+                // Redirect to user list with success message
+                response.sendRedirect("userlists");
+            } else {
+                request.setAttribute("error", "Failed to create user");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
-                return;
             }
 
-            
-
         } catch (Exception e) {
+            // Log the exception
             e.printStackTrace();
-            request.setAttribute("error", "Đăng ký không thành công. Vui lòng thử lại.");
+            request.setAttribute("error", "An error occurred while creating the user");
             request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);
         }
     }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 }

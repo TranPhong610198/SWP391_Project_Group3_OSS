@@ -5,6 +5,7 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -123,31 +124,25 @@
                     ${param.message}
                 </div>
             </c:if>
-            <form action="userdetailAdd" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="create">
-
-                <!--                <div class="form-group">
-                                    <label>Avatar:</label>
-                                    <input type="file" name="avatar" accept="image/*">
-                                </div>-->
-
+            <form action="addUser" method="post">
                 <div class="form-group">
                     <label class="required">Full Name:</label>
-                    <input type="text" name="fullName" required>
+                    <input type="text" name="fullname" required>
                 </div>
                 <div class="form-group">
                     <label class="required">Username:</label>
-                    <input type="username" name="username" placeholder="Tên đăng nhập" required minlength="4" maxlength="20" 
-                           pattern="[A-Za-z0-9]+" title="Tên người dùng phải dài từ 4-20 ký tự và không được chứa ký tự đặc biệt." 
+                    <input type="username" name="username" placeholder="Tên đăng nhập" 
+                           required minlength="4" maxlength="20" 
+                           pattern="[A-Za-z0-9]+" 
+                           title="Tên người dùng phải dài từ 4-20 ký tự và không được chứa ký tự đặc biệt." 
                            value="${username != null ? username : ''}">
                 </div>
                 <div class="form-group">
                     <label class="required">Password:</label>
-                    <input type="password" name="password" placeholder="Mật khẩu">
-                    
+                    <input type="password" name="password" placeholder="Mật khẩu" 
+                           >
                 </div>
                 <div class="form-group">
-                    
                     <label class="required">Re-Password:</label>
                     <input type="password" name="repassword" placeholder="Nhập lại mật khẩu" required>
                 </div>    
@@ -157,26 +152,26 @@
                 </div>
                 <div class="form-group">
                     <label class="required">Mobile:</label>
-                    <input type="tel" name="mobile" required>
+                    <input type="tel" name="phone" required
+                           pattern="[0-9]{10}"
+                           title="Số điện thoại phải có 10 chữ số">
                 </div>    
                 <div class="form-group">
                     <label class="required">Gender:</label>
                     <select name="gender" required>
-                        <option value="">Select Gender</option>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
+                        <option value="Male">Nam</option>
+                        <option value="Female">Nữ</option>
+                        <option value="other">Khác</option>
                     </select>
                 </div>
-                <!--<div class="form-group">
-                    <label>Address:</label>
-                    <textarea name="address"></textarea>
-                </div> -->
                 <div class="form-group">
                     <label class="required">Role:</label>
                     <select name="role" required>
                         <option value="">Select Role</option>
-                        <option value="USER">User</option>
-                        <option value="ADMIN">Admin</option>
+                        <option value="customer">Customer</option>
+                        <option value="admin">Admin</option>
+                        <option value="sale">Sale</option>
+                        <option value="marketing">Marketing</option>
                     </select>
                 </div>
 

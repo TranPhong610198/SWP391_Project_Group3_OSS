@@ -23,7 +23,7 @@
     </head>
     <body>
         <div class="container mt-4">
-            
+
             <h2>Danh Sách Người Dùng</h2>
 
             <!-- Filter and Search Form -->
@@ -41,6 +41,8 @@
                             <option value="">Tất cả vai trò</option>
                             <option value="Admin" ${role == 'Admin' ? 'selected' : ''}>Admin</option>
                             <option value="Customer" ${role == 'Customer' ? 'selected' : ''}>Customer</option>
+                            <option value="Sale" ${role == 'Sale' ? 'selected' : ''}>Sale</option>
+                            <option value="Marleting" ${role == 'Marketing' ? 'selected' : ''}>Marketing</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -48,6 +50,7 @@
                             <option value="">Tất cả trạng thái</option>
                             <option value="Active" ${status == 'Active' ? 'selected' : ''}>Active</option>
                             <option value="Inactive" ${status == 'Inactive' ? 'selected' : ''}>Inactive</option>
+                            <option value="Pending" ${status == 'Pending' ? 'selected' : ''}>Pending</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -63,8 +66,8 @@
             <!-- Export Buttons -->
             <div class="mb-3">
                 <a href="exporttoexcel" class="btn btn-success">Xuất sang Excel</a>
-                <a href="userlists?action=export&format=pdf" class="btn btn-danger">Xuất sang PDF</a>
-                <a href="userdetailAdd" class="btn btn-primary float-end">Thêm người dùng mới</a>
+                <a href="exporttopdf" class="btn btn-danger">Xuất sang PDF</a>
+                <a href="addUser" class="btn btn-primary float-end">Thêm người dùng mới</a>
             </div>
 
             <!-- Users Table -->
@@ -120,14 +123,20 @@
                             <td>${user.fullName}</td>
                             <td>${user.username}</td>
                             <td class="password-column">${user.passwordHash}</td>
-                            <td>${user.gender}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${user.gender == 'male' or user.gender == 'Male'}">Nam</c:when>
+                                    <c:when test="${user.gender == 'female' or user.gender == 'Female'}">Nữ</c:when>
+                                    <c:otherwise>Khác</c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>${user.email}</td>
                             <td>${user.mobile}</td>
                             <td>${user.role}</td>
                             <td>${user.status}</td>
                             <td>
-                                <a href="userdetail/view?id=${user.id}" class="btn btn-info btn-sm">View</a>
-                                <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Delete</a>
+                                <a href="userdetail/view?id=${user.id}" class="btn btn-info btn-sm">Chi tiết</a>
+                                <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Xoá</a>
 
                             </td>
                         </tr>
@@ -158,8 +167,8 @@
                 </ul>
             </nav>
         </div>
-                            
-        
+
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </body>
