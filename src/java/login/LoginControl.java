@@ -112,26 +112,36 @@ public class LoginControl extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             } else if ("pending".equals(account.getStatus())) {
-                // Gửi token xác minh qua email
-                Email emailUtil = new Email();
-                String token = emailUtil.generateToken();
-                LocalDateTime expiryTime = emailUtil.expireDateTime();
-
-                Token verificationToken = new Token(account.getId(), false, token, expiryTime);
-                tokenDao.insertTokenForget(verificationToken);
-
-                boolean emailSent = emailUtil.sendEmail(account, token);
-
-                if (!emailSent) {
-                    request.setAttribute("mess", "Không thể gửi email xác minh. Vui lòng thử lại sau.");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                    return;
-                }
-
-                request.setAttribute("mess", "Email của bạn chưa được xác thực. Một email xác thực đã được gửi đến bạn.");
+            // check token hiện tại của user
+            Token currentToken = tokenDao.getTokenByUserId(account.getId());
+            
+            // token còn hạn
+            if (currentToken != null && LocalDateTime.now().isBefore(currentToken.getExpiryTime())) {
+                request.setAttribute("mess", "Email xác thực đã được gửi. Vui lòng kiểm tra email của bạn.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
+
+            // Nếu không có token hoặc token đã hết hạn, tạo token mới
+            Email emailUtil = new Email();
+            String token = emailUtil.generateToken();
+            LocalDateTime expiryTime = emailUtil.expireDateTime();
+
+            Token verificationToken = new Token(account.getId(), false, token, expiryTime);
+            tokenDao.insertTokenForget(verificationToken); 
+
+            boolean emailSent = emailUtil.sendEmail(account, token);
+
+            if (!emailSent) {
+                request.setAttribute("mess", "Không thể gửi email xác minh. Vui lòng thử lại sau.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
+            request.setAttribute("mess", "Email của bạn chưa được xác thực. Một email xác thực mới đã được gửi đến bạn.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
             
             HttpSession session = request.getSession();
             session.setAttribute("acc", account);
