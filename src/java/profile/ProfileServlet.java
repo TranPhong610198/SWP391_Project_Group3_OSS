@@ -158,7 +158,7 @@ public class ProfileServlet extends HttpServlet {
                     LOGGER.log(Level.SEVERE, "Error uploading avatar", e);
                 }
             }
-
+//thêm address
         } else if (action.equals("add")) {
             UserAddress newAddress = new UserAddress();
             newAddress.setUserId(user.getId());
@@ -167,24 +167,23 @@ public class ProfileServlet extends HttpServlet {
             newAddress.setAddress(request.getParameter("address"));
             newAddress.setDefault(request.getParameter("is_default") != null);
             userDAO.addUserAddress(newAddress);
-        } else if (action.equals("set_default")) {
-            int addressId = Integer.parseInt(request.getParameter("address_id"));
-            userDAO.setDefaultAddress(addressId, user.getId());
+            // xóa address
         } else if (action.equals("delete")) {
             int addressId = Integer.parseInt(request.getParameter("address_id"));
             userDAO.deleteUserAddress(addressId, user.getId());
         }
-        if ("set_default".equals(action)) {
+        // set mặc định hay không
+        if (action.equals("set_default")) {
             int addressId = Integer.parseInt(request.getParameter("address_id"));
             userDAO.setDefaultAddress(addressId, user.getId());
-        } else if ("unset_default".equals(action)) {
+        } else if (action.equals("unset_default")) {
             int addressId = Integer.parseInt(request.getParameter("address_id"));
             userDAO.unsetDefaultAddress(user.getId(), addressId);
         }
 
         response.sendRedirect("profile");
     }
-
+    
     private String extractFileExtension(Part part) {
         String contentDisp = part.getHeader("content-disposition");
         for (String s : contentDisp.split(";")) {
