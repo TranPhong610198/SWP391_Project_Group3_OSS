@@ -181,7 +181,6 @@
                             <span class="category-badge">${post.category}</span>
                             <div class="action-btns mt-3">
                                 <a href="${pageContext.request.contextPath}/postdetail.jsp?id=${post.id}" class="btn btn-outline-primary">View</a>
-                                <a href="${pageContext.request.contextPath}/post/edit?id=${post.id}" class="btn btn-outline-warning">Edit</a>
                                 <a href="${pageContext.request.contextPath}/post/toggleVisibility?id=${post.id}" class="btn btn-outline-danger">${post.isVisible ? 'Hide' : 'Show'}</a>
                             </div>
                         </div>
@@ -201,10 +200,7 @@
             </ul>
         </nav>
 
-        <!-- Add New Post Button -->
-        <div class="text-center">
-            <a href="${pageContext.request.contextPath}/post/new" class="btn btn-primary">Add New Post</a>
-        </div>
+       
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

@@ -182,6 +182,17 @@
                     <a href="${pageContext.request.contextPath}/post" class="btn btn-primary">
                         <i class="fas fa-arrow-left me-2"></i>Back to Posts
                     </a>
+                        
+                        <c:if test="${user != null && user.isAdmin()}">
+        <a href="${pageContext.request.contextPath}/postform.jsp" class="btn btn-success">
+            <i class="fas fa-plus me-2"></i>Add New Post
+        </a>
+        <a href="${pageContext.request.contextPath}/deletePost?id=${post.id}" 
+           class="btn btn-danger" 
+           onclick="return confirm('Are you sure you want to delete this post?');">
+            <i class="fas fa-trash me-2"></i>Delete Post
+        </a>
+    </c:if>
                 </div>
             </div>
 
@@ -206,7 +217,7 @@
                         <h3 class="sidebar-title">Related Posts</h3>
                         <c:forEach var="relatedPost" items="${relatedPosts}">
                             <div class="related-post">
-                                <a href="${pageContext.request.contextPath}/postDetails?id=${relatedPost.id}">
+                                <a href="${pageContext.request.contextPath}/postlist.jsp?id=${relatedPost.id}">
                                     <h6 class="mb-1">${relatedPost.title}</h6>
                                     <small class="text-muted">
                                         <i class="fas fa-calendar-alt me-1"></i>${relatedPost.updatedAt}
@@ -215,6 +226,8 @@
                             </div>
                         </c:forEach>
                     </div>
+                                    
+                                    
                 </aside>
             </div>
         </div>
