@@ -305,11 +305,29 @@
                                 <div class="address-item">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            <c:if test="${address.isDefault}">
-                                                <span class="badge bg-primary ms-2">
-                                                    <i class="fas fa-star me-1"></i>Mặc định
-                                                </span>
-                                            </c:if>
+                                            <div class="col-auto">
+                                                <c:choose>
+                                                    <c:when test="${address.isDefault}">
+                                                        <form action="profile" method="post" class="d-inline">
+                                                            <input type="hidden" name="action" value="unset_default">
+                                                            <input type="hidden" name="address_id" value="${address.id}">
+                                                            <button type="submit" class="btn btn-warning btn-sm">
+                                                                <i class="fas fa-times"></i> Hủy mặc định
+                                                            </button>
+                                                        </form>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <form action="profile" method="post" class="d-inline">
+                                                            <input type="hidden" name="action" value="set_default">
+                                                            <input type="hidden" name="address_id" value="${address.id}">
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                <i class="fas fa-check"></i> Đặt mặc định
+                                                            </button>
+                                                        </form>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+
                                             <p><i class="fas fa-user"></i>${address.recipientName}</p>
                                             <p><i class="fas fa-phone"></i>${address.phone}</p>
                                             <p class="mb-0"><i class="fas fa-home"></i>${address.address}</p>

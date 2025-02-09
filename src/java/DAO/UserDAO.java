@@ -383,7 +383,17 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-
+public void unsetDefaultAddress(int userId, int addressId) {
+    String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
+    try (
+         PreparedStatement ps = connection.prepareStatement(query)) {
+        ps.setInt(1, addressId);
+        ps.setInt(2, userId);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
     public boolean updateAvatar(int userId, String avatarPath) {
         String sql = "UPDATE users SET avatar = ?, updated_at = GETDATE() WHERE id = ?;";
         try (

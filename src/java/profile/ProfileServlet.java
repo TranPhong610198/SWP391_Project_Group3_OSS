@@ -174,6 +174,13 @@ public class ProfileServlet extends HttpServlet {
             int addressId = Integer.parseInt(request.getParameter("address_id"));
             userDAO.deleteUserAddress(addressId, user.getId());
         }
+        if ("set_default".equals(action)) {
+            int addressId = Integer.parseInt(request.getParameter("address_id"));
+            userDAO.setDefaultAddress(addressId, user.getId());
+        } else if ("unset_default".equals(action)) {
+            int addressId = Integer.parseInt(request.getParameter("address_id"));
+            userDAO.unsetDefaultAddress(user.getId(), addressId);
+        }
 
         response.sendRedirect("profile");
     }
