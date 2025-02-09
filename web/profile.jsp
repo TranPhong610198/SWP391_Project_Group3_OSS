@@ -312,7 +312,7 @@
                                                             <input type="hidden" name="action" value="unset_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-warning btn-sm">
-                                                                <i class="fas fa-times"></i> Hủy mặc định
+                                                                <i class="fas fa-times"></i> Hủy
                                                             </button>
                                                         </form>
                                                     </c:when>
@@ -361,17 +361,18 @@
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" required>
                                 </div>
+                                
                                 <div class="col-12">
                                     <label class="form-label">Địa chỉ nhận</label>
                                     <textarea class="form-control" name="address" rows="3" required></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-check">
+<!--                                    <div class="form-check">
                                         <input type="checkbox" class="form-check-input" name="is_default" id="defaultAddress">
                                         <label class="form-check-label" for="defaultAddress">
                                             <i class="fas fa-star me-2"></i>Đặt làm mặc định
                                         </label>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="col-12 d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
