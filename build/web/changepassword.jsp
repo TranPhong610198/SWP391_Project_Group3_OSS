@@ -92,6 +92,8 @@
                                     <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
                                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                                 </div>
+                                <div><a href="forgotpassword">Quên mật khẩu?</a></div>
+                                
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                                 </div>

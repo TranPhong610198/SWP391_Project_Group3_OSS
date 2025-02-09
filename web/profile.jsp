@@ -249,9 +249,7 @@
                                 <a href="changepassword" class="btn btn-primary btn-sm">
                                     <i class="fas fa-key me-2"></i> Đổi mật khẩu
                                 </a>
-                                <a href="resetpassword" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-key me-2"></i> Khôi phục mật khẩu
-                                </a>
+                               
                             </div>
 
                         </div>
@@ -312,7 +310,7 @@
                                                             <input type="hidden" name="action" value="unset_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-warning btn-sm">
-                                                                <i class="fas fa-times"></i> Hủy
+                                                                <i class="fas "></i> Hủy
                                                             </button>
                                                         </form>
                                                     </c:when>
@@ -321,7 +319,7 @@
                                                             <input type="hidden" name="action" value="set_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fas fa-check"></i> Đặt mặc định
+                                                                <i class="fas"></i> Đặt mặc định
                                                             </button>
                                                         </form>
                                                     </c:otherwise>
@@ -367,12 +365,12 @@
                                     <textarea class="form-control" name="address" rows="3" required></textarea>
                                 </div>
                                 <div class="col-12">
-<!--                                    <div class="form-check">
+                                    <div class="form-check">
                                         <input type="checkbox" class="form-check-input" name="is_default" id="defaultAddress">
                                         <label class="form-check-label" for="defaultAddress">
                                             <i class="fas fa-star me-2"></i>Đặt làm mặc định
                                         </label>
-                                    </div>-->
+                                    </div>
                                 </div>
                                 <div class="col-12 d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
