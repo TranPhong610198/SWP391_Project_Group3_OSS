@@ -62,10 +62,19 @@ public class UserAddress {
         this.address = address;
     }
 
-    public boolean isDefault() { // Correct getter name for boolean
+ public boolean getIsDefault() {
         return isDefault;
     }
-
+    
+    // You can keep both setters for flexibility
+    public void setIsDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+    
+    public boolean isDefault() {
+        return isDefault;
+    }
+    
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }

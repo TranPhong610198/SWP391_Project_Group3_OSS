@@ -305,6 +305,11 @@
                                 <div class="address-item">
                                     <div class="row align-items-center">
                                         <div class="col">
+                                            <c:if test="${address.isDefault}">
+                                                <span class="badge bg-primary ms-2">
+                                                    <i class="fas fa-star me-1"></i>Mặc định
+                                                </span>
+                                            </c:if>
                                             <p><i class="fas fa-user"></i>${address.recipientName}</p>
                                             <p><i class="fas fa-phone"></i>${address.phone}</p>
                                             <p class="mb-0"><i class="fas fa-home"></i>${address.address}</p>
