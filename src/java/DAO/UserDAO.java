@@ -471,34 +471,14 @@ public class UserDAO extends DBContext {
         return 0;
     }
 
-    public boolean deleteUser(int userID) {
-        try {
-            connection.setAutoCommit(false);
-
-            // 1. Delete from tokenPassword first
-            String deleteTokenSQL = "DELETE FROM tokenPassword WHERE ID = ?";
-            try (PreparedStatement st = connection.prepareStatement(deleteTokenSQL)) {
-                st.setInt(1, userID);
-                st.executeUpdate();
-            }
-
-            // 2. Delete user and avatar
-            String avatarPath = null;
-            String getAvatarSql = "SELECT avatar FROM users WHERE ID = ?";
-            try (PreparedStatement st = connection.prepareStatement(getAvatarSql)) {
-                st.setInt(1, userID);
-                ResultSet rs = st.executeQuery();
-                if (rs.next()) {
-                    avatarPath = rs.getString("avatar");
-                }
-            }
-
-            String deleteUserSQL = "DELETE FROM users WHERE ID = ?";
-            try (PreparedStatement st = connection.prepareStatement(deleteUserSQL)) {
-                st.setInt(1, userID);
-                int result = st.executeUpdate();
-
-                if (result > 0 && avatarPath != null) {
+    private void deleteAvatarFile(int userID) throws SQLException {
+        String getAvatarSql = "SELECT avatar FROM users WHERE ID = ?";
+        try (PreparedStatement st = connection.prepareStatement(getAvatarSql)) {
+            st.setInt(1, userID);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String avatarPath = rs.getString("avatar");
+                if (avatarPath != null) {
                     String realPath = new File("").getAbsolutePath() + File.separator + avatarPath;
                     File avatarFile = new File(realPath);
                     if (avatarFile.exists()) {
@@ -506,9 +486,54 @@ public class UserDAO extends DBContext {
                     }
                 }
             }
+        }
+    }
 
+    public boolean deleteUser(int userID) {
+        try {
+            connection.setAutoCommit(false);
+
+            String[] deleteQueries = {
+                // Delete feedback
+                "DELETE FROM feedback WHERE user_id = ?",
+                // Delete cart items and cart
+                "DELETE FROM cart_items WHERE cart_id IN (SELECT id FROM cart WHERE user_id = ?)",
+                "DELETE FROM cart WHERE user_id = ?",
+                // Delete order related
+                "DELETE FROM order_history WHERE updated_by = ?",
+                "DELETE FROM payments WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM shipping WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM order_coupons WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM orders WHERE user_id = ?",
+                // Delete posts
+                "DELETE FROM posts WHERE author_id = ?",
+                // Delete contact history
+                "DELETE FROM customer_contact_history WHERE user_id = ? OR updated_by = ?",
+                // Delete addresses
+                "DELETE FROM user_addresses WHERE user_id = ?",
+                // Delete token
+                "DELETE FROM tokenPassword WHERE UserID = ?",
+                // Finally delete user
+                "DELETE FROM users WHERE id = ?"
+            };
+
+            for (String sql : deleteQueries) {
+                try (PreparedStatement st = connection.prepareStatement(sql)) {
+                    if (sql.contains("OR updated_by")) {
+                        st.setInt(1, userID);
+                        st.setInt(2, userID);
+                    } else {
+                        st.setInt(1, userID);
+                    }
+                    st.executeUpdate();
+                }
+            }
+
+            deleteAvatarFile(userID);
             connection.commit();
             return true;
+
         } catch (SQLException e) {
             try {
                 connection.rollback();
