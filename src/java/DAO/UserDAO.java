@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.BCrypt;
 
-
 /**
  *
  * @author nguye
@@ -384,17 +383,19 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-public void unsetDefaultAddress(int userId, int addressId) {
-    String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
-    try (
-         PreparedStatement ps = connection.prepareStatement(query)) {
-        ps.setInt(1, addressId);
-        ps.setInt(2, userId);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+    public void unsetDefaultAddress(int userId, int addressId) {
+        String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, addressId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
+
     public boolean updateAvatar(int userId, String avatarPath) {
         String sql = "UPDATE users SET avatar = ?, updated_at = GETDATE() WHERE id = ?;";
         try (
@@ -470,45 +471,60 @@ public void unsetDefaultAddress(int userId, int addressId) {
         return 0;
     }
 
-    
-
     public boolean deleteUser(int userID) {
-    // First get the user's avatar path
-    String avatarPath = null;
-    String getAvatarSql = "SELECT avatar FROM users WHERE ID = ?";
-    
-    try (PreparedStatement st = connection.prepareStatement(getAvatarSql)) {
-        st.setInt(1, userID);
-        ResultSet rs = st.executeQuery();
-        if (rs.next()) {
-            avatarPath = rs.getString("avatar");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
-    }
+        try {
+            connection.setAutoCommit(false);
 
-    // Delete user from database
-    String sql = "DELETE FROM users WHERE ID = ?";
-    try (PreparedStatement st = connection.prepareStatement(sql)) {
-        st.setInt(1, userID);
-        int result = st.executeUpdate();
-        
-        // If user deleted successfully and avatar exists, delete the file
-        if (result > 0 && avatarPath != null) {
-            String realPath = new File("").getAbsolutePath() + File.separator + avatarPath;
-            File avatarFile = new File(realPath);
-            if (avatarFile.exists()) {
-                avatarFile.delete();
+            // 1. Delete from tokenPassword first
+            String deleteTokenSQL = "DELETE FROM tokenPassword WHERE ID = ?";
+            try (PreparedStatement st = connection.prepareStatement(deleteTokenSQL)) {
+                st.setInt(1, userID);
+                st.executeUpdate();
             }
+
+            // 2. Delete user and avatar
+            String avatarPath = null;
+            String getAvatarSql = "SELECT avatar FROM users WHERE ID = ?";
+            try (PreparedStatement st = connection.prepareStatement(getAvatarSql)) {
+                st.setInt(1, userID);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    avatarPath = rs.getString("avatar");
+                }
+            }
+
+            String deleteUserSQL = "DELETE FROM users WHERE ID = ?";
+            try (PreparedStatement st = connection.prepareStatement(deleteUserSQL)) {
+                st.setInt(1, userID);
+                int result = st.executeUpdate();
+
+                if (result > 0 && avatarPath != null) {
+                    String realPath = new File("").getAbsolutePath() + File.separator + avatarPath;
+                    File avatarFile = new File(realPath);
+                    if (avatarFile.exists()) {
+                        avatarFile.delete();
+                    }
+                }
+            }
+
+            connection.commit();
             return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
     }
-    return false;
-}
 
     public boolean updateUserInfo(User user) {
         String sql = "UPDATE users SET full_name=?, email=?, mobile=?, gender=?, role=?, status=?, updated_at=GETDATE() WHERE id=?";
@@ -540,7 +556,7 @@ public void unsetDefaultAddress(int userId, int addressId) {
             ps.setString(6, user.getGender());
             ps.setString(7, user.getRole());
             ps.setString(8, user.getStatus());
-            
+
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
