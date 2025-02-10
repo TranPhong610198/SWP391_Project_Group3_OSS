@@ -249,7 +249,7 @@
                                 <a href="changepassword" class="btn btn-primary btn-sm">
                                     <i class="fas fa-key me-2"></i> Đổi mật khẩu
                                 </a>
-                               
+
                             </div>
 
                         </div>
@@ -298,6 +298,8 @@
                         <h3 class="section-title">
                             <i class="fas fa-map-marker-alt"></i>Địa chỉ vận chuyển
                         </h3>
+
+
                         <div class="addresses-container mb-4">
                             <c:forEach var="address" items="${addresses}">
                                 <div class="address-item">
@@ -310,7 +312,7 @@
                                                             <input type="hidden" name="action" value="unset_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-warning btn-sm">
-                                                                <i class="fas "></i> Hủy
+                                                                <i class=""></i>Hủy mặc định
                                                             </button>
                                                         </form>
                                                     </c:when>
@@ -319,7 +321,7 @@
                                                             <input type="hidden" name="action" value="set_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fas"></i> Đặt mặc định
+                                                                <i class=""></i>Đặt mặc định
                                                             </button>
                                                         </form>
                                                     </c:otherwise>
@@ -331,14 +333,16 @@
                                             <p class="mb-0"><i class="fas fa-home"></i>${address.address}</p>
                                         </div>
                                         <div class="col-auto">
-                                            <form action="profile" method="post" class="d-inline">
-                                                <input type="hidden" name="action" value="delete">
-                                                <input type="hidden" name="address_id" value="${address.id}">
-                                                <button type="submit" class="btn btn-danger btn-sm" 
-                                                        onclick="return confirm('Bạn có muốn xóa địa chỉ này không?')">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </form>
+                                            <c:if test="${!address.isDefault}">
+                                                <form action="profile" method="post" class="d-inline">
+                                                    <input type="hidden" name="action" value="delete">
+                                                    <input type="hidden" name="address_id" value="${address.id}">
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                                            onclick="return confirm('Bạn có muốn xóa địa chỉ này không?')">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
@@ -359,7 +363,7 @@
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" required>
                                 </div>
-                                
+
                                 <div class="col-12">
                                     <label class="form-label">Địa chỉ nhận</label>
                                     <textarea class="form-control" name="address" rows="3" required></textarea>
@@ -389,49 +393,49 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                                            function previewImage(input) {
-                                                                const preview = document.getElementById('preview');
-                                                                const previewContainer = document.querySelector('.preview-container');
-                                                                const uploadActions = document.querySelector('.upload-actions');
+                                                                function previewImage(input) {
+                                                                    const preview = document.getElementById('preview');
+                                                                    const previewContainer = document.querySelector('.preview-container');
+                                                                    const uploadActions = document.querySelector('.upload-actions');
 
-                                                                if (input.files && input.files[0]) {
-                                                                    const reader = new FileReader();
+                                                                    if (input.files && input.files[0]) {
+                                                                        const reader = new FileReader();
 
-                                                                    reader.onload = function (e) {
-                                                                        preview.src = e.target.result;
-                                                                        previewContainer.style.display = 'block';
-                                                                        uploadActions.style.display = 'flex';
-                                                                    }
-
-                                                                    reader.readAsDataURL(input.files[0]);
-                                                                }
-                                                            }
-
-                                                            function cancelUpload() {
-                                                                const form = document.getElementById('avatarForm');
-                                                                const preview = document.getElementById('preview');
-                                                                const previewContainer = document.querySelector('.preview-container');
-                                                                const uploadActions = document.querySelector('.upload-actions');
-
-                                                                form.reset();
-                                                                preview.src = '#';
-                                                                previewContainer.style.display = 'none';
-                                                                uploadActions.style.display = 'none';
-                                                            }
-                                                            // Form validation
-                                                            (() => {
-                                                                'use strict'
-                                                                const forms = document.querySelectorAll('.needs-validation')
-                                                                Array.from(forms).forEach(form => {
-                                                                    form.addEventListener('submit', event => {
-                                                                        if (!form.checkValidity()) {
-                                                                            event.preventDefault()
-                                                                            event.stopPropagation()
+                                                                        reader.onload = function (e) {
+                                                                            preview.src = e.target.result;
+                                                                            previewContainer.style.display = 'block';
+                                                                            uploadActions.style.display = 'flex';
                                                                         }
-                                                                        form.classList.add('was-validated')
-                                                                    }, false)
-                                                                })
-                                                            })()
+
+                                                                        reader.readAsDataURL(input.files[0]);
+                                                                    }
+                                                                }
+
+                                                                function cancelUpload() {
+                                                                    const form = document.getElementById('avatarForm');
+                                                                    const preview = document.getElementById('preview');
+                                                                    const previewContainer = document.querySelector('.preview-container');
+                                                                    const uploadActions = document.querySelector('.upload-actions');
+
+                                                                    form.reset();
+                                                                    preview.src = '#';
+                                                                    previewContainer.style.display = 'none';
+                                                                    uploadActions.style.display = 'none';
+                                                                }
+                                                                // Form validation
+                                                                (() => {
+                                                                    'use strict'
+                                                                    const forms = document.querySelectorAll('.needs-validation')
+                                                                    Array.from(forms).forEach(form => {
+                                                                        form.addEventListener('submit', event => {
+                                                                            if (!form.checkValidity()) {
+                                                                                event.preventDefault()
+                                                                                event.stopPropagation()
+                                                                            }
+                                                                            form.classList.add('was-validated')
+                                                                        }, false)
+                                                                    })
+                                                                })()
         </script>
     </body>
 </html>
