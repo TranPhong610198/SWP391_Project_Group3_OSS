@@ -42,7 +42,7 @@
                             <option value="Admin" ${role == 'Admin' ? 'selected' : ''}>Admin</option>
                             <option value="Customer" ${role == 'Customer' ? 'selected' : ''}>Customer</option>
                             <option value="Sale" ${role == 'Sale' ? 'selected' : ''}>Sale</option>
-                            <option value="Marleting" ${role == 'Marketing' ? 'selected' : ''}>Marketing</option>
+                            <option value="Marketing" ${role == 'Marketing' ? 'selected' : ''}>Marketing</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -149,27 +149,30 @@
             </table>
 
             <!-- Pagination -->
+            <c:set var="queryParams" value="&gender=${gender}&role=${role}&status=${status}&search=${search}&sortField=${sortField}&sortDir=${sortDir}"/>
+            
             <nav>
                 <ul class="pagination">
                     <c:if test="${currentPage > 1}">
                         <li class="page-item">
-                            <a class="page-link" href="userlists?page=${currentPage-1}">Trước</a>
+                            <a class="page-link" href="userlists?page=${currentPage-1}${queryParams}">Trước</a>
                         </li>
                     </c:if>
-
+                    
                     <c:forEach begin="1" end="${totalPages}" var="i">
                         <li class="page-item ${currentPage == i ? 'active' : ''}">
-                            <a class="page-link" href="userlists?page=${i}">${i}</a>
+                            <a class="page-link" href="userlists?page=${i}${queryParams}">${i}</a>
                         </li>
                     </c:forEach>
-
+                    
                     <c:if test="${currentPage < totalPages}">
                         <li class="page-item">
-                            <a class="page-link" href="userlists?page=${currentPage+1}">Sau</a>
+                            <a class="page-link" href="userlists?page=${currentPage+1}${queryParams}">Sau</a>
                         </li>
                     </c:if>
                 </ul>
             </nav>
+            
         </div>
 
 
