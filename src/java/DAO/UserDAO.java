@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import entity.User;
 import Context.DBContext;
 import entity.UserAddress;
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -472,16 +473,42 @@ public void unsetDefaultAddress(int userId, int addressId) {
     
 
     public boolean deleteUser(int userID) {
-        String sql = "DELETE FROM users WHERE ID = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, userID);
-            st.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+    // First get the user's avatar path
+    String avatarPath = null;
+    String getAvatarSql = "SELECT avatar FROM users WHERE ID = ?";
+    
+    try (PreparedStatement st = connection.prepareStatement(getAvatarSql)) {
+        st.setInt(1, userID);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            avatarPath = rs.getString("avatar");
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
         return false;
     }
+
+    // Delete user from database
+    String sql = "DELETE FROM users WHERE ID = ?";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setInt(1, userID);
+        int result = st.executeUpdate();
+        
+        // If user deleted successfully and avatar exists, delete the file
+        if (result > 0 && avatarPath != null) {
+            String realPath = new File("").getAbsolutePath() + File.separator + avatarPath;
+            File avatarFile = new File(realPath);
+            if (avatarFile.exists()) {
+                avatarFile.delete();
+            }
+            return true;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+    return false;
+}
 
     public boolean updateUserInfo(User user) {
         String sql = "UPDATE users SET full_name=?, email=?, mobile=?, gender=?, role=?, status=?, updated_at=GETDATE() WHERE id=?";
