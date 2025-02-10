@@ -9,6 +9,29 @@
         <title>User Details</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     </head>
+    <style>
+    .avatar-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    .avatar-container img {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #ddd;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .avatar-container img:hover {
+        transform: scale(1.05);
+    }
+</style>
+
     <body>
         <div class="container mt-4">
             <div class="row">
@@ -19,12 +42,11 @@
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
-                                <div class="col-md-4 text-center mb-3">
-                                    <img src="${(user.avatar.contains('https')) ? user.avatar : '../'.concat(user.avatar)}" alt="avatar"
-                                         onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'"
-                                         class="img-fluid rounded-circle"
-                                         style="max-width: 150px;">
-                                </div>
+                                <div class="col-md-4 avatar-container mb-3">
+    <img src="${(user.avatar.contains('https')) ? user.avatar : '../'.concat(user.avatar)}" alt="avatar"
+         onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
+</div>
+
                                 <div class="col-md-8">
                                     <table class="table">
                                         <tr>
