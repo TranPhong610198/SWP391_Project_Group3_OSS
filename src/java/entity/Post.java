@@ -7,7 +7,6 @@ public class Post {
     private int id;
     private String title;
     private String thumbnail;
-    private int categoryId;
     private String summary;
     private String content;
     private User user;
@@ -20,22 +19,20 @@ public class Post {
     public Post() {
     }
 
-    public Post(int id, String title, String thumbnail, int categoryId, String summary, String content, String status, Date updatedAt) {
+    public Post(int id, String title, String thumbnail, String summary, String content, String status, Date updatedAt) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
-        this.categoryId = categoryId;
         this.summary = summary;
         this.content = content;
         this.status = status;
         this.updatedAt = updatedAt;
     }
 
-    public Post(int id, String title, String thumbnail, int categoryId, String summary, String content, User user, boolean isFeatured, String status, Date createdAt, Date updatedAt) {
+    public Post(int id, String title, String thumbnail, String summary, String content, User user, boolean isFeatured, String status, Date createdAt, Date updatedAt) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
-        this.categoryId = categoryId;
         this.summary = summary;
         this.content = content;
         this.user = user;
@@ -67,14 +64,6 @@ public class Post {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
     }
 
     public String getSummary() {

@@ -128,7 +128,7 @@
                 <div class="post-meta">
                     <span class="me-3"><i class="fas fa-user"></i>${post.getUser().getFullName()}</span>
                     <span class="me-3"><i class="fas fa-clock"></i>${post.getCreatedAt()}</span>
-                    <span><i class="fas fa-folder"></i>${post.getCategoryId()}</span>
+                    
                 </div>
             </div>
         </header>
@@ -144,7 +144,7 @@
                 <div class="col-lg-8">
                     <article class="post-content">
                         <img src="${post.getThumbnail()}" alt="${post.getTitle()}" class="post-thumbnail">
-                        <span class="category-badge">${post.getCategoryId()}</span>
+                        
                         <div class="content">
                             <p><strong>Summary:</strong> ${post.getSummary()}</p>
                             <p><strong>Description:</strong> ${post.getContent()}</p>
@@ -160,10 +160,7 @@
                                 <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control" id="title" name="title" value="${post.getTitle()}" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="category" class="form-label">Category</label>
-                                <input type="text" class="form-control" id="category" name="category" value="${post.getCategoryId()}" required>
-                            </div>
+                            
                             <div class="mb-3">
                                 <label for="thumbnail" class="form-label">Thumbnail URL</label>
                                 <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="${post.getThumbnail()}" required>

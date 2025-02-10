@@ -68,8 +68,8 @@ public class PostDetailServlet extends HttpServlet {
             postId = Integer.parseInt(pId);
             PostDAO postDAO = new PostDAO();
             Post p = postDAO.getPostById(postId);
-            List<User> users = postDAO.getUserRoleAdmin();
-            request.setAttribute("users", users);
+
+
             request.setAttribute("post", p);
             request.getRequestDispatcher("/marketing/postdetail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
@@ -91,25 +91,24 @@ public class PostDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         String title = request.getParameter("title");
-        int categoryId = Integer.parseInt(request.getParameter("category"));
         String thumbnail = request.getParameter("thumbnail");
         String summary = request.getParameter("summary");
         String content = request.getParameter("content");
         String status = request.getParameter("status");
         Date updatedAt = new Date(System.currentTimeMillis());
 
-        Post post = new Post(id, title, thumbnail, categoryId, summary, content, status, updatedAt);
+        Post post = new Post(id, title, thumbnail, summary, content, status, updatedAt);
 
         PostDAO postDAO = new PostDAO();
         boolean isUpdated = postDAO.updatePost(post);
 
         Post p = postDAO.getPostById(id);
-        List<User> users = postDAO.getUserRoleAdmin();
+
 
         if (isUpdated) {
             response.sendRedirect("postList");
         } else {
-            request.setAttribute("users", users);
+
             request.setAttribute("post", p);
             request.setAttribute("error", "Cập nhật bài viết thất bại.");
             request.getRequestDispatcher("/marketing/postdetail.jsp").forward(request, response);

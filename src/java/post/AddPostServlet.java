@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.util.List;
 
@@ -63,10 +64,10 @@ public class AddPostServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PostDAO postDAO = new PostDAO();
-        List<User> users = postDAO.getUserRoleAdmin();
-        request.setAttribute("users", users);
+    List<User> users = postDAO.getAuthorsByRole(); // Lấy danh sách admin & marketing
+    request.setAttribute("users", users);
 
-        request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
+    request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
     }
 
     /**
@@ -83,10 +84,19 @@ public class AddPostServlet extends HttpServlet {
         try {
             String title = request.getParameter("title");
             String thumbnail = request.getParameter("thumbnail");
-            int categoryId = Integer.parseInt(request.getParameter("categoryId"));
             String summary = request.getParameter("summary");
             String content = request.getParameter("content");
-            int authorId = Integer.parseInt(request.getParameter("authorId"));
+            HttpSession session = request.getSession();
+User existingUser = (User) session.getAttribute("acc");
+
+if (existingUser == null) {
+    response.sendRedirect("login.jsp");
+    return;
+}
+
+String authorIdParam = request.getParameter("authorId");
+int authorId = (authorIdParam != null && !authorIdParam.isEmpty()) ? Integer.parseInt(authorIdParam) : 0;
+
             String isFeaturedParam = request.getParameter("isFeatured");
             boolean isFeatured = (isFeaturedParam != null);
             String status = request.getParameter("status");
@@ -94,9 +104,15 @@ public class AddPostServlet extends HttpServlet {
 
       
             PostDAO postDAO = new PostDAO();
-            List<User> users = postDAO.getUserRoleAdmin();
 
-           Post post = new Post(authorId, title, thumbnail, categoryId, summary, content, status, createdAt);
+           Post post = new Post();
+post.setTitle(title);
+post.setThumbnail(thumbnail);
+post.setSummary(summary);
+post.setContent(content);
+post.setStatus(status);
+post.setCreatedAt(createdAt);
+post.setUser(existingUser);
             boolean isAdded = postDAO.addPost(post);
 
             if (isAdded) {
@@ -104,7 +120,6 @@ public class AddPostServlet extends HttpServlet {
                 response.sendRedirect("postList");
             } else {
                 System.out.println("Thêm bài viết thất bại!");
-                request.setAttribute("users", users);
                 request.setAttribute("error", "Thêm bài viết thất bại!");
                 request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
             }

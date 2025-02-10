@@ -61,18 +61,9 @@
                                     <img id="thumbnail-preview" class="preview-image">
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="categoryId" class="form-label">Category</label>
-                                    <select class="form-select" id="categoryId" name="categoryId" required>
-                                        <option value="0">All Categories</option>
-                                        <option value="1">Category 1</option>   
-                                        <option value="2">Category 2</option>
-                                        <option value="3">Category 3</option>
-                                        <option value="4">Category 4</option>
-                                    </select>
-                                </div>
 
-                                <div class="mb-3">
+
+<!--                                <div class="mb-3">
                                     <label for="authorId" class="form-label">Author</label>
                                     <select class="form-select" id="authorId" name="authorId" required>
                                         <option value="0">All Authors</option>
@@ -80,7 +71,7 @@
                                             <option value="${user.id}">${user.fullName}</option>
                                         </c:forEach>
                                     </select>
-                                </div>
+                                </div>-->
 
                                 <div class="mb-3">
                                     <label for="summary" class="form-label">Summary</label>

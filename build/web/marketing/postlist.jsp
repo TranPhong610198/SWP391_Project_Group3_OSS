@@ -150,30 +150,17 @@
                                     <input type="text" name="search" class="form-control" placeholder="Enter title...">
                                 </div>
 
-                                <!-- Category -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Category</label>
-                                    <select name="categoryId" class="form-select">
-                                        <option value="0">All Categories</option>
-                                        <!-- sau lấy  Category List truyền vào đây  -->
-                                        <option value="1" >Category 1</option>   
-                                        <option value="2" >Category 2</option>
-                                        <option value="3" >Category 3</option>
-                                        <option value="4" >Category 4</option>
-                                    </select>
-                                </div>
+                                
 
 
                                 <!-- Author -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Author</label>
-                                    <select name="authorId" class="form-select">
-                                        <option value="0">All Authors</option>
-                                        <c:forEach var="user" items="${users}">
-                                            <option value="${user.id}">${user.fullName}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
+                                <select name="authorId">
+    <option value="0">All Authors</option>
+    <c:forEach var="author" items="${authors}">
+        <option value="${author.id}">(${author.role})</option>
+    </c:forEach>
+</select>
+
 
                                 <!-- Status -->
                                 <div class="col-md-2">
@@ -185,23 +172,7 @@
                                     </select>
                                 </div>
                                 <!-- Sorting -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Sort By</label>
-                                    <select name="sortBy" class="form-select">
-                                        <option value="">Default</option>
-                                        <option value="title" ${sortBy == 'title' ? 'selected' : ''}>Title</option>
-                                        <option value="date" ${sortBy == 'category_id' ? 'selected' : ''}>Catgory</option>
-                                        <option value="author" ${sortBy == 'author_id' ? 'selected' : ''}>Author</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <label class="form-label">Order</label>
-                                    <select name="sortDirection" class="form-select">
-                                        <option value="asc" ${sortDirection == 'asc' ? 'selected' : ''}>Ascending</option>
-                                        <option value="desc" ${sortDirection == 'desc' ? 'selected' : ''}>Descending</option>
-                                    </select>
-                                </div>
+                                
                                 <!-- Submit -->
                                 <div class="col-md-2">
                                     <label class="form-label">&nbsp;</label>
@@ -233,11 +204,11 @@
                                 <div class="meta-info">
                                     <i class="fas fa-user"></i> ${post.getUser().getFullName()}
                                     <i class="fas fa-clock ms-2"></i> ${post.getCreatedAt()}
-                                    <i class="fas fa-tag ms-2"></i> ${post.getCategoryId()}
+                                    
                                     <i class="fas fa-star ms-2"></i> ${post.isIsFeatured() ? 'Featured' : 'Not Featured'}
                                 </div>
                                 <p class="card-text">${post.getSummary()}</p>
-                                <span class="category-badge">${post.getCategoryId()}</span>
+                                
                                 <div class="action-btns mt-3">
                                     <a href="${pageContext.request.contextPath}/detailPost?id=${post.getId()}" 
                                        class="btn btn-outline-primary">View</a>
@@ -266,9 +237,10 @@
                     <c:forEach var="i" begin="1" end="${totalPages}">
                         <li class="page-item ${currentPage == i ? 'active' : ''}">
                             <a class="page-link" 
-                               href="${pageContext.request.contextPath}/postList?page=${i}">
-                                ${i}
-                            </a>
+   href="${pageContext.request.contextPath}/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">
+   ${i}
+</a>
+
                         </li>
                     </c:forEach>
 

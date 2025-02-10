@@ -15,7 +15,7 @@ public class PostDAO extends DBContext {
 
     public static UserDAO userDao = new UserDAO();
 
-    public List<Post> getAllPosts(int page, int pageSize, String search, Integer categoryId, Integer authorId, String status, String sortBy, String sortDirection) {
+    public List<Post> getAllPosts(int page, int pageSize, String search, Integer authorId, String status) {
         List<Post> posts = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder("SELECT * FROM posts");
@@ -28,36 +28,20 @@ public class PostDAO extends DBContext {
             params.add("%" + search + "%");
             hasCondition = true;
         }
-        if (categoryId != null && categoryId != 0) { // Nếu = 0 thì bỏ qua
-            sql.append(hasCondition ? " AND" : " WHERE").append(" category_id = ?");
-            params.add(categoryId);
-            hasCondition = true;
-        }
-        if (authorId != null && authorId != 0) { // Nếu = 0 thì bỏ qua
-            sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
-            params.add(authorId);
-            hasCondition = true;
-        }
+        
+        if (authorId != null && authorId != 0) { // Nếu chọn "All Authors" thì bỏ qua lọc
+    sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
+    params.add(authorId);
+    hasCondition = true;
+}
+
         if (status != null && !status.isEmpty()) {
             sql.append(hasCondition ? " AND" : " WHERE").append(" status = ?");
             params.add(status);
         }
 
         // Danh sách các cột hợp lệ
-        List<String> validSortColumns = Arrays.asList("title", "created_at", "updated_at", "category_id", "author_id");
-
-        // Kiểm tra nếu `sortBy` không hợp lệ -> đặt mặc định
-        if (sortBy == null || !validSortColumns.contains(sortBy.toLowerCase())) {
-            sortBy = "created_at"; // Sắp xếp mặc định
-        }
-
-        // Kiểm tra hướng sắp xếp ASC/DESC, nếu sai -> mặc định DESC
-        if (!"ASC".equalsIgnoreCase(sortDirection) && !"DESC".equalsIgnoreCase(sortDirection)) {
-            sortDirection = "DESC";
-        }
-
-        // Thêm ORDER BY vào truy vấn
-        sql.append(" ORDER BY ").append(sortBy).append(" ").append(sortDirection);
+        sql.append(" ORDER BY created_at DESC");
 
         // Phân trang (đảm bảo FETCH NEXT > 0)
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
@@ -80,7 +64,6 @@ public class PostDAO extends DBContext {
                     post.setId(rs.getInt("id"));
                     post.setTitle(rs.getString("title"));
                     post.setThumbnail(rs.getString("thumbnail"));
-                    post.setCategoryId(rs.getInt("category_id"));
                     post.setSummary(rs.getString("summary"));
                     post.setContent(rs.getString("content"));
                     post.setIsFeatured(rs.getBoolean("is_featured"));
@@ -99,7 +82,7 @@ public class PostDAO extends DBContext {
         return posts;
     }
 
-    public int getTotalPostsCount(String search, Integer categoryId, Integer authorId, String status) {
+    public int getTotalPostsCount(String search, Integer authorId, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM posts WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -107,10 +90,7 @@ public class PostDAO extends DBContext {
             sql.append(" AND title LIKE ?");
             params.add("%" + search + "%");
         }
-        if (categoryId != null) {
-            sql.append(" AND category_id = ?");
-            params.add(categoryId);
-        }
+        
         if (authorId != null) {
             sql.append(" AND author_id = ?");
             params.add(authorId);
@@ -150,7 +130,7 @@ public class PostDAO extends DBContext {
                     post.setId(rs.getInt("id"));
                     post.setTitle(rs.getString("title"));
                     post.setThumbnail(rs.getString("thumbnail"));
-                    post.setCategoryId(rs.getInt("category_id"));
+                    
                     post.setSummary(rs.getString("summary"));
                     post.setContent(rs.getString("content"));
 
@@ -170,18 +150,23 @@ public class PostDAO extends DBContext {
     }
 
     public boolean addPost(Post post) {
-        String sql = "INSERT INTO posts (title, thumbnail, category_id, summary, content, author_id, is_featured, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO posts (title, thumbnail, summary, content, author_id, is_featured, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, post.getTitle());
             st.setString(2, post.getThumbnail());
-            st.setInt(3, post.getCategoryId());
-            st.setString(4, post.getSummary());
-            st.setString(5, post.getContent());
-            st.setInt(6, post.getUser().getId());
-            st.setBoolean(7, post.isIsFeatured());
-            st.setString(8, post.getStatus());
-            st.setDate(9, post.getCreatedAt());
-            st.setDate(10, post.getUpdatedAt());
+            st.setString(3, post.getSummary());
+            st.setString(4, post.getContent());
+            st.setInt(5, post.getUser().getId());
+            st.setBoolean(6, post.isIsFeatured());
+            st.setString(7, post.getStatus());
+            st.setDate(8, post.getCreatedAt());
+            if (post.getUpdatedAt() != null) {
+    st.setDate(9, new java.sql.Date(post.getUpdatedAt().getTime()));
+} else {
+    st.setNull(9, java.sql.Types.DATE);
+}
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -190,23 +175,22 @@ public class PostDAO extends DBContext {
     }
 
    public boolean updatePost(Post post) {
-    String sql = "UPDATE posts SET title = ?, thumbnail = ?, category_id = ?, summary = ?, content = ?, status = ?, updated_at = ? WHERE id = ?";
+    String sql = "UPDATE posts SET title = ?, thumbnail = ?,  summary = ?, content = ?, status = ?, updated_at = ? WHERE id = ?";
     try (PreparedStatement st = connection.prepareStatement(sql)) {
         st.setString(1, post.getTitle());
         st.setString(2, post.getThumbnail());
-        st.setInt(3, post.getCategoryId());
-        st.setString(4, post.getSummary());
-        st.setString(5, post.getContent());
-        st.setString(6, post.getStatus());
+        st.setString(3, post.getSummary());
+        st.setString(4, post.getContent());
+        st.setString(5, post.getStatus());
 
        
         if (post.getUpdatedAt() != null) {
-            st.setDate(7, new java.sql.Date(post.getUpdatedAt().getTime()));
+            st.setDate(6, new java.sql.Date(post.getUpdatedAt().getTime()));
         } else {
-            st.setNull(7, java.sql.Types.DATE);
+            st.setNull(6, java.sql.Types.DATE);
         }
 
-        st.setInt(8, post.getId()); 
+        st.setInt(7, post.getId()); 
 
         return st.executeUpdate() > 0;
     } catch (SQLException e) {
@@ -228,28 +212,25 @@ public class PostDAO extends DBContext {
         return false;
     }
 
-public List<User> getUserRoleAdmin() {
-    List<User> marketers = new ArrayList<>();
-    String query = "SELECT id, full_name, email, role FROM users WHERE role = ?";
+public List<User> getAuthorsByRole() {
+    List<User> authors = new ArrayList<>();
+    String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
 
-    try (PreparedStatement stmt = connection.prepareStatement(query)) {
-        stmt.setString(1, "admin"); 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setFullName(rs.getString("full_name"));
-                user.setEmail(rs.getString("email"));
-                user.setRole(rs.getString("role"));
-                marketers.add(user);
-            }
+    try (PreparedStatement stmt = connection.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setFullName(rs.getString("full_name"));
+            user.setRole(rs.getString("role"));
+            authors.add(user);
         }
-    } catch (Exception e) {
+    } catch (SQLException e) {
         e.printStackTrace();
     }
-
-    return marketers;
+    return authors;
 }
+
 
 
     public static void main(String[] args) {

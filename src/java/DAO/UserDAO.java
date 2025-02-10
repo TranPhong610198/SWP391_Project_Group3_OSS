@@ -617,6 +617,29 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
+    
+    
+
+    public List<User> getAuthorsByRole() {
+        List<User> authors = new ArrayList<>();
+        String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
+
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setRole(rs.getString("role"));
+                authors.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return authors;
+    }
+
+
 ////////
 
     public static void main(String[] args) {
