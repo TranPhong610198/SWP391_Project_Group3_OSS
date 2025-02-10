@@ -23,7 +23,6 @@
     </head>
     <body>
         <div class="container mt-4">
-
             <h2>Danh Sách Người Dùng</h2>
 
             <!-- Filter and Search Form -->
@@ -75,45 +74,42 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="userlists?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 ID ${sortField == 'id' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
                         <th>
-                            <a href="userlists?sortField=full_name&sortDir=${sortField == 'full_name' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=full_name&sortDir=${sortField == 'full_name' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Tên ${sortField == 'full_name' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
                         <th>
-                            <a href="userlists?sortField=username&sortDir=${sortField == 'username' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=username&sortDir=${sortField == 'username' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Tên đăng nhập ${sortField == 'username' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
-
-                        <!--                        <th>
-                                                    <a>Password</a></th>-->
                         <th>
-                            <a href="userlists?sortField=gender&sortDir=${sortField == 'gender' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=gender&sortDir=${sortField == 'gender' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Giới tính ${sortField == 'gender' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
                         <th>
-                            <a href="userlists?sortField=email&sortDir=${sortField == 'email' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=email&sortDir=${sortField == 'email' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Email ${sortField == 'email' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
                         <th>
-                            <a href="userlists?sortField=mobile&sortDir=${sortField == 'mobile' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=mobile&sortDir=${sortField == 'mobile' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Số điện thoại ${sortField == 'mobile' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
                         <th>
-                            <a href="userlists?sortField=role&sortDir=${sortField == 'role' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=role&sortDir=${sortField == 'role' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Vai trò ${sortField == 'role' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
                         <th>
-                            <a href="userlists?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}">
+                            <a href="userlists?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
                                 Trạng thái ${sortField == 'status' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
                             </a>
                         </th>
@@ -126,7 +122,6 @@
                             <td>${user.id}</td>
                             <td>${user.fullName}</td>
                             <td>${user.username}</td>
-<!--                            <td class="password-column">${user.passwordHash}</td>-->
                             <td>
                                 <c:choose>
                                     <c:when test="${user.gender == 'male' or user.gender == 'Male'}">Nam</c:when>
@@ -140,8 +135,8 @@
                             <td>${user.status}</td>
                             <td>
                                 <a href="userdetail/view?id=${user.id}" class="btn btn-info btn-sm">Chi tiết</a>
-                                <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Xoá</a>
-
+                                <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm" 
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Xoá</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -149,33 +144,28 @@
             </table>
 
             <!-- Pagination -->
-            <c:set var="queryParams" value="&gender=${gender}&role=${role}&status=${status}&search=${search}&sortField=${sortField}&sortDir=${sortDir}"/>
-            
             <nav>
                 <ul class="pagination">
                     <c:if test="${currentPage > 1}">
                         <li class="page-item">
-                            <a class="page-link" href="userlists?page=${currentPage-1}${queryParams}">Trước</a>
+                            <a class="page-link" href="userlists?page=${currentPage-1}&gender=${gender}&role=${role}&status=${status}&search=${search}&sortField=${sortField}&sortDir=${sortDir}">Trước</a>
                         </li>
                     </c:if>
                     
                     <c:forEach begin="1" end="${totalPages}" var="i">
                         <li class="page-item ${currentPage == i ? 'active' : ''}">
-                            <a class="page-link" href="userlists?page=${i}${queryParams}">${i}</a>
+                            <a class="page-link" href="userlists?page=${i}&gender=${gender}&role=${role}&status=${status}&search=${search}&sortField=${sortField}&sortDir=${sortDir}">${i}</a>
                         </li>
                     </c:forEach>
                     
                     <c:if test="${currentPage < totalPages}">
                         <li class="page-item">
-                            <a class="page-link" href="userlists?page=${currentPage+1}${queryParams}">Sau</a>
+                            <a class="page-link" href="userlists?page=${currentPage+1}&gender=${gender}&role=${role}&status=${status}&search=${search}&sortField=${sortField}&sortDir=${sortDir}">Sau</a>
                         </li>
                     </c:if>
                 </ul>
             </nav>
-            
         </div>
-
-
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </body>
