@@ -1,83 +1,130 @@
-///*
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-// * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
-// */
-//
-//package post;
-//
-//import java.io.IOException;
-//import java.io.PrintWriter;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.annotation.WebServlet;
-//import jakarta.servlet.http.HttpServlet;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
-//
-///**
-// *
-// * @author DELL
-// */
-//@WebServlet(name="PostDetailServlet", urlPatterns={"/postdetail"})
-//public class PostDetailServlet extends HttpServlet {
-//   
-//    /** 
-//     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-//     * @param request servlet request
-//     * @param response servlet response
-//     * @throws ServletException if a servlet-specific error occurs
-//     * @throws IOException if an I/O error occurs
-//     */
-//    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-//    throws ServletException, IOException {
-//        response.setContentType("text/html;charset=UTF-8");
-//        try (PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet PostDetailServlet</title>");  
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet PostDetailServlet at " + request.getContextPath () + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
-//    } 
-//
-//    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-//    /** 
-//     * Handles the HTTP <code>GET</code> method.
-//     * @param request servlet request
-//     * @param response servlet response
-//     * @throws ServletException if a servlet-specific error occurs
-//     * @throws IOException if an I/O error occurs
-//     */
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-//    throws ServletException, IOException {
-//        processRequest(request, response);
-//    } 
-//
-//    /** 
-//     * Handles the HTTP <code>POST</code> method.
-//     * @param request servlet request
-//     * @param response servlet response
-//     * @throws ServletException if a servlet-specific error occurs
-//     * @throws IOException if an I/O error occurs
-//     */
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//    throws ServletException, IOException {
-//        processRequest(request, response);
-//    }
-//
-//    /** 
-//     * Returns a short description of the servlet.
-//     * @return a String containing servlet description
-//     */
-//    @Override
-//    public String getServletInfo() {
-//        return "Short description";
-//    }// </editor-fold>
-//
-//}
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package post;
+
+import DAO.PostDAO;
+import entity.Post;
+import entity.User;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.util.List;
+
+/**
+ *
+ * @author USA
+ */
+@WebServlet(name = "DetailPostServlet", urlPatterns = {"/detailPost"})
+public class PostDetailServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet EditPostServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet EditPostServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String pId = request.getParameter("id");
+        int postId;
+        try {
+            postId = Integer.parseInt(pId);
+            PostDAO postDAO = new PostDAO();
+            Post p = postDAO.getPostById(postId);
+            List<User> users = postDAO.getUserRoleAdmin();
+            request.setAttribute("users", users);
+            request.setAttribute("post", p);
+            request.getRequestDispatcher("/marketing/postdetail.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String title = request.getParameter("title");
+        int categoryId = Integer.parseInt(request.getParameter("category"));
+        String thumbnail = request.getParameter("thumbnail");
+        String summary = request.getParameter("summary");
+        String content = request.getParameter("content");
+        String status = request.getParameter("status");
+        Date updatedAt = new Date(System.currentTimeMillis());
+
+        Post post = new Post(id, title, thumbnail, categoryId, summary, content, status, updatedAt);
+
+        PostDAO postDAO = new PostDAO();
+        boolean isUpdated = postDAO.updatePost(post);
+
+        Post p = postDAO.getPostById(id);
+        List<User> users = postDAO.getUserRoleAdmin();
+
+        if (isUpdated) {
+            response.sendRedirect("postList");
+        } else {
+            request.setAttribute("users", users);
+            request.setAttribute("post", p);
+            request.setAttribute("error", "Cập nhật bài viết thất bại.");
+            request.getRequestDispatcher("/marketing/postdetail.jsp").forward(request, response);
+        }
+
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
