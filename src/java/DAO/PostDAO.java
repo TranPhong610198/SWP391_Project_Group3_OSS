@@ -1,294 +1,320 @@
-//package DAO;
+package DAO;
+
+import Context.DBContext;
+import entity.Post;
+import entity.User;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class PostDAO extends DBContext {
+
+    public static UserDAO userDao = new UserDAO();
+
+    public List<Post> getAllPosts(int page, int pageSize, String search, Integer categoryId, Integer authorId, String status, String sortBy, String sortDirection) {
+        List<Post> posts = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM posts");
+        List<Object> params = new ArrayList<>();
+
+        // Điều kiện WHERE
+        boolean hasCondition = false;
+        if (search != null && !search.isEmpty()) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" title LIKE ?");
+            params.add("%" + search + "%");
+            hasCondition = true;
+        }
+        if (categoryId != null && categoryId != 0) { // Nếu = 0 thì bỏ qua
+            sql.append(hasCondition ? " AND" : " WHERE").append(" category_id = ?");
+            params.add(categoryId);
+            hasCondition = true;
+        }
+        if (authorId != null && authorId != 0) { // Nếu = 0 thì bỏ qua
+            sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
+            params.add(authorId);
+            hasCondition = true;
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" status = ?");
+            params.add(status);
+        }
+
+        // Danh sách các cột hợp lệ
+        List<String> validSortColumns = Arrays.asList("title", "created_at", "updated_at", "category_id", "author_id");
+
+        // Kiểm tra nếu `sortBy` không hợp lệ -> đặt mặc định
+        if (sortBy == null || !validSortColumns.contains(sortBy.toLowerCase())) {
+            sortBy = "created_at"; // Sắp xếp mặc định
+        }
+
+        // Kiểm tra hướng sắp xếp ASC/DESC, nếu sai -> mặc định DESC
+        if (!"ASC".equalsIgnoreCase(sortDirection) && !"DESC".equalsIgnoreCase(sortDirection)) {
+            sortDirection = "DESC";
+        }
+
+        // Thêm ORDER BY vào truy vấn
+        sql.append(" ORDER BY ").append(sortBy).append(" ").append(sortDirection);
+
+        // Phân trang (đảm bảo FETCH NEXT > 0)
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add((page - 1) * pageSize); // OFFSET
+        params.add(Math.max(pageSize, 1)); // FETCH NEXT (phải > 0)
+
+        // Thực thi truy vấn
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                if (params.get(i) instanceof Integer) {
+                    st.setInt(i + 1, (Integer) params.get(i));
+                } else {
+                    st.setString(i + 1, (String) params.get(i));
+                }
+            }
+
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    Post post = new Post();
+                    post.setId(rs.getInt("id"));
+                    post.setTitle(rs.getString("title"));
+                    post.setThumbnail(rs.getString("thumbnail"));
+                    post.setCategoryId(rs.getInt("category_id"));
+                    post.setSummary(rs.getString("summary"));
+                    post.setContent(rs.getString("content"));
+                    post.setIsFeatured(rs.getBoolean("is_featured"));
+                    post.setStatus(rs.getString("status"));
+                    post.setCreatedAt(rs.getDate("created_at"));
+                    post.setUpdatedAt(rs.getDate("updated_at"));
+                    User user = userDao.getUserById(rs.getInt("author_id"));
+                    post.setUser(user);
+
+                    posts.add(post);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return posts;
+    }
+
+    public int getTotalPostsCount(String search, Integer categoryId, Integer authorId, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM posts WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (search != null && !search.isEmpty()) {
+            sql.append(" AND title LIKE ?");
+            params.add("%" + search + "%");
+        }
+        if (categoryId != null) {
+            sql.append(" AND category_id = ?");
+            params.add(categoryId);
+        }
+        if (authorId != null) {
+            sql.append(" AND author_id = ?");
+            params.add(authorId);
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND status = ?");
+            params.add(status);
+        }
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                if (params.get(i) instanceof Integer) {
+                    st.setInt(i + 1, (Integer) params.get(i));
+                } else {
+                    st.setString(i + 1, (String) params.get(i));
+                }
+            }
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public Post getPostById(int postId) {
+        String sql = "SELECT * FROM posts WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, postId);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    Post post = new Post();
+                    post.setId(rs.getInt("id"));
+                    post.setTitle(rs.getString("title"));
+                    post.setThumbnail(rs.getString("thumbnail"));
+                    post.setCategoryId(rs.getInt("category_id"));
+                    post.setSummary(rs.getString("summary"));
+                    post.setContent(rs.getString("content"));
+
+                    post.setIsFeatured(rs.getBoolean("is_featured"));
+                    post.setStatus(rs.getString("status"));
+                    post.setCreatedAt(rs.getDate("created_at"));
+                    post.setUpdatedAt(rs.getDate("updated_at"));
+                    User user = userDao.getUserById(rs.getInt("author_id"));
+                    post.setUser(user);
+                    return post;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean addPost(Post post) {
+        String sql = "INSERT INTO posts (title, thumbnail, category_id, summary, content, author_id, is_featured, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, post.getTitle());
+            st.setString(2, post.getThumbnail());
+            st.setInt(3, post.getCategoryId());
+            st.setString(4, post.getSummary());
+            st.setString(5, post.getContent());
+            st.setInt(6, post.getUser().getId());
+            st.setBoolean(7, post.isIsFeatured());
+            st.setString(8, post.getStatus());
+            st.setDate(9, post.getCreatedAt());
+            st.setDate(10, post.getUpdatedAt());
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+   public boolean updatePost(Post post) {
+    String sql = "UPDATE posts SET title = ?, thumbnail = ?, category_id = ?, summary = ?, content = ?, status = ?, updated_at = ? WHERE id = ?";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setString(1, post.getTitle());
+        st.setString(2, post.getThumbnail());
+        st.setInt(3, post.getCategoryId());
+        st.setString(4, post.getSummary());
+        st.setString(5, post.getContent());
+        st.setString(6, post.getStatus());
+
+       
+        if (post.getUpdatedAt() != null) {
+            st.setDate(7, new java.sql.Date(post.getUpdatedAt().getTime()));
+        } else {
+            st.setNull(7, java.sql.Types.DATE);
+        }
+
+        st.setInt(8, post.getId()); 
+
+        return st.executeUpdate() > 0;
+    } catch (SQLException e) {
+        System.err.println("Error updating post: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return false;
+}
+
+
+    public boolean deletePost(int postId) {
+        String sql = "DELETE FROM posts WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, postId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+public List<User> getUserRoleAdmin() {
+    List<User> marketers = new ArrayList<>();
+    String query = "SELECT id, full_name, email, role FROM users WHERE role = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, "admin"); 
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                marketers.add(user);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return marketers;
+}
+
+
+    public static void main(String[] args) {
+        PostDAO postDAO = new PostDAO();
+
+//        // Test lấy tất cả bài viết
+//        System.out.println("Lấy danh sách bài viết:");
+//        List<Post> posts = postDAO.getAllPosts(1, 5, "", null, null, null, "", "DESC");
+//        for (Post post : posts) {
+//            System.out.println(post.getId() + " - " + post.getTitle());
+//        }
 //
-//import DAO.PostDAO;
-//import Context.DBContext;
-//import entity.Post;
-//import java.sql.*;
-//import java.util.ArrayList;
-//import java.util.List;
+//        // Test lấy số lượng bài viết
+//        int totalPosts = postDAO.getTotalPostsCount("", null, null, null);
+//        System.out.println("Tổng số bài viết: " + totalPosts);
 //
-//public class PostDAO {
-//    private Connection conn;
-//    private PreparedStatement ps;
-//    private ResultSet rs;
+//        // Test lấy bài viết theo ID
+//        if (!posts.isEmpty()) {
+//            int postId = posts.get(0).getId();
+//            Post post = postDAO.getPostById(postId);
+//            
+//            System.out.println("Chi tiết bài viết ID " + postId + ": " + post.getTitle() + ": "+ post.getUser().getFullName());
+//        }
+//        Post newPost = new Post();
+//        Date createdAt = new Date(System.currentTimeMillis());
+//        newPost.setTitle("Bài viết mới 2");
+//        newPost.setThumbnail("thumbnail.jpg");
+//        newPost.setCategoryId(1); // ID danh mục hợp lệ trong DB
+//        newPost.setSummary("Tóm tắt bài viết mới");
+//        newPost.setContent("Nội dung chi tiết của bài viết mới");
+//         newPost.setCreatedAt(createdAt);
+//// ✅ Khởi tạo User trước khi gọi setId
+//        User user = new User();
+//        user.setId(1); // ID tác giả hợp lệ trong DB
+//        newPost.setUser(user); // Gán User vào Post
 //
-//    public List<Post> getAllPosts(String search, String category, String author, String status, 
-//                                String sortBy, String sortOrder, int page, int pageSize) {
-//        List<Post> list = new ArrayList<>();
-//        String query = "SELECT p.*, c.name as category_name, u.full_name as author_name " +
-//                      "FROM posts p " +
-//                      "JOIN categories c ON p.category_id = c.id " +
-//                      "JOIN users u ON p.author_id = u.id " +
-//                      "WHERE 1=1 ";
-//        
-//        if (search != null && !search.trim().isEmpty()) {
-//            query += "AND p.title LIKE ? ";
-//        }
-//        if (category != null && !category.trim().isEmpty()) {
-//            query += "AND c.name LIKE ? ";
-//        }
-//        if (author != null && !author.trim().isEmpty()) {
-//            query += "AND u.full_name LIKE ? ";
-//        }
-//        if (status != null && !status.trim().isEmpty()) {
-//            query += "AND p.status = ? ";
-//        }
-//        
-//        // Add sorting
-//        if (sortBy != null && !sortBy.trim().isEmpty()) {
-//            query += "ORDER BY " + sortBy + " " + (sortOrder != null ? sortOrder : "ASC");
+//        newPost.setIsFeatured(false);
+//        newPost.setStatus("published");
+//
+//        boolean isAdded = postDAO.addPost(newPost);
+//
+//        if (isAdded) {
+//            System.out.println("Thêm bài viết thành công!");
 //        } else {
-//            query += "ORDER BY p.created_at DESC";
-//        }
-//        
-//        // Add pagination
-//        query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-//        
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            
-//            int paramIndex = 1;
-//            if (search != null && !search.trim().isEmpty()) {
-//                ps.setString(paramIndex++, "%" + search + "%");
-//            }
-//            if (category != null && !category.trim().isEmpty()) {
-//                ps.setString(paramIndex++, "%" + category + "%");
-//            }
-//            if (author != null && !author.trim().isEmpty()) {
-//                ps.setString(paramIndex++, "%" + author + "%");
-//            }
-//            if (status != null && !status.trim().isEmpty()) {
-//                ps.setString(paramIndex++, status);
-//            }
-//            
-//            ps.setInt(paramIndex++, (page - 1) * pageSize);
-//            ps.setInt(paramIndex, pageSize);
-//            
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                Post post = new Post();
-//                post.setId(rs.getInt("id"));
-//                post.setTitle(rs.getString("title"));
-//                post.setThumbnail(rs.getString("thumbnail"));
-//                post.setCategoryId(rs.getInt("category_id"));
-//                post.setCategoryName(rs.getString("category_name"));
-//                post.setSummary(rs.getString("summary"));
-//                post.setContent(rs.getString("content"));
-//                post.setAuthorId(rs.getInt("author_id"));
-//                post.setAuthorName(rs.getString("author_name"));
-//                post.setIsFeatured(rs.getBoolean("is_featured"));
-//                post.setStatus(rs.getString("status"));
-//                post.setCreatedAt(rs.getTimestamp("created_at"));
-//                post.setUpdatedAt(rs.getTimestamp("updated_at"));
-//                list.add(post);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            closeResources();
-//        }
-//        return list;
-//    }
+//            System.out.println("Thêm bài viết thất bại!");
+//        int postId = 1; // Đổi thành ID bài viết bạn muốn test
 //
-//    public int getTotalPosts(String search, String category, String author, String status) {
-//        String query = "SELECT COUNT(*) FROM posts p " +
-//                      "JOIN categories c ON p.category_id = c.id " +
-//                      "JOIN users u ON p.author_id = u.id " +
-//                      "WHERE 1=1 ";
-//        
-//        if (search != null && !search.trim().isEmpty()) {
-//            query += "AND p.title LIKE ? ";
-//        }
-//        if (category != null && !category.trim().isEmpty()) {
-//            query += "AND c.name LIKE ? ";
-//        }
-//        if (author != null && !author.trim().isEmpty()) {
-//            query += "AND u.full_name LIKE ? ";
-//        }
-//        if (status != null && !status.trim().isEmpty()) {
-//            query += "AND p.status = ? ";
-//        }
-//        
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            
-//            int paramIndex = 1;
-//            if (search != null && !search.trim().isEmpty()) {
-//                ps.setString(paramIndex++, "%" + search + "%");
-//            }
-//            if (category != null && !category.trim().isEmpty()) {
-//                ps.setString(paramIndex++, "%" + category + "%");
-//            }
-//            if (author != null && !author.trim().isEmpty()) {
-//                ps.setString(paramIndex++, "%" + author + "%");
-//            }
-//            if (status != null && !status.trim().isEmpty()) {
-//                ps.setString(paramIndex, status);
-//            }
-//            
-//            rs = ps.executeQuery();
-//            if (rs.next()) {
-//                return rs.getInt(1);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            closeResources();
-//        }
-//        return 0;
-//    }
+//        // Gọi phương thức getPostById
+//        Post post = postDAO.getPostById(postId);
 //
-//    public Post getPostById(int id) {
-//        String query = "SELECT p.*, c.name as category_name, u.full_name as author_name " +
-//                      "FROM posts p " +
-//                      "JOIN categories c ON p.category_id = c.id " +
-//                      "JOIN users u ON p.author_id = u.id " +
-//                      "WHERE p.id = ?";
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            ps.setInt(1, id);
-//            rs = ps.executeQuery();
-//            
-//            if (rs.next()) {
-//                Post post = new Post();
-//                post.setId(rs.getInt("id"));
-//                post.setTitle(rs.getString("title"));
-//                post.setThumbnail(rs.getString("thumbnail"));
-//                post.setCategoryId(rs.getInt("category_id"));
-//                post.setCategoryName(rs.getString("category_name"));
-//                post.setSummary(rs.getString("summary"));
-//                post.setContent(rs.getString("content"));
-//                post.setAuthorId(rs.getInt("author_id"));
-//                post.setAuthorName(rs.getString("author_name"));
-//                post.setIsFeatured(rs.getBoolean("is_featured"));
-//                post.setStatus(rs.getString("status"));
-//                post.setCreatedAt(rs.getTimestamp("created_at"));
-//                post.setUpdatedAt(rs.getTimestamp("updated_at"));
-//                return post;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            closeResources();
+//        // Kiểm tra và in kết quả
+//        if (post != null) {
+//            System.out.println("Bài viết tìm thấy:");
+//            System.out.println("ID: " + post.getId());
+//            System.out.println("Tiêu đề: " + post.getTitle());
+//            System.out.println("Tóm tắt: " + post.getSummary());
+//            System.out.println("Nội dung: " + post.getContent());
+//            System.out.println("Tác giả: " + post.getUser().getFullName());
+//            System.out.println("Trạng thái: " + post.getStatus());
+//            System.out.println("Ngày tạo: " + post.getCreatedAt());
+//            System.out.println("Ngày cập nhật: " + post.getUpdatedAt());
+//        } else {
+//            System.out.println("Không tìm thấy bài viết với ID: " + postId);
 //        }
-//        return null;
-//    }
-//
-//    public boolean updatePost(Post post) {
-//        String query = "UPDATE posts SET title=?, thumbnail=?, category_id=?, summary=?, " +
-//                      "content=?, is_featured=?, status=? WHERE id=?";
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            ps.setString(1, post.getTitle());
-//            ps.setString(2, post.getThumbnail());
-//            ps.setInt(3, post.getCategoryId());
-//            ps.setString(4, post.getSummary());
-//            ps.setString(5, post.getContent());
-//            ps.setBoolean(6, post.getIsFeatured());
-//            ps.setString(7, post.getStatus());
-//            ps.setInt(8, post.getId());
-//            
-//            return ps.executeUpdate() > 0;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            closeResources();
 //        }
-//        return false;
-//    }
-//
-//    public boolean insertPost(Post post) {
-//        String query = "INSERT INTO posts (title, thumbnail, category_id, summary, content, " +
-//                      "author_id, is_featured, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            ps.setString(1, post.getTitle());
-//            ps.setString(2, post.getThumbnail());
-//            ps.setInt(3, post.getCategoryId());
-//            ps.setString(4, post.getSummary());
-//            ps.setString(5, post.getContent());
-//            ps.setInt(6, post.getAuthorId());
-//            ps.setBoolean(7, post.getIsFeatured());
-//            ps.setString(8, post.getStatus());
-//            
-//            return ps.executeUpdate() > 0;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            closeResources();
-//        }
-//        return false;
-//    }
-//
-//    public List<Post> getRelatedPosts(int currentPostId, int categoryId, int limit) {
-//        List<Post> list = new ArrayList<>();
-//        String query = "SELECT TOP ? p.*, c.name as category_name, u.full_name as author_name " +
-//                      "FROM posts p " +
-//                      "JOIN categories c ON p.category_id = c.id " +
-//                      "JOIN users u ON p.author_id = u.id " +
-//                      "WHERE p.category_id = ? AND p.id != ? AND p.status = 'published' " +
-//                      "ORDER BY p.created_at DESC";
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            ps.setInt(1, limit);
-//            ps.setInt(2, categoryId);
-//            ps.setInt(3, currentPostId);
-//            rs = ps.executeQuery();
-//            
-//            while (rs.next()) {
-//                Post post = new Post();
-//                post.setId(rs.getInt("id"));
-//                post.setTitle(rs.getString("title"));
-//                post.setThumbnail(rs.getString("thumbnail"));
-//                post.setCategoryId(rs.getInt("category_id"));
-//                post.setCategoryName(rs.getString("category_name"));
-//                post.setSummary(rs.getString("summary"));
-//                post.setAuthorId(rs.getInt("author_id"));
-//                post.setAuthorName(rs.getString("author_name"));
-//                post.setCreatedAt(rs.getTimestamp("created_at"));
-//                list.add(post);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            closeResources();
-//        }
-//        return list;
-//    }
-//
-//    private void closeResources() {
-//        try {
-//            if (rs != null) rs.close();
-//            if (ps != null) ps.close();
-//            if (conn != null) conn.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    
-//    public boolean deletePost(int postId) throws SQLException {
-//        String sql = "DELETE FROM posts WHERE id = ?";
-//        
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(sql);
-//            ps.setInt(1, postId);
-//            
-//            int rowsAffected = ps.executeUpdate();
-//            return rowsAffected > 0;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new SQLException(e);
-//        } finally {
-//            closeResources();
-//        }
-//    }
-//
-//
-//}
+    }
+
+}
