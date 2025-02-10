@@ -96,3 +96,208 @@ INSERT [dbo].[tokenPassword] ([id], [token], [expiryTime], [isUsed], [UserID]) V
 GO
 SET IDENTITY_INSERT [dbo].[tokenPassword] OFF
 GO
+
+
+USE [clothing_shop]
+GO
+-- First ensure we have some categories for the posts
+
+-- Insert posts data
+SET IDENTITY_INSERT [dbo].[posts] ON
+INSERT INTO [dbo].[posts] 
+([id], [title], [thumbnail], [summary], [content], [author_id], [is_featured], [status], [created_at], [updated_at])
+VALUES
+(1, N'Spring Fashion Trends 2025', 
+    N'uploads/posts/spring-2025.jpg',
+    
+    N'Discover the hottest fashion trends for Spring 2025',
+    N'Spring 2025 is all about bold colors and sustainable fashion. This season brings a fresh perspective on classic styles with an emphasis on eco-friendly materials and versatile pieces that can be styled multiple ways. Key trends include pastel minimalism, oversized blazers, and sustainable denim.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-01-15T10:00:00' AS DateTime2),
+    CAST(N'2025-01-15T10:00:00' AS DateTime2)),
+(2, N'How to Build a Capsule Wardrobe',
+    N'uploads/posts/capsule-wardrobe.jpg',
+    
+    N'Essential guide to creating a versatile capsule wardrobe',
+    N'A capsule wardrobe is the perfect solution for those looking to minimize their clothing while maximizing style options. This comprehensive guide walks you through selecting essential pieces, color coordination, and seasonal transitions.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-01-20T14:30:00' AS DateTime2),
+    CAST(N'2025-01-20T14:30:00' AS DateTime2)),
+(3, N'Sustainable Fashion: A Complete Guide',
+    N'uploads/posts/sustainable-fashion.jpg',
+    
+    N'Everything you need to know about sustainable fashion',
+    N'Sustainable fashion is more than just a trend - it''s a necessity for our planet''s future. Learn about eco-friendly materials, ethical manufacturing processes, and how to make more sustainable choices in your fashion purchases.',
+    4,
+    0,
+    'published',
+    CAST(N'2025-01-25T09:15:00' AS DateTime2),
+    CAST(N'2025-01-25T09:15:00' AS DateTime2)),
+(4, N'Color Trends for Summer 2025',
+    N'uploads/posts/summer-colors.jpg',
+    
+    N'Explore the vibrant color palette of Summer 2025',
+    N'This summer''s color palette is all about expression and joy. From electric blues to sunset oranges, discover how to incorporate these trending colors into your wardrobe and make a statement.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-02-01T11:45:00' AS DateTime2),
+    CAST(N'2025-02-01T11:45:00' AS DateTime2)),
+(5, N'Accessorizing 101: Complete Guide',
+    N'uploads/posts/accessories-guide.jpg',
+    
+    N'Master the art of accessorizing your outfits',
+    N'Learn the fundamental principles of accessorizing, from selecting the right jewelry to choosing bags and shoes that complement your outfit. This comprehensive guide covers everything from casual to formal occasions.',
+    4,
+    0,
+    'draft',
+    CAST(N'2025-02-05T16:20:00' AS DateTime2),
+    CAST(N'2025-02-05T16:20:00' AS DateTime2)),
+
+	(6, N'Layering Techniques for Winter', 
+    N'uploads/posts/winter-layering.jpg',
+    
+    N'Master the art of stylish winter layering',
+    N'Learn how to combine different textures and pieces to create warm, fashionable winter outfits. From thermal base layers to statement coats, we break down the essential techniques for staying chic and comfortable.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-02-10T10:00:00' AS DateTime2),
+    CAST(N'2025-02-10T10:00:00' AS DateTime2)),
+
+(7, N'Eco-Friendly Fabric Innovations', 
+    N'uploads/posts/eco-fabrics.jpg',
+    
+    N'Discover groundbreaking sustainable fabric technologies',
+    N'From recycled ocean plastics to lab-grown textiles, explore the cutting-edge materials revolutionizing the fashion industry and reducing environmental impact.',
+    4,
+    0,
+    'published',
+    CAST(N'2025-02-15T14:30:00' AS DateTime2),
+    CAST(N'2025-02-15T14:30:00' AS DateTime2)),
+
+(8, N'Minimalist Wardrobe Essentials', 
+    N'uploads/posts/minimalist-wardrobe.jpg',
+    
+    N'Create a versatile wardrobe with fewer pieces',
+    N'Learn how to build a functional minimalist wardrobe that combines style, practicality, and personal expression. Our guide covers selecting timeless pieces that mix and match effortlessly.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-02-20T09:15:00' AS DateTime2),
+    CAST(N'2025-02-20T09:15:00' AS DateTime2)),
+
+(9, N'Vintage Fashion Revival', 
+    N'uploads/posts/vintage-fashion.jpg',
+    
+    N'How vintage styles are making a comeback',
+    N'Explore the resurgence of vintage fashion trends and how modern designers are reinterpreting classic looks from different decades.',
+    4,
+    0,
+    'published',
+    CAST(N'2025-02-25T11:45:00' AS DateTime2),
+    CAST(N'2025-02-25T11:45:00' AS DateTime2)),
+
+(10, N'Tech-Integrated Clothing', 
+    N'uploads/posts/tech-fashion.jpg',
+    
+    N'The future of fashion meets technology',
+    N'Discover how smart textiles, wearable tech, and innovative design are transforming the clothing industry, from self-heating jackets to fitness-tracking apparel.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-03-01T16:20:00' AS DateTime2),
+    CAST(N'2025-03-01T16:20:00' AS DateTime2)),
+
+(11, N'Budget-Friendly Fashion Hacks', 
+    N'uploads/posts/budget-fashion.jpg',
+    
+    N'Look great without breaking the bank',
+    N'Expert tips on creating stylish outfits on a budget, including thrifting strategies, versatile piece selection, and smart shopping techniques.',
+    4,
+    0,
+    'published',
+    CAST(N'2025-03-05T10:00:00' AS DateTime2),
+    CAST(N'2025-03-05T10:00:00' AS DateTime2)),
+
+(12, N'Cultural Influences in Fashion', 
+    N'uploads/posts/cultural-fashion.jpg',
+    
+    N'Global fashion trends and cultural inspirations',
+    N'An exploration of how different cultures influence global fashion trends, highlighting unique design elements and traditional textile techniques.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-03-10T14:30:00' AS DateTime2),
+    CAST(N'2025-03-10T14:30:00' AS DateTime2)),
+
+(13, N'Sustainable Shoe Design', 
+    N'uploads/posts/sustainable-shoes.jpg',
+    
+    N'Innovative approaches to eco-friendly footwear',
+    N'Dive into the world of sustainable shoe design, featuring brands that are reimagining footwear using recycled materials, ethical production, and innovative manufacturing techniques.',
+    4,
+    0,
+    'published',
+    CAST(N'2025-03-15T09:15:00' AS DateTime2),
+    CAST(N'2025-03-15T09:15:00' AS DateTime2)),
+
+(14, N'Fashion Photography Trends', 
+    N'uploads/posts/fashion-photography.jpg',
+    
+    N'The evolving art of fashion imagery',
+    N'Explore the latest trends in fashion photography, from digital manipulation to inclusive representation and storytelling through visual media.',
+    4,
+    1,
+    'draft',
+    CAST(N'2025-03-20T11:45:00' AS DateTime2),
+    CAST(N'2025-03-20T11:45:00' AS DateTime2)),
+
+(15, N'Personal Style Development', 
+    N'uploads/posts/personal-style.jpg',
+    
+    N'Discover and develop your unique fashion identity',
+    N'A comprehensive guide to understanding your personal style, including body type analysis, color theory, and building a wardrobe that reflects your personality.',
+    4,
+    0,
+    'published',
+    CAST(N'2025-03-25T16:20:00' AS DateTime2),
+    CAST(N'2025-03-25T16:20:00' AS DateTime2)),
+
+(16, N'Ethical Fashion Brands', 
+    N'uploads/posts/ethical-brands.jpg',
+    
+    N'Leading brands making a positive impact',
+    N'Spotlight on fashion brands committed to sustainable practices, fair labor, and environmental responsibility. Learn how your fashion choices can make a difference.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-03-30T10:00:00' AS DateTime2),
+    CAST(N'2025-03-30T10:00:00' AS DateTime2)),
+
+(17, N'Digital Fashion and Metaverse', 
+    N'uploads/posts/digital-fashion.jpg',
+    
+    N'Fashion in the digital and virtual world',
+    N'Exploring the emerging trends of digital fashion, virtual clothing, and how the metaverse is changing our perception of style and personal expression.',
+    4,
+    0,
+    'draft',
+    CAST(N'2025-04-05T14:30:00' AS DateTime2),
+    CAST(N'2025-04-05T14:30:00' AS DateTime2)),
+
+(18, N'Adaptive Fashion Revolution', 
+    N'uploads/posts/adaptive-fashion.jpg',
+    
+    N'Inclusive design for all body types and abilities',
+    N'A deep dive into adaptive fashion, highlighting designers and brands creating clothing that is both stylish and functional for people with diverse physical needs.',
+    4,
+    1,
+    'published',
+    CAST(N'2025-04-10T09:15:00' AS DateTime2),
+    CAST(N'2025-04-10T09:15:00' AS DateTime2));
+SET IDENTITY_INSERT [dbo].[posts] OFF
