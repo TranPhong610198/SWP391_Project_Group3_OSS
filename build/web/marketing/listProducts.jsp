@@ -26,6 +26,22 @@
                 border-left: 3px solid #0d6efd;
                 padding-left: 10px;
             }
+            .combo-product:hover {
+                background-color: #e9ecef;
+            }
+
+            /*css combo*/
+            /*            .combo-product {
+                            background-color: #f8f9fa;
+                        }
+                        .combo-product td {
+                            border-left: 3px solid #0d6efd;
+                        }
+                        .combo-product:hover {
+                            background-color: #e9ecef;
+                        }*/
+            /*_____________________________________*/
+
         </style>
     </head>
     <body>
@@ -113,42 +129,92 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${products}" var="product">
-                                        <tr>
-                                            <td>${product.id}</td>
-                                            <td>
-                                                <img src="${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
-                                            </td>
-                                            <td>${product.title}</td>
-                                            <td>
-                                                <c:forEach items="${categories}" var="cate">
-                                                    ${(product.categoryId==cate.id)?cate.name:''}
-                                                </c:forEach>
-                                            </td>
-                                            <td><fmt:formatNumber value="${product.originalPrice}" type="currency"/></td>
-                                            <td><fmt:formatNumber value="${product.salePrice}" type="currency"/></td>
-                                            <td>
-                                                <span class="badge bg-${product.status == 'active' ? 'success' : 'danger'}">
-                                                    ${product.status}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <a href="product/inventory?id=${product.id}" class="btn btn-link">
-                                                    ${product.stock}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="product/view?id=${product.id}" class="btn btn-sm btn-info">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="product/edit?id=${product.id}" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button onclick="deleteProduct(${product.id})" class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
                                         <!--đoạn này sẽ chứa code để thêm sản phẩm cùng combo ngay dưới-->
+                                        <c:if test="${not empty product.comboProducts}">
+                                            <c:if test="${product.id == product.comboProducts.get(0).id}">
+                                                <c:forEach items="${product.comboProducts}" var="comboProduct">
+
+                                                    <tr class="combo-product">
+                                                        <td>${comboProduct.id}</td>
+                                                        <td>
+                                                            <img src="${comboProduct.thumbnail}" alt="${comboProduct.title}" class="product-thumbnail">
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-info me-2">Combo</span>
+                                                            ${comboProduct.title}
+                                                        </td>
+                                                        <td>
+                                                            <c:forEach items="${categories}" var="cate">
+                                                                ${(comboProduct.categoryId==cate.id)?cate.name:''}
+                                                            </c:forEach>
+                                                        </td>
+                                                        <td><fmt:formatNumber value="${comboProduct.originalPrice}" type="currency"/></td>
+                                                        <td><fmt:formatNumber value="${comboProduct.salePrice}" type="currency"/></td>
+                                                        <td>
+                                                            <span class="badge bg-${comboProduct.status == 'active' ? 'success' : 'danger'}">
+                                                                ${comboProduct.status}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <a href="product/inventory?id=${comboProduct.id}" class="btn btn-link">
+                                                                ${comboProduct.stock}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="product/view?id=${comboProduct.id}" class="btn btn-sm btn-info">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <a href="product/edit?id=${comboProduct.id}" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <button onclick="deleteProduct(${comboProduct.id})" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:if>
+                                        </c:if>
+                                        <!--___________________________________________________________________________________________________________________________-->
+                                        <!--đoạn này sẽ chứa code để thêm những sản phẩm không thuộc combo-->
+                                        <c:if test="${empty product.comboProducts}">
+                                            <tr>
+                                                <td>${product.id}</td>
+                                                <td>
+                                                    <img src="${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
+                                                </td>
+                                                <td>${product.title}</td>
+                                                <td>
+                                                    <c:forEach items="${categories}" var="cate">
+                                                        ${(product.categoryId==cate.id)?cate.name:''}
+                                                    </c:forEach>
+                                                </td>
+                                                <td><fmt:formatNumber value="${product.originalPrice}" type="currency"/></td>
+                                                <td><fmt:formatNumber value="${product.salePrice}" type="currency"/></td>
+                                                <td>
+                                                    <span class="badge bg-${product.status == 'active' ? 'success' : 'danger'}">
+                                                        ${product.status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="product/inventory?id=${product.id}" class="btn btn-link">
+                                                        ${product.stock}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="product/view?id=${product.id}" class="btn btn-sm btn-info">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="product/edit?id=${product.id}" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button onclick="deleteProduct(${product.id})" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </c:if>
+                                        <!--___________________________________________________________________________________________________________________________-->
                                     </c:forEach>
                                 </tbody>
                             </table>

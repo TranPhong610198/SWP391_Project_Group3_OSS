@@ -89,8 +89,12 @@ public class ProductListServlet extends HttpServlet {
             }
 
             // Xây dựng câu query SQL
+//            StringBuilder sql = new StringBuilder("SELECT p.*, c.name as category_name FROM products p "
+//                    + "JOIN categories c ON p.category_id = c.id WHERE 1=1");
+// Xây dựng câu query SQL
             StringBuilder sql = new StringBuilder("SELECT p.*, c.name as category_name FROM products p "
-                    + "JOIN categories c ON p.category_id = c.id WHERE 1=1");
+                    + "JOIN categories c ON p.category_id = c.id WHERE 1=1 "); // Thêm điều kiện is_combo = false
+
             List<Object> params = new ArrayList<>();
 
             // Thêm điều kiện lọc
@@ -134,12 +138,20 @@ public class ProductListServlet extends HttpServlet {
             List<Product> products = productDAO.getProductsByFilter(sql.toString(), params);
 
             // Lấy thông tin về combo products - phần này sẽ dùng khi in ra sản phẩm combo liền nhau
-//            for (Product tempProduct : products) {
-//                Product comboProduct = productDAO.getComboProduct(tempProduct.getId());
-//                if (comboProduct != null) {
-//                    tempProduct.setComboProduct(comboProduct);
-//                }
-//            }
+            if ((sortField == null || sortField.isEmpty())
+                    && (keyword == null || keyword.trim().isEmpty())
+                    && (categoryId == null || categoryId.isEmpty())) {
+                for (Product tempProduct : products) {
+                    if (tempProduct.getComboGroupId() > 0) { // Chỉ lấy combo cho sản phẩm có combo_group_id
+                        List<Product> comboProducts = productDAO.getComboProduct(tempProduct.getComboGroupId());
+                        if (!comboProducts.isEmpty()) {
+                            tempProduct.setComboProducts(comboProducts);
+                        }
+                    }
+                }
+            }
+            //________________________________________________________________________________
+
             //Lấy listcategory
             CategoryDAO cateDao = new CategoryDAO();
             List<Category> listCate = cateDao.getAll();

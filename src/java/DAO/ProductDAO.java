@@ -18,6 +18,20 @@ public class ProductDAO extends DBContext {
 
     private static final int RECORDS_PER_PAGE = 10;
 
+    public int getTotalStockByProductId(int productId) {
+        String query = "SELECT SUM(stock_quantity) AS total_stock FROM product_variants WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total_stock");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public List<Product> getProductsByFilter(String filterQuery, List<Object> params) {
         List<Product> products = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(filterQuery)) {
@@ -39,6 +53,9 @@ public class ProductDAO extends DBContext {
                 product.setComboGroupId(rs.getInt("combo_group_id"));
                 product.setCreatedAt(rs.getString("created_at"));
                 product.setUpdatedAt(rs.getString("updated_at"));
+
+                product.setStock(getTotalStockByProductId(rs.getInt("id")));
+
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -47,12 +64,13 @@ public class ProductDAO extends DBContext {
         return products;
     }
 
-    public Product getComboProduct(int productId) {
-        String query = "SELECT * FROM products WHERE id = (SELECT combo_group_id FROM products WHERE id = ?)";
+    public List<Product> getComboProduct(int comboGroupId) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT * FROM products WHERE combo_group_id = ? ORDER BY id DESC";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, productId);
+            ps.setInt(1, comboGroupId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Product comboProduct = new Product();
                 comboProduct.setId(rs.getInt("id"));
                 comboProduct.setTitle(rs.getString("title"));
@@ -66,12 +84,14 @@ public class ProductDAO extends DBContext {
                 comboProduct.setComboGroupId(rs.getInt("combo_group_id"));
                 comboProduct.setCreatedAt(rs.getString("created_at"));
                 comboProduct.setUpdatedAt(rs.getString("updated_at"));
-                return comboProduct;
+                comboProduct.setStock(getTotalStockByProductId(rs.getInt("id")));
+
+                products.add(comboProduct);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return products;
     }
 
     public int getTotalFilteredRecords(String filterQuery, List<Object> params) {

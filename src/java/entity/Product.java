@@ -5,6 +5,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -25,6 +26,8 @@ public class Product {
     private boolean isCombo;
     private String createdAt;
     private String updatedAt;
+
+    private List<Product> comboProducts;
 
     public Product() {
     }
@@ -160,4 +163,13 @@ public class Product {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public void setComboProducts(List<Product> comboProducts) {
+        this.comboProducts = comboProducts;
+    }
+
+    public List<Product> getComboProducts() {
+        return comboProducts;
+    }
+
 }
