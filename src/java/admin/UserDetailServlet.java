@@ -63,7 +63,7 @@ public class UserDetailServlet extends HttpServlet {
             }
 
             request.setAttribute("user", user);
-            request.getRequestDispatcher("/admin/userdetail.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/userdetaill.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/userlists");
@@ -79,7 +79,7 @@ public class UserDetailServlet extends HttpServlet {
 
             if (user != null) {
                 request.setAttribute("user", user);
-                request.getRequestDispatcher("/admin/edituser.jsp").forward(request, response);
+                request.getRequestDispatcher("/admin/userdetail.jsp").forward(request, response);
             } else {
                 response.sendRedirect(request.getContextPath() + "/userlists");
             }
@@ -152,7 +152,7 @@ public class UserDetailServlet extends HttpServlet {
             UserDAO userDAO = new UserDAO();
             if (userDAO.updateUserInfo(user)) {
                 request.getSession().setAttribute("successMessage", "Cập nhật thông tin thành công!");
-                response.sendRedirect(request.getContextPath() + "/userdetail/view?id=" + userId);
+                response.sendRedirect(request.getContextPath() + "/userlists");
             } else {
                 request.getSession().setAttribute("errorMessage", "Cập nhật thông tin thất bại!");
                 response.sendRedirect(request.getContextPath() + "/userdetail/edit?id=" + userId);

@@ -134,7 +134,7 @@
                             <td>${user.role}</td>
                             <td>${user.status}</td>
                             <td>
-                                <a href="userdetail/view?id=${user.id}" class="btn btn-info btn-sm">Chi tiết</a>
+                                <a href="userdetail/edit?id=${user.id}" class="btn btn-warning btn-sm">Sửa</a>
                                 <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm" 
                                    onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Xoá</a>
                             </td>
