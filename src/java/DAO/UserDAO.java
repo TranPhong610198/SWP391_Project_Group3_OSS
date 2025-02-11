@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import entity.User;
 import Context.DBContext;
 import entity.UserAddress;
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.List;
 import utils.BCrypt;
-
 
 /**
  *
@@ -383,17 +383,19 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-public void unsetDefaultAddress(int userId, int addressId) {
-    String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
-    try (
-         PreparedStatement ps = connection.prepareStatement(query)) {
-        ps.setInt(1, addressId);
-        ps.setInt(2, userId);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+    public void unsetDefaultAddress(int userId, int addressId) {
+        String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, addressId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
+
     public boolean updateAvatar(int userId, String avatarPath) {
         String sql = "UPDATE users SET avatar = ?, updated_at = GETDATE() WHERE id = ?;";
         try (
@@ -469,18 +471,84 @@ public void unsetDefaultAddress(int userId, int addressId) {
         return 0;
     }
 
-    
+    private void deleteAvatarFile(int userID) throws SQLException {
+        String getAvatarSql = "SELECT avatar FROM users WHERE ID = ?";
+        try (PreparedStatement st = connection.prepareStatement(getAvatarSql)) {
+            st.setInt(1, userID);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String avatarPath = rs.getString("avatar");
+                if (avatarPath != null) {
+                    String realPath = new File("").getAbsolutePath() + File.separator + avatarPath;
+                    File avatarFile = new File(realPath);
+                    if (avatarFile.exists()) {
+                        avatarFile.delete();
+                    }
+                }
+            }
+        }
+    }
 
     public boolean deleteUser(int userID) {
-        String sql = "DELETE FROM users WHERE ID = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, userID);
-            st.executeUpdate();
+        try {
+            connection.setAutoCommit(false);
+
+            String[] deleteQueries = {
+                // Delete feedback
+                "DELETE FROM feedback WHERE user_id = ?",
+                // Delete cart items and cart
+                "DELETE FROM cart_items WHERE cart_id IN (SELECT id FROM cart WHERE user_id = ?)",
+                "DELETE FROM cart WHERE user_id = ?",
+                // Delete order related
+                "DELETE FROM order_history WHERE updated_by = ?",
+                "DELETE FROM payments WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM shipping WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM order_coupons WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)",
+                "DELETE FROM orders WHERE user_id = ?",
+                // Delete posts
+                "DELETE FROM posts WHERE author_id = ?",
+                // Delete contact history
+                "DELETE FROM customer_contact_history WHERE user_id = ? OR updated_by = ?",
+                // Delete addresses
+                "DELETE FROM user_addresses WHERE user_id = ?",
+                // Delete token
+                "DELETE FROM tokenPassword WHERE UserID = ?",
+                // Finally delete user
+                "DELETE FROM users WHERE id = ?"
+            };
+
+            for (String sql : deleteQueries) {
+                try (PreparedStatement st = connection.prepareStatement(sql)) {
+                    if (sql.contains("OR updated_by")) {
+                        st.setInt(1, userID);
+                        st.setInt(2, userID);
+                    } else {
+                        st.setInt(1, userID);
+                    }
+                    st.executeUpdate();
+                }
+            }
+
+            deleteAvatarFile(userID);
+            connection.commit();
+            return true;
+
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return false;
     }
 
     public boolean updateUserInfo(User user) {
@@ -513,7 +581,7 @@ public void unsetDefaultAddress(int userId, int addressId) {
             ps.setString(6, user.getGender());
             ps.setString(7, user.getRole());
             ps.setString(8, user.getStatus());
-            
+
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -549,6 +617,29 @@ public void unsetDefaultAddress(int userId, int addressId) {
         }
         return list;
     }
+    
+    
+
+    public List<User> getAuthorsByRole() {
+        List<User> authors = new ArrayList<>();
+        String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
+
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setRole(rs.getString("role"));
+                authors.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return authors;
+    }
+
+
 ////////
 
     public static void main(String[] args) {

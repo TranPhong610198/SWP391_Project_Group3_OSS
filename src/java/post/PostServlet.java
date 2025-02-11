@@ -60,56 +60,42 @@ public class PostServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
 
-        int page = 1;
-        int pageSize = 9;
-        String search = request.getParameter("search");
-        String categoryIdStr = request.getParameter("categoryId");
-        String authorIdStr = request.getParameter("authorId");
-        String status = request.getParameter("status");
-        String sortBy = request.getParameter("sortBy");
-        String sortDirection = request.getParameter("sortDirection");
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        Integer categoryId = (categoryIdStr != null && !categoryIdStr.isEmpty() && !categoryIdStr.equals("0"))
-                ? Integer.parseInt(categoryIdStr)
-                : null;
+    int page = 1;
+    int pageSize = 9;
+    String search = request.getParameter("search");
+    String authorIdStr = request.getParameter("authorId");
+    String status = request.getParameter("status");
+    
 
-        Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
-                ? Integer.parseInt(authorIdStr)
-                : null;
+    Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
+            ? Integer.parseInt(authorIdStr)
+            : null;
 
-        System.out.println("Search: " + search);
-        System.out.println("Category ID String: " + categoryIdStr);
-        System.out.println("Author ID String: " + authorIdStr);
-        System.out.println("Status: " + status);
-        System.out.println("Sort By: " + sortBy);
-        System.out.println("Sort Direction: " + sortDirection);
-        System.out.println("Parsed Category ID: " + categoryId);
-        System.out.println("Parsed Author ID: " + authorId);
-
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
-        PostDAO postDAO = new PostDAO();
-        List<Post> posts = postDAO.getAllPosts(page, pageSize, search, categoryId, authorId, status, sortBy, sortDirection);
-        List<User> users = postDAO.getUserRoleAdmin();
-        
-        
-        for (Post post : posts) {
-            System.out.println(post.getId() + " - " + post.getTitle());
-        }
-        int totalPosts = postDAO.getTotalPostsCount(search, categoryId, authorId, status);
-        int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
-
-        request.setAttribute("posts", posts);
-        request.setAttribute("users", users);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.getRequestDispatcher("/marketing/postlist.jsp").forward(request, response);
-
+    if (request.getParameter("page") != null) {
+        page = Integer.parseInt(request.getParameter("page"));
     }
+
+    PostDAO postDAO = new PostDAO();
+    List<Post> posts = postDAO.getAllPosts(page, pageSize, search, authorId, status);
+
+    UserDAO userDAO = new UserDAO();
+    List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'
+
+    int totalPosts = postDAO.getTotalPostsCount(search, authorId, status);
+    int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
+
+    request.setAttribute("posts", posts);
+    request.setAttribute("authors", authors); // Gửi danh sách authors đến JSP
+    request.setAttribute("currentPage", page);
+    request.setAttribute("totalPages", totalPages);
+
+    request.getRequestDispatcher("/marketing/postlist.jsp").forward(request, response);
+}
+
 
     /**
      * Handles the HTTP <code>POST</code> method.

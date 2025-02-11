@@ -59,13 +59,13 @@
 
                                 <div class="mb-3">
                                     <label for="role" class="form-label">Vai trò:</label>
-                                    <select class="form-select" id="role" name="role" disabled>
+                                    <select class="form-select" id="role" name="role">
                                         <option value="admin" ${user.role == 'admin' ? 'selected' : ''}>Admin</option>
                                         <option value="customer" ${user.role == 'customer' ? 'selected' : ''}>Customer</option>
                                         <option value="sale" ${user.role == 'Sale' ? 'selected' : ''}>Sale</option>
                                         <option value="marketing" ${user.role == 'Marketing' ? 'selected' : ''}>Marketing</option>
                                     </select>
-                                    <input type="hidden" name="role" value="${user.role}">
+                                    
                                 </div>
 
 

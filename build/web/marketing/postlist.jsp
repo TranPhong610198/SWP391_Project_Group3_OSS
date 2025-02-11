@@ -137,92 +137,80 @@
     </head>
     <body>
 
-        <div class="search-section">
-            <div class="container">
-                <h1 class="text-center">Discover Our Latest Posts</h1>
-                <div class="row justify-content-center">
-                    <div class="col-md-10">
-                        <form method="get" action="${pageContext.request.contextPath}/postList" class="search-form">
-                            <div class="row g-3 align-items-center">
-                                <!-- Search -->
-                                <div class="col-md-3">
-                                    <label class="form-label">Search Title</label>
-                                    <input type="text" name="search" class="form-control" placeholder="Enter title...">
-                                </div>
-
-                                <!-- Category -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Category</label>
-                                    <select name="categoryId" class="form-select">
-                                        <option value="0">All Categories</option>
-                                        <!-- sau lấy  Category List truyền vào đây  -->
-                                        <option value="1" >Category 1</option>   
-                                        <option value="2" >Category 2</option>
-                                        <option value="3" >Category 3</option>
-                                        <option value="4" >Category 4</option>
-                                    </select>
-                                </div>
-
-
-                                <!-- Author -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Author</label>
-                                    <select name="authorId" class="form-select">
-                                        <option value="0">All Authors</option>
-                                        <c:forEach var="user" items="${users}">
-                                            <option value="${user.id}">${user.fullName}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-
-                                <!-- Status -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Status</label>
-                                    <select name="status" class="form-select">
-                                        <option value="">All Status</option>
-                                        <option value="published" ${status == 'published' ? 'selected' : ''}>Published</option>
-                                        <option value="draft" ${status == 'draft' ? 'selected' : ''}>Draft</option>
-                                    </select>
-                                </div>
-                                <!-- Sorting -->
-                                <div class="col-md-2">
-                                    <label class="form-label">Sort By</label>
-                                    <select name="sortBy" class="form-select">
-                                        <option value="">Default</option>
-                                        <option value="title" ${sortBy == 'title' ? 'selected' : ''}>Title</option>
-                                        <option value="date" ${sortBy == 'category_id' ? 'selected' : ''}>Catgory</option>
-                                        <option value="author" ${sortBy == 'author_id' ? 'selected' : ''}>Author</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <label class="form-label">Order</label>
-                                    <select name="sortDirection" class="form-select">
-                                        <option value="asc" ${sortDirection == 'asc' ? 'selected' : ''}>Ascending</option>
-                                        <option value="desc" ${sortDirection == 'desc' ? 'selected' : ''}>Descending</option>
-                                    </select>
-                                </div>
-                                <!-- Submit -->
-                                <div class="col-md-2">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary w-100">Search</button>
-                                </div>
-
-                                <div>
-                                    <a href="${pageContext.request.contextPath}/addPost" class="btn btn-success">
-                                        <i class="fas fa-plus me-2"></i>Add New Post
-                                    </a>
-                                </div>
+        <div class="search-section py-5" style="
+    background: url('https://thietkethicongshop.net/wp-content/uploads/2019/09/thiet-ke-shop-thoi-trang-nam-lozalo-3.jpg') no-repeat center center; 
+    background-size: cover;
+    position: relative;">
+    <div class="overlay" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);"></div>
+    <div class="container position-relative">
+        <h1 class="text-center mb-4 fw-bold text-white">Các bài đăng của chúng tôi</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-lg rounded p-4" style="
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <form method="get" action="${pageContext.request.contextPath}/postList" class="search-form">
+                        <div class="row g-3 align-items-end">
+                            <!-- Search Title -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Tìm kiếm Tiêu đề</label>
+                                <input type="text" name="search" class="form-control" placeholder="Nhập tiêu đề...">
                             </div>
-                        </form>
-                    </div>
-                </div>
+
+                            <!-- Author -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Tác giả</label>
+                                <select name="authorId" class="form-select">
+                                    <option value="0">Tất cả tác giả</option>
+                                    <c:forEach var="author" items="${authors}">
+                                        <option value="${author.id}">(${author.role})</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Trạng thái</label>
+                                <select name="status" class="form-select">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="published" ${status == 'published' ? 'selected' : ''}>Đã xuất bản</option>
+                                    <option value="draft" ${status == 'draft' ? 'selected' : ''}>Bản thảo</option>
+                                </select>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-md-3 d-flex align-items-center mt-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Tìm kiếm
+                                </button>
+                            </div>
+
+                            <!-- Add New Post Button -->
+                            <div class="col-12 text-center mt-3">
+                                <a href="${pageContext.request.contextPath}/addPost" class="btn btn-success">
+                                    <i class="fas fa-plus me-2"></i>Thêm bài mới
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>  
             </div>
         </div>
+    </div>
+</div>
+
+
 
         <div class="container">
             <!-- Latest Posts Section -->
-            <h2 class="section-title">Latest Posts</h2>
+            <h2 class="section-title">Tất cả bài đăng</h2>
             <div class="row g-4 mb-5">
                 <c:forEach var="post" items="${posts}">
                     <div class="col-md-4">
@@ -233,21 +221,21 @@
                                 <div class="meta-info">
                                     <i class="fas fa-user"></i> ${post.getUser().getFullName()}
                                     <i class="fas fa-clock ms-2"></i> ${post.getCreatedAt()}
-                                    <i class="fas fa-tag ms-2"></i> ${post.getCategoryId()}
+                                    
                                     <i class="fas fa-star ms-2"></i> ${post.isIsFeatured() ? 'Featured' : 'Not Featured'}
                                 </div>
                                 <p class="card-text">${post.getSummary()}</p>
-                                <span class="category-badge">${post.getCategoryId()}</span>
+                                
                                 <div class="action-btns mt-3">
                                     <a href="${pageContext.request.contextPath}/detailPost?id=${post.getId()}" 
-                                       class="btn btn-outline-primary">View</a>
+                                       class="btn btn-outline-primary">Xem</a>
 
                                     <c:choose>
                                         <c:when test="${post.getStatus() == 'draft'}">
-                                            <button class="btn btn-outline-danger toggle-visibility" data-id="${post.getId()}">Hide</button>
+                                            <button class="btn btn-outline-danger toggle-visibility" data-id="${post.getId()}">Ẩn</button>
                                         </c:when>
                                         <c:otherwise>
-                                            <button class="btn btn-outline-success toggle-visibility" data-id="${post.getId()}">Show</button>
+                                            <button class="btn btn-outline-success toggle-visibility" data-id="${post.getId()}">Hiện</button>
                                         </c:otherwise>
                                     </c:choose>
 
@@ -266,9 +254,10 @@
                     <c:forEach var="i" begin="1" end="${totalPages}">
                         <li class="page-item ${currentPage == i ? 'active' : ''}">
                             <a class="page-link" 
-                               href="${pageContext.request.contextPath}/postList?page=${i}">
-                                ${i}
-                            </a>
+   href="${pageContext.request.contextPath}/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">
+   ${i}
+</a>
+
                         </li>
                     </c:forEach>
 
