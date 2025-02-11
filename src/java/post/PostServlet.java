@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  *
- * @author USA
+ * @author DELL
  */
 @WebServlet(name = "PostServlet", urlPatterns = {"/postList"})
 public class PostServlet extends HttpServlet {
