@@ -122,7 +122,7 @@
        
 
 
-        <header class="post-header">
+        <header class="post-header" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20231012/pngtree-seasonal-attire-for-kids-delightful-autumn-winter-outfits-hanging-on-a-image_13647902.png'); background-size: cover; background-position: center; color: white; padding: 50px 0;">
             <div class="container">
                 <h1 class="post-title">${post.getTitle()}</h1>
                 <div class="post-meta">
@@ -146,58 +146,58 @@
                         <img src="${post.getThumbnail()}" alt="${post.getTitle()}" class="post-thumbnail">
                         
                         <div class="content">
-                            <p><strong>Summary:</strong> ${post.getSummary()}</p>
-                            <p><strong>Description:</strong> ${post.getContent()}</p>
+                            <p><strong>Thông tin tóm tắt:</strong> ${post.getSummary()}</p>
+                            <p><strong>Mô tả:</strong> ${post.getContent()}</p>
                         </div>
 
                         <!-- Edit Form (if user has permission) -->
 
                         <hr>
-                        <h3>Edit Post</h3>
+                        <h3>Chỉnh sửa bài</h3>
                         <form method="POST" action="${pageContext.request.contextPath}/detailPost">
                             <input type="hidden" name="id" value="${post.getId()}">
                             <div class="mb-3">
-                                <label for="title" class="form-label">Title</label>
+                                <label for="title" class="form-label">Tiêu đề</label>
                                 <input type="text" class="form-control" id="title" name="title" value="${post.getTitle()}" required>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="thumbnail" class="form-label">Thumbnail URL</label>
+                                <label for="thumbnail" class="form-label">Ảnh nguồn</label>
                                 <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="${post.getThumbnail()}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="summary" class="form-label">Summary</label>
+                                <label for="summary" class="form-label">Thông tin tóm tắt</label>
                                 <textarea class="form-control" id="summary" name="summary" required>${post.getSummary()}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="content" class="form-label">Content</label>
+                                <label for="content" class="form-label">Mô tả</label>
                                 <textarea class="form-control" id="content" name="content" rows="6" required>${post.getContent()}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
+                                <label for="status" class="form-label">Trạng thái</label>
                                 <select class="form-select" id="status" name="status" required>
-                                    <option value="published" ${post.getStatus() == 'published' ? 'selected' : ''}>Published</option>
-                                    <option value="draft" ${post.getStatus() == 'draft' ? 'selected' : ''}>Draft</option>
+                                    <option value="published" ${post.getStatus() == 'published' ? 'selected' : ''}>Đã xuất bản</option>
+                                    <option value="draft" ${post.getStatus() == 'draft' ? 'selected' : ''}>Bản thảo</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </form>
 
                     </article>
 
                     <div class="back-button">
                         <a href="javascript:history.back()" class="btn btn-primary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Posts
+                            <i class="fas fa-arrow-left me-2"></i>Quay về các bài đăng
                         </a>
 
 
                         <a href="${pageContext.request.contextPath}/addPost" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Add New Post
+                            <i class="fas fa-plus me-2"></i>Thêm bài
                         </a>
                         <a href="${pageContext.request.contextPath}/deletePost?id=${post.getId()}" 
                            class="btn btn-danger" 
                            onclick="return confirm('Are you sure you want to delete this post?');">
-                            <i class="fas fa-trash me-2"></i>Delete Post
+                            <i class="fas fa-trash me-2"></i>Xóa bài
                         </a>
 
                     </div>
@@ -208,8 +208,8 @@
                     <aside class="sidebar">
                         <!-- Search Box -->
                         <div class="search-box">
-                            <h3 class="sidebar-title">Search Posts</h3>
-                            <form method="get" action="${pageContext.request.contextPath}/post">
+                            <h3 class="sidebar-title">Tìm kiếm bài</h3>
+                            <form method="get" action="${pageContext.request.contextPath}/postList">
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" placeholder="Search...">
                                     <button class="btn btn-primary" type="submit">
@@ -221,7 +221,7 @@
 
                         <!-- Related Posts -->
                         <div class="related-posts">
-                            <h3 class="sidebar-title">Related Posts</h3>
+                            <h3 class="sidebar-title fs-6">Phong cách <i class="fas fa-heart text-danger"></i></h3>
                             <c:forEach var="relatedPost" items="${relatedPosts}">
                                 <div class="related-post">
                                     <a href="${pageContext.request.contextPath}/postlist.jsp?id=${relatedPost.id}">

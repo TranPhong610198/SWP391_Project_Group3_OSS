@@ -9,18 +9,20 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
             .form-section {
-                background: linear-gradient(135deg, #2c3e50, #34495e);
-                padding: 3rem 0;
-                color: white;
-            }
+    background: url('https://decorbanghieu.com/wp-content/uploads/2022/08/background-shop-quan-ao-1-1067x800.jpg') no-repeat center center;
+    background-size: cover;
+    padding: 3rem 0;
+    color: white;
+}
 
             .form-container {
-                background: white;
-                padding: 2rem;
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0,0,0,0.1);
-                color: #2c3e50;
-            }
+    background: rgba(255, 255, 255, 0.3); /* Nền trắng trong suốt 30% */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    color: #2c3e50;
+    backdrop-filter: blur(10px); /* Hiệu ứng mờ phía sau */
+}
 
             .preview-image {
                 max-width: 200px;
@@ -35,7 +37,7 @@
     <body>
         <div class="form-section">
             <div class="container">
-                <h1 class="text-center mb-4">Create New Post</h1>
+                <h1 class="text-center mb-4">Thêm mới bài</h1>
 
                 <div class="row justify-content-center">
                     <div class="col-md-8">
@@ -50,12 +52,12 @@
                                 <input type="hidden" name="action" value="create">
 
                                 <div class="mb-3">
-                                    <label for="title" class="form-label">Title</label>
+                                    <label for="title" class="form-label">Tiêu đề</label>
                                     <input type="text" class="form-control" id="title" name="title" required>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="thumbnail" class="form-label">Thumbnail URL</label>
+                                    <label for="thumbnail" class="form-label">Ảnh nguồn</label>
                                     <input type="url" class="form-control" id="thumbnail" name="thumbnail"
                                            required onchange="previewImage(this)">
                                     <img id="thumbnail-preview" class="preview-image">
@@ -74,12 +76,12 @@
                                 </div>-->
 
                                 <div class="mb-3">
-                                    <label for="summary" class="form-label">Summary</label>
+                                    <label for="summary" class="form-label">Thông tin tóm tắt</label>
                                     <textarea class="form-control" id="summary" name="summary" rows="3" required></textarea>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="content" class="form-label">Content</label>
+                                    <label for="content" class="form-label">Mô tả</label>
                                     <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
                                 </div>
 
@@ -87,22 +89,22 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="isFeatured" name="isFeatured">
                                         <label class="form-check-label" for="isFeatured">
-                                            Featured Post
+                                            Bài nổi bật
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
+                                    <label for="status" class="form-label">Trạng thái</label>
                                     <select class="form-select" id="status" name="status" required>
-                                        <option value="draft">Draft</option>
-                                        <option value="published">Published</option>
+                                        <option value="draft">Bản thảo</option>
+                                        <option value="published">Đã xuất bản</option>
                                     </select>
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary">Create Post</button>
-                                    <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Thêm bài</button>
+                                    <a href="javascript:history.back()" class="btn btn-secondary">Hủy</a>
                                 </div>
                             </form>
                         </div>
