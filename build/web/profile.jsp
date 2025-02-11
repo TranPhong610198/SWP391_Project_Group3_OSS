@@ -225,7 +225,7 @@
                         <form action="profile" method="post" enctype="multipart/form-data" id="avatarForm">
                             <input type="hidden" name="action" value="update_avatar">
                             <input type="file" class="form-control d-none" id="avatar" name="avatar" 
-                                   accept="image/*" onchange="previewImage(this)">
+                                   accept="image/jpeg,image/png,image/gif,image/webp" onchange="validateAndPreviewImage(this)">
                             <div class="preview-container">
                                 <img id="preview" src="#" alt="Preview">
                                 <div class="upload-actions d-flex">
@@ -270,7 +270,7 @@
                                     <input type="text" class="form-control" value="${requestScope.user.username}" readonly>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Tên đầy đủ</label>
+                                    <label class="form-label">Họ và tên</label>
                                     <input type="text" class="form-control" name="fullName" 
                                            value="${requestScope.user.fullName}" required>
                                 </div>
@@ -312,7 +312,7 @@
                                                             <input type="hidden" name="action" value="unset_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-link p-0">
-                                                                <i class="fas fa-star text-warning"></i>mặc định
+                                                                <i class="fas fa-star text-warning"></i>hủy
                                                             </button>
                                                         </form>
                                                     </c:when>
@@ -321,7 +321,7 @@
                                                             <input type="hidden" name="action" value="set_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-link p-0">
-                                                                <i class="far fa-star text-secondary"></i>
+                                                                <i class="fas fa-star text-secondary"></i>mặc định
                                                             </button>
                                                         </form>
                                                     </c:otherwise>
@@ -393,49 +393,68 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                function previewImage(input) {
-                                    const preview = document.getElementById('preview');
-                                    const previewContainer = document.querySelector('.preview-container');
-                                    const uploadActions = document.querySelector('.upload-actions');
+                                                                function validateAndPreviewImage(input) {
+                                                                    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                                                    const file = input.files[0];
 
-                                    if (input.files && input.files[0]) {
-                                        const reader = new FileReader();
+                                                                    if (file && !allowedTypes.includes(file.type)) {
+                                                                        alert('Chỉ chấp nhận file ảnh có định dạng: JPG, PNG, GIF, WEBP');
+                                                                        input.value = ''; // Reset input file
+                                                                        return;
+                                                                    }
 
-                                        reader.onload = function (e) {
-                                            preview.src = e.target.result;
-                                            previewContainer.style.display = 'block';
-                                            uploadActions.style.display = 'flex';
-                                        }
+                                                                    const maxSize = 10 * 1024 * 1024; // 10MB
+                                                                    if (file && file.size > maxSize) {
+                                                                        alert('Kích thước file không được vượt quá 10MB');
+                                                                        input.value = '';
+                                                                        return;
+                                                                    }
 
-                                        reader.readAsDataURL(input.files[0]);
-                                    }
-                                }
+                                                                    previewImage(input);
+                                                                }
+                                                                function previewImage(input) {
+                                                                    const preview = document.getElementById('preview');
+                                                                    const previewContainer = document.querySelector('.preview-container');
+                                                                    const uploadActions = document.querySelector('.upload-actions');
 
-                                function cancelUpload() {
-                                    const form = document.getElementById('avatarForm');
-                                    const preview = document.getElementById('preview');
-                                    const previewContainer = document.querySelector('.preview-container');
-                                    const uploadActions = document.querySelector('.upload-actions');
+                                                                    if (input.files && input.files[0]) {
+                                                                        const reader = new FileReader();
 
-                                    form.reset();
-                                    preview.src = '#';
-                                    previewContainer.style.display = 'none';
-                                    uploadActions.style.display = 'none';
-                                }
-                                // Form validation
-                                (() => {
-                                    'use strict'
-                                    const forms = document.querySelectorAll('.needs-validation')
-                                    Array.from(forms).forEach(form => {
-                                        form.addEventListener('submit', event => {
-                                            if (!form.checkValidity()) {
-                                                event.preventDefault()
-                                                event.stopPropagation()
-                                            }
-                                            form.classList.add('was-validated')
-                                        }, false)
-                                    })
-                                })()
+                                                                        reader.onload = function (e) {
+                                                                            preview.src = e.target.result;
+                                                                            previewContainer.style.display = 'block';
+                                                                            uploadActions.style.display = 'flex';
+                                                                        }
+
+                                                                        reader.readAsDataURL(input.files[0]);
+                                                                    }
+                                                                }
+
+                                                                function cancelUpload() {
+                                                                    const form = document.getElementById('avatarForm');
+                                                                    const preview = document.getElementById('preview');
+                                                                    const previewContainer = document.querySelector('.preview-container');
+                                                                    const uploadActions = document.querySelector('.upload-actions');
+
+                                                                    form.reset();
+                                                                    preview.src = '#';
+                                                                    previewContainer.style.display = 'none';
+                                                                    uploadActions.style.display = 'none';
+                                                                }
+                                                                // Form validation
+                                                                (() => {
+                                                                    'use strict'
+                                                                    const forms = document.querySelectorAll('.needs-validation')
+                                                                    Array.from(forms).forEach(form => {
+                                                                        form.addEventListener('submit', event => {
+                                                                            if (!form.checkValidity()) {
+                                                                                event.preventDefault()
+                                                                                event.stopPropagation()
+                                                                            }
+                                                                            form.classList.add('was-validated')
+                                                                        }, false)
+                                                                    })
+                                                                })()
         </script>
     </body>
 </html>

@@ -383,7 +383,6 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-
     public void unsetDefaultAddress(int userId, int addressId) {
         String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
         try (

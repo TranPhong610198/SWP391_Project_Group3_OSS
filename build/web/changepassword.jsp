@@ -93,15 +93,15 @@
                                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                                 </div>
                                 <div><a href="forgotpassword">Quên mật khẩu?</a></div>
-                                
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                </div>
-                            </form>
 
-                            <div class="mt-3">
-                                <a href="profile" class="btn btn-secondary">Hủy</a>
-                            </div>
+                                <div class="row mt-3 gx-2">
+                                    <div class="col-6">
+                                        <button type="submit" class="btn btn-primary w-100">Cập nhật</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="profile" class="btn btn-secondary w-100">Hủy</a>
+                                    </div>
+                                </div>
 
                         </div>
                     </div>
