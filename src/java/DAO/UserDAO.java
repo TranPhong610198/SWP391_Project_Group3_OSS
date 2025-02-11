@@ -340,20 +340,33 @@ public class UserDAO extends DBContext {
     }
 
     public boolean addUserAddress(UserAddress address) {
-        String sql = "INSERT INTO user_addresses (user_id, recipient_name, phone, address, is_default) VALUES (?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
+    // First check if this is meant to be a default address
+    if (address.isDefault()) {
+        // Clear any existing default addresses for this user
+        String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(clearDefaults)) {
             st.setInt(1, address.getUserId());
-            st.setString(2, address.getRecipientName());
-            st.setString(3, address.getPhone());
-            st.setString(4, address.getAddress());
-            st.setBoolean(5, address.isDefault());
-            return st.executeUpdate() > 0;
+            st.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return false;
         }
     }
+
+    // Now insert the new address
+    String sql = "INSERT INTO user_addresses (user_id, recipient_name, phone, address, is_default) VALUES (?, ?, ?, ?, ?)";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setInt(1, address.getUserId());
+        st.setString(2, address.getRecipientName());
+        st.setString(3, address.getPhone());
+        st.setString(4, address.getAddress());
+        st.setBoolean(5, address.isDefault());
+        return st.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 
     public boolean deleteUserAddress(int addressId, int userId) {
         String sql = "DELETE FROM user_addresses WHERE id = ? AND user_id = ?";
@@ -369,20 +382,47 @@ public class UserDAO extends DBContext {
     }
 
     public boolean setDefaultAddress(int addressId, int userId) {
+        // First clear all default addresses for this user
         String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
         String setDefault = "UPDATE user_addresses SET is_default = 1 WHERE id = ? AND user_id = ?";
-        try (PreparedStatement st1 = connection.prepareStatement(clearDefaults); PreparedStatement st2 = connection.prepareStatement(setDefault)) {
-            st1.setInt(1, userId);
-            st1.executeUpdate();
 
-            st2.setInt(1, addressId);
-            st2.setInt(2, userId);
-            return st2.executeUpdate() > 0;
+        try {
+            // Start transaction
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement st1 = connection.prepareStatement(clearDefaults); PreparedStatement st2 = connection.prepareStatement(setDefault)) {
+
+                // Clear all defaults first
+                st1.setInt(1, userId);
+                st1.executeUpdate();
+
+                // Set the new default
+                st2.setInt(1, addressId);
+                st2.setInt(2, userId);
+                int result = st2.executeUpdate();
+
+                // Commit transaction
+                connection.commit();
+                return result > 0;
+            }
         } catch (SQLException e) {
+            // Rollback in case of error
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
     public void unsetDefaultAddress(int userId, int addressId) {
         String query = "UPDATE user_addresses SET is_default = 0 WHERE id = ? AND user_id = ?";
         try (
@@ -616,15 +656,12 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
-    
 
     public List<User> getAuthorsByRole() {
         List<User> authors = new ArrayList<>();
         String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
 
-        try (PreparedStatement ps = connection.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 User user = new User();
                 user.setId(rs.getInt("id"));
@@ -638,9 +675,7 @@ public class UserDAO extends DBContext {
         return authors;
     }
 
-
 ////////
-
     public static void main(String[] args) {
         UserDAO UserDAO = new UserDAO();
         System.out.println(UserDAO.checkExistUsername("1234"));
