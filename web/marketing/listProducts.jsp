@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <select name="categoryId" class="form-select">
-                                        <option value="">All Categories</option>
+                                        <option value="">Tất cả danh mục</option>
                                         <c:forEach items="${categories}" var="category">
                                             <option value="${category.id}" ${categoryId == category.id ? 'selected' : ''}>
                                                 ${category.name}
@@ -67,16 +67,16 @@
                                 </div>
                                 <div class="col-md-2">
                                     <select name="status" class="form-select">
-                                        <option value="all">All Status</option>
-                                        <option value="active" ${status == 'active' ? 'selected' : ''}>Active</option>
-                                        <option value="inactive" ${status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                        <option value="all">Tất cả trạng thái</option>
+                                        <option value="active" ${status == 'active' ? 'selected' : ''}>Khả bán</option>
+                                        <option value="inactive" ${status == 'inactive' ? 'selected' : ''}>Không khả bán</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                                    <button type="submit" class="btn btn-primary">Lọc</button>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="product/new" class="btn btn-success">Add New Product</a>
+                                    <a href="product/new" class="btn btn-success">Thêm sản phẩm</a>
                                 </div>
                             </form>
                         </div>
@@ -97,34 +97,34 @@
                                                 ID ${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
-                                        <th>Image</th>
+                                        <th>Ảnh minh họa</th>
                                         <th>
                                             <a href="productlist?sortField=title&sortDir=${sortField == 'title' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Title ${sortField == 'title' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
+                                                Tên sản phẩm ${sortField == 'title' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
                                             <a href="productlist?sortField=category_id&sortDir=${sortField == 'category_id' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Category ${sortField == 'category_id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
+                                                Danh mục ${sortField == 'category_id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
                                             <a href="productlist?sortField=original_price&sortDir=${sortField == 'original_price' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Original Price ${sortField == 'original_price' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
+                                                Giá nhập ${sortField == 'original_price' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
                                             <a href="productlist?sortField=sale_price&sortDir=${sortField == 'sale_price' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Sale Price ${sortField == 'sale_price' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
+                                                Giá bán ${sortField == 'sale_price' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
                                             <a href="productlist?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Status ${sortField == 'status' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
+                                                Trạng thái ${sortField == 'status' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
-                                        <th>Stock</th>
-                                        <th>Actions</th>
+                                        <th>Số lượng</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -231,7 +231,7 @@
                         <ul class="pagination justify-content-center">
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="productlist?page=${currentPage-1}&keyword=${keyword}&categoryId=${categoryId}&status=${status}&sortField=${sortField}&sortDir=${sortDir}">Previous</a>
+                                    <a class="page-link" href="productlist?page=${currentPage-1}&keyword=${keyword}&categoryId=${categoryId}&status=${status}&sortField=${sortField}&sortDir=${sortDir}">Lùi</a>
                                 </li>
                             </c:if>
 
@@ -243,7 +243,7 @@
 
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="productlist?page=${currentPage+1}&keyword=${keyword}&categoryId=${categoryId}&status=${status}&sortField=${sortField}&sortDir=${sortDir}">Next</a>
+                                    <a class="page-link" href="productlist?page=${currentPage+1}&keyword=${keyword}&categoryId=${categoryId}&status=${status}&sortField=${sortField}&sortDir=${sortDir}">Tiến</a>
                                 </li>
                             </c:if>
                         </ul>
