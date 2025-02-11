@@ -74,7 +74,7 @@
                                     <select class="form-select" id="status" name="status">
                                         <option value="active" ${user.status == 'active' ? 'selected' : ''}>Active</option>
                                         <option value="inactive" ${user.status == 'inactive' ? 'selected' : ''}>Inactive</option>
-                                        <option value="pending" ${user.status == 'pending' ? 'selected' : ''}>Pending</option>
+                                        
                                     </select>
                                 </div>
 
