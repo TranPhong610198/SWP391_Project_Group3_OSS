@@ -93,33 +93,33 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <a href="productlist?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
+                                            <a href="productlist?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
                                                 ID ${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>Ảnh minh họa</th>
                                         <th>
-                                            <a href="productlist?sortField=title&sortDir=${sortField == 'title' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            <a href="productlist?sortField=title&sortDir=${sortField == 'title' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
                                                 Tên sản phẩm ${sortField == 'title' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
-                                            <a href="productlist?sortField=category_id&sortDir=${sortField == 'category_id' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            <a href="productlist?sortField=category_id&sortDir=${sortField == 'category_id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
                                                 Danh mục ${sortField == 'category_id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
-                                            <a href="productlist?sortField=original_price&sortDir=${sortField == 'original_price' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            <a href="productlist?sortField=original_price&sortDir=${sortField == 'original_price' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
                                                 Giá nhập ${sortField == 'original_price' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
-                                            <a href="productlist?sortField=sale_price&sortDir=${sortField == 'sale_price' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            <a href="productlist?sortField=sale_price&sortDir=${sortField == 'sale_price' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
                                                 Giá bán ${sortField == 'sale_price' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
                                         <th>
-                                            <a href="productlist?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            <a href="productlist?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
                                                 Trạng thái ${sortField == 'status' ? (sortDir == 'asc' ? '↑' : '↓') : ''}
                                             </a>
                                         </th>
