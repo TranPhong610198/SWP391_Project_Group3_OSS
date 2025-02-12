@@ -63,7 +63,7 @@ public class UserDetailServlet extends HttpServlet {
             }
 
             request.setAttribute("user", user);
-            request.getRequestDispatcher("/admin/userdetaill.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/userdetail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/userlists");

@@ -135,11 +135,8 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Giới tính:</label>
-                                            <select class="form-select" name="gender" disabled>
-                                                <option value="Male" ${user.gender == 'Male' ? 'selected' : ''}>Nam</option>
-                                                <option value="Female" ${user.gender == 'Female' ? 'selected' : ''}>Nữ</option>
-                                                <option value="Other" ${user.gender == 'Other' ? 'selected' : ''}>Khác</option>
-                                            </select>
+                                            <input  type="text" class="form-control" name="gender1" value="${!user.gender.equals('other') ? (user.gender.equals('male') ? 'Nam' : 'Nữ') : 'Khác'}" readonly>
+                                            <input hidden type="text" class="form-control" name="gender" value="${user.gender}"readonly>
 
                                         </div>
 
@@ -204,6 +201,6 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-        
+
     </body>
 </html>
