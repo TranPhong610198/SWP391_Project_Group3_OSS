@@ -312,7 +312,7 @@
                                                             <input type="hidden" name="action" value="unset_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-link p-0">
-                                                                <i class="fas fa-star text-warning"></i>hủy
+                                                                <i class="fas fa-star text-warning"></i>Hủy
                                                             </button>
                                                         </form>
                                                     </c:when>
@@ -321,7 +321,7 @@
                                                             <input type="hidden" name="action" value="set_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-link p-0">
-                                                                <i class="fas fa-star text-secondary"></i>mặc định
+                                                                <i class="fas fa-star text-secondary"></i>Thiết lập mặc định
                                                             </button>
                                                         </form>
                                                     </c:otherwise>

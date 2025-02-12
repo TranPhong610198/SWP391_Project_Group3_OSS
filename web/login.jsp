@@ -12,6 +12,7 @@
     <head>
         <title>Đăng nhập</title>
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assests/css/LoginRegister.css">
     </head>
     <style>
@@ -27,22 +28,22 @@
                     <h1>Đăng nhập</h1>
                     <div class="social-container">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid
-&redirect_uri=http://localhost:9999/fashionshop/login
-&response_type=code
-&client_id=371802530617-nupp3tq4lnrphcd50jnj3r4e2j31suea.apps.googleusercontent.com
-&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
+                           &redirect_uri=http://localhost:9999/fashionshop/login
+                           &response_type=code
+                           &client_id=371802530617-nupp3tq4lnrphcd50jnj3r4e2j31suea.apps.googleusercontent.com
+                           &approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <p>hoặc sử dụng tài khoản của bạn</p>
 
                     <c:if test="${not empty mess}">
                         <c:if test="${mess.equals('Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.') 
-                                   || mess.equals('Email xác thực đã được gửi. Vui lòng kiểm tra email của bạn.')
-                                   || mess.equals('Đăng ký thành công. Vui lòng kiểm tra email để xác minh tài khoản của bạn.')
-                                   || mess.equals('Tài khoản đã được xác thực thành công. Bây giờ bạn có thể đăng nhập.')}">
-                            <p style="color: green; margin-bottom: 10px;">
-                                ${mess}
-                            </p>
-                            <c:remove var="mess" scope="request"/>
+                                      || mess.equals('Email xác thực đã được gửi. Vui lòng kiểm tra email của bạn.')
+                                      || mess.equals('Đăng ký thành công. Vui lòng kiểm tra email để xác minh tài khoản của bạn.')
+                                      || mess.equals('Tài khoản đã được xác thực thành công. Bây giờ bạn có thể đăng nhập.')}">
+                              <p style="color: green; margin-bottom: 10px;">
+                                  ${mess}
+                              </p>
+                              <c:remove var="mess" scope="request"/>
                         </c:if>
                         <c:if test="${!mess.equals('Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.')}">
                             <div class="error-message" style="color: red; margin-bottom: 10px;">
@@ -52,7 +53,10 @@
                     </c:if>
 
                     <input type="text" name="username" placeholder="Tên đăng nhập" required="">
-                    <input type="password" name="password" placeholder="Mật khẩu" required="">
+                    <div class="form-input">
+                        <input type="password" name="password" placeholder="Mật khẩu" required>
+                        <i class="password-toggle fas fa-eye-slash"></i>
+                    </div>
                     <a href="forgotpassword">Quên mật khẩu?</a>
                     <button>Đăng nhập</button>
                 </form>
@@ -75,6 +79,25 @@
                 setTimeout(() => {
                     window.location.href = `${pageContext.request.contextPath}/register`;
                 }, 500);
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const togglePassword = document.querySelectorAll('.password-toggle');
+                togglePassword.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const input = this.previousElementSibling;
+
+                        if (input.type === 'password') {
+                            input.type = 'text';
+                            this.classList.remove('fa-eye-slash');
+                            this.classList.add('fa-eye');
+                        } else {
+                            input.type = 'password';
+                            this.classList.remove('fa-eye');
+                            this.classList.add('fa-eye-slash');
+                        }
+                    });
+                });
             });
         </script>
     </body>
