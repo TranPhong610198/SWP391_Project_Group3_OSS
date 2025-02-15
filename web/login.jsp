@@ -31,21 +31,15 @@
                     </div>
                     <p>hoặc sử dụng tài khoản của bạn</p>
 
+                    <c:if test="${not empty error}">
+                        <div class="error-message">
+                            ${error}
+                        </div>
+                    </c:if>
                     <c:if test="${not empty mess}">
-                        <c:if test="${mess.equals('Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.') 
-                                      || mess.equals('Email xác thực đã được gửi. Vui lòng kiểm tra email của bạn.')
-                                      || mess.equals('Đăng ký thành công. Vui lòng kiểm tra email để xác minh tài khoản của bạn.')
-                                      || mess.equals('Tài khoản đã được xác thực thành công. Bây giờ bạn có thể đăng nhập.')}">
-                              <p style="color: green; margin-bottom: 10px;">
-                                  ${mess}
-                              </p>
-                              <c:remove var="mess" scope="request"/>
-                        </c:if>
-                        <c:if test="${!mess.equals('Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.')}">
-                            <div class="error-message" style="color: red; margin-bottom: 10px;">
-                                ${mess}
-                            </div>
-                        </c:if>
+                        <div class="success-message">
+                            ${mess}
+                        </div>
                     </c:if>
 
                     <input type="text" name="username" placeholder="Tên đăng nhập" required="">
