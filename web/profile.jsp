@@ -206,6 +206,18 @@
                     margin-bottom: 0.5rem;
                 }
             }
+            .form-label {
+                font-weight: 500;
+            }
+            .form-select, .form-control {
+                border-radius: 0.75rem;
+                padding: 0.75rem 1rem;
+                border: 1px solid var(--border);
+            }
+            .form-select:focus, .form-control:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            }
         </style>
     </head>
     <body>
@@ -312,7 +324,7 @@
                                                             <input type="hidden" name="action" value="unset_default">
                                                             <input type="hidden" name="address_id" value="${address.id}">
                                                             <button type="submit" class="btn btn-link p-0">
-                                                                <i class="fas fa-star text-warning"></i>Hủy
+                                                                <i class="fas fa-star text-warning"></i>Mặc định
                                                             </button>
                                                         </form>
                                                     </c:when>
@@ -364,10 +376,39 @@
                                     <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" required>
                                 </div>
 
-                                <div class="col-12">
-                                    <label class="form-label">Địa chỉ nhận</label>
-                                    <textarea class="form-control" name="address" rows="3" required></textarea>
+                                <!-- Thêm select box cho tỉnh/thành phố -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Tỉnh/Thành phố</label>
+                                    <select class="form-select" id="province" required>
+                                        <option value="">Chọn tỉnh/thành phố</option>
+                                    </select>
                                 </div>
+
+                                <!-- Thêm select box cho quận/huyện -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Quận/Huyện</label>
+                                    <select class="form-select" id="district" required disabled>
+                                        <option value="">Chọn quận/huyện</option>
+                                    </select>
+                                </div>
+
+                                <!-- Thêm select box cho phường/xã -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Phường/Xã</label>
+                                    <select class="form-select" id="ward" required disabled>
+                                        <option value="">Chọn phường/xã</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Địa chỉ cụ thể</label>
+                                    <input type="text" class="form-control" id="specific_address" 
+                                           placeholder="Số nhà, tên đường, khu vực" required>
+                                </div>
+
+                                <!-- Hidden input để lưu địa chỉ đầy đủ -->
+                                <input type="hidden" name="address" id="full_address">
+
                                 <div class="col-12">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" name="is_default" id="defaultAddress">
@@ -376,13 +417,14 @@
                                         </label>
                                     </div>
                                 </div>
+
                                 <div class="col-12 d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-2"></i>Lưu địa chỉ
                                     </button>
-                                    <a href="index.jsp" class="btn btn-secondary">
+                                    <button type="button" class="btn btn-secondary" onclick="window.location.href = 'index.jsp'">
                                         <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -393,68 +435,208 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                                                function validateAndPreviewImage(input) {
-                                                                    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                                                                    const file = input.files[0];
+                                        const API_PROVINCE = 'https://provinces.open-api.vn/api/?depth=1';
+                                        const API_DISTRICT = 'https://provinces.open-api.vn/api/p/';
+                                        const API_WARD = 'https://provinces.open-api.vn/api/d/';
 
-                                                                    if (file && !allowedTypes.includes(file.type)) {
-                                                                        alert('Chỉ chấp nhận file ảnh có định dạng: JPG, PNG, GIF, WEBP');
-                                                                        input.value = ''; // Reset input file
-                                                                        return;
-                                                                    }
+                                        // Các element select
+                                        const provinceSelect = document.getElementById('province');
+                                        const districtSelect = document.getElementById('district');
+                                        const wardSelect = document.getElementById('ward');
+                                        const specificAddress = document.getElementById('specific_address');
+                                        const fullAddressInput = document.getElementById('full_address');
 
-                                                                    const maxSize = 10 * 1024 * 1024; // 10MB
-                                                                    if (file && file.size > maxSize) {
-                                                                        alert('Kích thước file không được vượt quá 10MB');
-                                                                        input.value = '';
-                                                                        return;
-                                                                    }
+                                        // Load tỉnh/thành phố
+                                        async function loadProvinces() {
+                                            try {
+                                                const response = await fetch(API_PROVINCE);
+                                                const data = await response.json();
 
-                                                                    previewImage(input);
-                                                                }
-                                                                function previewImage(input) {
-                                                                    const preview = document.getElementById('preview');
-                                                                    const previewContainer = document.querySelector('.preview-container');
-                                                                    const uploadActions = document.querySelector('.upload-actions');
+                                                data.forEach(province => {
+                                                    const option = document.createElement('option');
+                                                    option.value = province.code;
+                                                    option.textContent = province.name;
+                                                    provinceSelect.appendChild(option);
+                                                });
+                                            } catch (error) {
+                                                console.error('Error loading provinces:', error);
+                                            }
+                                        }
 
-                                                                    if (input.files && input.files[0]) {
-                                                                        const reader = new FileReader();
+                                        // Load quận/huyện theo tỉnh/thành
+                                        async function loadDistricts(provinceCode) {
+                                            try {
+                                                const response = await fetch(API_DISTRICT + provinceCode + '?depth=2');
+                                                const data = await response.json();
 
-                                                                        reader.onload = function (e) {
-                                                                            preview.src = e.target.result;
-                                                                            previewContainer.style.display = 'block';
-                                                                            uploadActions.style.display = 'flex';
-                                                                        }
+                                                // Reset quận/huyện select
+                                                districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                                                districtSelect.disabled = false;
 
-                                                                        reader.readAsDataURL(input.files[0]);
-                                                                    }
-                                                                }
+                                                // Reset phường/xã select
+                                                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                wardSelect.disabled = true;
 
-                                                                function cancelUpload() {
-                                                                    const form = document.getElementById('avatarForm');
-                                                                    const preview = document.getElementById('preview');
-                                                                    const previewContainer = document.querySelector('.preview-container');
-                                                                    const uploadActions = document.querySelector('.upload-actions');
+                                                data.districts.forEach(district => {
+                                                    const option = document.createElement('option');
+                                                    option.value = district.code;
+                                                    option.textContent = district.name;
+                                                    districtSelect.appendChild(option);
+                                                });
+                                            } catch (error) {
+                                                console.error('Error loading districts:', error);
+                                            }
+                                        }
 
-                                                                    form.reset();
-                                                                    preview.src = '#';
-                                                                    previewContainer.style.display = 'none';
-                                                                    uploadActions.style.display = 'none';
-                                                                }
-                                                                // Form validation
-                                                                (() => {
-                                                                    'use strict'
-                                                                    const forms = document.querySelectorAll('.needs-validation')
-                                                                    Array.from(forms).forEach(form => {
-                                                                        form.addEventListener('submit', event => {
-                                                                            if (!form.checkValidity()) {
-                                                                                event.preventDefault()
-                                                                                event.stopPropagation()
-                                                                            }
-                                                                            form.classList.add('was-validated')
-                                                                        }, false)
-                                                                    })
-                                                                })()
+                                        // Load phường/xã theo quận/huyện
+                                        async function loadWards(districtCode) {
+                                            try {
+                                                const response = await fetch(API_WARD + districtCode + '?depth=2');
+                                                const data = await response.json();
+
+                                                // Reset phường/xã select
+                                                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                wardSelect.disabled = false;
+
+                                                data.wards.forEach(ward => {
+                                                    const option = document.createElement('option');
+                                                    option.value = ward.code;
+                                                    option.textContent = ward.name;
+                                                    wardSelect.appendChild(option);
+                                                });
+                                            } catch (error) {
+                                                console.error('Error loading wards:', error);
+                                            }
+                                        }
+
+                                        // Cập nhật địa chỉ đầy đủ
+                                        function updateFullAddress() {
+                                            const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
+                                            const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
+                                            const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+                                            const specific = specificAddress.value.trim();
+
+                                            // Tạo mảng chứa các phần tử địa chỉ có giá trị
+                                            const addressParts = [];
+
+                                            if (specific)
+                                                addressParts.push(specific);
+                                            if (ward)
+                                                addressParts.push(ward);
+                                            if (district)
+                                                addressParts.push(district);
+                                            if (province)
+                                                addressParts.push(province);
+
+                                            // Nối các phần tử bằng dấu phẩy và khoảng trắng
+                                            const fullAddress = addressParts.join(', ');
+
+                                            // Cập nhật giá trị vào input ẩn
+                                            if (fullAddress) {
+                                                fullAddressInput.value = fullAddress;
+                                            }
+                                        }
+
+                                        // Event listeners
+                                        provinceSelect.addEventListener('change', (e) => {
+                                            if (e.target.value) {
+                                                loadDistricts(e.target.value);
+                                            } else {
+                                                districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                                                districtSelect.disabled = true;
+                                                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                wardSelect.disabled = true;
+                                            }
+                                            updateFullAddress();
+                                        });
+
+                                        districtSelect.addEventListener('change', (e) => {
+                                            if (e.target.value) {
+                                                loadWards(e.target.value);
+                                            } else {
+                                                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                wardSelect.disabled = true;
+                                            }
+                                            updateFullAddress();
+                                        });
+
+                                        wardSelect.addEventListener('change', updateFullAddress);
+                                        specificAddress.addEventListener('input', updateFullAddress);
+
+                                        // Form validation
+                                        const form = document.querySelector('form');
+                                        form.addEventListener('submit', (e) => {
+                                            if (!form.checkValidity()) {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                            }
+                                            form.classList.add('was-validated');
+                                        });
+
+                                        // Load provinces when page loads
+                                        loadProvinces();
+                                        function validateAndPreviewImage(input) {
+                                            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                            const file = input.files[0];
+
+                                            if (file && !allowedTypes.includes(file.type)) {
+                                                alert('Chỉ chấp nhận file ảnh có định dạng: JPG, PNG, GIF, WEBP');
+                                                input.value = ''; // Reset input file
+                                                return;
+                                            }
+
+                                            const maxSize = 10 * 1024 * 1024; // 10MB
+                                            if (file && file.size > maxSize) {
+                                                alert('Kích thước file không được vượt quá 10MB');
+                                                input.value = '';
+                                                return;
+                                            }
+
+                                            previewImage(input);
+                                        }
+                                        function previewImage(input) {
+                                            const preview = document.getElementById('preview');
+                                            const previewContainer = document.querySelector('.preview-container');
+                                            const uploadActions = document.querySelector('.upload-actions');
+
+                                            if (input.files && input.files[0]) {
+                                                const reader = new FileReader();
+
+                                                reader.onload = function (e) {
+                                                    preview.src = e.target.result;
+                                                    previewContainer.style.display = 'block';
+                                                    uploadActions.style.display = 'flex';
+                                                }
+
+                                                reader.readAsDataURL(input.files[0]);
+                                            }
+                                        }
+
+                                        function cancelUpload() {
+                                            const form = document.getElementById('avatarForm');
+                                            const preview = document.getElementById('preview');
+                                            const previewContainer = document.querySelector('.preview-container');
+                                            const uploadActions = document.querySelector('.upload-actions');
+
+                                            form.reset();
+                                            preview.src = '#';
+                                            previewContainer.style.display = 'none';
+                                            uploadActions.style.display = 'none';
+                                        }
+                                        // Form validation
+                                        (() => {
+                                            'use strict'
+                                            const forms = document.querySelectorAll('.needs-validation')
+                                            Array.from(forms).forEach(form => {
+                                                form.addEventListener('submit', event => {
+                                                    if (!form.checkValidity()) {
+                                                        event.preventDefault()
+                                                        event.stopPropagation()
+                                                    }
+                                                    form.classList.add('was-validated')
+                                                }, false)
+                                            })
+                                        })()
         </script>
     </body>
 </html>
