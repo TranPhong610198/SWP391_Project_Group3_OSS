@@ -221,8 +221,8 @@ INSERT [dbo].[tokenPassword] ([id], [token], [expiryTime], [isUsed], [UserID]) V
 GO
 SET IDENTITY_INSERT [dbo].[tokenPassword] OFF
 GO
-<<<<<<< HEAD
-=======
+
+
 
 
 INSERT INTO footer_settings (type, field_name, value, image) VALUES
@@ -233,4 +233,4 @@ INSERT INTO footer_settings (type, field_name, value, image) VALUES
 (N'contact', N'Tổng đài hỗ trợ', N'+84 123 456 789', NULL),
 (N'social', N'Facebook', N'https://facebook.com/fashion', N'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT83dd8_4WZCT-LsYC477q2WKocjms9OHCg0g&s'),
 (N'social', N'Instagram', N'https://instagram.com/fashion', N'https://cdn-icons-png.freepik.com/256/15707/15707869.png?semt=ais_hybrid') 
->>>>>>> 48cb518495695862de7a30033795b09d77f72de4
+
