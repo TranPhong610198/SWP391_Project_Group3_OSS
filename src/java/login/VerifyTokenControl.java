@@ -22,7 +22,7 @@ public class VerifyTokenControl extends HttpServlet {
         String token = request.getParameter("token");
         
         if (token == null || token.isEmpty()) {
-            request.setAttribute("mess", "Mã xác thực không hợp lệ.");
+            request.setAttribute("error", "Mã xác thực không hợp lệ.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
@@ -34,13 +34,13 @@ public class VerifyTokenControl extends HttpServlet {
         Token storedToken = tokenDao.getTokenPassword(token);
 
         if (storedToken == null) {
-            request.setAttribute("mess", "Mã xác thực không hợp lệ hoặc đã hết hạn.");
+            request.setAttribute("error", "Mã xác thực không hợp lệ hoặc đã hết hạn.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
 
         if (storedToken.isIsUsed()) {
-            request.setAttribute("mess", "Mã xác thực đã được sử dụng. Vui lòng đăng nhập.");
+            request.setAttribute("error", "Mã xác thực đã được sử dụng. Vui lòng đăng nhập.");
             request.getRequestDispatcher("login").forward(request, response);
             return;
         }
@@ -60,10 +60,10 @@ public class VerifyTokenControl extends HttpServlet {
                 if (emailSent) {
                     request.setAttribute("mess", "Mã xác thực trước đó đã hết hạn. Một email xác thực mới đã được gửi. Vui lòng kiểm tra email.");
                 } else {
-                    request.setAttribute("mess", "Không gửi được email xác thực mới. Vui lòng liên hệ bộ phận hỗ trợ.");
+                    request.setAttribute("error", "Không gửi được email xác thực mới. Vui lòng liên hệ bộ phận hỗ trợ.");
                 }
             } else {
-                request.setAttribute("mess", "Không tìm thấy người dùng cho mã xác thực này.");
+                request.setAttribute("error", "Không tìm thấy người dùng cho mã xác thực này.");
             }
             
             request.getRequestDispatcher("login").forward(request, response);

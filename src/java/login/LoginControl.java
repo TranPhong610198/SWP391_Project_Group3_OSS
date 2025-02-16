@@ -49,7 +49,7 @@ public class LoginControl extends HttpServlet {
 
                 if (existingUser != null) {
                     if ("inactive".equals(existingUser.getStatus())) {
-                        request.setAttribute("mess", "Tài khoản của bạn đã bị chặn.");
+                        request.setAttribute("error", "Tài khoản của bạn đã bị chặn.");
                         request.getRequestDispatcher("login.jsp").forward(request, response);
                         return;
                     } else if ("pending".equals(existingUser.getStatus())) {
@@ -76,7 +76,7 @@ public class LoginControl extends HttpServlet {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                request.setAttribute("mess", "Đăng nhập Google thất bại. Vui lòng thử lại.");
+                request.setAttribute("error", "Đăng nhập Google thất bại. Vui lòng thử lại.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
@@ -104,11 +104,11 @@ public class LoginControl extends HttpServlet {
         User account = userDao.checkAccount(username, password);
 
         if (account == null) {
-            request.setAttribute("mess", "Tên đăng nhập hoặc mật khẩu không đúng.");
+            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             if ("inactive".equals(account.getStatus())) {
-                request.setAttribute("mess", "Tài khoản của bạn đã bị chặn.");
+                request.setAttribute("error", "Tài khoản của bạn đã bị chặn.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             } else if ("pending".equals(account.getStatus())) {
@@ -133,12 +133,12 @@ public class LoginControl extends HttpServlet {
             boolean emailSent = emailUtil.sendEmail(account, token);
 
             if (!emailSent) {
-                request.setAttribute("mess", "Không thể gửi email xác minh. Vui lòng thử lại sau.");
+                request.setAttribute("error", "Không thể gửi email xác minh. Vui lòng thử lại sau.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
 
-            request.setAttribute("mess", "Email của bạn chưa được xác thực. Một email xác thực mới đã được gửi đến bạn.");
+            request.setAttribute("error", "Email của bạn chưa được xác thực. Một email xác thực mới đã được gửi đến bạn.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }

@@ -22,8 +22,13 @@
                     <div class="social-container"></div>
 
                     <c:if test="${not empty error}">
-                        <div style="color: red; margin-bottom: 10px;">
+                        <div class="error-message">
                             ${error}
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty mess}">
+                        <div class="success-message">
+                            ${mess}
                         </div>
                     </c:if>
 
