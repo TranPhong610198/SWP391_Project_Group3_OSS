@@ -1,7 +1,5 @@
 package admin;
 
-
-
 import DAO.UserDAO;
 import entity.User;
 import java.io.IOException;
@@ -12,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/userlists")
 public class UserListServlet extends HttpServlet {
@@ -41,7 +40,7 @@ public class UserListServlet extends HttpServlet {
                 page = Integer.parseInt(request.getParameter("page"));
             }
             
-            // Xây dựng câu query SQL
+            // Xây dựng câu query SQL cho cả filtered và export data
             StringBuilder sql = new StringBuilder("SELECT * FROM users WHERE 1=1");
             List<Object> params = new ArrayList<>();
             
@@ -79,17 +78,28 @@ public class UserListServlet extends HttpServlet {
             } else {
                 sql.append(" ORDER BY id ASC");
             }
-            
-            // Thêm phân trang
+
+            // Lưu câu SQL gốc và params cho export (không có OFFSET và FETCH)
+            StringBuilder exportSql = new StringBuilder(sql);
+            List<Object> exportParams = new ArrayList<>(params);
+
+            // Thêm phân trang cho SQL hiển thị
             int offset = (page - 1) * RECORDS_PER_PAGE;
             sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
             params.add(offset);
             params.add(RECORDS_PER_PAGE);
 
-            // Thực hiện truy vấn
+            // Thực hiện truy vấn cho trang hiện tại
             List<User> users = userDAO.getUsersByFilter(sql.toString(), params);
             int totalRecords = userDAO.getTotalFilteredRecords(sql.toString(), params);
             int totalPages = (int) Math.ceil(totalRecords * 1.0 / RECORDS_PER_PAGE);
+
+            // Lấy tất cả dữ liệu đã lọc (không phân trang) cho export
+            List<User> allFilteredUsers = userDAO.getUsersByFilter(exportSql.toString(), exportParams);
+
+            // Lưu danh sách đã lọc vào session
+            HttpSession session = request.getSession();
+            session.setAttribute("filteredUsers", allFilteredUsers);
 
             // Set attributes cho JSP
             request.setAttribute("users", users);
