@@ -66,11 +66,12 @@ public class DeleteCategory extends HttpServlet {
             } else {
                 response.sendRedirect("categorylists?error=Xoa that bai!");
             }
-        } catch (Exception e) {
-            response.sendRedirect("categorylists?error=Loi xu ly!");
+         } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("error/404.jsp");
         }
+    
     }
-
     
 
     /** 

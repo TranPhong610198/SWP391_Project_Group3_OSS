@@ -71,7 +71,7 @@ public class CategoryAddServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-         
+         try{
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String status = request.getParameter("status");
@@ -88,6 +88,10 @@ public class CategoryAddServlet extends HttpServlet {
             response.sendRedirect("categorylists");
         } else {
             response.sendRedirect("categoryadd");
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("error/404.jsp");
         }
     }
 
