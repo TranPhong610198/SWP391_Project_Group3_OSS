@@ -48,20 +48,37 @@ INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [
 GO
 SET IDENTITY_INSERT [dbo].[users] OFF
 GO
-SET IDENTITY_INSERT [dbo].[categories] ON 
+SET IDENTITY_INSERT [dbo].[categories] ON;
 GO
-INSERT [dbo].[categories] ([id], [name], [description], [status]) VALUES (1, N'Quần áo nam', N'Các loại quần áo cho nam như áo sơ mi, quần tây, vest', N'active')
+
+-- Thêm danh mục cấp 1 (Danh mục gốc - `parent_id = NULL`)
+INSERT INTO [dbo].[categories] ([id], [name], [description], [parent_id], [level], [status]) 
+VALUES 
+(1, N'Quần áo nam', N'Các loại quần áo cho nam như áo sơ mi, quần tây, vest', NULL, 1, N'active'),
+(2, N'Quần áo nữ', N'Các loại quần áo cho nữ như váy, áo kiểu và chân váy', NULL, 1, N'active'),
+(3, N'Quần áo trẻ em', N'Quần áo cho trẻ em như áo thun, quần short và đầm', NULL, 1, N'active'),
+(4, N'Phụ kiện', N'Các phụ kiện thời trang như túi xách, thắt lưng và khăn quàng cổ', NULL, 1, N'active'),
+(5, N'Giày dép', N'Giày dép cho mọi độ tuổi và giới tính', NULL, 1, N'active'),
+
+-- Thêm danh mục cấp 2 (Danh mục con của "Quần áo nam" và "Quần áo nữ")
+(6, N'Áo nam', N'Áo thun, áo sơ mi, áo khoác cho nam', 1, 2, N'active'),
+(7, N'Quần nam', N'Quần jean, quần kaki, quần tây cho nam', 1, 2, N'active'),
+(8, N'Áo nữ', N'Áo kiểu, áo thun, áo khoác cho nữ', 2, 2, N'active'),
+(9, N'Váy & Chân váy', N'Váy đầm, chân váy dài, váy xòe', 2, 2, N'active'),
+
+-- Thêm danh mục cấp 3 (Danh mục con của "Quần nam" và "Áo nam", "Áo nữ" và "Váy & Chân váy" )
+(10, N'Quần jean nam', N'Quần jean nhiều kiểu dáng', 7, 3, N'active'),
+(11, N'Quần kaki nam', N'Quần kaki cho nam lịch lãm', 7, 3, N'active'),
+(12, N'Áo sơ mi nam', N'Áo sơ mi công sở, lịch lãm', 6, 3, N'active'),
+(13, N'Áo thun nam', N'Áo thun cotton, áo thun polo', 6, 3, N'active'),
+(14, N'Đầm dự tiệc', N'Đầm dài, đầm body, đầm công sở', 9, 3, N'active'),
+(15, N'Áo sơ mi nữ', N'Áo sơ mi công sở, lịch lãm', 8, 3, N'active'),   
+(16, N'Áo thun nữ', N'Áo thun cotton, áo thun kiểu', 8, 3, N'active'), 
+(17, N'Váy maxi', N'Váy maxi dài, phong cách thời trang', 9, 3, N'active');  
 GO
-INSERT [dbo].[categories] ([id], [name], [description], [status]) VALUES (2, N'Quần áo nữ', N'Các loại quần áo cho nữ như váy, áo kiểu và chân váy', N'active')
+SET IDENTITY_INSERT [dbo].[categories] OFF;
 GO
-INSERT [dbo].[categories] ([id], [name], [description], [status]) VALUES (3, N'Quần áo trẻ em', N'Quần áo cho trẻ em như áo thun, quần short và đầm', N'active')
-GO
-INSERT [dbo].[categories] ([id], [name], [description], [status]) VALUES (4, N'Phụ kiện', N'Các phụ kiện thời trang như túi xách, thắt lưng và khăn quàng cổ', N'active')
-GO
-INSERT [dbo].[categories] ([id], [name], [description], [status]) VALUES (5, N'Giày dép', N'Giày dép cho mọi độ tuổi và giới tính', N'active')
-GO
-SET IDENTITY_INSERT [dbo].[categories] OFF
-GO
+
 SET IDENTITY_INSERT [dbo].[products] ON 
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (1, N'Áo sơ mi trắng', 1, N'Áo sơ mi trắng phong cách, phù hợp với mọi dịp', CAST(200000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'ao_so_mi_trang.jpg', N'active', 1, N'1', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
