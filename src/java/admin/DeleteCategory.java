@@ -60,13 +60,15 @@ public class DeleteCategory extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             CategoryDAO categoryDAO = new CategoryDAO();
             boolean success = categoryDAO.deleteCategory(id);
-
+            
             if (success) {
-                response.sendRedirect("categorylists?message= Xoa thanh cong!");
+                response.sendRedirect("categorylists?message=Xoa thanh cong!");
             } else {
-                response.sendRedirect("categorylists?error=Xoa that bai!");
+                response.sendRedirect("categorylists?error=Khong the xoa danh muc nay!");
             }
-         } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            response.sendRedirect("categorylists?error=ID danh muc khong hop le!");
+        } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("error/404.jsp");
         }
