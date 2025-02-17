@@ -72,8 +72,8 @@ public class InventoryDAO extends DBContext {
                     inventory.getSizes().add(new Size(sizeId, sizeName));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         return new ArrayList<>(inventoryMap.values());
@@ -103,27 +103,27 @@ public class InventoryDAO extends DBContext {
             if (rs.next()) {
                 totalRecords = rs.getInt(1);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         return totalRecords;
     }
 
-    public Inventory getInventoryDetail(int productId) throws SQLException {
+    public Inventory getInventoryDetail(int productId) {
         String sql = """
-                    SELECT p.id, p.title, c.name as category_name,
-                           pc.id as color_id, pc.color as color_name,
-                           ps.id as size_id, ps.size as size_name,
-                           SUM(pv.stock_quantity) as total_quantity
-                    FROM products p
-                    JOIN categories c ON p.category_id = c.id
-                    LEFT JOIN product_variants pv ON p.id = pv.product_id
-                    LEFT JOIN product_colors pc ON pv.color_id = pc.id
-                    LEFT JOIN product_sizes ps ON pv.size_id = ps.id
-                    WHERE p.id = ?
-                    GROUP BY p.id, p.title, c.name, pc.id, pc.color, ps.id, ps.size
-                    """;
+                SELECT p.id, p.title, c.name as category_name,
+                       pc.id as color_id, pc.color as color_name,
+                       ps.id as size_id, ps.size as size_name,
+                       SUM(pv.stock_quantity) as total_quantity
+                FROM products p
+                JOIN categories c ON p.category_id = c.id
+                LEFT JOIN product_variants pv ON p.id = pv.product_id
+                LEFT JOIN product_colors pc ON pv.color_id = pc.id
+                LEFT JOIN product_sizes ps ON pv.size_id = ps.id
+                WHERE p.id = ?
+                GROUP BY p.id, p.title, c.name, pc.id, pc.color, ps.id, ps.size
+                """;
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, productId);
@@ -152,20 +152,23 @@ public class InventoryDAO extends DBContext {
             }
 
             return new Inventory(productId, productName, category, colors, sizes, totalQuantity);
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
+        return null;
     }
 
-    public List<Variant> getProductVariants(int productId) throws SQLException {
+    public List<Variant> getProductVariants(int productId) {
         String sql = """
                     SELECT pv.id, pv.product_id, 
-                           pc.id as color_id, pc.color as color_name,
-                           ps.id as size_id, ps.size as size_name,
-                           pv.stock_quantity, pv.last_restock_date
-                    FROM product_variants pv
-                    JOIN product_colors pc ON pv.color_id = pc.id
-                    JOIN product_sizes ps ON pv.size_id = ps.id
-                    WHERE pv.product_id = ?
-                    ORDER BY pc.color, ps.size
+                                               pc.id as color_id, pc.color as color_name,
+                                               ps.id as size_id, ps.size as size_name,
+                                               pv.stock_quantity, pv.last_restock_date
+                                        FROM product_variants pv
+                                        JOIN product_colors pc ON pv.color_id = pc.id
+                                        JOIN product_sizes ps ON pv.size_id = ps.id
+                                        WHERE pv.product_id = ?
+                                        ORDER BY pc.color, ps.size
                     """;
 
         List<Variant> variants = new ArrayList<>();
@@ -187,12 +190,14 @@ public class InventoryDAO extends DBContext {
                         rs.getTimestamp("last_restock_date")
                 ));
             }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         return variants;
     }
 
-    public Color getColorByName(int productId, String colorName) throws SQLException {
+    public Color getColorByName(int productId, String colorName) {
         String sql = "SELECT id, color FROM product_colors WHERE product_id = ? AND color = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, productId);
@@ -201,11 +206,13 @@ public class InventoryDAO extends DBContext {
             if (rs.next()) {
                 return new Color(rs.getInt("id"), rs.getString("color"));
             }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
         return null;
     }
 
-    public Size getSizeByName(int productId, String sizeName) throws SQLException {
+    public Size getSizeByName(int productId, String sizeName) {
         String sql = "SELECT id, size FROM product_sizes WHERE product_id = ? AND size = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, productId);
@@ -214,73 +221,13 @@ public class InventoryDAO extends DBContext {
             if (rs.next()) {
                 return new Size(rs.getInt("id"), rs.getString("size"));
             }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
         return null;
     }
 
-    public int addColor(int productId, String colorName) throws SQLException {
-        String sql = "INSERT INTO product_colors (product_id, color) OUTPUT INSERTED.id VALUES (?, ?)";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, productId);
-            st.setString(2, colorName);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        }
-        return -1;
-    }
-
-    public int addSize(int productId, String sizeName) throws SQLException {
-        String sql = "INSERT INTO product_sizes (product_id, size) OUTPUT INSERTED.id VALUES (?, ?)";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, productId);
-            st.setString(2, sizeName);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        }
-        return -1;
-    }
-
-    public void updateVariant(int variantId, int colorId, int sizeId, int quantity) throws SQLException {
-        String sql = "UPDATE product_variants SET color_id = ?, size_id = ?, stock_quantity = ?, last_restock_date = GETDATE() WHERE id = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, colorId);
-            st.setInt(2, sizeId);
-            st.setInt(3, quantity);
-            st.setInt(4, variantId);
-            st.executeUpdate();
-        }
-    }
-
-    public void addNewVariant(int productId, int colorId, int sizeId, int quantity) throws SQLException {
-        String sql = "INSERT INTO product_variants (product_id, color_id, size_id, stock_quantity, last_restock_date) VALUES (?, ?, ?, ?, GETDATE())";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, productId);
-            st.setInt(2, colorId);
-            st.setInt(3, sizeId);
-            st.setInt(4, quantity);
-            st.executeUpdate();
-        }
-    }
-
-    public boolean isVariantExists(int productId, int colorId, int sizeId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, productId);
-            st.setInt(2, colorId);
-            st.setInt(3, sizeId);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        }
-        return false;
-    }
-
-    public Variant getVariant(int variantId) throws SQLException {
+    public Variant getVariant(int variantId) {
         String sql = """
                     SELECT pv.id, pv.product_id,
                            pc.id as color_id, pc.color as color_name,
@@ -309,11 +256,118 @@ public class InventoryDAO extends DBContext {
                         rs.getTimestamp("last_restock_date")
                 );
             }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
         return null;
     }
 
-    public void deleteVariant(int variantId) throws SQLException {
+    public boolean isVariantExists(int productId, int colorId, int sizeId) {
+        String sql = "SELECT COUNT(*) FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            st.setInt(2, colorId);
+            st.setInt(3, sizeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public int addColor(int productId, String colorName) {
+        String sql = "INSERT INTO product_colors (product_id, color) OUTPUT INSERTED.id VALUES (?, ?)";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            st.setString(2, colorName);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    public int addSize(int productId, String sizeName) {
+        String sql = "INSERT INTO product_sizes (product_id, size) OUTPUT INSERTED.id VALUES (?, ?)";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            st.setString(2, sizeName);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    public void addNewVariant(int productId, int colorId, int sizeId, int quantity) {
+        String sql = "INSERT INTO product_variants (product_id, color_id, size_id, stock_quantity, last_restock_date) VALUES (?, ?, ?, ?, GETDATE())";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            st.setInt(2, colorId);
+            st.setInt(3, sizeId);
+            st.setInt(4, quantity);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void updateSize(int sizeId, String newSize) {
+        String sql = "UPDATE product_sizes SET size = ? WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, newSize);
+            st.setInt(2, sizeId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void updateColor(int colorId, String newColor) {
+        String sql = "UPDATE product_colors SET color = ? WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, newColor);
+            st.setInt(2, colorId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void updateVariant(int variantId, int colorId, int sizeId, int quantity) {
+        String sql = "UPDATE product_variants SET color_id = ?, size_id = ?, stock_quantity = ?, last_restock_date = GETDATE() WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, colorId);
+            st.setInt(2, sizeId);
+            st.setInt(3, quantity);
+            st.setInt(4, variantId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void updateVariantQuantity(int variantId, int quantity) {
+        String sql = "UPDATE product_variants SET stock_quantity = ?, last_restock_date = GETDATE() WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, quantity);
+            st.setInt(2, variantId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void deleteVariant(int variantId) {
         // lấy color_id and size_id
         String getIdsSQL = "SELECT color_id, size_id FROM product_variants WHERE id = ?";
         int colorId = 0;
@@ -326,22 +380,23 @@ public class InventoryDAO extends DBContext {
                 colorId = rs.getInt("color_id");
                 sizeId = rs.getInt("size_id");
             }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // Start transaction
-        connection.setAutoCommit(false);
+        // Bắt đầu transaction
         try {
-            // xóa từ product_variants
-            String deleteVariantSQL = "DELETE FROM product_variants WHERE id = ?";
-            try (PreparedStatement st = connection.prepareStatement(deleteVariantSQL)) {
+            connection.setAutoCommit(false);
+
+            // Xóa từ bảng product_variants
+            try (PreparedStatement st = connection.prepareStatement("DELETE FROM product_variants WHERE id = ?")) {
                 st.setInt(1, variantId);
                 st.executeUpdate();
             }
 
-            // Kiểm tra xem màu sắc có còn được sử dụng trong các biến thể khác không
-            String checkColorSQL = "SELECT COUNT(*) FROM product_variants WHERE color_id = ?";
+            // Kiểm tra xem color có còn được sử dụng không
             boolean colorInUse = false;
-            try (PreparedStatement st = connection.prepareStatement(checkColorSQL)) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT COUNT(*) FROM product_variants WHERE color_id = ?")) {
                 st.setInt(1, colorId);
                 ResultSet rs = st.executeQuery();
                 if (rs.next()) {
@@ -349,19 +404,17 @@ public class InventoryDAO extends DBContext {
                 }
             }
 
-            // Xóa từ product_colors nếu ko đc sử dụng
+            // Nếu color không còn dùng, xóa khỏi product_colors
             if (!colorInUse) {
-                String deleteColorSQL = "DELETE FROM product_colors WHERE id = ?";
-                try (PreparedStatement st = connection.prepareStatement(deleteColorSQL)) {
+                try (PreparedStatement st = connection.prepareStatement("DELETE FROM product_colors WHERE id = ?")) {
                     st.setInt(1, colorId);
                     st.executeUpdate();
                 }
             }
 
-            // Kiểm tra xem kích thước có còn được sử dụng trong các biến thể khác không
-            String checkSizeSQL = "SELECT COUNT(*) FROM product_variants WHERE size_id = ?";
+            // Kiểm tra xem size có còn được sử dụng không
             boolean sizeInUse = false;
-            try (PreparedStatement st = connection.prepareStatement(checkSizeSQL)) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT COUNT(*) FROM product_variants WHERE size_id = ?")) {
                 st.setInt(1, sizeId);
                 ResultSet rs = st.executeQuery();
                 if (rs.next()) {
@@ -369,10 +422,9 @@ public class InventoryDAO extends DBContext {
                 }
             }
 
-            // Xóa từ product_sizes nếu ko đc sử dụng
+            // Nếu size không còn dùng, xóa khỏi product_sizes
             if (!sizeInUse) {
-                String deleteSizeSQL = "DELETE FROM product_sizes WHERE id = ?";
-                try (PreparedStatement st = connection.prepareStatement(deleteSizeSQL)) {
+                try (PreparedStatement st = connection.prepareStatement("DELETE FROM product_sizes WHERE id = ?")) {
                     st.setInt(1, sizeId);
                     st.executeUpdate();
                 }
@@ -381,19 +433,19 @@ public class InventoryDAO extends DBContext {
             // Commit transaction
             connection.commit();
         } catch (SQLException e) {
-            connection.rollback();
-            throw e;
+            try {
+                connection.rollback(); // Rollback nếu có lỗi
+            } catch (SQLException rollbackEx) {
+                System.out.println("Error: " + e.getMessage());
+            }
+            System.out.println("Error: " + e.getMessage());
         } finally {
-            connection.setAutoCommit(true);
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                System.out.println("Error: " + ex.getMessage());
+            }
         }
     }
 
-    public void updateVariantQuantity(int variantId, int quantity) throws SQLException {
-        String sql = "UPDATE product_variants SET stock_quantity = ?, last_restock_date = GETDATE() WHERE id = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, quantity);
-            st.setInt(2, variantId);
-            st.executeUpdate();
-        }
-    }
 }
