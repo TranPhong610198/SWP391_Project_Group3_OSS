@@ -80,7 +80,13 @@
                         <td>${post.getTitle()}</td>
                         <td>${post.getUser().getFullName()}</td>
                         <td>${post.getCreatedAt()}</td>
-                        <td>${post.getStatus()}</td>
+                        <td>
+    <c:choose>
+        <c:when test="${post.getStatus() == 'published'}">Đã xuất bản</c:when>
+        <c:when test="${post.getStatus() == 'draft'}">Bản thảo</c:when>
+        <c:otherwise>${post.getStatus()}</c:otherwise>
+    </c:choose>
+</td>
                         <td>${post.isIsFeatured() ? 'Có' : 'Không'}</td>
                         <td>
                             <a href="${pageContext.request.contextPath}/detailPost?id=${post.getId()}" 
