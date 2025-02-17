@@ -5,130 +5,97 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý danh mục</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; padding: 20px; }
-        .container {
-            max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1); padding-bottom: 20px;
-        }
-        .header {
-            background: #ff6b00; color: white; padding: 20px;
-            border-radius: 8px 8px 0 0; display: flex; justify-content: space-between;
-            align-items: center;
-        }
-        .controls {
-            padding: 20px; background: #f8f9fa; border-bottom: 1px solid #dee2e6;
-        }
-        .search-form { display: flex; gap: 15px; align-items: center; }
-        .form-group { display: flex; align-items: center; gap: 8px; }
-        input, select {
-            padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;
-        }
-        .btn {
-            padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;
-            font-weight: 500; display: flex; align-items: center; gap: 5px;
-        }
-        .btn-primary { background: #ff6b00; color: white; }
-        .btn-add { background: white; color: #ff6b00; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #dee2e6; }
-        th { background-color: #f8f9fa; font-weight: 600; }
-        .status-badge {
-            padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
-        }
-        .status-active { background-color: #e8f5e9; color: #2e7d32; }
-        .status-inactive { background-color: #ffebee; color: #c62828; }
-        .action-buttons { display: flex; gap: 8px; }
-        .btn-edit { color: #2196f3; }
-        .btn-delete { color: #f44336; }
-        .message { padding: 10px; text-align: center; font-weight: bold; }
-        .message.success { color: green; }
-        .message.error { color: red; }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Danh sách danh mục</h2>
-            <a href="categoryadd" class="btn btn-add">
+            <a href="categoryadd" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Thêm danh mục
             </a>
         </div>
 
-        <div class="controls">
-            <form action="categorylists" method="GET" class="search-form">
-                <div class="form-group">
+        <!-- Filter and Search Form -->
+        <form action="categorylists" method="GET" class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-4">
                     <input type="text" name="search" value="${searchQuery}" 
-                           placeholder="Tìm kiếm theo tên..." style="width: 250px;">
+                           class="form-control" placeholder="Tìm kiếm theo tên...">
                 </div>
                 
-                <div class="form-group">
-                    <select name="status">
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
                         <option value="">Tất cả trạng thái</option>
                         <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Hoạt động</option>
                         <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <select name="sort">
+                <div class="col-md-3">
+                    <select name="sort" class="form-select">
                         <option value="">Sắp xếp theo</option>
                         <option value="name" ${sortBy == 'name' ? 'selected' : ''}>Tên</option>
                         <option value="status" ${sortBy == 'status' ? 'selected' : ''}>Trạng thái</option>
                     </select>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Tìm kiếm
-                </button>
-            </form>
-        </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                </div>
+            </div>
+        </form>
 
-        <!-- Hiển thị thông báo nếu có 
+        <!-- Messages 
         <c:if test="${not empty param.message}">
-            <div class="message success">${param.message}</div>
+            <div class="alert alert-success">${param.message}</div>
         </c:if>
         <c:if test="${not empty param.error}">
-            <div class="message error">${param.error}</div>
+            <div class="alert alert-danger">${param.error}</div>
         </c:if>-->
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Tên danh mục</th>
-                    <th>Mô tả</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${categories}" var="category">
+        <!-- Categories Table -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>${category.name}</td>
-                        <td>${category.description}</td>
-                        <td>
-                            <span class="status-badge ${category.status == 'active' ? 'status-active' : 'status-inactive'}">
-                                ${category.status == 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="categoryedit.jsp?id=${category.id}" class="btn-edit">
-                                    <i class="fas fa-edit"></i>
+                        <th>Tên danh mục</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${categories}" var="category">
+                        <tr>
+                            <td>${category.name}</td>
+                            <td>${category.description}</td>
+                            <td>
+                                <span class="badge ${category.status == 'active' ? 'bg-success' : 'bg-danger'}">
+                                    ${category.status == 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="categoryedit.jsp?id=${category.id}" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Sửa
                                 </a>
                                 <a href="categorydelete?id=${category.id}" 
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')"
-                                   class="btn-delete">
-                                    <i class="fas fa-trash"></i>
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
+                                    <i class="fas fa-trash"></i> Xóa
                                 </a>
-                            </div>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
