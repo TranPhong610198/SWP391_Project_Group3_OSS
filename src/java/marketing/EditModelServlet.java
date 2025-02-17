@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package marketing;
 
 import DAO.InventoryDAO;
@@ -16,15 +15,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author nguye
  */
-@WebServlet(name = "EditModelServlet", urlPatterns = {"/editModel"})
+@WebServlet(name = "EditModelServlet", urlPatterns = {"/Marketing/editModel"})
 public class EditModelServlet extends HttpServlet {
 
     @Override
@@ -34,16 +30,16 @@ public class EditModelServlet extends HttpServlet {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
             InventoryDAO dao = new InventoryDAO();
             Variant variant = dao.getVariant(variantId);
-            
+
             if (variant == null) {
                 response.sendRedirect("inventorylist");
                 return;
             }
-            
+
             request.setAttribute("variant", variant);
             request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
-            
-        } catch (NumberFormatException | SQLException e) {
+
+        } catch (NumberFormatException e) {
             response.sendRedirect("error.jsp");
         }
     }
@@ -53,18 +49,16 @@ public class EditModelServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         InventoryDAO dao = new InventoryDAO();
-        
+
         try {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
             int productId = Integer.parseInt(request.getParameter("productId"));
-            String colorName = request.getParameter("color");
-            String sizeName = request.getParameter("size");
+            String colorName = request.getParameter("color").trim();
+            String sizeName = request.getParameter("size").trim();
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
             // Validate input
-            if (colorName == null || colorName.trim().isEmpty() || 
-                sizeName == null || sizeName.trim().isEmpty() || 
-                quantity < 0) {
+            if (colorName.isEmpty() || sizeName.isEmpty() || quantity < 0) {
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin hợp lệ");
                 Variant variant = dao.getVariant(variantId);
                 request.setAttribute("variant", variant);
@@ -74,33 +68,41 @@ public class EditModelServlet extends HttpServlet {
 
             // Lấy biến thể hiện tại
             Variant currentVariant = dao.getVariant(variantId);
-            
-            //Nếu màu sắc hoặc kích thước thay đổi, check xem có sự kết hợp mới nào không
-            if (!currentVariant.getColor().getName().equals(colorName) || 
-                !currentVariant.getSize().getName().equals(sizeName)) {
-                
-                Color newColor = dao.getColorByName(productId, colorName);
-                Size newSize = dao.getSizeByName(productId, sizeName);
-                
-                if (newColor != null && newSize != null && 
-                    dao.isVariantExists(productId, newColor.getId(), newSize.getId())) {
-                    request.setAttribute("errorMessage", "Model với màu sắc và kích thước này đã tồn tại");
-                    request.setAttribute("variant", currentVariant);
-                    request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
-                    return;
-                }
+
+            // Xử lý cập nhật màu sắc 
+            Color newColor;
+            if (!currentVariant.getColor().getName().equalsIgnoreCase(colorName)) { 
+                dao.updateColor(currentVariant.getColor().getId(), colorName);
+                newColor = new Color(currentVariant.getColor().getId(), colorName);
+            } else {
+                newColor = currentVariant.getColor();
             }
 
-            // Update variant
-            dao.updateVariantQuantity(variantId, quantity);
-            
+            // Xử lý cập nhật kích thước 
+            Size newSize;
+            if (!currentVariant.getSize().getName().equalsIgnoreCase(sizeName)) { 
+                dao.updateSize(currentVariant.getSize().getId(), sizeName);
+                newSize = new Size(currentVariant.getSize().getId(), sizeName);
+            } else {
+                newSize = currentVariant.getSize();
+            }
+
+            // Kiểm tra trùng lặp với model khác (loại trừ model hiện tại) 
+            if ((currentVariant.getColor().getId() != newColor.getId() || currentVariant.getSize().getId() != newSize.getId()) && dao.isVariantExists(productId, newColor.getId(), newSize.getId())) {
+                request.setAttribute("errorMessage", "Model với màu sắc và kích thước này đã tồn tại");
+                request.setAttribute("variant", currentVariant);
+                request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
+                return;
+            }
+
+            // Cập nhật biến thể với màu sắc, kích thước, số lượng mới
+            dao.updateVariant(variantId, newColor.getId(), newSize.getId(), quantity);
+
             response.sendRedirect("inventoryDetail?id=" + productId + "&success=updated");
-            
+
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Dữ liệu không hợp lệ");
             request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(EditModelServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
