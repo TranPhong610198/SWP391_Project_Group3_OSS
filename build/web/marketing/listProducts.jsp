@@ -156,7 +156,7 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <a href="product/inventory?id=${comboProduct.id}" class="btn btn-link">
+                                                            <a href="inventoryDetail?id=${comboProduct.id}" class="btn btn-link">
                                                                 ${comboProduct.stock}
                                                             </a>
                                                         </td>
@@ -197,7 +197,7 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <a href="product/inventory?id=${product.id}" class="btn btn-link">
+                                                    <a href="inventoryDetail?id=${product.id}" class="btn btn-link">
                                                         ${product.stock}
                                                     </a>
                                                 </td>
