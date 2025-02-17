@@ -116,6 +116,7 @@
                 font-weight: 500;
             }
         </style>
+         <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <!-- Post Header -->
@@ -134,112 +135,125 @@
         </header>
 
         <div class="container">
-             <c:if test="${error != null}">
-            <div class="alert alert-danger" role="alert">
-                ${error}
-            </div>
-        </c:if>
-            <div class="row">
-                <!-- Main Content -->
-                <div class="col-lg-8">
-                    <article class="post-content">
-                        <img src="${post.getThumbnail()}" alt="${post.getTitle()}" class="post-thumbnail">
-                        
-                        <div class="content">
-                            <p><strong>Thông tin tóm tắt:</strong> ${post.getSummary()}</p>
-                            <p><strong>Mô tả:</strong> ${post.getContent()}</p>
-                        </div>
-
-                        <!-- Edit Form (if user has permission) -->
-
-                        <hr>
-                        <h3>Chỉnh sửa bài</h3>
-                        <form method="POST" action="${pageContext.request.contextPath}/detailPost">
-                            <input type="hidden" name="id" value="${post.getId()}">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Tiêu đề</label>
-                                <input type="text" class="form-control" id="title" name="title" value="${post.getTitle()}" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="thumbnail" class="form-label">Ảnh nguồn</label>
-                                <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="${post.getThumbnail()}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="summary" class="form-label">Thông tin tóm tắt</label>
-                                <textarea class="form-control" id="summary" name="summary" required>${post.getSummary()}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="content" class="form-label">Mô tả</label>
-                                <textarea class="form-control" id="content" name="content" rows="6" required>${post.getContent()}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Trạng thái</label>
-                                <select class="form-select" id="status" name="status" required>
-                                    <option value="published" ${post.getStatus() == 'published' ? 'selected' : ''}>Đã xuất bản</option>
-                                    <option value="draft" ${post.getStatus() == 'draft' ? 'selected' : ''}>Bản thảo</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                        </form>
-
-                    </article>
-
-                    <div class="back-button">
-                        <a href="javascript:history.back()" class="btn btn-primary">
-                            <i class="fas fa-arrow-left me-2"></i>Quay về các bài đăng
-                        </a>
-
-
-                        <a href="${pageContext.request.contextPath}/addPost" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Thêm bài
-                        </a>
-                        <a href="${pageContext.request.contextPath}/deletePost?id=${post.getId()}" 
-                           class="btn btn-danger" 
-                           onclick="return confirm('Are you sure you want to delete this post?');">
-                            <i class="fas fa-trash me-2"></i>Xóa bài
-                        </a>
-
-                    </div>
+    <c:if test="${error != null}">
+        <div class="alert alert-danger" role="alert">
+            ${error}
+        </div>
+    </c:if>
+    
+    <div class="row d-flex align-items-stretch">
+        <!-- Main Content - Chiếm 50% màn hình -->
+        <div class="col-lg-6 d-flex">
+            <article class="post-content flex-fill h-100 p-4 bg-white shadow rounded">
+                <img src="${post.getThumbnail()}" alt="${post.getTitle()}" class="post-thumbnail">
+                
+                <div class="content">
+                    <p><strong>Thông tin tóm tắt:</strong> ${post.getSummary()}</p>
+                    <p><strong>Mô tả:</strong> ${post.getContent()}</p>
                 </div>
-
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <aside class="sidebar">
-                        <!-- Search Box -->
-                        <div class="search-box">
-                            <h3 class="sidebar-title">Tìm kiếm bài</h3>
-                            <form method="get" action="${pageContext.request.contextPath}/postList">
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Search...">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Related Posts -->
-                        <div class="related-posts">
-                            <h3 class="sidebar-title fs-6">Phong cách <i class="fas fa-heart text-danger"></i></h3>
-                            <c:forEach var="relatedPost" items="${relatedPosts}">
-                                <div class="related-post">
-                                    <a href="${pageContext.request.contextPath}/postlist.jsp?id=${relatedPost.id}">
-                                        <h6 class="mb-1">${relatedPost.title}</h6>
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar-alt me-1"></i>${relatedPost.updatedAt}
-                                        </small>
-                                    </a>
-                                </div>
-                            </c:forEach>
-                        </div>
-
-
-                    </aside>
-                </div>
-            </div>
+            </article>
         </div>
 
+        <!-- Sidebar - Chiếm 50% màn hình -->
+        <div class="col-lg-6 d-flex">
+    <aside class="sidebar flex-fill h-100 p-4 bg-white shadow rounded">
+
+        <!-- Edit Post Section -->
+        <div class="edit-post mb-4">
+    <h2 class="fw-bold">Chỉnh sửa bài viết</h2>
+    <form method="POST" action="${pageContext.request.contextPath}/detailPost" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="${post.getId()}">
+
+    <div class="mb-3">
+        <label for="title" class="form-label fw-bold">Tiêu đề</label>
+        <input type="text" class="form-control" id="title" name="title" value="${post.getTitle()}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="thumbnail" class="form-label fw-bold">Ảnh nguồn</label>
+        <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
+        <input type="hidden" name="old_thumbnail" value="${post.getThumbnail()}">
+        <c:if test="${not empty post.getThumbnail()}">
+            <div class="mt-2">
+                <img src="${post.getThumbnail()}" alt="Current thumbnail" style="max-width: 200px;" class="img-thumbnail">
+                <p class="text-muted">Ảnh hiện tại</p>
+            </div>
+        </c:if>
+    </div>
+
+    <div class="mb-3">
+        <label for="summary" class="form-label fw-bold">Thông tin tóm tắt</label>
+        <textarea class="form-control" id="summary" name="summary" required>${post.getSummary()}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="content" class="form-label fw-bold">Mô tả</label>
+        <textarea class="form-control" id="content" name="content" rows="6" required>${post.getContent()}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="status" class="form-label fw-bold">Trạng thái</label>
+        <select class="form-select" id="status" name="status" required>
+            <option value="published" ${post.getStatus() == 'published' ? 'selected' : ''}>Đã xuất bản</option>
+            <option value="draft" ${post.getStatus() == 'draft' ? 'selected' : ''}>Bản thảo</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary ms-2">
+        <i class="fas fa-arrow-left me-2"></i>Hủy
+    </a>
+</form>
+</div>
+
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <form method="get" action="${pageContext.request.contextPath}/postList">
+                <div class="input-group mb-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search...">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </aside>
+</div>
+
+    </div>
+</div>
+
+<script>
+    CKEDITOR.replace('content', {
+    filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+    filebrowserUploadMethod: 'form',
+    height: 400,
+    toolbar: [
+        { name: 'document', items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+        { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+        { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+        { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+        '/',
+        { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
+        { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+        { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+        { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+        '/',
+        { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+        { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+        { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] }
+    ],
+    removeButtons: '',
+    format_tags: 'p;h1;h2;h3;pre',
+    removeDialogTabs: 'image:advanced;link:advanced'
+});
+
+</script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
+
+
+                

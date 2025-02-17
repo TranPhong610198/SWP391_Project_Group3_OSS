@@ -10,10 +10,13 @@ import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.sql.Date;
 import java.util.List;
 
@@ -22,6 +25,12 @@ import java.util.List;
  * @author DELL
  */
 @WebServlet(name = "DetailPostServlet", urlPatterns = {"/detailPost"})
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,    // 1 MB
+    maxFileSize = 1024 * 1024 * 10,      // 10 MB
+    maxRequestSize = 1024 * 1024 * 15,   // 15 MB
+    location = ""
+)
 public class PostDetailServlet extends HttpServlet {
 
     /**
@@ -89,13 +98,36 @@ public class PostDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         int id = Integer.parseInt(request.getParameter("id"));
         String title = request.getParameter("title");
-        String thumbnail = request.getParameter("thumbnail");
+        String oldThumbnail = request.getParameter("old_thumbnail");
         String summary = request.getParameter("summary");
         String content = request.getParameter("content");
         String status = request.getParameter("status");
         Date updatedAt = new Date(System.currentTimeMillis());
+        
+        Part thumbnailPart = request.getPart("thumbnail");
+        String thumbnail = oldThumbnail; // Giữ ảnh cũ mặc định
+        
+        try {
+            Part filePart = request.getPart("thumbnail");
+            if (filePart != null && filePart.getSize() > 0) {
+                String uploadPath = request.getServletContext().getRealPath("") + "uploads";
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+                
+                String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
+                String filePath = uploadPath + File.separator + fileName;
+                
+                filePart.write(filePath);
+                thumbnail = "uploads/" + fileName;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Post post = new Post(id, title, thumbnail, summary, content, status, updatedAt);
 

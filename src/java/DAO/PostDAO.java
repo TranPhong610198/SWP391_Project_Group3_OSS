@@ -41,7 +41,7 @@ public class PostDAO extends DBContext {
         }
 
         // Danh sách các cột hợp lệ
-        sql.append(" ORDER BY created_at DESC");
+        sql.append(" ORDER BY created_at ASC");
 
         // Phân trang (đảm bảo FETCH NEXT > 0)
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
