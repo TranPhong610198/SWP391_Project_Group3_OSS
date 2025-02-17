@@ -161,14 +161,14 @@ public class InventoryDAO extends DBContext {
     public List<Variant> getProductVariants(int productId) {
         String sql = """
                     SELECT pv.id, pv.product_id, 
-                                               pc.id as color_id, pc.color as color_name,
-                                               ps.id as size_id, ps.size as size_name,
-                                               pv.stock_quantity, pv.last_restock_date
-                                        FROM product_variants pv
-                                        JOIN product_colors pc ON pv.color_id = pc.id
-                                        JOIN product_sizes ps ON pv.size_id = ps.id
-                                        WHERE pv.product_id = ?
-                                        ORDER BY pc.color, ps.size
+                    pc.id as color_id, pc.color as color_name,
+                    ps.id as size_id, ps.size as size_name,
+                    pv.stock_quantity, pv.last_restock_date
+                    FROM product_variants pv
+                    JOIN product_colors pc ON pv.color_id = pc.id
+                    JOIN product_sizes ps ON pv.size_id = ps.id
+                    WHERE pv.product_id = ?
+                    ORDER BY pc.color, ps.size
                     """;
 
         List<Variant> variants = new ArrayList<>();
@@ -198,7 +198,8 @@ public class InventoryDAO extends DBContext {
     }
 
     public Color getColorByName(int productId, String colorName) {
-        String sql = "SELECT id, color FROM product_colors WHERE product_id = ? AND color = ?";
+        colorName = colorName.trim();
+        String sql = "SELECT id, color FROM product_colors WHERE product_id = ? AND UPPER(TRIM(color)) = UPPER(?)";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, productId);
             st.setString(2, colorName);
@@ -213,7 +214,8 @@ public class InventoryDAO extends DBContext {
     }
 
     public Size getSizeByName(int productId, String sizeName) {
-        String sql = "SELECT id, size FROM product_sizes WHERE product_id = ? AND size = ?";
+        sizeName = sizeName.trim();
+        String sql = "SELECT id, size FROM product_sizes WHERE product_id = ? AND UPPER(TRIM(size)) = UPPER(?)";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, productId);
             st.setString(2, sizeName);
@@ -268,6 +270,23 @@ public class InventoryDAO extends DBContext {
             st.setInt(1, productId);
             st.setInt(2, colorId);
             st.setInt(3, sizeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isVariantExists(int productId, int colorId, int sizeId, int excludeVariantId) {
+        String sql = "SELECT COUNT(*) FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ? AND id <> ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            st.setInt(2, colorId);
+            st.setInt(3, sizeId);
+            st.setInt(4, excludeVariantId);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
@@ -448,4 +467,63 @@ public class InventoryDAO extends DBContext {
         }
     }
 
+    public void cleanupOrphanColor(int colorId) {
+        String sql = "SELECT COUNT(*) FROM product_variants WHERE color_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, colorId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) {
+                try (PreparedStatement del = connection.prepareStatement("DELETE FROM product_colors WHERE id = ?")) {
+                    del.setInt(1, colorId);
+                    del.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error cleaning up color: " + e.getMessage());
+        }
+    }
+
+    public void cleanupOrphanSize(int sizeId) {
+        String sql = "SELECT COUNT(*) FROM product_variants WHERE size_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, sizeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) {
+                try (PreparedStatement del = connection.prepareStatement("DELETE FROM product_sizes WHERE id = ?")) {
+                    del.setInt(1, sizeId);
+                    del.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error cleaning up size: " + e.getMessage());
+        }
+    }
+
+    public int countVariantsUsingColor(int colorId) {
+        String sql = "SELECT COUNT(*) FROM product_variants WHERE color_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, colorId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int countVariantsUsingSize(int sizeId) {
+        String sql = "SELECT COUNT(*) FROM product_variants WHERE size_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, sizeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
+    }
 }

@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package marketing;
 
 import DAO.InventoryDAO;
@@ -16,7 +15,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-
 
 /**
  *
@@ -42,17 +40,15 @@ public class AddModelServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         InventoryDAO dao = new InventoryDAO();
-        
+
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
-            String colorName = request.getParameter("color");
-            String sizeName = request.getParameter("size");
+            String colorName = request.getParameter("color").trim();
+            String sizeName = request.getParameter("size").trim();
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
             // Validate input
-            if (colorName == null || colorName.trim().isEmpty() || 
-                sizeName == null || sizeName.trim().isEmpty() || 
-                quantity < 0) {
+            if (colorName.isEmpty() || sizeName.isEmpty() || quantity < 0) {
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin hợp lệ");
                 request.setAttribute("productId", productId);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
@@ -62,10 +58,11 @@ public class AddModelServlet extends HttpServlet {
             // lấy màu vs size của các đối tượng
             Color color = dao.getColorByName(productId, colorName);
             Size size = dao.getSizeByName(productId, sizeName);
-            
+            System.out.println(color);
+            System.out.println(size);
             // Nhận hoặc tạo ID màu sắc và kích thước
             int colorId, sizeId;
-            
+
             if (color != null) {
                 colorId = color.getId();
             } else {
@@ -74,7 +71,7 @@ public class AddModelServlet extends HttpServlet {
                     throw new SQLException("Không thể tạo màu mới");
                 }
             }
-            
+
             if (size != null) {
                 sizeId = size.getId();
             } else {
@@ -94,9 +91,9 @@ public class AddModelServlet extends HttpServlet {
 
             // Tạo new variant
             dao.addNewVariant(productId, colorId, sizeId, quantity);
-            
+
             response.sendRedirect("inventoryDetail?id=" + productId + "&success=added");
-            
+
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Dữ liệu không hợp lệ");
             request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
