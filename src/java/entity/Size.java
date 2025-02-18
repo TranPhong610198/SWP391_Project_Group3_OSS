@@ -34,4 +34,9 @@ public class Size {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Size{" + "id=" + id + ", name=" + name + '}';
+    }
+
 }

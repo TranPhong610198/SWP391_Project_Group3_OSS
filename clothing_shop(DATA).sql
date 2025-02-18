@@ -109,86 +109,272 @@ SET IDENTITY_INSERT [dbo].[products] OFF
 GO
 USE [clothing_shop]
 GO
-SET IDENTITY_INSERT [dbo].[product_sizes] ON 
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (1, 1, N'L')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (2, 1, N'M')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (3, 1, N'XL')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (4, 2, N'L')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (5, 2, N'M')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (6, 2, N'XL')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (7, 3, N'M')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (8, 3, N'S')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (9, 4, N'L')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (10, 4, N'M')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (11, 5, N'L')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (12, 5, N'M')
-GO
-INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (13, 5, N'S')
-GO
-SET IDENTITY_INSERT [dbo].[product_sizes] OFF
-GO
-SET IDENTITY_INSERT [dbo].[product_colors] ON 
+
+-- Populate product_colors table
+SET IDENTITY_INSERT [dbo].[product_colors] ON
 GO
 INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (1, 1, N'Trắng')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (2, 2, N'Ðen')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (3, 3, N'Hồng')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (4, 3, N'Xanh')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (5, 4, N'Xanh đậm')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (6, 4, N'Xanh nhạt')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (7, 5, N'Đỏ')
-GO
-INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (8, 5, N'Xanh')
-GO
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (2, 1, N'Xanh nhạt')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (3, 2, N'Đen')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (4, 2, N'Xám')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (5, 3, N'Hoa xanh')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (6, 3, N'Hoa đỏ')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (7, 4, N'Xanh đậm')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (8, 4, N'Đen')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (9, 5, N'Đỏ')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (10, 5, N'Xanh')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (11, 6, N'Xanh navy')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (12, 6, N'Xám')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (13, 7, N'Nâu')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (14, 7, N'Đen')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (15, 8, N'Đỏ')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (16, 8, N'Xanh dương')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (17, 9, N'Trắng')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (18, 9, N'Đen')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (19, 10, N'Trắng')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (20, 10, N'Đen')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (21, 10, N'Xanh') 
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (22, 11, N'Xanh')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (23, 11, N'Đỏ')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (24, 12, N'Xanh')
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES (25, 12, N'Xanh đậm')
 SET IDENTITY_INSERT [dbo].[product_colors] OFF
 GO
-SET IDENTITY_INSERT [dbo].[product_variants] ON 
+
+-- Populate product_sizes table
+SET IDENTITY_INSERT [dbo].[product_sizes] ON
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (1, 1, 1, 1, 35, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
+-- Áo sơ mi nam và quần tây - sizes S, M, L, XL
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (1, 1, N'S')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (2, 1, N'M')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (3, 1, N'L')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (4, 1, N'XL')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (5, 2, N'S')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (6, 2, N'M')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (7, 2, N'L')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (8, 2, N'XL')
+
+-- Đầm và chân váy - sizes S, M, L
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (9, 3, N'S')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (10, 3, N'M')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (11, 3, N'L')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (12, 4, N'S')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (13, 4, N'M')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (14, 4, N'L')
+
+-- Quần áo trẻ em - sizes 2-4, 4-6, 6-8
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (15, 5, N'2-4')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (16, 5, N'4-6')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (17, 5, N'6-8')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (18, 6, N'2-4')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (19, 6, N'4-6')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (20, 6, N'6-8')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (21, 11, N'2-4')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (22, 11, N'4-6')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (23, 11, N'6-8')
+
+-- Phụ kiện - sizes onesize hoặc kích thước cụ thể
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (24, 7, N'90cm')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (25, 7, N'100cm')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (26, 7, N'110cm')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (27, 8, N'Onesize')
+
+-- Giày dép - sizes 38-42 cho giày
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (28, 9, N'38')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (29, 9, N'39')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (30, 9, N'40')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (31, 9, N'41')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (32, 9, N'42')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (33, 10, N'38')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (34, 10, N'39')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (35, 10, N'40')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (36, 10, N'41')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (37, 10, N'42')
+
+-- Áo sơ mi xanh - sizes S, M, L, XL
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (38, 12, N'S')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (39, 12, N'M')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (40, 12, N'L')
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (41, 12, N'XL')
+SET IDENTITY_INSERT [dbo].[product_sizes] OFF
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (2, 1, 2, 1, 40, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
+
+-- Populate product_variants table with various stock quantities
+SET IDENTITY_INSERT [dbo].[product_variants] ON
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (3, 1, 3, 1, 30, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (4, 2, 4, 2, 40, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (5, 2, 5, 2, 45, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (6, 2, 6, 2, 38, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (7, 3, 7, 3, 28, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (8, 3, 7, 4, 32, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (9, 3, 8, 3, 30, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (10, 4, 9, 6, 35, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (11, 4, 10, 5, 38, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (12, 5, 11, 8, 40, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (13, 5, 12, 7, 45, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (14, 5, 13, 7, 50, CAST(N'2025-02-13T16:22:25.0666667' AS DateTime2))
-GO
+-- Áo sơ mi trắng variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (1, 1, 1, 1, 50, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (2, 1, 2, 1, 75, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (3, 1, 3, 1, 60, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (4, 1, 4, 1, 40, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (5, 1, 1, 2, 45, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (6, 1, 2, 2, 70, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (7, 1, 3, 2, 55, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (8, 1, 4, 2, 35, CAST(N'2025-01-15T00:00:00.0000000' AS DateTime2))
+
+-- Quần tây đen variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (9, 2, 5, 3, 40, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (10, 2, 6, 3, 65, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (11, 2, 7, 3, 50, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (12, 2, 8, 3, 30, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (13, 2, 5, 4, 35, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (14, 2, 6, 4, 60, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (15, 2, 7, 4, 45, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (16, 2, 8, 4, 25, CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2))
+
+-- Đầm hoa mùa hè variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (17, 3, 9, 5, 30, CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (18, 3, 10, 5, 45, CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (19, 3, 11, 5, 20, CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (20, 3, 9, 6, 25, CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (21, 3, 10, 6, 40, CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (22, 3, 11, 6, 15, CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2))
+
+-- Chân váy denim variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (23, 4, 12, 7, 35, CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (24, 4, 13, 7, 50, CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (25, 4, 14, 7, 25, CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (26, 4, 12, 8, 30, CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (27, 4, 13, 8, 45, CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (28, 4, 14, 8, 20, CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2))
+
+-- Áo thun siêu nhân variants (trẻ em)
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (29, 5, 15, 9, 60, CAST(N'2025-01-20T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (30, 5, 16, 9, 75, CAST(N'2025-01-20T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (31, 5, 17, 9, 50, CAST(N'2025-01-20T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (32, 5, 15, 10, 55, CAST(N'2025-01-20T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (33, 5, 16, 10, 70, CAST(N'2025-01-20T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (34, 5, 17, 10, 45, CAST(N'2025-01-20T00:00:00.0000000' AS DateTime2))
+
+-- Quần short cotton variants (trẻ em)
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (35, 6, 18, 11, 65, CAST(N'2025-01-25T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (36, 6, 19, 11, 80, CAST(N'2025-01-25T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (37, 6, 20, 11, 55, CAST(N'2025-01-25T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (38, 6, 18, 12, 60, CAST(N'2025-01-25T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (39, 6, 19, 12, 75, CAST(N'2025-01-25T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (40, 6, 20, 12, 50, CAST(N'2025-01-25T00:00:00.0000000' AS DateTime2))
+
+-- Thắt lưng da variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (41, 7, 24, 13, 40, CAST(N'2025-01-12T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (42, 7, 25, 13, 50, CAST(N'2025-01-12T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (43, 7, 26, 13, 30, CAST(N'2025-01-12T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (44, 7, 24, 14, 35, CAST(N'2025-01-12T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (45, 7, 25, 14, 45, CAST(N'2025-01-12T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (46, 7, 26, 14, 25, CAST(N'2025-01-12T00:00:00.0000000' AS DateTime2))
+
+-- Khăn lụa variants (Onesize)
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (47, 8, 27, 15, 70, CAST(N'2025-01-18T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (48, 8, 27, 16, 65, CAST(N'2025-01-18T00:00:00.0000000' AS DateTime2))
+
+-- Giày thể thao variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (49, 9, 28, 17, 25, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (50, 9, 29, 17, 35, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (51, 9, 30, 17, 40, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (52, 9, 31, 17, 30, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (53, 9, 32, 17, 20, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (54, 9, 28, 18, 20, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (55, 9, 29, 18, 30, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (56, 9, 30, 18, 35, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (57, 9, 31, 18, 25, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (58, 9, 32, 18, 15, CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2))
+
+
+--Giày sneaker variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (59, 10, 33, 19, 30, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (60, 10, 34, 19, 40, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (61, 10, 35, 19, 50, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (62, 10, 36, 19, 35, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (63, 10, 37, 19, 25, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (64, 10, 33, 20, 20, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (65, 10, 34, 20, 30, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (66, 10, 35, 20, 45, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (67, 10, 36, 20, 40, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (68, 10, 37, 20, 30, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (69, 10, 33, 21, 25, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (70, 10, 34, 21, 35, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (71, 10, 35, 21, 50, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (72, 10, 36, 21, 45, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2)),
+       (73, 10, 37, 21, 30, CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2));
+
+
+--Quần short siêu nhân variants (trẻ em)
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (74, 11, 21, 22, 55, CAST(N'2025-01-22T00:00:00.0000000' AS DateTime2)),
+       (75, 11, 22, 22, 65, CAST(N'2025-01-22T00:00:00.0000000' AS DateTime2)),
+       (76, 11, 23, 22, 50, CAST(N'2025-01-22T00:00:00.0000000' AS DateTime2)),
+       (77, 11, 21, 23, 45, CAST(N'2025-01-22T00:00:00.0000000' AS DateTime2)),
+       (78, 11, 22, 23, 60, CAST(N'2025-01-22T00:00:00.0000000' AS DateTime2)),
+       (79, 11, 23, 23, 55, CAST(N'2025-01-22T00:00:00.0000000' AS DateTime2));
+
+--Áo sơ mi xanh variants
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) 
+VALUES (80, 12, 38, 24, 40, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (81, 12, 39, 24, 55, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (82, 12, 40, 24, 35, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (83, 12, 41, 24, 50, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (84, 12, 38, 25, 45, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (85, 12, 39, 25, 60, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (86, 12, 40, 25, 30, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2)),
+       (87, 12, 41, 25, 55, CAST(N'2025-01-14T00:00:00.0000000' AS DateTime2));
 
 SET IDENTITY_INSERT [dbo].[product_variants] OFF
 GO
