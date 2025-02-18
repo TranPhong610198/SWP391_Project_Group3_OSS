@@ -250,7 +250,7 @@
                                 <button type="submit" class="btn btn-primary me-2">
                                     <i class="fas fa-filter me-2"></i>Lọc
                                 </button>
-                                <a href="productlist" class="btn btn-secondary">Xóa bộ lọc</a>
+                                <a href="inventorylist" class="btn btn-secondary">Xóa bộ lọc</a>
                             </div>
                         </form>
                     </div>

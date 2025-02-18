@@ -20,7 +20,7 @@ import java.sql.SQLException;
  *
  * @author nguye
  */
-@WebServlet(name = "AddModelServlet", urlPatterns = {"/Marketing/addModel"})
+@WebServlet(name = "AddModelServlet", urlPatterns = {"/marketing/addModel"})
 public class AddModelServlet extends HttpServlet {
 
     @Override

@@ -261,6 +261,7 @@
                                 <select class="form-select" id="filterStatus" name="filterStatus">
                                     <option value="">Tất cả trạng thái</option>
                                     <option value="active" ${filterStatus == 'active' ? 'selected' : ''}>Hoạt động</option>
+                                    <option value="inactive" ${filterStatus == 'inactive' ? 'selected' : ''}>Chưa kích hoạt</option>
                                     <option value="expired" ${filterStatus == 'expired' ? 'selected' : ''}>Hết hạn</option>
                                 </select>
                             </div>
@@ -305,10 +306,31 @@
                                             </a>
                                         </th>
                                         <th>Loại giảm giá</th>
-                                        <th>Giá trị</th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=discount_value&sortOrder=${sortField == 'discount_value' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Giá trị 
+                                                <span class="sort-icons">
+                                                    ${sortField == 'discount_value' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th>Đơn hàng tối thiểu</th>
-                                        <th>Giảm tối đa</th>
-                                        <th>Sử dụng tối đa</th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=max_discount&sortOrder=${sortField == 'max_discount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Giảm tối đa
+                                                <span class="sort-icons">
+                                                    ${sortField == 'max_discount' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=usage_limit&sortOrder=${sortField == 'usage_limit' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Sử dụng tối đa
+                                                <span class="sort-icons">
+                                                    ${sortField == 'usage_limit' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th>Đã dùng</th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=expiry_date&sortOrder=${sortField == 'expiry_date' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
@@ -362,6 +384,9 @@
                                                         <c:choose>
                                                             <c:when test="${coupon.status == 'active'}">
                                                                 <span class="badge badge-status badge-active">Hoạt động</span>
+                                                            </c:when>
+                                                            <c:when test="${coupon.status == 'inactive'}">
+                                                                <span class="badge badge-status badge-discount-type">Chưa kích hoạt</span>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <span class="badge badge-status badge-expired">Hết hạn</span>

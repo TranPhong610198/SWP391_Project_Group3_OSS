@@ -36,7 +36,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item p-2">
+<!--        <li class="menu-item p-2">
             <a href="campaignlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-bullhorn me-2"></i>
@@ -44,7 +44,7 @@
                 </div>
                 <span class="badge bg-danger rounded-pill">3</span>
             </a>
-        </li>
+        </li>-->
 
         <li class="menu-item p-2">
             <a href="couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
@@ -52,7 +52,7 @@
                     <i class="fas fa-tags me-2"></i>
                     Mã giảm giá
                 </div>
-                <span class="badge bg-danger rounded-pill">3</span>
+<!--                <span class="badge bg-danger rounded-pill">3</span>-->
             </a>
         </li>
 

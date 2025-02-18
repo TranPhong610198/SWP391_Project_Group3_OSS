@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author nguye
  */
-@WebServlet(name = "EditModelServlet", urlPatterns = {"/Marketing/editModel"})
+@WebServlet(name = "EditModelServlet", urlPatterns = {"/marketing/editModel"})
 public class EditModelServlet extends HttpServlet {
 
     @Override

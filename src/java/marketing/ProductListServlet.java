@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author tphon
  */
-@WebServlet(name = "ProductListServlet", urlPatterns = {"/Marketing/productlist"})
+@WebServlet(name = "ProductListServlet", urlPatterns = {"/marketing/productlist"})
 public class ProductListServlet extends HttpServlet {
 
     private ProductDAO productDAO;
