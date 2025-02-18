@@ -137,20 +137,20 @@ public class ProductListServlet extends HttpServlet {
             // Thực hiện truy vấn
             List<Product> products = productDAO.getProductsByFilter(sql.toString(), params);
 
-            // Lấy thông tin về combo products - phần này sẽ dùng khi in ra sản phẩm combo liền nhau
-            if ((sortField == null || sortField.isEmpty())
-                    && (keyword == null || keyword.trim().isEmpty())
-                    && (categoryId == null || categoryId.isEmpty())) {
-                for (Product tempProduct : products) {
-                    if (tempProduct.getComboGroupId() > 0) { // Chỉ lấy combo cho sản phẩm có combo_group_id
-                        List<Product> comboProducts = productDAO.getComboProduct(tempProduct.getComboGroupId());
-                        if (!comboProducts.isEmpty()) {
-                            tempProduct.setComboProducts(comboProducts);
-                        }
-                    }
-                }
-            }
-            //________________________________________________________________________________
+//            // Lấy thông tin về combo products - phần này sẽ dùng khi in ra sản phẩm combo liền nhau
+//            if ((sortField == null || sortField.isEmpty())
+//                    && (keyword == null || keyword.trim().isEmpty())
+//                    && (categoryId == null || categoryId.isEmpty())) {
+//                for (Product tempProduct : products) {
+//                    if (tempProduct.getComboGroupId() > 0) { // Chỉ lấy combo cho sản phẩm có combo_group_id
+//                        List<Product> comboProducts = productDAO.getComboProduct(tempProduct.getComboGroupId());
+//                        if (!comboProducts.isEmpty()) {
+//                            tempProduct.setComboProducts(comboProducts);
+//                        }
+//                    }
+//                }
+//            }
+//            //________________________________________________________________________________
 
             //Lấy listcategory
             CategoryDAO cateDao = new CategoryDAO();
