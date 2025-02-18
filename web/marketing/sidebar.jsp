@@ -103,7 +103,7 @@
         </li>
         
         <li class="menu-item p-2">
-            <a href="settings.jsp" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="homepage.jsp" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-home me-2 "></i>
                 Trang chủ
             </a>
