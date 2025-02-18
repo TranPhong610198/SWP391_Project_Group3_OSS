@@ -437,3 +437,20 @@ INSERT INTO footer_settings (type, field_name, value, image) VALUES
 (N'social', N'Facebook', N'https://facebook.com/fashion', N'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT83dd8_4WZCT-LsYC477q2WKocjms9OHCg0g&s'),
 (N'social', N'Instagram', N'https://instagram.com/fashion', N'https://cdn-icons-png.freepik.com/256/15707/15707869.png?semt=ais_hybrid') 
 
+INSERT INTO coupons (code, discount_type, discount_value, min_order_amount, max_discount, usage_limit, used_count, expiry_date, status)
+VALUES
+    ('ABC123XYZ', 'percentage', 10.00, 50.00, 100.00, 50, 0, '2025-06-30 23:59:59', 'active'),
+    ('DEF456UVW', 'fixed', 20.00, 100.00, NULL, 100, 0, '2025-07-31 23:59:59', 'active'),
+    ('GHI789RST', 'percentage', 15.00, 75.00, 150.00, 75, 0, '2025-08-31 23:59:59', 'active'),
+    ('JKL012PQR', 'fixed', 30.00, 150.00, NULL, 200, 0, '2025-09-30 23:59:59', 'active'),
+    ('MNO345NOP', 'percentage', 20.00, 200.00, 200.00, 50, 0, '2025-10-31 23:59:59', 'active'),
+    ('STU678KLM', 'fixed', 50.00, 250.00, NULL, 25, 0, '2025-11-30 23:59:59', 'active'),
+    ('VWX901HIJ', 'percentage', 25.00, 300.00, 250.00, 100, 0, '2025-12-31 23:59:59', 'active'),
+    ('YZA234EFG', 'fixed', 15.00, 80.00, NULL, 150, 0, '2026-01-31 23:59:59', 'active'),
+    ('BCD567BCD', 'percentage', 30.00, 400.00, 300.00, 30, 0, '2026-02-28 23:59:59', 'active'),
+    ('EFG890YZA', 'fixed', 25.00, 120.00, NULL, 75, 0, '2026-03-31 23:59:59', 'active'),
+    ('HIJ123VWX', 'percentage', 5.00, 25.00, 50.00, 500, 0, '2026-04-30 23:59:59', 'active'),
+    ('KLM456STU', 'fixed', 10.00, 50.00, NULL, NULL, 0, '2026-05-31 23:59:59', 'active'),
+    ('NOP789MNO', 'percentage', 12.50, 60.00, 125.00, 250, 0, '2026-06-30 23:59:59', 'active'),
+    ('QRS012JKL', 'fixed', 40.00, 200.00, NULL, 40, 0, '2025-01-31 23:59:59', 'expired'),
+    ('TUV345GHI', 'percentage', 35.00, 500.00, 350.00, 20, 0, '2025-01-28 23:59:59', 'expired');

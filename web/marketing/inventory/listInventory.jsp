@@ -246,10 +246,11 @@
                                     </c:forEach>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-success">
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary me-2">
                                     <i class="fas fa-filter me-2"></i>Lọc
                                 </button>
+                                <a href="productlist" class="btn btn-secondary">Xóa bộ lọc</a>
                             </div>
                         </form>
                     </div>

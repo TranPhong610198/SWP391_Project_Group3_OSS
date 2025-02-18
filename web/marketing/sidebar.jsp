@@ -37,7 +37,7 @@
             </ul>
         </li>
         <li class="menu-item p-2">
-            <a href="promotions.jsp" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+            <a href="campaignlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-bullhorn me-2"></i>
                     Chiến dịch Marketing
@@ -47,10 +47,10 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="promotions.jsp" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+            <a href="couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-tags me-2"></i>
-                    Khuyến mãi
+                    Mã giảm giá
                 </div>
                 <span class="badge bg-danger rounded-pill">3</span>
             </a>
@@ -73,7 +73,7 @@
             </a>
             <ul class="submenu collapse list-unstyled ms-3 mt-1" id="contentSubmenu">
                 <li class="submenu-item py-1">
-                    <a href="content/blog.jsp" class="text-decoration-none text-light">Bài đăng</a>
+                    <a href="postList" class="text-decoration-none text-light">Bài đăng</a>
                 </li>
                 <li class="submenu-item py-1">
                     <a href="content/social-posts.jsp" class="text-decoration-none text-light">Thanh Trượt</a>

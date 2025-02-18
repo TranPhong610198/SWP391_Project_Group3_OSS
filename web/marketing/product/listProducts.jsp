@@ -250,9 +250,7 @@
                                 <button type="submit" class="btn btn-primary me-2">
                                     <i class="fas fa-filter me-2"></i>Lọc
                                 </button>
-                                <a href="product/new" class="btn btn-success">
-                                    <i class="fas fa-plus me-2"></i>Thêm sản phẩm
-                                </a>
+                                <a href="productlist" class="btn btn-secondary">Xóa bộ lọc</a>
                             </div>
                         </form>
                     </div>
@@ -264,6 +262,9 @@
                         <div>
                             <i class="fas fa-list me-2"></i>Danh sách sản phẩm
                         </div>
+                        <a href="product/new" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+                        </a>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
