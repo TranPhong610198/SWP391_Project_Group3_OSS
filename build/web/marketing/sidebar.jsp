@@ -14,7 +14,7 @@
     <ul class="sidebar-menu list-unstyled p-0 mt-3">
         <li class="menu-item p-2">
             <a href="dashboard" class="text-decoration-none text-light d-flex align-items-center">
-                <i class="fas fa-home me-2"></i>
+                <i class="fas fa-chart-bar me-2"></i>
                 Dashboard
             </a>
         </li>
@@ -34,31 +34,16 @@
                 <li class="submenu-item py-1">
                     <a href="inventorylist" class="text-decoration-none text-light">Quản lý kho hàng</a>
                 </li>
-                <li class="submenu-item py-1">
-                    <a href="product/new" class="text-decoration-none text-light">Thêm sản phẩm mới</a>
-                </li>
             </ul>
         </li>
-
         <li class="menu-item p-2">
-            <a href="#campaignSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+            <a href="promotions.jsp" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-bullhorn me-2"></i>
                     Chiến dịch Marketing
                 </div>
-                <i class="fas fa-chevron-down ms-auto"></i>
+                <span class="badge bg-danger rounded-pill">3</span>
             </a>
-            <ul class="submenu collapse list-unstyled ms-3 mt-1" id="campaignSubmenu">
-                <li class="submenu-item py-1">
-                    <a href="campaigns/email.jsp" class="text-decoration-none text-light">Email Marketing</a>
-                </li>
-                <li class="submenu-item py-1">
-                    <a href="campaigns/social.jsp" class="text-decoration-none text-light">Social Media</a>
-                </li>
-                <li class="submenu-item py-1">
-                    <a href="campaigns/seo.jsp" class="text-decoration-none text-light">SEO</a>
-                </li>
-            </ul>
         </li>
 
         <li class="menu-item p-2">
@@ -88,13 +73,10 @@
             </a>
             <ul class="submenu collapse list-unstyled ms-3 mt-1" id="contentSubmenu">
                 <li class="submenu-item py-1">
-                    <a href="content/blog.jsp" class="text-decoration-none text-light">Blog</a>
+                    <a href="content/blog.jsp" class="text-decoration-none text-light">Bài đăng</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="content/social-posts.jsp" class="text-decoration-none text-light">Social Posts</a>
-                </li>
-                <li class="submenu-item py-1">
-                    <a href="content/newsletter.jsp" class="text-decoration-none text-light">Newsletter</a>
+                    <a href="content/social-posts.jsp" class="text-decoration-none text-light">Thanh Trượt</a>
                 </li>
             </ul>
         </li>
@@ -117,6 +99,13 @@
             <a href="settings.jsp" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-cog me-2"></i>
                 Cài đặt
+            </a>
+        </li>
+        
+        <li class="menu-item p-2">
+            <a href="settings.jsp" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-home me-2 "></i>
+                Trang chủ
             </a>
         </li>
     </ul>

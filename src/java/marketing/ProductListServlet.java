@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author tphon
  */
-@WebServlet(name = "ProductListServlet", urlPatterns = {"/productlist"})
+@WebServlet(name = "ProductListServlet", urlPatterns = {"/Marketing/productlist"})
 public class ProductListServlet extends HttpServlet {
 
     private ProductDAO productDAO;
@@ -168,7 +168,7 @@ public class ProductListServlet extends HttpServlet {
             request.setAttribute("sortDir", sortDir);
 
             // Forward đến trang JSP
-            request.getRequestDispatcher("/marketing/listProducts.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/product/listProducts.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

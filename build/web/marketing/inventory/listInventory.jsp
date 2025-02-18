@@ -247,7 +247,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary search-btn w-100">
+                                <button type="submit" class="btn btn-success">
                                     <i class="fas fa-filter me-2"></i>Lọc
                                 </button>
                             </div>
@@ -303,7 +303,7 @@
                                             <c:forEach items="${inventoryList}" var="item" varStatus="status">
                                                 <tr>
                                                     <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
-                                                    <td><strong>${item.productName}</strong></td>
+                                                    <td>${item.productName}</td>
                                                     <td><span class="badge bg-secondary rounded-pill">${item.category}</span></td>
                                                     <td>
                                                         <c:forEach items="${item.colorString.split(',')}" var="color" varStatus="colorStatus">
@@ -319,7 +319,7 @@
                                                         <span class="badge-quantity">${item.totalQuantity}</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="inventoryDetail?id=${item.productId}" class="btn btn-view action-btn">
+                                                        <a href="inventoryDetail?id=${item.productId}" class="btn btn-outline-primary btn-sm">
                                                             <i class="fas fa-eye me-1"></i> Xem
                                                         </a>
                                                     </td>
