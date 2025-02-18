@@ -123,7 +123,8 @@
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand" href="#">
-                <img src="path-to-your-logo.png" alt="Logo">
+                
+                <img src="/fashionshop/uploads/logo/tvthanh.jpg" alt="Logo"/>
             </a>
 
             <!-- Navbar Toggle Button -->
