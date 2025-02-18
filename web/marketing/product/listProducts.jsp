@@ -18,11 +18,11 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .sort-link {
                 text-decoration: none;
                 color: var(--primary-color);
@@ -31,36 +31,36 @@
                 align-items: center;
                 justify-content: space-between;
             }
-            
+
             .sort-link:hover {
                 color: var(--accent-color);
             }
-            
+
             .sort-icons {
                 margin-left: 5px;
             }
-            
+
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .product-thumbnail {
                 width: 80px;
                 height: 80px;
@@ -68,54 +68,54 @@
                 border-radius: 4px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .action-btn {
                 padding: 5px 15px;
                 border-radius: 4px;
                 transition: all 0.3s;
             }
-            
+
             .action-btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
-            
+
             .search-box {
                 border-radius: 50px;
                 padding-left: 15px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .search-btn {
                 border-radius: 50px;
                 padding: 8px 20px;
             }
-            
+
             .filter-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -123,16 +123,22 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
+            .empty-state {
+                padding: 40px;
+                text-align: center;
+                color: #6c757d;
+            }
+
             .combo-product {
                 background-color: rgba(52, 152, 219, 0.05);
                 border-left: 4px solid var(--accent-color);
             }
-            
+
             .combo-product td {
                 padding: 15px 10px;
             }
-            
+
             .combo-badge {
                 background-color: var(--accent-color);
                 color: white;
@@ -141,23 +147,23 @@
                 font-size: 0.8rem;
                 margin-right: 8px;
             }
-            
+
             .status-badge {
                 padding: 5px 10px;
                 border-radius: 50px;
                 font-weight: 500;
             }
-            
+
             .stock-link {
                 color: var(--accent-color);
                 text-decoration: none;
                 font-weight: 500;
             }
-            
+
             .stock-link:hover {
                 text-decoration: underline;
             }
-            
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -169,7 +175,7 @@
                     display: block;
                 }
             }
-            
+
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -181,20 +187,20 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             .pagination .page-item .page-link {
                 color: var(--primary-color);
                 border: 1px solid var(--border-color);
                 min-width: 40px;
                 text-align: center;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: var(--accent-color);
                 border-color: var(--accent-color);
                 color: white;
             }
-            
+
             .pagination .page-item .page-link:hover {
                 background-color: var(--hover-color);
             }
@@ -203,7 +209,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        
+
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -271,14 +277,14 @@
                             <table class="table table-hover table-bordered mb-0">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <a href="productlist?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
-                                                ID
-                                                <span class="sort-icons">
-                                                    ${sortField == 'id' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
-                                            </a>
-                                        </th>
+                                        <!--                                        <th>
+                                                                                    <a href="productlist?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
+                                                                                        STT
+                                                                                        <span class="sort-icons">
+                                        ${sortField == 'id' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                    </span>
+                                </a>
+                            </th>--><th class="text-center" style="width: 60px;">STT</th>
                                         <th>Ảnh minh họa</th>
                                         <th>
                                             <a href="productlist?sortField=title&sortDir=${sortField == 'title' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
@@ -325,93 +331,57 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${products}" var="product">
-                                        <c:if test="${not empty product.comboProducts}">
-                                            <c:if test="${product.id == product.comboProducts.get(0).id}">
-                                                <c:forEach items="${product.comboProducts}" var="comboProduct">
-                                                    <tr class="combo-product">
-                                                        <td>${comboProduct.id}</td>
-                                                        <td>
-                                                            <img src="${comboProduct.thumbnail}" alt="${comboProduct.title}" class="product-thumbnail">
-                                                        </td>
-                                                        <td>
-                                                            <span class="combo-badge">
-                                                                <i class="fas fa-box-open me-1"></i>Combo
-                                                            </span>
-                                                            ${comboProduct.title}
-                                                        </td>
-                                                        <td>
-                                                            <c:forEach items="${categories}" var="cate">
-                                                                ${(comboProduct.categoryId==cate.id)?cate.name:''}
-                                                            </c:forEach>
-                                                        </td>
-                                                        <td><fmt:formatNumber value="${comboProduct.originalPrice}" type="currency"/></td>
-                                                        <td><fmt:formatNumber value="${comboProduct.salePrice}" type="currency"/></td>
-                                                        <td>
-                                                            <span class="status-badge bg-${comboProduct.status == 'active' ? 'success' : 'danger'}">
-                                                                ${comboProduct.status == 'active' ? 'Khả bán' : 'Không khả bán'}
-                                                            </span>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a href="inventoryDetail?id=${comboProduct.id}" class="stock-link">
-                                                                ${comboProduct.stock}
-                                                                <i class="fas fa-external-link-alt ms-1"></i>
-                                                            </a>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a href="product/view?id=${comboProduct.id}" class="btn btn-sm btn-info me-1" title="Xem chi tiết">
-                                                                <i class="fas fa-eye"></i>
-                                                            </a>
-                                                            <a href="product/edit?id=${comboProduct.id}" class="btn btn-sm btn-primary me-1" title="Chỉnh sửa">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
-                                                            <button onclick="deleteProduct(${comboProduct.id})" class="btn btn-sm btn-danger" title="Xóa">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </c:if>
-                                        </c:if>
-                                        <c:if test="${empty product.comboProducts}">
+                                    <c:choose>
+                                        <c:when test="${not empty products}">
+                                            <c:forEach items="${products}" var="product" varStatus="status">
+                                                <tr>
+                                                    <!--<td>${product.id}</td>-->
+                                                    <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
+                                                    <td>
+                                                        <img src="${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
+                                                    </td>
+                                                    <td>${product.title}</td>
+                                                    <td>
+                                                        <c:forEach items="${categories}" var="cate">
+                                                            ${(product.categoryId==cate.id)?cate.name:''}
+                                                        </c:forEach>
+                                                    </td>
+                                                    <td><fmt:formatNumber value="${product.originalPrice}" type="currency"/></td>
+                                                    <td><fmt:formatNumber value="${product.salePrice}" type="currency"/></td>
+                                                    <td>
+                                                        <span class="status-badge bg-${product.status == 'active' ? 'success' : 'danger'}">
+                                                            ${product.status == 'active' ? 'Khả bán' : 'Không khả bán'}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="inventoryDetail?id=${product.id}" class="stock-link">
+                                                            ${product.stock}
+                                                            <i class="fas fa-external-link-alt ms-1"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+<!--                                                        <a href="product/view?id=${product.id}" class="btn btn-sm btn-info me-1" title="Xem chi tiết">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>-->
+                                                        <a href="edit?id=${product.id}" class="btn btn-sm btn-primary me-1" title="Chỉnh sửa">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <button onclick="deleteProduct(${product.id})" class="btn btn-sm btn-danger" title="Xóa">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
                                             <tr>
-                                                <td>${product.id}</td>
-                                                <td>
-                                                    <img src="${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
-                                                </td>
-                                                <td>${product.title}</td>
-                                                <td>
-                                                    <c:forEach items="${categories}" var="cate">
-                                                        ${(product.categoryId==cate.id)?cate.name:''}
-                                                    </c:forEach>
-                                                </td>
-                                                <td><fmt:formatNumber value="${product.originalPrice}" type="currency"/></td>
-                                                <td><fmt:formatNumber value="${product.salePrice}" type="currency"/></td>
-                                                <td>
-                                                    <span class="status-badge bg-${product.status == 'active' ? 'success' : 'danger'}">
-                                                        ${product.status == 'active' ? 'Khả bán' : 'Không khả bán'}
-                                                    </span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="inventoryDetail?id=${product.id}" class="stock-link">
-                                                        ${product.stock}
-                                                        <i class="fas fa-external-link-alt ms-1"></i>
-                                                    </a>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="product/view?id=${product.id}" class="btn btn-sm btn-info me-1" title="Xem chi tiết">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="product/edit?id=${product.id}" class="btn btn-sm btn-primary me-1" title="Chỉnh sửa">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <button onclick="deleteProduct(${product.id})" class="btn btn-sm btn-danger" title="Xóa">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                <td colspan="9" class="empty-state">
+                                                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                                                    <p>Không tìm thấy sản phẩm nào!!!</p>
                                                 </td>
                                             </tr>
-                                        </c:if>
-                                    </c:forEach>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </tbody>
                             </table>
                         </div>
@@ -454,41 +424,41 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <script>
-            $(document).ready(function () {
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
 
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-                
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="productlist"]').closest('.menu-item').addClass('active');
-                
-                $('#productSubmenu').addClass('show');
-                
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                  return new bootstrap.Tooltip(tooltipTriggerEl)
-                });
-            });
-            
-            function deleteProduct(id) {
-                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-                    window.location.href = 'product/delete?id=' + id;
-                }
-            }
+        <script>
+                                                            $(document).ready(function () {
+                                                                $('.sidebar-toggle').on('click', function () {
+                                                                    $('.sidebar').toggleClass('active');
+                                                                    $('.main-content').toggleClass('active');
+                                                                    $(this).hide();
+                                                                });
+
+                                                                $(document).on('click', function (e) {
+                                                                    if ($(window).width() <= 768) {
+                                                                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                            $('.sidebar').removeClass('active');
+                                                                            $('.main-content').removeClass('active');
+                                                                            $('.sidebar-toggle').show();
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                                $('.menu-item').removeClass('active');
+                                                                $('.menu-item a[href="productlist"]').closest('.menu-item').addClass('active');
+
+                                                                $('#productSubmenu').addClass('show');
+
+                                                                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                                                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                                                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                                                                });
+                                                            });
+
+                                                            function deleteProduct(id) {
+                                                                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                                                                    window.location.href = 'delete?id=' + id;
+                                                                }
+                                                            }
         </script>
     </body>
 </html>
