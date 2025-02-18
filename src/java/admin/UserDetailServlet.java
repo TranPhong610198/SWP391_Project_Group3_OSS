@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "UserDetailServlet", urlPatterns = {"/userdetail/*"})
+@WebServlet(name = "UserDetailServlet", urlPatterns = {"/admin/userdetail/*"})
 public class UserDetailServlet extends HttpServlet {
 
     @Override
@@ -18,7 +18,7 @@ public class UserDetailServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
             return;
         }
 
@@ -38,7 +38,7 @@ public class UserDetailServlet extends HttpServlet {
                 deleteUser(request, response);
                 break;
             default:
-                response.sendRedirect(request.getContextPath() + "/userlists");
+                response.sendRedirect(request.getContextPath() + "/admin/userlists");
                 break;
         }
     }
@@ -48,7 +48,7 @@ public class UserDetailServlet extends HttpServlet {
         try {
             String userId = request.getParameter("id");
             if (userId == null || userId.trim().isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/userlists");
+                response.sendRedirect(request.getContextPath() + "/admin/userlists");
                 return;
             }
 
@@ -58,7 +58,7 @@ public class UserDetailServlet extends HttpServlet {
             request.setAttribute("avatar", user.getAvatar());
 
             if (user == null) {
-                response.sendRedirect(request.getContextPath() + "/userlists");
+                response.sendRedirect(request.getContextPath() + "/admin/userlists");
                 return;
             }
 
@@ -66,7 +66,7 @@ public class UserDetailServlet extends HttpServlet {
             request.getRequestDispatcher("/admin/userdetail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
         }
     }
 
@@ -81,10 +81,10 @@ public class UserDetailServlet extends HttpServlet {
                 request.setAttribute("user", user);
                 request.getRequestDispatcher("/admin/userdetail.jsp").forward(request, response);
             } else {
-                response.sendRedirect(request.getContextPath() + "/userlists");
+                response.sendRedirect(request.getContextPath() + "/admin/userlists");
             }
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
         }
     }
 
@@ -101,9 +101,9 @@ public class UserDetailServlet extends HttpServlet {
                 request.getSession().setAttribute("errorMessage", "Không thể xóa người dùng!");
             }
             
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
         }
     }
 
@@ -112,7 +112,7 @@ public class UserDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
             return;
         }
 
@@ -122,7 +122,7 @@ public class UserDetailServlet extends HttpServlet {
         if ("edit".equals(action)) {
             updateUser(request, response);
         } else {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
         }
     }
 
@@ -152,14 +152,14 @@ public class UserDetailServlet extends HttpServlet {
             UserDAO userDAO = new UserDAO();
             if (userDAO.updateUserInfo(user)) {
                 request.getSession().setAttribute("successMessage", "Cập nhật thông tin thành công!");
-                response.sendRedirect(request.getContextPath() + "/userlists");
+                response.sendRedirect(request.getContextPath() + "/admin/userlists");
             } else {
                 request.getSession().setAttribute("errorMessage", "Cập nhật thông tin thất bại!");
-                response.sendRedirect(request.getContextPath() + "/userdetail/edit?id=" + userId);
+                response.sendRedirect(request.getContextPath() + "/admin/userdetail/edit?id=" + userId);
             }
 
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/userlists");
+            response.sendRedirect(request.getContextPath() + "/admin/userlists");
         }
     }
 }

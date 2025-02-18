@@ -101,7 +101,7 @@
                             <h2>Chỉnh sửa thông tin người dùng</h2>
                         </div>
                         <div class="card-body">
-                            <form action="${pageContext.request.contextPath}/userdetail/edit" method="post">
+                            <form action="${pageContext.request.contextPath}/admin/userdetail/edit" method="post">
                                 <input type="hidden" name="id" value="${user.id}">
 
                                 <div class="row mb-3">
@@ -191,7 +191,7 @@
                                 <div class="text-center mt-3">
                                     <!-- Change this line in userdetail.jsp -->
                                     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                                    <a href="userlists" class="btn btn-secondary">Hủy</a>
+                                    <a href="../userlists" class="btn btn-secondary">Hủy</a>
                                 </div>
                             </form>
                         </div>

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 import utils.BCrypt;
 
-@WebServlet(name = "UserAddServlet", urlPatterns = "/addUser")
+@WebServlet(name = "UserAddServlet", urlPatterns = "/admin/addUser")
 public class AddUser extends HttpServlet {
 
     @Override
@@ -129,7 +129,7 @@ public class AddUser extends HttpServlet {
 
             if (success) {
                 // Redirect to user list with success message
-                response.sendRedirect("userlists");
+                response.sendRedirect(request.getContextPath() + "/admin/userlists");
             } else {
                 request.setAttribute("error", "Failed to create user");
                 request.getRequestDispatcher("/admin/userform.jsp").forward(request, response);

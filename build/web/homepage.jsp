@@ -224,32 +224,12 @@
                 </div>
             </section>
 
-            <!-- Liên hệ/Liên kết -->
-            <section class="mb-5">
-                <h2 class="section-title">Liên hệ & Liên kết</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>Thông tin liên hệ</h4>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="bi bi-geo-alt"></i> Địa chỉ: 123 Đường ABC, Quận XYZ</li>
-                            <li class="mb-2"><i class="bi bi-telephone"></i> Điện thoại: (084) 123-456-789</li>
-                            <li class="mb-2"><i class="bi bi-envelope"></i> Email: contact@example.com</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>Liên kết hữu ích</h4>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><a href="#about" class="text-decoration-none">Về chúng tôi</a></li>
-                            <li class="mb-2"><a href="#terms" class="text-decoration-none">Điều khoản sử dụng</a></li>
-                            <li class="mb-2"><a href="#privacy" class="text-decoration-none">Chính sách bảo mật</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+          
+
         </div>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <jsp:include page="footer.jsp" />
+<!-- Bootstrap JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <jsp:include page="footer.jsp" />
     </body>
 </html>

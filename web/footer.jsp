@@ -80,7 +80,7 @@
                 <ul>
                     <li>SAVANI là thương hiệu thời trang nam được thành lập từ năm 2020, chuyên cung cấp các sản phẩm thời trang nam chất lượng cao.</li>
                     <li class="social-links mt-3">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.facebook.com/Moriaty11"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-youtube"></i></a>
                         <a href="#"><i class="fab fa-tiktok"></i></a>
@@ -127,7 +127,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2024 SAVANI. Tất cả các quyền được bảo lưu.</p>
+            <p>&copy; 2025 Đội Báo. Tất cả các quyền được bảo lưu.</p>
         </div>
     </div>
 </footer>

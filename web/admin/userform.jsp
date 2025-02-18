@@ -124,7 +124,7 @@
                     ${param.message}
                 </div>
             </c:if>
-            <form action="addUser" method="post">
+            <form action="${pageContext.request.contextPath}/admin/addUser" method="post">
                 <div class="form-group">
                     <label class="required">Full Name:</label>
                     <input type="text" name="fullname" required>
@@ -177,7 +177,7 @@
 
                 <div class="form-actions">
                     <button type="submit">Create User</button>
-                    <a href="userlists" class="btn-cancel">Cancel</a>
+                    <a href="${pageContext.request.contextPath}/admin/userlists" class="btn-cancel">Cancel</a>
                 </div>
             </form>
         </div>

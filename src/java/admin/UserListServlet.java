@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/userlists")
+@WebServlet("/admin/userlists")
 public class UserListServlet extends HttpServlet {
     private UserDAO userDAO;
     private static final int RECORDS_PER_PAGE = 10;
