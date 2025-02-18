@@ -4,312 +4,178 @@
     Author     : tphon
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <!-- Thêm style cho sidebar -->
-        <style>
-            /* Sidebar styles */
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 250px;
-                background: #2c3e50;
-                color: #ecf0f1;
-                transition: all 0.3s;
-                z-index: 1000;
-            }
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<div class="sidebar">
+    <div class="sidebar-header p-3 border-bottom">
+        <h5 class="mt-2 mb-3">Marketing Dashboard</h5>
+    </div>
 
-            .sidebar-header {
-                padding: 20px;
-                background: #243342;
-                text-align: center;
-            }
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu list-unstyled p-0 mt-3">
+        <li class="menu-item p-2">
+            <a href="dashboard" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-home me-2"></i>
+                Dashboard
+            </a>
+        </li>
 
-            .sidebar-header img {
-                width: 50px;
-                height: 50px;
-                border-radius: 10px;
-            }
-
-            .sidebar-menu {
-                padding: 0;
-                list-style: none;
-            }
-
-            .menu-item {
-                position: relative;
-            }
-
-            .menu-item a {
-                padding: 15px 20px;
-                color: #ecf0f1;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                transition: 0.3s;
-            }
-
-            .menu-item a:hover {
-                background: #34495e;
-                color: #3498db;
-            }
-
-            .menu-item.active a {
-                background: #34495e;
-                color: #3498db;
-                border-left: 4px solid #3498db;
-            }
-
-            .menu-item i {
-                margin-right: 10px;
-                width: 20px;
-                text-align: center;
-            }
-
-            .submenu {
-                padding-left: 0;
-                list-style: none;
-                background: #243342;
-                display: none;
-            }
-
-            .menu-item.active .submenu {
-                display: block;
-            }
-
-            .submenu-item a {
-                padding: 10px 20px 10px 56px;
-                font-size: 0.9em;
-            }
-
-            /* Adjust main content */
-            .main-content {
-                margin-left: 250px;
-                transition: all 0.3s;
-            }
-
-            /* Responsive */
-            @media (max-width: 768px) {
-                .sidebar {
-                    margin-left: -250px;
-                }
-                .sidebar.active {
-                    margin-left: 0;
-                }
-                .main-content {
-                    margin-left: 0;
-                }
-                .main-content.active {
-                    margin-left: 250px;
-                }
-            }
-
-            /* Toggle button */
-            .sidebar-toggle {
-                position: fixed;
-                left: 10px;
-                top: 10px;
-                z-index: 1001;
-                display: none;
-            }
-
-            @media (max-width: 768px) {
-                .sidebar-toggle {
-                    display: block;
-                }
-            }
-
-            /* User profile section */
-            .user-profile {
-                padding: 15px 20px;
-                border-bottom: 1px solid #34495e;
-                margin-bottom: 15px;
-            }
-
-            .user-profile img {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                margin-right: 10px;
-            }
-
-            .user-info {
-                color: #ecf0f1;
-                font-size: 0.9em;
-            }
-
-            .user-role {
-                color: #95a5a6;
-                font-size: 0.8em;
-            }
-
-            /* Notification badge */
-            .notification-badge {
-                position: absolute;
-                top: 12px;
-                right: 15px;
-                background: #e74c3c;
-                color: white;
-                border-radius: 50%;
-                padding: 2px 6px;
-                font-size: 0.7em;
-            }
-        </style>
-    </head>
-    <body>
-
-        <button class="btn btn-primary sidebar-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="sidebar-header">
-            <!--Nhét cái logo vào bên dưới là đẹp rồi-->
-            <!--<img src="/api/placeholder/50/50" alt="Logo">--> 
-            <h5 class="mt-2 mb-0">Marketing Dashboard</h5>
-        </div>
-
-<!--         User Profile 
-        <div class="user-profile d-flex align-items-center">
-            <img src="/api/placeholder/40/40" alt="User Avatar">
-            <div class="ms-2">
-                <div class="user-info">John Doe</div>
-                <div class="user-role">Marketing Manager</div>
-            </div>
-        </div>-->
-
-        <!-- Sidebar Menu -->
-        <ul class="sidebar-menu">
-            <li class="menu-item">
-                <a href="dashboard">
-                    <i class="fas fa-home"></i>
-                    Dashboard
-                </a>
-            </li>
-
-            <li class="menu-item active">
-                <a href="listProducts">
-                    <i class="fas fa-box"></i>
+        <li class="menu-item p-2">
+            <a href="#productSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+                <div>
+                    <i class="fas fa-box me-2"></i>
                     Quản lý sản phẩm
-                </a>
-            </li>
+                </div>
+                <i class="fas fa-chevron-down ms-auto"></i>
+            </a>
+            <ul class="submenu collapse show list-unstyled ms-3 mt-1" id="productSubmenu">
+                <li class="submenu-item py-1">
+                    <a href="productlist" class="text-decoration-none text-light">Danh sách sản phẩm</a>
+                </li>
+                <li class="submenu-item py-1">
+                    <a href="inventorylist" class="text-decoration-none text-light">Quản lý kho hàng</a>
+                </li>
+                <li class="submenu-item py-1">
+                    <a href="product/new" class="text-decoration-none text-light">Thêm sản phẩm mới</a>
+                </li>
+            </ul>
+        </li>
 
-            <li class="menu-item">
-                <a href="#campaignSubmenu" data-bs-toggle="collapse">
-                    <i class="fas fa-bullhorn"></i>
+        <li class="menu-item p-2">
+            <a href="#campaignSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+                <div>
+                    <i class="fas fa-bullhorn me-2"></i>
                     Chiến dịch Marketing
-                    <i class="fas fa-chevron-down ms-auto"></i>
-                </a>
-                <ul class="submenu collapse" id="campaignSubmenu">
-                    <li class="submenu-item">
-                        <a href="campaigns/email.jsp">Email Marketing</a>
-                    </li>
-                    <li class="submenu-item">
-                        <a href="campaigns/social.jsp">Social Media</a>
-                    </li>
-                    <li class="submenu-item">
-                        <a href="campaigns/seo.jsp">SEO</a>
-                    </li>
-                </ul>
-            </li>
+                </div>
+                <i class="fas fa-chevron-down ms-auto"></i>
+            </a>
+            <ul class="submenu collapse list-unstyled ms-3 mt-1" id="campaignSubmenu">
+                <li class="submenu-item py-1">
+                    <a href="campaigns/email.jsp" class="text-decoration-none text-light">Email Marketing</a>
+                </li>
+                <li class="submenu-item py-1">
+                    <a href="campaigns/social.jsp" class="text-decoration-none text-light">Social Media</a>
+                </li>
+                <li class="submenu-item py-1">
+                    <a href="campaigns/seo.jsp" class="text-decoration-none text-light">SEO</a>
+                </li>
+            </ul>
+        </li>
 
-            <li class="menu-item">
-                <a href="promotions.jsp">
-                    <i class="fas fa-tags"></i>
+        <li class="menu-item p-2">
+            <a href="promotions.jsp" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+                <div>
+                    <i class="fas fa-tags me-2"></i>
                     Khuyến mãi
-                    <span class="notification-badge">3</span>
-                </a>
-            </li>
+                </div>
+                <span class="badge bg-danger rounded-pill">3</span>
+            </a>
+        </li>
 
-            <li class="menu-item">
-                <a href="analytics.jsp">
-                    <i class="fas fa-chart-line"></i>
-                    Phân tích dữ liệu
-                </a>
-            </li>
+        <li class="menu-item p-2">
+            <a href="analytics.jsp" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-chart-line me-2"></i>
+                Phân tích dữ liệu
+            </a>
+        </li>
 
-            <li class="menu-item">
-                <a href="#contentSubmenu" data-bs-toggle="collapse">
-                    <i class="fas fa-newspaper"></i>
+        <li class="menu-item p-2">
+            <a href="#contentSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+                <div>
+                    <i class="fas fa-newspaper me-2"></i>
                     Quản lý nội dung
-                    <i class="fas fa-chevron-down ms-auto"></i>
-                </a>
-                <ul class="submenu collapse" id="contentSubmenu">
-                    <li class="submenu-item">
-                        <a href="content/blog.jsp">Blog</a>
-                    </li>
-                    <li class="submenu-item">
-                        <a href="content/social-posts.jsp">Social Posts</a>
-                    </li>
-                    <li class="submenu-item">
-                        <a href="content/newsletter.jsp">Newsletter</a>
-                    </li>
-                </ul>
-            </li>
+                </div>
+                <i class="fas fa-chevron-down ms-auto"></i>
+            </a>
+            <ul class="submenu collapse list-unstyled ms-3 mt-1" id="contentSubmenu">
+                <li class="submenu-item py-1">
+                    <a href="content/blog.jsp" class="text-decoration-none text-light">Blog</a>
+                </li>
+                <li class="submenu-item py-1">
+                    <a href="content/social-posts.jsp" class="text-decoration-none text-light">Social Posts</a>
+                </li>
+                <li class="submenu-item py-1">
+                    <a href="content/newsletter.jsp" class="text-decoration-none text-light">Newsletter</a>
+                </li>
+            </ul>
+        </li>
 
-            <li class="menu-item">
-                <a href="customer-feedback.jsp">
-                    <i class="fas fa-comments"></i>
-                    Phản hồi khách hàng
-                </a>
-            </li>
+        <li class="menu-item p-2">
+            <a href="customer-feedback.jsp" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-comments me-2"></i>
+                Phản hồi khách hàng
+            </a>
+        </li>
 
-            <li class="menu-item">
-                <a href="reports.jsp">
-                    <i class="fas fa-file-alt"></i>
-                    Báo cáo
-                </a>
-            </li>
+        <li class="menu-item p-2">
+            <a href="reports.jsp" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-file-alt me-2"></i>
+                Báo cáo
+            </a>
+        </li>
 
-            <li class="menu-item">
-                <a href="settings.jsp">
-                    <i class="fas fa-cog"></i>
-                    Cài đặt
-                </a>
-            </li>
-        </ul>
+        <li class="menu-item p-2">
+            <a href="settings.jsp" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-cog me-2"></i>
+                Cài đặt
+            </a>
+        </li>
+    </ul>
+</div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    /* Sidebar specific styles */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 250px;
+        background: #2c3e50;
+        color: #ecf0f1;
+        transition: all 0.3s;
+        z-index: 1000;
+        overflow-y: auto;
+    }
 
-        <!-- Add JavaScript for sidebar functionality -->
-        <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $('.sidebar-toggle').hide();
-                });
+    .sidebar-header {
+        background-color: #1a2530;
+    }
 
-                // Highlight active menu item
-                $('.menu-item a').on('click', function () {
-                    $('.menu-item').removeClass('active');
-                    $(this).closest('.menu-item').addClass('active');
-                });
+    .sidebar .menu-item {
+        position: relative;
+        transition: all 0.3s;
+    }
 
-                // Handle submenu
-                $('.menu-item a[data-bs-toggle="collapse"]').on('click', function () {
-                    $(this).find('.fas.fa-chevron-down').toggleClass('rotate-180');
-                });
+    .sidebar .menu-item:hover {
+        background: #34495e;
+    }
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-            });
-        </script>
+    .sidebar .menu-item.active {
+        background: #34495e;
+    }
 
-    </body>
-</html>
+    .sidebar .submenu-item {
+        padding-left: 10px;
+    }
+
+    .sidebar .submenu-item:hover {
+        background: #34495e;
+    }
+
+    .notification-badge {
+        background-color: #e74c3c;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 50%;
+        font-size: 0.7rem;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            margin-left: -250px;
+        }
+        .sidebar.active {
+            margin-left: 0;
+        }
+    }
+</style>
