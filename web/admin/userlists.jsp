@@ -17,52 +17,49 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
-            /* Main content styles */
-            .main-content {
-                margin-left: 250px;
-                transition: all 0.3s;
+
+            .content {
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -70,28 +67,10 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-
-            @media (max-width: 768px) {
-                .main-content {
-                    margin-left: 0;
-                }
-                .main-content.active {
-                    margin-left: 250px;
-                }
-            }
         </style>
     </head>
     <body>
-        <jsp:include page="../header.jsp" />
-        <!-- Include the sidebar -->
-        <jsp:include page="../marketing/sidebar.jsp" />
-        
-        
-        <button class="btn btn-primary sidebar-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="main-content">
+        <div class="content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
                     <i class="fas fa-users me-2"></i>Danh Sách Người Dùng
@@ -170,13 +149,27 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 60px;">STT</th>
-                                        <th>Tên</th>
-                                        <th>Tên đăng nhập</th>
-                                        <th>Giới tính</th>
-                                        <th>Email</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Vai trò</th>
-                                        <th>Trạng thái</th>
+                                        <th><a href="userlists?sortField=full_name&sortDir=${sortField == 'full_name' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Tên ${sortField == 'full_name' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
+                                        <th><a href="userlists?sortField=username&sortDir=${sortField == 'username' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Tên đăng nhập ${sortField == 'username' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
+                                        <th><a href="userlists?sortField=gender&sortDir=${sortField == 'gender' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Giới tính ${sortField == 'gender' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
+                                        <th><a href="userlists?sortField=email&sortDir=${sortField == 'email' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Email ${sortField == 'email' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
+                                        <th><a href="userlists?sortField=mobile&sortDir=${sortField == 'mobile' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Số điện thoại ${sortField == 'mobile' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
+                                        <th><a href="userlists?sortField=role&sortDir=${sortField == 'role' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Vai trò ${sortField == 'role' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
+                                        <th><a href="userlists?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&role=${role}&status=${status}&search=${search}">
+                                                Trạng thái ${sortField == 'status' ? (sortDir == 'asc' ? '▲' : '▼') : ''}
+                                            </a></th>
                                         <th class="text-center">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -250,28 +243,5 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <!-- Add JavaScript for sidebar functionality -->
-        <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
-
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-            });
-        </script>
     </body>
 </html>
