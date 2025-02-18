@@ -48,21 +48,18 @@
                                 </div>
                             </c:if>
 
-                            <form method="post" action="${pageContext.request.contextPath}/addPost">
-                                <input type="hidden" name="action" value="create">
+                            <form method="post" action="${pageContext.request.contextPath}/addPost" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="create">
 
-                                <div class="mb-3">
-                                    <label for="title" class="form-label">Tiêu đề</label>
-                                    <input type="text" class="form-control" id="title" name="title" required>
-                                </div>
+    <div class="mb-3">
+        <label for="title" class="form-label">Tiêu đề</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+    </div>
 
-                                <div class="mb-3">
-                                    <label for="thumbnail" class="form-label">Ảnh nguồn</label>
-                                    <input type="url" class="form-control" id="thumbnail" name="thumbnail"
-                                           required onchange="previewImage(this)">
-                                    <img id="thumbnail-preview" class="preview-image">
-                                </div>
-
+    <div class="mb-3">
+        <label for="thumbnail" class="form-label">Ảnh nguồn</label>
+        <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" required>
+    </div>
 
 
 <!--                                <div class="mb-3">
