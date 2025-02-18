@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package resetPassword;
+package login;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +11,7 @@ import DAO.TokenDAO;
 import DAO.UserDAO;
 import entity.Token;
 import entity.User;
-import utils.MaHoa;
+import utils.Email;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -25,8 +25,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author tphon
  */
-@WebServlet(name = "resetPassword", urlPatterns = {"/resetpassword"})
-public class resetPassword extends HttpServlet {
+@WebServlet(name = "forgotPassword", urlPatterns = {"/forgotpassword"})
+public class forgotPassword extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +45,10 @@ public class resetPassword extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet resetPassword</title>");
+            out.println("<title>Servlet forgotPassword</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet resetPassword at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet forgotPassword at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,12 +67,7 @@ public class resetPassword extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        processRequest(request, response);
-        String token = request.getParameter("token");
-//        System.out.println(token);
-        request.setAttribute("token", token);
-
-        request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
-
+        request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
     }
 
     /**
@@ -87,42 +82,37 @@ public class resetPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        processRequest(request, response);
+        String email = request.getParameter("email");
 
-        String token = request.getParameter("token");
-        String newPassword = request.getParameter("newPassword");
-        String confirmPassword = request.getParameter("confirmPassword");
-
-        
-        if (!newPassword.equals(confirmPassword)) {
-            request.setAttribute("mess", "Mật khẩu xác nhận không khớp.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
-            return;
-        }
-
-        TokenDAO tokenDao = new TokenDAO();
         UserDAO userDao = new UserDAO();
+        TokenDAO tokenDao = new TokenDAO();
+        Email emailUtil = new Email();
 
-        Token resetToken = tokenDao.getTokenPassword(token);
+        User user = userDao.checkExistEmail(email);
 
-        if (resetToken == null || resetToken.isIsUsed() || LocalDateTime.now().isAfter(resetToken.getExpiryTime())) {
-            request.setAttribute("mess", "Mã xác nhận không hợp lệ hoặc đã hết hạn.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+        if (user == null) {
+            request.setAttribute("mess", "Email không tồn tại trong hệ thống.");
+            request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
             return;
         }
 
-        // Cập nhật mật khẩu mới
-//        String hashedPassword = MaHoa.toBcrypt(newPassword);
-        boolean updated = userDao.updatePassword(resetToken.getUserId(), newPassword);
+        // Tạo token và thời gian hết hạn (30 phút)
+        String token = emailUtil.generateToken();
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(30);
 
-        if (updated) {
-            resetToken.setIsUsed(true);
-            tokenDao.updateStatus(resetToken);
-            request.setAttribute("mess", "Mật khẩu đã được đặt lại thành công. Hãy đăng nhập.");
+        Token resetToken = new Token(user.getId(), false, token, expiryTime);
+        tokenDao.insertTokenForget(resetToken);
+
+        // Gửi email xác nhận
+        boolean isSent = emailUtil.sendEmailReset(user, token);
+
+        if (isSent) {
+            request.setAttribute("mess", "Hệ thống đã gửi email xác nhận, vui lòng kiểm tra hộp thư.");
         } else {
-            request.setAttribute("mess", "Không thể cập nhật mật khẩu, thử lại sau.");
+            request.setAttribute("mess", "Không thể gửi email, vui lòng thử lại.");
         }
 
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
 
     }
 
