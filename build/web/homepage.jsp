@@ -62,7 +62,7 @@
         <!-- Include header -->
         <jsp:include page="header.jsp" />
         <!-- Thanh trượt (Carousel) -->
-        <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="2000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
                 <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
@@ -72,26 +72,20 @@
                 <div class="carousel-item active">
                     <a href="#">
                         <img src="https://hthaostudio.com/wp-content/uploads/2019/08/anh-sexxy-1.jpg.webp" class="d-block w-100" alt="Slide 1">
-                        <div class="carousel-caption">
-                            <h3>Tiêu đề thanh trượt 1</h3>
-                        </div>
+                        
                     </a>
 
                 </div>
                 <div class="carousel-item">
                     <a href="#slide2-link">
                         <img src="https://c.wallhere.com/photos/07/0d/500px_kneeling_mask_Maksim_Chuprin_women_lingerie_Disha_Shemetova-1342363.jpg!d" class="d-block w-100" alt="Slide 2">
-                        <div class="carousel-caption">
-                            <h3>Tiêu đề thanh trượt 2</h3>
-                        </div>
+                        
                     </a>
                 </div>
                 <div class="carousel-item">
                     <a href="#slide3-link">
                         <img src="https://c.wallhere.com/photos/84/19/women_model_brunette_long_hair_women_outdoors_wavy_hair_500px_Damian_Pi_rko-10474.jpg!d" class="d-block w-100" alt="Slide 3">
-                        <div class="carousel-caption">
-                            <h3>Tiêu đề thanh trượt 3</h3>
-                        </div>
+                        
                     </a>
                 </div>
             </div>
