@@ -268,7 +268,7 @@
                         <div>
                             <i class="fas fa-list me-2"></i>Danh sách sản phẩm
                         </div>
-                        <a href="product/new" class="btn btn-success">
+                        <a href="addproduct" class="btn btn-success">
                             <i class="fas fa-plus me-2"></i>Thêm sản phẩm
                         </a>
                     </div>
