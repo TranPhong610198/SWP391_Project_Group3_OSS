@@ -68,6 +68,7 @@
                             <option value="">Sắp xếp mặc định</option>
                             <option value="name" ${sortBy == 'name' ? 'selected' : ''}>Tên</option>
                             <option value="status" ${sortBy == 'status' ? 'selected' : ''}>Trạng thái</option>
+                            <option value="level" ${sortBy == 'level' ? 'selected' : ''}>Cấp độ</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -124,55 +125,43 @@
 
             <!-- Phân trang -->
             <!-- Phân trang -->
-            <c:if test="${totalPages > 1}">
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <div class="text-muted">
-                        <c:set var="startItem" value="${(currentPage-1)*pageSize + 1}" />
-                        <c:set var="endItem" value="${currentPage*pageSize}" />
-                        <c:if test="${endItem > totalCategories}">
-                            <c:set var="endItem" value="${totalCategories}" />
-                        </c:if>
-                        Hiển thị ${startItem} đến ${endItem} trong tổng số ${totalCategories} danh mục
-                    </div>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination mb-0">
-                            <!-- Nút Previous -->
-                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                <a class="page-link" href="categorylists?page=${currentPage - 1}
-                                   ${searchQuery != null ? '&search='.concat(searchQuery) : ''}
-                                   ${statusFilter != null ? '&status='.concat(statusFilter) : ''}
-                                   ${sortBy != null ? '&sort='.concat(sortBy) : ''}"
-                                   ${currentPage == 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
-                            </li>
-
-                            <!-- Các số trang -->
-                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="categorylists?page=${i}
-                                       ${searchQuery != null ? '&search='.concat(searchQuery) : ''}
-                                       ${statusFilter != null ? '&status='.concat(statusFilter) : ''}
-                                       ${sortBy != null ? '&sort='.concat(sortBy) : ''}">
-                                        ${i}
-                                    </a>
-                                </li>
-                            </c:forEach>
-
-                            <!-- Nút Next -->
-                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                <a class="page-link" href="categorylists?page=${currentPage + 1}
-                                   ${searchQuery != null ? '&search='.concat(searchQuery) : ''}
-                                   ${statusFilter != null ? '&status='.concat(statusFilter) : ''}
-                                   ${sortBy != null ? '&sort='.concat(sortBy) : ''}"
-                                   ${currentPage == totalPages ? 'tabindex="-1" aria-disabled="true"' : ''}>
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+            <!-- Phân trang -->
+<c:if test="${totalPages > 1}">
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted">
+            <c:set var="startItem" value="${(currentPage-1)*pageSize + 1}" />
+            <c:set var="endItem" value="${currentPage*pageSize}" />
+            <c:if test="${endItem > totalCategories}">
+                <c:set var="endItem" value="${totalCategories}" />
             </c:if>
+            Hiển thị ${startItem} đến ${endItem} trong tổng số ${totalCategories} danh mục
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                <!-- Nút Previous -->
+                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="categorylists?page=${currentPage - 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}" ${currentPage == 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                
+                <!-- Các số trang -->
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                        <a class="page-link" href="categorylists?page=${i}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}">${i}</a>
+                    </li>
+                </c:forEach>
+                
+                <!-- Nút Next -->
+                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="categorylists?page=${currentPage + 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}" ${currentPage == totalPages ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</c:if>
         </div>
 
         <script>

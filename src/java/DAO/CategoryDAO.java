@@ -207,31 +207,32 @@ public class CategoryDAO extends DBContext {
         }
         return categories;
     }
+
     public boolean updateCategory(Category category) {
-    String sql = "UPDATE categories SET name = ?, description = ?, parent_id = ?, level = ?, status = ? WHERE id = ?";
-    
-    try {
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setString(1, category.getName());
-        stmt.setString(2, category.getDescription());
-        
-        if (category.getParentId() != null) {
-            stmt.setInt(3, category.getParentId());
-        } else {
-            stmt.setNull(3, java.sql.Types.INTEGER);
+        String sql = "UPDATE categories SET name = ?, description = ?, parent_id = ?, level = ?, status = ? WHERE id = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, category.getName());
+            st.setString(2, category.getDescription());
+
+            if (category.getParentId() != null) {
+                st.setInt(3, category.getParentId());
+            } else {
+                st.setNull(3, java.sql.Types.INTEGER);
+            }
+
+            st.setInt(4, category.getLevel());
+            st.setString(5, category.getStatus());
+            st.setInt(6, category.getId());
+
+            int rowsAffected = st.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error updating category: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
-        
-        stmt.setInt(4, category.getLevel());
-        stmt.setString(5, category.getStatus());
-        stmt.setInt(6, category.getId());
-        
-        int rowsAffected = stmt.executeUpdate();
-        return rowsAffected > 0;
-        
-    } catch (SQLException e) {
-        System.out.println("Error updating category: " + e.getMessage());
-        e.printStackTrace();
-        return false;
     }
-}
 }
