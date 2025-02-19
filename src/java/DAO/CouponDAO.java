@@ -122,6 +122,42 @@ public class CouponDAO extends DBContext {
         return 0;
     }
 
+    public boolean addCoupon(Coupon coupon) {
+        String sql = "INSERT INTO coupons (code, discount_type, discount_value, min_order_amount, max_discount, usage_limit, used_count, expiry_date, created_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, coupon.getCode());
+            ps.setString(2, coupon.getDiscount_type());
+            ps.setDouble(3, coupon.getDiscount_value());
+            ps.setDouble(4, coupon.getMin_order_amount());
+            ps.setDouble(5, coupon.getMax_discount());
+            ps.setInt(6, coupon.getUsage_limit());
+            ps.setInt(7, coupon.getUsed_count());
+            ps.setDate(8, coupon.getExpiry_date());
+            ps.setDate(9, coupon.getCreated_at());
+            ps.setString(10, coupon.getStatus());
+
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isCouponCodeExists(String code) {
+        String sql = "SELECT COUNT(*) FROM coupons WHERE code = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         CouponDAO dao = new CouponDAO();
         List<Coupon> list = dao.getCoupons("", "", "", "", "", 1, 10);

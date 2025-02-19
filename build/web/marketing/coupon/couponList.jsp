@@ -224,7 +224,12 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        
+        <c:if test="${param.success eq 'true'}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Thêm mã giảm giá thành công!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -349,7 +354,7 @@
                                         <c:when test="${not empty couponList}">
                                             <c:forEach items="${couponList}" var="coupon" varStatus="status">
                                                 <tr>
-                                                    <td class="text-center">${coupon.id}</td>
+                                                    <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
                                                     <td><strong>${coupon.code}</strong></td>
                                                     <td>
                                                         <span class="badge-discount-type">
