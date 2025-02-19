@@ -462,7 +462,7 @@
 
                                                             function deleteProduct(id) {
                                                                 if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-                                                                    window.location.href = 'delete?id=' + id;
+                                                                    window.location.href = 'deleteproduct?productId=' + id;
                                                                 }
                                                             }
         </script>

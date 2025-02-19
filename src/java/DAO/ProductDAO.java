@@ -10,6 +10,7 @@ package DAO;
  */
 import Context.DBContext;
 import entity.Product;
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,7 @@ public class ProductDAO extends DBContext {
     }
 //_______________________________________Hết Phần DAO Cho Việc List______________________________________________________________ 
 
+//_________________________________________Phần DAO Cho Việc Add____________________________________________________________    
     public List<String> getProductImages(int productId) {
         List<String> images = new ArrayList<>();
         String query = "SELECT image_url FROM product_images WHERE product_id = ?";
@@ -176,5 +178,85 @@ public class ProductDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+//______________________________________________________Hết Phần DAO Cho Việc Add_________________________________________
+
+//_______________________________________________________Phần DAO Cho Việc Delete____________________________________________
+    public boolean canDeleteProduct(int productId) {
+        String query = "SELECT COUNT(*) FROM order_items oi "
+                + "JOIN orders o ON oi.order_id = o.id "
+                + "WHERE oi.product_id = ? AND o.status IN ('pending', 'processing', 'shipping')";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) == 0; // Nếu không có đơn hàng đang xử lý, có thể xóa
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteProduct(int productId, String uploadPath) {
+        if (!canDeleteProduct(productId)) {
+            return false; // Không thể xóa nếu sản phẩm có đơn hàng chưa hoàn tất
+        }
+
+        // Lấy đường dẫn ảnh chính của sản phẩm
+        String thumbnailPath = null;
+        String selectThumbnailQuery = "SELECT thumbnail FROM products WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(selectThumbnailQuery)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                thumbnailPath = rs.getString("thumbnail");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+
+        // Lấy danh sách ảnh phụ của sản phẩm để xóa file
+        List<String> imagePaths = getProductImages(productId);
+
+        // Xóa ảnh chính khỏi thư mục
+        if (thumbnailPath != null) {
+            thumbnailPath = thumbnailPath.replace("uploads/productImages/", "");
+            File thumbnailFile = new File(uploadPath + File.separator + thumbnailPath);
+            if (thumbnailFile.exists()) {
+                thumbnailFile.delete();
+            }
+        }
+
+        // Xóa ảnh phụ sản phẩm khỏi thư mục
+        for (String imagePath : imagePaths) {
+            imagePath = imagePath.replace("uploads/productImages/", "");
+            File file = new File(uploadPath + File.separator + imagePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+
+        // Xóa ảnh trong DB
+        String deleteImagesQuery = "DELETE FROM product_images WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(deleteImagesQuery)) {
+            ps.setInt(1, productId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Xóa sản phẩm khỏi DB
+        String deleteProductQuery = "DELETE FROM products WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(deleteProductQuery)) {
+            ps.setInt(1, productId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
