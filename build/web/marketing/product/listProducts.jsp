@@ -152,6 +152,7 @@
                 padding: 5px 10px;
                 border-radius: 50px;
                 font-weight: 500;
+                color: white;
             }
 
             .stock-link {
@@ -367,10 +368,10 @@
 <!--                                                        <a href="product/view?id=${product.id}" class="btn btn-sm btn-info me-1" title="Xem chi tiết">
                                                             <i class="fas fa-eye"></i>
                                                         </a>-->
-                                                        <a href="edit?id=${product.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa">
+                                                        <a href="edit?id=${product.id}" class="btn btn-primary btn-sm" title="Chỉnh sửa">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <button onclick="deleteProduct(${product.id})" class="btn btn-outline-danger btn-sm" title="Xóa">
+                                                        <button onclick="deleteProduct(${product.id})" class="btn btn-danger btn-sm" title="Xóa">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </td>

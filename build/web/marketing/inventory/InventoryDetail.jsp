@@ -206,7 +206,8 @@
                 </div>
 
                 <div class="d-flex justify-content-start mt-3">
-                    <a href="inventorylist" class="btn btn-secondary">Quay lại</a>
+                    <!--<a href="inventorylist" class="btn btn-secondary">Quay lại</a>-->
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Quay lại</a>
                 </div>
             </div>
         </div>
