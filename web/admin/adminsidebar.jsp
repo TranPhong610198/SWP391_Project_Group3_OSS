@@ -47,7 +47,7 @@
         </li>-->
 
         <li class="menu-item p-2">
-            <a href="couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+            <a href="../marketing/couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-tags me-2"></i>
                     Mã giảm giá
