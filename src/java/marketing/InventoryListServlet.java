@@ -103,6 +103,7 @@ public class InventoryListServlet extends HttpServlet {
             request.setAttribute("sortOrder", sortOrder);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalItems", totalRecords);
 
             request.getRequestDispatcher("/marketing/inventory/listInventory.jsp").forward(request, response);
         } catch (Exception e) {

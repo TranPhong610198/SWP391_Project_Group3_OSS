@@ -100,8 +100,16 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         String minOrderStr = request.getParameter("min_order_amount");
         double minOrderAmount = Double.parseDouble(minOrderStr);
 
+        // for percentage type
         String maxDiscountStr = request.getParameter("max_discount");
-        double maxDiscount = Double.parseDouble(maxDiscountStr);
+        double maxDiscount = 0;
+        if (discountType.equals("percentage")) {
+            if (maxDiscountStr == null || maxDiscountStr.trim().isEmpty()) {
+                errors.put("max_discount", "Vui lòng nhập giá trị giảm tối đa cho mã giảm theo phần trăm");
+            } else {
+                maxDiscount = Double.parseDouble(maxDiscountStr);
+            }
+        }
 
         String usageLimitStr = request.getParameter("usage_limit");
         int usageLimit = Integer.parseInt(usageLimitStr);

@@ -166,6 +166,7 @@ public class ProductListServlet extends HttpServlet {
             request.setAttribute("status", status);
             request.setAttribute("sortField", sortField);
             request.setAttribute("sortDir", sortDir);
+            request.setAttribute("totalItems", totalRecords);
 
             // Forward đến trang JSP
             request.getRequestDispatcher("/marketing/product/listProducts.jsp").forward(request, response);

@@ -253,10 +253,14 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary me-2">
-                                    <i class="fas fa-filter me-2"></i>Lọc
-                                </button>
-                                <a href="productlist" class="btn btn-secondary">Xóa bộ lọc</a>
+                                <div class="d-grid gap-2 d-md-flex">
+                                    <button type="submit" class="btn btn-primary me-md-2">
+                                        <i class="fas fa-filter me-2"></i>Lọc
+                                    </button>
+                                    <a href="couponlist" class="btn btn-secondary">
+                                        <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
+                                    </a>
+                                </div>
                             </div>
                         </form>
                     </div>

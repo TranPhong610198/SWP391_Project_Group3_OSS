@@ -224,18 +224,18 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        <c:if test="${param.success eq 'true'}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Thêm mã giảm giá thành công!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </c:if>
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
         
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${param.success eq 'true'}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Thêm mã giảm giá thành công!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
                 <h2 class="page-title">
                     <i class="fas fa-tags me-2"></i>Quản lý mã giảm giá
                 </h2>
@@ -276,7 +276,7 @@
                                         <i class="fas fa-filter me-2"></i>Lọc
                                     </button>
                                     <a href="couponlist" class="btn btn-secondary">
-                                        <i class="fas fa-eraser me-2"></i>Xóa lọc
+                                        <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
                                     </a>
                                 </div>
                             </div>
@@ -403,7 +403,7 @@
                                                             <a href="editCoupon?id=${coupon.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCoupon${coupon.id}" title="Xóa">
+                                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#couponlist${coupon.id}" title="Xóa">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </div>
@@ -411,11 +411,11 @@
                                                 </tr>
                                                 
                                                 <!-- Delete Confirmation Modal -->
-                                                <div class="modal fade" id="deleteCouponModal${coupon.id}" tabindex="-1" aria-labelledby="deleteCouponModalLabel${coupon.id}" aria-hidden="true">
+                                                <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="deleteCoupon?id=${coupon.id}">Xác nhận xóa</h5>
+                                                                <h5 class="modal-title" id="couponlist?action=delete&id=${coupon.id}">Xác nhận xóa</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -423,7 +423,11 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                                <a href="deleteCoupon?id=${coupon.id}" class="btn btn-danger">Xóa</a>
+                                                                <form action="couponlist" method="POST" style="display: inline;">
+                                                                    <input type="hidden" name="action" value="delete">
+                                                                    <input type="hidden" name="id" value="${coupon.id}">
+                                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
