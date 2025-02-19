@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @WebServlet(name = "CategoryList", urlPatterns = {"/admin/categorylists"})
 public class CategoryList extends HttpServlet {
-private static final int PAGE_SIZE = 5;
+private static final int PAGE_SIZE = 10;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -114,7 +114,7 @@ private static final int PAGE_SIZE = 5;
 
         // Tính toán phân trang
         int totalCategories = filteredCategories.size();
-        int pageSize = 5;
+        int pageSize = 10;
         int totalPages = (int) Math.ceil((double) totalCategories / pageSize);
 
         // Điều chỉnh page nếu cần

@@ -242,9 +242,9 @@
                 <c:if test="${totalPages > 1}">
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
-<!--                            Hiển thị ${(currentPage-1)*pageSize + 1} đến 
+                            Hiển thị ${(currentPage-1)*pageSize + 1} đến 
                             ${currentPage*pageSize > totalCategories ? totalCategories : currentPage*pageSize} 
-                            trong tổng số ${totalCategories} danh mục-->
+                            trong tổng số ${totalCategories} danh mục
                         </div>
                         <nav aria-label="Page navigation">
                             <ul class="pagination mb-0">
