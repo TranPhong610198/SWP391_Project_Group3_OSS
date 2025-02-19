@@ -91,96 +91,23 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             errors.put("code", "Mã giảm giá đã tồn tại");
         }
 
-        // Validate discount type
         String discountType = request.getParameter("discount_type");
-        if (discountType == null || (!discountType.equals("percentage") && !discountType.equals("fixed"))) {
-            errors.put("discount_type", "Vui lòng chọn loại giảm giá hợp lệ");
-        }
 
-        // Validate discount value
         String discountValueStr = request.getParameter("discount_value");
-        double discountValue = 0;
-        if (discountValueStr == null || discountValueStr.trim().isEmpty()) {
-            errors.put("discount_value", "Vui lòng nhập giá trị giảm giá");
-        } else {
-            try {
-                discountValue = Double.parseDouble(discountValueStr);
-                if (discountType.equals("percentage")) {
-                    if (discountValue <= 0 || discountValue > 100) {
-                        errors.put("discount_value", "Phần trăm giảm giá phải từ 1 đến 100");
-                    }
-                } else {
-                    if (discountValue <= 0) {
-                        errors.put("discount_value", "Giá trị giảm phải lớn hơn 0");
-                    }
-                }
-            } catch (NumberFormatException e) {
-                errors.put("discount_value", "Giá trị giảm không hợp lệ");
-            }
-        }
+        double discountValue = Double.parseDouble(discountValueStr);
 
-        // Validate minimum order amount
+
         String minOrderStr = request.getParameter("min_order_amount");
-        double minOrderAmount = 0;
-        if (minOrderStr != null && !minOrderStr.trim().isEmpty()) {
-            try {
-                minOrderAmount = Double.parseDouble(minOrderStr);
-                if (minOrderAmount < 0) {
-                    errors.put("min_order_amount", "Giá trị đơn hàng tối thiểu không được âm");
-                }
-            } catch (NumberFormatException e) {
-                errors.put("min_order_amount", "Giá trị đơn hàng tối thiểu không hợp lệ");
-            }
-        }
+        double minOrderAmount = Double.parseDouble(minOrderStr);
 
-        // Validate max discount (for percentage type)
         String maxDiscountStr = request.getParameter("max_discount");
-        double maxDiscount = 0;
-        if (discountType.equals("percentage")) {
-            if (maxDiscountStr == null || maxDiscountStr.trim().isEmpty()) {
-                errors.put("max_discount", "Vui lòng nhập giá trị giảm tối đa cho mã giảm theo phần trăm");
-            } else {
-                try {
-                    maxDiscount = Double.parseDouble(maxDiscountStr);
-                    if (maxDiscount <= 0) {
-                        errors.put("max_discount", "Giá trị giảm tối đa phải lớn hơn 0");
-                    }
-                } catch (NumberFormatException e) {
-                    errors.put("max_discount", "Giá trị giảm tối đa không hợp lệ");
-                }
-            }
-        }
+        double maxDiscount = Double.parseDouble(maxDiscountStr);
 
-        // Validate usage limit
         String usageLimitStr = request.getParameter("usage_limit");
-        int usageLimit = 0;
-        if (usageLimitStr != null && !usageLimitStr.trim().isEmpty()) {
-            try {
-                usageLimit = Integer.parseInt(usageLimitStr);
-                if (usageLimit < 0) {
-                    errors.put("usage_limit", "Số lần sử dụng không được âm");
-                }
-            } catch (NumberFormatException e) {
-                errors.put("usage_limit", "Số lần sử dụng không hợp lệ");
-            }
-        }
+        int usageLimit = Integer.parseInt(usageLimitStr);
 
-        // Validate expiry date
         String expiryDateStr = request.getParameter("expiry_date");
-        java.sql.Date expiryDate = null;
-        if (expiryDateStr == null || expiryDateStr.trim().isEmpty()) {
-            errors.put("expiry_date", "Vui lòng chọn ngày hết hạn");
-        } else {
-            try {
-                expiryDate = java.sql.Date.valueOf(expiryDateStr);
-                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-                if (expiryDate.before(currentDate)) {
-                    errors.put("expiry_date", "Ngày hết hạn phải sau ngày hiện tại");
-                }
-            } catch (IllegalArgumentException e) {
-                errors.put("expiry_date", "Ngày hết hạn không hợp lệ");
-            }
-        }
+        java.sql.Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
 
         // Xử lý status
         String status = request.getParameter("status") != null ? "active" : "inactive";

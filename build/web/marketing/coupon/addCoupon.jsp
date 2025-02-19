@@ -215,8 +215,7 @@
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control ${not empty errors.code ? 'is-invalid' : ''}" 
-                                           id="discountValue" name="discount_value" value="${param.discount_value}" required min="0">
+                                    <input type="number" class="form-control " id="discountValue" name="discount_value" value="${param.discount_value}" required min="0">
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
                                 <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>

@@ -270,7 +270,7 @@
                                     <option value="expired" ${filterStatus == 'expired' ? 'selected' : ''}>Hết hạn</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="d-grid gap-2 d-md-flex">
                                     <button type="submit" class="btn btn-primary me-md-2">
                                         <i class="fas fa-filter me-2"></i>Lọc
@@ -301,7 +301,7 @@
                             <table class="table table-hover table-bordered mb-0">
                                 <thead>
                                     <tr class="bg-light">
-                                        <th class="text-center" style="width: 60px;">ID</th>
+                                        <th class="text-center" style="width: 60px;">STT</th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=code&sortOrder=${sortField == 'code' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Mã giảm giá
@@ -319,7 +319,7 @@
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>Đơn hàng tối thiểu</th>
+                                        <th>Đơn hàng</th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=max_discount&sortOrder=${sortField == 'max_discount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Giảm tối đa
@@ -403,7 +403,7 @@
                                                             <a href="editCoupon?id=${coupon.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCouponModal${coupon.id}" title="Xóa">
+                                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCoupon${coupon.id}" title="Xóa">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </div>
@@ -415,7 +415,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="deleteCouponModalLabel${coupon.id}">Xác nhận xóa</h5>
+                                                                <h5 class="modal-title" id="deleteCoupon?id=${coupon.id}">Xác nhận xóa</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
