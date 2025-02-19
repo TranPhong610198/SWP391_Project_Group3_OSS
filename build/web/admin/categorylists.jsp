@@ -17,32 +17,32 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -50,43 +50,43 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .filter-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             .search-box {
                 border-radius: 50px;
                 padding-left: 15px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .badge {
                 padding: 6px 12px;
                 border-radius: 50px;
             }
-            
+
             .pagination .page-link {
                 color: var(--primary-color);
                 border: 1px solid var(--border-color);
@@ -94,18 +94,18 @@
                 text-align: center;
                 margin: 0 3px;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: var(--accent-color);
                 border-color: var(--accent-color);
                 color: white;
             }
-            
+
             .btn-action {
                 padding: 5px 10px;
                 margin: 0 2px;
             }
-            
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -119,7 +119,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="/admin/adminsidebar.jsp" />
-        
+
         <div class="main-content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
@@ -193,50 +193,59 @@
                         </a>
                     </div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered mb-0">
-                                <thead>
-                                    <tr class="bg-light">
-                                        <th class="text-center" style="width: 60px;">STT</th>
-                                        <th>Tên danh mục</th>
-                                        <th>Danh mục cha</th>
-                                        <th>Cấp độ</th>
-                                        <th>Mô tả</th>
-                                        <th>Trạng thái</th>
-                                        <th class="text-center">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${categories}" var="category" varStatus="status">
-                                        <tr>
-                                            <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
-                                            <td>
-                                                <c:forEach begin="1" end="${category.level}" step="1">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                                </c:forEach>
-                                                ${category.name}
-                                            </td>
-                                            <td>${category.parentName != null ? category.parentName : 'Danh mục gốc'}</td>
-                                            <td><span class="badge bg-secondary">${category.level}</span></td>
-                                            <td>${category.description}</td>
-                                            <td>
-                                                <span class="badge ${category.status == 'active' ? 'bg-success' : 'bg-danger'}">
-                                                    ${category.status == 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="categorydetail?id=${category.id}" class="btn btn-primary btn-sm btn-action">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button type="button" class="btn btn-danger btn-sm btn-action" onclick="deleteCategory(${category.id})">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
+                        <c:choose>
+                            <c:when test="${empty categories}">
+                                <div class="text-center py-5">
+                                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Không tìm thấy danh mục nào</h5>
+                                    <p class="text-muted">Vui lòng thử lại với điều kiện tìm kiếm khác hoặc thêm danh mục mới</p>
+                                    <a href="categoryadd" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Thêm danh mục mới
+                                    </a>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered mb-0">
+                                        <thead>
+                                            <tr class="bg-light">
+                                                <th class="text-center" style="width: 60px;">STT</th>
+                                                <th>Tên danh mục</th>
+                                                <th>Danh mục cha</th>
+                                                <th>Cấp độ</th>
+                                                <th>Mô tả</th>
+                                                <th>Trạng thái</th>
+                                                <th class="text-center">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${categories}" var="category" varStatus="status">
+                                                <tr>
+                                                    <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
+                                                    <td>${category.name}</td>
+                                                    <td>${category.parentName != null ? category.parentName : 'Danh mục gốc'}</td>
+                                                    <td><span class="badge bg-secondary">${category.level}</span></td>
+                                                    <td>${category.description}</td>
+                                                    <td>
+                                                        <span class="badge ${category.status == 'active' ? 'bg-success' : 'bg-danger'}">
+                                                            ${category.status == 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="categorydetail?id=${category.id}" class="btn btn-primary btn-sm btn-action">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <button type="button" class="btn btn-danger btn-sm btn-action" onclick="deleteCategory(${category.id})">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
 
@@ -255,13 +264,13 @@
                                         <i class="fas fa-chevron-left"></i>
                                     </a>
                                 </li>
-                                
+
                                 <c:forEach begin="1" end="${totalPages}" var="i">
                                     <li class="page-item ${i == currentPage ? 'active' : ''}">
                                         <a class="page-link" href="categorylists?page=${i}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}">${i}</a>
                                     </li>
                                 </c:forEach>
-                                
+
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
                                     <a class="page-link" href="categorylists?page=${currentPage + 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}">
                                         <i class="fas fa-chevron-right"></i>
@@ -276,25 +285,25 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <script>
-            function deleteCategory(categoryId) {
-                if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-                    window.location.href = 'categorydelete?id=' + categoryId;
-                }
-            }
 
-            $(document).ready(function () {
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
-                
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                });
-            });
+        <script>
+                                                            function deleteCategory(categoryId) {
+                                                                if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+                                                                    window.location.href = 'categorydelete?id=' + categoryId;
+                                                                }
+                                                            }
+
+                                                            $(document).ready(function () {
+                                                                // Highlight active menu item
+                                                                $('.menu-item').removeClass('active');
+                                                                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
+
+                                                                // Initialize tooltips
+                                                                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                                                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                                                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                                                                });
+                                                            });
         </script>
     </body>
 </html>

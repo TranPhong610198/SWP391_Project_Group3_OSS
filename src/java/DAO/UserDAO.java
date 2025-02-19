@@ -339,29 +339,39 @@ public class UserDAO extends DBContext {
         return addresses;
     }
 
-    public boolean addUserAddress(UserAddress address) {
-    // First check if this is meant to be a default address
-    if (address.isDefault()) {
-        // Clear any existing default addresses for this user
-        String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
-        try (PreparedStatement st = connection.prepareStatement(clearDefaults)) {
-            st.setInt(1, address.getUserId());
-            st.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Now insert the new address
+ public boolean addUserAddress(UserAddress address) {
+    // Kiểm tra xem người dùng đã có địa chỉ nào chưa
+    String checkExistingAddresses = "SELECT COUNT(*) FROM user_addresses WHERE user_id = ?";
     String sql = "INSERT INTO user_addresses (user_id, recipient_name, phone, address, is_default) VALUES (?, ?, ?, ?, ?)";
-    try (PreparedStatement st = connection.prepareStatement(sql)) {
-        st.setInt(1, address.getUserId());
-        st.setString(2, address.getRecipientName());
-        st.setString(3, address.getPhone());
-        st.setString(4, address.getAddress());
-        st.setBoolean(5, address.isDefault());
-        return st.executeUpdate() > 0;
+
+    try {
+        // Kiểm tra số lượng địa chỉ hiện có
+        PreparedStatement checkStmt = connection.prepareStatement(checkExistingAddresses);
+        checkStmt.setInt(1, address.getUserId());
+        ResultSet rs = checkStmt.executeQuery();
+        rs.next();
+        int addressCount = rs.getInt(1);
+
+        // Nếu là địa chỉ đầu tiên hoặc đã chọn là địa chỉ mặc định
+        boolean shouldBeDefault = addressCount == 0 || address.isDefault();
+        
+        // Nếu sẽ set làm mặc định, clear các địa chỉ mặc định khác
+        if (shouldBeDefault) {
+            String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
+            PreparedStatement clearStmt = connection.prepareStatement(clearDefaults);
+            clearStmt.setInt(1, address.getUserId());
+            clearStmt.executeUpdate();
+        }
+
+        // Thêm địa chỉ mới
+        PreparedStatement insertStmt = connection.prepareStatement(sql);
+        insertStmt.setInt(1, address.getUserId());
+        insertStmt.setString(2, address.getRecipientName());
+        insertStmt.setString(3, address.getPhone());
+        insertStmt.setString(4, address.getAddress());
+        insertStmt.setBoolean(5, shouldBeDefault);  // Sử dụng shouldBeDefault thay vì address.isDefault()
+
+        return insertStmt.executeUpdate() > 0;
     } catch (SQLException e) {
         e.printStackTrace();
         return false;

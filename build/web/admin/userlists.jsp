@@ -324,7 +324,7 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="userdetail/edit?id=${user.id}" class="btn btn-warning btn-sm btn-action">
+                                                <a href="userdetail/edit?id=${user.id}" class="btn btn-primary btn-sm btn-action">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm btn-action"
