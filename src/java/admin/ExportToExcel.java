@@ -18,7 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 
-@WebServlet(name = "ExportToExcel", urlPatterns = {"/exporttoexcel"})
+@WebServlet(name = "ExportToExcel", urlPatterns = {"/admin/exporttoexcel"})
 public class ExportToExcel extends HttpServlet {
 
     @Override
