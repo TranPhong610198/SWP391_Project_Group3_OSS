@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author DELL
  */
-@WebServlet(name = "PostServlet", urlPatterns = {"/postList"})
+@WebServlet(name = "PostServlet", urlPatterns = {"/marketing/postList"})
 public class PostServlet extends HttpServlet {
 
     /**
@@ -93,7 +93,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     request.setAttribute("currentPage", page);
     request.setAttribute("totalPages", totalPages);
 
-    request.getRequestDispatcher("/marketing/postlist.jsp").forward(request, response);
+    request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
 }
 
 

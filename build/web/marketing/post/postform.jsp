@@ -9,20 +9,20 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
             .form-section {
-    background: url('https://decorbanghieu.com/wp-content/uploads/2022/08/background-shop-quan-ao-1-1067x800.jpg') no-repeat center center;
-    background-size: cover;
-    padding: 3rem 0;
-    color: white;
-}
+                background: url('https://decorbanghieu.com/wp-content/uploads/2022/08/background-shop-quan-ao-1-1067x800.jpg') no-repeat center center;
+                background-size: cover;
+                padding: 3rem 0;
+                color: white;
+            }
 
             .form-container {
-    background: rgba(255, 255, 255, 0.3); /* Nền trắng trong suốt 30% */
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    color: #2c3e50;
-    backdrop-filter: blur(10px); /* Hiệu ứng mờ phía sau */
-}
+                background: rgba(255, 255, 255, 0.3); /* Nền trắng trong suốt 30% */
+                padding: 2rem;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                color: #2c3e50;
+                backdrop-filter: blur(10px); /* Hiệu ứng mờ phía sau */
+            }
 
             .preview-image {
                 max-width: 200px;
@@ -49,20 +49,20 @@
                             </c:if>
 
                             <form method="post" action="${pageContext.request.contextPath}/addPost" enctype="multipart/form-data">
-    <input type="hidden" name="action" value="create">
+                                <input type="hidden" name="action" value="create">
 
-    <div class="mb-3">
-        <label for="title" class="form-label">Tiêu đề</label>
-        <input type="text" class="form-control" id="title" name="title" required>
-    </div>
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Tiêu đề</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
 
-    <div class="mb-3">
-        <label for="thumbnail" class="form-label">Ảnh nguồn</label>
-        <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" required>
-    </div>
+                                <div class="mb-3">
+                                    <label for="thumbnail" class="form-label">Ảnh nguồn</label>
+                                    <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" required>
+                                </div>
 
 
-<!--                                <div class="mb-3">
+                                <!--                                <div class="mb-3">
                                     <label for="authorId" class="form-label">Author</label>
                                     <select class="form-select" id="authorId" name="authorId" required>
                                         <option value="0">All Authors</option>

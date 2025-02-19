@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author DELL
  */
-@WebServlet(name = "DetailPostServlet", urlPatterns = {"/detailPost"})
+@WebServlet(name = "DetailPostServlet", urlPatterns = {"/marketing/detailPost"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,    // 1 MB
     maxFileSize = 1024 * 1024 * 10,      // 10 MB
@@ -80,7 +80,7 @@ public class PostDetailServlet extends HttpServlet {
 
 
             request.setAttribute("post", p);
-            request.getRequestDispatcher("/marketing/postdetail.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);
         }
@@ -143,7 +143,7 @@ public class PostDetailServlet extends HttpServlet {
 
             request.setAttribute("post", p);
             request.setAttribute("error", "Cập nhật bài viết thất bại.");
-            request.getRequestDispatcher("/marketing/postdetail.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
         }
 
     }

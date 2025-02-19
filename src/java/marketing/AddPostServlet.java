@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author DELL
  */
-@WebServlet(name = "AddPostServlet", urlPatterns = {"/addPost"})
+@WebServlet(name = "AddPostServlet", urlPatterns = {"/marketing/addPost"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024, // 1 MB
     maxFileSize = 1024 * 1024 * 10,  // 10 MB
@@ -75,7 +75,7 @@ public class AddPostServlet extends HttpServlet {
     List<User> users = postDAO.getAuthorsByRole(); // Lấy danh sách admin & marketing
     request.setAttribute("users", users);
 
-    request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
+    request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
     }
 
     /**
@@ -117,7 +117,7 @@ public class AddPostServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
-            request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
             return;
         }
 
@@ -146,13 +146,13 @@ public class AddPostServlet extends HttpServlet {
             response.sendRedirect("postList");
         } else {
             request.setAttribute("error", "Thêm bài viết thất bại!");
-            request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
         }
         
     } catch (Exception e) {
         e.printStackTrace();
         request.setAttribute("error", "Lỗi: " + e.getMessage());
-        request.getRequestDispatcher("/marketing/postform.jsp").forward(request, response);
+        request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
     }
     }
 
