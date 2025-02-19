@@ -7,8 +7,30 @@
         <title>Đăng ký tài khoản</title>
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assests/css/LoginRegister.css">
+        <style>
+            .fade-out {
+                opacity: 0;
+                transition: opacity 0.5s ease-out;
+            }
+            .home-icon {
+                position: absolute;
+                top: 1px;
+                right: 20px;
+                font-size: 24px;
+                color: #34495e;
+                cursor: pointer;
+                transition: color 0.3s;
+                z-index: 1000;
+            }
+            .home-icon:hover {
+                color: #2c3e50;
+            }
+        </style>
     </head>
     <body>
+        <a href="${pageContext.request.contextPath}/homepage.jsp" class="home-icon">
+            <i class="fas fa-home"></i>
+        </a>
         <div class="container right-panel-active" id="main">
             <div class="sign-up">
                 <form action="register" method="post">

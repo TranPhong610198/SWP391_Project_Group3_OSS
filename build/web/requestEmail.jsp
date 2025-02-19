@@ -26,7 +26,7 @@
                 margin: 0;
                 padding: 20px;
                 font-family: 'Poppins', sans-serif;
-                background: url('fashion-store-with-industrial-aesthetic-41qyopx1bf2s0xix.jpg') no-repeat center center fixed;
+                background: url('assests/css/login.png') no-repeat center center fixed;
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
