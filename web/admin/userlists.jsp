@@ -319,7 +319,7 @@
                                             <td>${user.mobile}</td>
                                             <td><span class="badge bg-secondary rounded-pill">${user.role}</span></td>
                                             <td>
-                                                <span class="badge bg-${user.status == 'Active' ? 'success' : (user.status == 'Inactive' ? 'danger' : 'warning')}">
+                                                <span class="badge bg-${user.status == 'active' ? 'success' : (user.status == 'inactive' ? 'danger' : 'warning')}">
                                                     ${user.status}
                                                 </span>
                                             </td>
