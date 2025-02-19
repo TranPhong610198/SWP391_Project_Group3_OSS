@@ -16,6 +16,7 @@ import java.util.List;
 
 public class ProductDAO extends DBContext {
 
+//_______________________________________Phần DAO Cho Việc List______________________________________________________________ 
     private static final int RECORDS_PER_PAGE = 10;
 
     public int getTotalStockByProductId(int productId) {
@@ -55,6 +56,7 @@ public class ProductDAO extends DBContext {
                 product.setUpdatedAt(rs.getString("updated_at"));
 
                 product.setStock(getTotalStockByProductId(rs.getInt("id")));
+                product.setSubImages(getProductImages(rs.getInt("id")));
 
                 products.add(product);
             }
@@ -116,5 +118,63 @@ public class ProductDAO extends DBContext {
         params.add(offset);
         params.add(RECORDS_PER_PAGE);
         return getProductsByFilter(paginatedQuery, params);
+    }
+//_______________________________________Hết Phần DAO Cho Việc List______________________________________________________________ 
+
+    public List<String> getProductImages(int productId) {
+        List<String> images = new ArrayList<>();
+        String query = "SELECT image_url FROM product_images WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                images.add(rs.getString("image_url"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return images;
+    }
+
+    public boolean addProduct(Product product, List<String> subImages) {
+        String insertProduct = "INSERT INTO products (title, category_id, description, original_price, sale_price, thumbnail, is_combo, combo_group_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(insertProduct, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, product.getTitle());
+            ps.setInt(2, product.getCategoryId());
+            ps.setString(3, product.getDescription());
+            ps.setDouble(4, product.getOriginalPrice());
+            ps.setDouble(5, product.getSalePrice());
+            ps.setString(6, product.getThumbnail());
+            ps.setBoolean(7, product.isIsCombo());
+            ps.setInt(8, product.getComboGroupId());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int productId = generatedKeys.getInt(1);
+                    addProductImages(productId, subImages);
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void addProductImages(int productId, List<String> subImages) {
+        String insertImage = "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(insertImage)) {
+            for (int i = 0; i < subImages.size(); i++) {
+                ps.setInt(1, productId);
+                ps.setString(2, subImages.get(i));
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

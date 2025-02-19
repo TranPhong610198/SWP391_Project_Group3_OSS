@@ -28,8 +28,27 @@ public class Product {
     private String updatedAt;
 
     private List<Product> comboProducts;
+    private List<String> subImages;
 
     public Product() {
+    }
+
+    public Product(int id, String title, int categoryId, double originalPrice, double salePrice, String thumbnail, String status, int stock, String description, int comboGroupId, boolean isCombo, String createdAt, String updatedAt, List<Product> comboProducts, List<String> subImages) {
+        this.id = id;
+        this.title = title;
+        this.categoryId = categoryId;
+        this.originalPrice = originalPrice;
+        this.salePrice = salePrice;
+        this.thumbnail = thumbnail;
+        this.status = status;
+        this.stock = stock;
+        this.description = description;
+        this.comboGroupId = comboGroupId;
+        this.isCombo = isCombo;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.comboProducts = comboProducts;
+        this.subImages = subImages;
     }
 
     public Product(int id, String title, int categoryId, double originalPrice, double salePrice, String thumbnail, String status, int stock, String description, int comboGroupId, boolean isCombo, String createdAt, String updatedAt) {
@@ -170,6 +189,14 @@ public class Product {
 
     public List<Product> getComboProducts() {
         return comboProducts;
+    }
+
+    public List<String> getSubImages() {
+        return subImages;
+    }
+
+    public void setSubImages(List<String> subImages) {
+        this.subImages = subImages;
     }
 
 }

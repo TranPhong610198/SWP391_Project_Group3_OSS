@@ -1,272 +1,326 @@
-<%-- 
-    Document   : addProduct
-    Created on : Feb 19, 2025, 2:24:06 AM
-    Author     : tphon
---%>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Thêm sản phẩm mới</title>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-        <style>
-            :root {
-                --primary-color: #2c3e50;
-                --secondary-color: #34495e;
-                --accent-color: #3498db;
-                --light-color: #ecf0f1;
-                --border-color: #dee2e6;
-            }
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm sản phẩm</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --border-color: #dee2e6;
+            --hover-color: #f8f9fa;
+        }
 
-            body {
-                background-color: #f8f9fa;
-            }
+        body {
+            background-color: #f8f9fa;
+        }
 
+        .main-content {
+            margin-left: 250px;
+            transition: all 0.3s;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+
+        .form-text {
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            z-index: 1001;
+            display: none;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .alert {
+            border-radius: 8px;
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-top: 10px;
+        }
+
+        .sub-images-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .sub-image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
             .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
                 margin-left: 250px;
-                transition: all 0.3s;
-                padding: 20px;
-                min-height: 100vh;
             }
-
-            .page-title {
-                color: var(--primary-color);
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid var(--accent-color);
-                display: inline-block;
+            .sidebar-toggle {
+                display: block;
             }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the sidebar -->
+    <jsp:include page="../sidebar.jsp" />
 
-            .card {
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                border: 1px solid var(--border-color);
-            }
+    <button class="btn btn-primary sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
 
-            .preview-image {
-                width: 150px;
-                height: 150px;
-                object-fit: cover;
-                border-radius: 4px;
-                border: 1px solid var(--border-color);
-                margin: 5px;
-            }
+    <div class="main-content">
+        <div class="container-fluid p-4">
+            <h2 class="page-title">
+                <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
+            </h2>
 
-            .image-preview-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-top: 10px;
-            }
+            <!-- Hiển thị thông báo thành công hoặc lỗi -->
+            <c:if test="${param.success != null}">
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>Thêm sản phẩm thành công!
+                </div>
+            </c:if>
+            <c:if test="${param.error != null}">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>Có lỗi xảy ra, vui lòng thử lại.
+                </div>
+            </c:if>
 
-            .remove-image {
-                position: absolute;
-                top: -10px;
-                right: -10px;
-                background: red;
-                color: white;
-                border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                text-align: center;
-                line-height: 20px;
-                cursor: pointer;
-            }
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-info-circle me-2"></i>Thông tin sản phẩm
+                </div>
+                <div class="card-body">
+                    <form action="addproduct" method="post" enctype="multipart/form-data" class="row g-3">
+                        <!-- Tên sản phẩm -->
+                        <div class="col-md-6">
+                            <label for="title" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="title" name="title" required />
+                            <div class="form-text">Nhập tên sản phẩm đầy đủ và chính xác</div>
+                        </div>
 
-            .preview-item {
-                position: relative;
-                display: inline-block;
-            }
+                        <!-- Chọn danh mục -->
+                        <div class="col-md-6">
+                            <label for="categoryId" class="form-label">Danh mục <span class="text-danger">*</span></label>
+                            <select class="form-select" id="categoryId" name="categoryId" required>
+                                <option value="" selected disabled>Chọn danh mục</option>
+                                <c:forEach var="category" items="${categories}">
+                                    <option value="${category.id}">${category.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
-            @media (max-width: 768px) {
-                .main-content {
-                    margin-left: 0;
-                }
-            }
+                        <!-- Giá gốc -->
+                        <div class="col-md-6">
+                            <label for="originalPrice" class="form-label">Giá gốc (₫) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="originalPrice" name="originalPrice" step="1000" min="0" required />
+                        </div>
 
-            .ck-editor__editable {
-                min-height: 200px;
-            }
-        </style>
-    </head>
-    <body>
-        <jsp:include page="../sidebar.jsp" />
+                        <!-- Giá khuyến mãi -->
+                        <div class="col-md-6">
+                            <label for="salePrice" class="form-label">Giá bán (₫) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="salePrice" name="salePrice" step="1000" min="0" required />
+                            <div class="form-text">Giá bán phải lớn hơn hoặc bằng giá gốc</div>
+                        </div>
 
-        <div class="main-content">
-            <div class="container-fluid">
-                <h2 class="page-title">
-                    <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
-                </h2>
+                         <!--Trạng thái--> 
+<!--                        <div class="col-md-6">
+                            <label for="status" class="form-label">Trạng thái <span class="text-danger">*</span></label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="active">Đang bán</option>
+                                <option value="inactive">Ngưng bán</option>
+                            </select>
+                        </div>-->
 
-                <c:if test="${not empty error}">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        ${error}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </c:if>
+                        <!-- Mô tả -->
+                        <div class="col-12">
+                            <label for="description" class="form-label">Mô tả sản phẩm</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
+                        </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <form action="${pageContext.request.contextPath}/admin/product/add" method="POST" 
-                              enctype="multipart/form-data" id="productForm">
-                            <div class="row mb-3">
-                                <div class="col-md-8">
-                                    <label class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
-                                    <input type="text" name="title" class="form-control" required 
-                                           value="${param.title}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Danh mục <span class="text-danger">*</span></label>
-                                    <select name="categoryId" class="form-select" required>
-                                        <option value="">Chọn danh mục</option>
-                                        <c:forEach items="${categories}" var="category">
-                                            <option value="${category.id}" 
-                                                    ${param.categoryId == category.id ? 'selected' : ''}>
-                                                ${category.name}
-                                            </option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
+                        <!-- Ảnh chính -->
+                        <div class="col-md-6">
+                            <label for="thumbnail" class="form-label">Ảnh chính <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" required onchange="previewThumbnail(this)" />
+                            <div class="form-text">Kích thước tối ưu: 800x800px, định dạng: JPG, PNG</div>
+                            <div id="thumbnailPreview"></div>
+                        </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">Giá nhập <span class="text-danger">*</span></label>
-                                    <input type="number" name="originalPrice" class="form-control" required 
-                                           min="0" value="${param.originalPrice}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Giá bán <span class="text-danger">*</span></label>
-                                    <input type="number" name="salePrice" class="form-control" required 
-                                           min="0" value="${param.salePrice}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Trạng thái</label>
-                                    <select name="status" class="form-select">
-                                        <option value="active" ${param.status == 'active' ? 'selected' : ''}>
-                                            Khả bán
-                                        </option>
-                                        <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>
-                                            Không khả bán
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
+                        <!-- Ảnh phụ -->
+                        <div class="col-md-6">
+                            <label for="subImages" class="form-label">Ảnh phụ (tối đa 5 ảnh)</label>
+                            <input type="file" class="form-control" id="subImages" name="subImages" accept="image/*" multiple onchange="previewSubImages(this)" />
+                            <div class="form-text">Chọn tối đa 5 ảnh chi tiết sản phẩm</div>
+                            <div id="subImagesPreview" class="sub-images-preview"></div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Ảnh đại diện <span class="text-danger">*</span></label>
-                                <input type="file" name="thumbnail" class="form-control" accept="image/*" required 
-                                       onchange="previewThumbnail(this)">
-                                <div id="thumbnailPreview" class="mt-2"></div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Ảnh phụ (Tối đa 5 ảnh)</label>
-                                <input type="file" name="productImages" class="form-control" accept="image/*" 
-                                       multiple onchange="previewImages(this)">
-                                <div id="imagePreview" class="image-preview-container"></div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Mô tả chi tiết</label>
-                                <textarea name="description" id="editor">${param.description}</textarea>
-                            </div>
-
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="${pageContext.request.contextPath}/admin/productlist" 
-                                   class="btn btn-secondary">
-                                    <i class="fas fa-times me-2"></i>Hủy
-                                </a>
+                        <div class="col-12 mt-4">
+                            <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Lưu
+                                    <i class="fas fa-save me-2"></i>Thêm sản phẩm
                                 </button>
+                                <a href="productlist" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.sidebar-toggle').on('click', function () {
+                $('.sidebar').toggleClass('active');
+                $('.main-content').toggleClass('active');
+                $(this).hide();
+            });
 
-        <script>
-                                           // Initialize CKEditor
-                                           ClassicEditor
-                                                   .create(document.querySelector('#editor'))
-                                                   .catch(error => {
-                                                       console.error(error);
-                                                   });
+            $(document).on('click', function (e) {
+                if ($(window).width() <= 768) {
+                    if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                        $('.sidebar').removeClass('active');
+                        $('.main-content').removeClass('active');
+                        $('.sidebar-toggle').show();
+                    }
+                }
+            });
 
-                                           // Preview thumbnail
-                                           function previewThumbnail(input) {
-                                               const preview = document.getElementById('thumbnailPreview');
-                                               preview.innerHTML = '';
-
-                                               if (input.files && input.files[0]) {
-                                                   const reader = new FileReader();
-                                                   reader.onload = function (e) {
-                                                       const img = document.createElement('img');
-                                                       img.src = e.target.result;
-                                                       img.className = 'preview-image';
-                                                       preview.appendChild(img);
-                                                   }
-                                                   reader.readAsDataURL(input.files[0]);
-                                               }
-                                           }
-
-                                           // Preview multiple images
-                                           function previewImages(input) {
-                                               const preview = document.getElementById('imagePreview');
-                                               preview.innerHTML = '';
-
-                                               if (input.files) {
-                                                   const maxImages = 5;
-                                                   const files = Array.from(input.files).slice(0, maxImages);
-
-                                                   files.forEach(file => {
-                                                       const reader = new FileReader();
-                                                       reader.onload = function (e) {
-                                                           const previewItem = document.createElement('div');
-                                                           previewItem.className = 'preview-item';
-
-                                                           const img = document.createElement('img');
-                                                           img.src = e.target.result;
-                                                           img.className = 'preview-image';
-
-                                                           const removeButton = document.createElement('div');
-                                                           removeButton.className = 'remove-image';
-                                                           removeButton.innerHTML = '×';
-                                                           removeButton.onclick = function () {
-                                                               previewItem.remove();
-                                                           };
-
-                                                           previewItem.appendChild(img);
-                                                           previewItem.appendChild(removeButton);
-                                                           preview.appendChild(previewItem);
-                                                       }
-                                                       reader.readAsDataURL(file);
-                                                   });
-                                               }
-                                           }
-
-                                           // Form validation
-                                           document.getElementById('productForm').onsubmit = function (e) {
-                                               const originalPrice = parseFloat(document.querySelector('[name="originalPrice"]').value);
-                                               const salePrice = parseFloat(document.querySelector('[name="salePrice"]').value);
-
-                                               if (salePrice < originalPrice) {
-                                                   alert('Giá bán không thể thấp hơn giá nhập!');
-                                                   e.preventDefault();
-                                                   return false;
-                                               }
-
-                                               return true;
-
-        </script>
+            // Highlight active menu item
+            $('.menu-item').removeClass('active');
+            $('.menu-item a[href="addproduct"]').closest('.menu-item').addClass('active');
+            $('#productSubmenu').addClass('show');
+            
+            // Validate sale price is less than or equal to original price
+            $('#salePrice').on('change', function() {
+                const originalPrice = parseFloat($('#originalPrice').val()) || 0;
+                const salePrice = parseFloat($('#salePrice').val()) || 0;
+                
+                if (salePrice < originalPrice) {
+                    alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
+                    $('#salePrice').val(originalPrice);
+                }
+            });
+        });
+        
+        // Preview thumbnail image
+        function previewThumbnail(input) {
+            const preview = document.getElementById('thumbnailPreview');
+            preview.innerHTML = '';
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    preview.appendChild(img);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // Preview multiple sub-images
+        function previewSubImages(input) {
+            const preview = document.getElementById('subImagesPreview');
+            preview.innerHTML = '';
+            
+            if (input.files) {
+                const filesAmount = input.files.length;
+                const maxFiles = 5;
+                
+                for (let i = 0; i < Math.min(filesAmount, maxFiles); i++) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'sub-image-preview';
+                        preview.appendChild(img);
+                    }
+                    
+                    reader.readAsDataURL(input.files[i]);
+                }
+                
+                if (filesAmount > maxFiles) {
+                    alert(`Bạn đã chọn ${filesAmount} ảnh. Chỉ 5 ảnh đầu tiên sẽ được hiển thị.`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

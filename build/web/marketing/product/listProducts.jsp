@@ -249,8 +249,9 @@
                             <div class="col-md-2">
                                 <select name="status" class="form-select">
                                     <option value="all">Tất cả trạng thái</option>
-                                    <option value="active" ${status == 'active' ? 'selected' : ''}>Khả bán</option>
-                                    <option value="inactive" ${status == 'inactive' ? 'selected' : ''}>Không khả bán</option>
+                                    <option value="active" ${status == 'active' ? 'selected' : ''}>Đang bán</option>
+                                    <option value="inactive" ${status == 'inactive' ? 'selected' : ''}>Ngưng bán</option>
+                                    <option value="EOStock" ${status == 'EOStock' ? 'selected' : ''}>Hết hàng</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -258,7 +259,7 @@
                                     <button type="submit" class="btn btn-primary me-md-2">
                                         <i class="fas fa-filter me-2"></i>Lọc
                                     </button>
-                                    <a href="couponlist" class="btn btn-secondary">
+                                    <a href="productlist" class="btn btn-secondary">
                                         <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
                                     </a>
                                 </div>
@@ -343,7 +344,7 @@
                                                     <!--<td>${product.id}</td>-->
                                                     <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
                                                     <td>
-                                                        <img src="${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
+                                                        <img src="../${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
                                                     </td>
                                                     <td>${product.title}</td>
                                                     <td>
@@ -354,8 +355,8 @@
                                                     <td><fmt:formatNumber value="${product.originalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                                     <td><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                                     <td>
-                                                        <span class="status-badge bg-${product.status == 'active' ? 'success' : 'danger'}">
-                                                            ${product.status == 'active' ? 'Khả bán' : 'Không khả bán'}
+                                                        <span class="status-badge bg-${product.status == 'active' ? 'success' : product.status == 'inactive' ? 'danger' : 'warning'}">
+                                                            ${product.status == 'active' ? 'Đang bán' : product.status == 'inactive' ? 'Ngưng bán' : 'Hết hàng'}
                                                         </span>
                                                     </td>
                                                     <td class="text-center">
