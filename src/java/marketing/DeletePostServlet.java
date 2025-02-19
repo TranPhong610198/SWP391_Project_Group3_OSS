@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author DELL
  */
-@WebServlet(name = "DeletPostServlet", urlPatterns = {"/deletePost"})
+@WebServlet(name = "DeletPostServlet", urlPatterns = {"/marketing/deletePost"})
 public class DeletePostServlet extends HttpServlet {
 
     /**

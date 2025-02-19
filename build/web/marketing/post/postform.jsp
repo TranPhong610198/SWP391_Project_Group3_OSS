@@ -48,7 +48,7 @@
                                 </div>
                             </c:if>
 
-                            <form method="post" action="${pageContext.request.contextPath}/addPost" enctype="multipart/form-data">
+                            <form method="post" action="${pageContext.request.contextPath}/marketing/addPost" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="create">
 
                                 <div class="mb-3">

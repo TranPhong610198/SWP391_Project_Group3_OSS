@@ -161,7 +161,7 @@
         <!-- Edit Post Section -->
         <div class="edit-post mb-4">
     <h2 class="fw-bold">Chỉnh sửa bài viết</h2>
-    <form method="POST" action="${pageContext.request.contextPath}/detailPost" enctype="multipart/form-data">
+    <form method="POST" action="${pageContext.request.contextPath}/marketing/detailPost" enctype="multipart/form-data">
     <input type="hidden" name="id" value="${post.getId()}">
 
     <div class="mb-3">
@@ -209,7 +209,7 @@
 
         <!-- Search Box -->
         <div class="search-box">
-            <form method="get" action="${pageContext.request.contextPath}/postList">
+            <form method="get" action="${pageContext.request.contextPath}/marketing/postList">
                 <div class="input-group mb-4">
                     <input type="text" name="search" class="form-control" placeholder="Search...">
                     <button class="btn btn-primary" type="submit">

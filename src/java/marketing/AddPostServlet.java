@@ -125,7 +125,7 @@ public class AddPostServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User existingUser = (User) session.getAttribute("acc");
         if (existingUser == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 

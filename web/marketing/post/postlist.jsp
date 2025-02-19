@@ -16,7 +16,7 @@
         <h2>Các bài đăng</h2>
 
         <!-- Filter and Search Form -->
-        <form method="get" action="${pageContext.request.contextPath}/postList" class="mb-4">
+        <form method="get" action="${pageContext.request.contextPath}/marketing/postList" class="mb-4">
             <div class="row g-3">
                 <!-- Author Selection -->
                 <div class="col-md-2">
@@ -51,7 +51,7 @@
 
         <!-- Action Buttons -->
         <div class="mb-3">
-            <a href="${pageContext.request.contextPath}/addPost" class="btn btn-primary float-end">
+            <a href="${pageContext.request.contextPath}/marketing/addPost" class="btn btn-primary float-end">
                 <i class="fas fa-plus me-2"></i>Thêm bài mới
             </a>
         </div>
@@ -60,7 +60,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>STT</th>
                     <th>Hình ảnh</th>
                     <th>Tiêu đề</th>
                     <th>Tác giả</th>
@@ -89,11 +89,11 @@
 </td>
                         <td>${post.isIsFeatured() ? 'Có' : 'Không'}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/detailPost?id=${post.getId()}" 
+                            <a href="${pageContext.request.contextPath}/marketing/detailPost?id=${post.getId()}" 
                                class="btn btn-warning btn-sm">Sửa</a>
                                
                             
-                            <a href="${pageContext.request.contextPath}/deletePost?id=${post.getId()}" 
+                            <a href="${pageContext.request.contextPath}/marketing/deletePost?id=${post.getId()}" 
                            class="btn btn-danger btn-sm" 
                            onclick="return confirm('Are you sure you want to delete this post?');">
                             Xóa
@@ -118,19 +118,19 @@
             <ul class="pagination">
                 <c:if test="${currentPage > 1}">
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/postList?page=${currentPage-1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">Trước</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage-1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">Trước</a>
                     </li>
                 </c:if>
                 
                 <c:forEach var="i" begin="1" end="${totalPages}">
                     <li class="page-item ${currentPage == i ? 'active' : ''}">
-                        <a class="page-link" href="${pageContext.request.contextPath}/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">${i}</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">${i}</a>
                     </li>
                 </c:forEach>
                 
                 <c:if test="${currentPage < totalPages}">
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/postList?page=${currentPage+1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">Sau</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage+1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">Sau</a>
                     </li>
                 </c:if>
             </ul>
