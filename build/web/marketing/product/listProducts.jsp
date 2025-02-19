@@ -350,8 +350,8 @@
                                                             ${(product.categoryId==cate.id)?cate.name:''}
                                                         </c:forEach>
                                                     </td>
-                                                    <td><fmt:formatNumber value="${product.originalPrice}" type="currency"/></td>
-                                                    <td><fmt:formatNumber value="${product.salePrice}" type="currency"/></td>
+                                                    <td><fmt:formatNumber value="${product.originalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                                    <td><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                                     <td>
                                                         <span class="status-badge bg-${product.status == 'active' ? 'success' : 'danger'}">
                                                             ${product.status == 'active' ? 'Khả bán' : 'Không khả bán'}

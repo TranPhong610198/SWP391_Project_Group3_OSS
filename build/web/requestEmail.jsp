@@ -26,7 +26,7 @@
                 margin: 0;
                 padding: 20px;
                 font-family: 'Poppins', sans-serif;
-                background: url('fashion-store-with-industrial-aesthetic-41qyopx1bf2s0xix.jpg') no-repeat center center fixed;
+                background: url('assests/css/requestEmail.jpg') no-repeat center center fixed;
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
@@ -163,7 +163,8 @@
                         </button>
                     </form>
                     <div class="text-center mt-3">
-                        <a href="login" class="text-decoration-none">Quay lại đăng nhập</a>
+                        <!--<a href="login" class="text-decoration-none">Quay lại đăng nhập</a>-->
+                        <a href="#" onclick="window.history.back();">Quay lại</a>
                     </div>
                 </div>
             </div>
