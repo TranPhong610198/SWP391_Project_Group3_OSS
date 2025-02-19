@@ -170,6 +170,15 @@
                     </div>
                     <div class="card-body">
                         <form action="userlists" method="get" class="row g-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" name="search" value="${search}" class="form-control search-box" 
+                                           placeholder="Tìm kiếm theo tên, email, số điện thoại">
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <select name="gender" class="form-select">
                                     <option value="">Tất cả giới tính</option>
@@ -194,15 +203,7 @@
                                     <option value="Pending" ${status == 'Pending' ? 'selected' : ''}>Pending</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white">
-                                        <i class="fas fa-search text-muted"></i>
-                                    </span>
-                                    <input type="text" name="search" value="${search}" class="form-control search-box" 
-                                           placeholder="Tìm kiếm theo tên, email, số điện thoại">
-                                </div>
-                            </div>
+                            
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-filter me-2"></i>Lọc
@@ -341,10 +342,8 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div class="text-muted small">
-                        Hiển thị ${users.size()} / ${totalItems} người dùng
-                    </div>
+                <div class="d-flex justify-content-center align-items-center mt-3">
+                    
                     <nav>
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">

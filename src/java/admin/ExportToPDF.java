@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-@WebServlet(name = "ExportToPDF", urlPatterns = {"/exporttopdf"})
+@WebServlet(name = "ExportToPDF", urlPatterns = {"/admin/exporttopdf"})
 public class ExportToPDF extends HttpServlet {
 
     @Override
