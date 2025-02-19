@@ -27,11 +27,11 @@
                 --success-color: #2ecc71;
                 --warning-color: #f39c12;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             /* Main content styles */
             .main-content {
                 margin-left: 250px;
@@ -39,21 +39,21 @@
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -61,34 +61,34 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             /* Form styles */
             .form-label {
                 font-weight: 500;
                 color: var(--primary-color);
             }
-            
+
             .form-control, .form-select {
                 border-radius: 4px;
                 border: 1px solid var(--border-color);
                 padding: 8px 12px;
             }
-            
+
             .form-control:focus, .form-select:focus {
                 border-color: var(--accent-color);
                 box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
             }
-            
+
             .form-text {
                 color: #6c757d;
                 font-size: 0.875rem;
             }
-            
+
             .required-field::after {
                 content: ' *';
                 color: var(--danger-color);
             }
-            
+
             /* Toggle button */
             .sidebar-toggle {
                 position: fixed;
@@ -101,26 +101,26 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             /* Form card */
             .form-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             /* Toggle switch */
             .form-switch .form-check-input {
                 width: 3em;
                 height: 1.5em;
                 margin-top: 0.25em;
             }
-            
+
             .form-switch .form-check-input:checked {
                 background-color: var(--success-color);
                 border-color: var(--success-color);
             }
-            
+
             /* Button styles */
             .btn-submit {
                 background-color: var(--accent-color);
@@ -129,13 +129,13 @@
                 border-radius: 4px;
                 transition: all 0.3s;
             }
-            
+
             .btn-submit:hover {
                 background-color: #2980b9;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-            
+
             .btn-cancel {
                 background-color: #6c757d;
                 color: white;
@@ -143,13 +143,13 @@
                 border-radius: 4px;
                 transition: all 0.3s;
             }
-            
+
             .btn-cancel:hover {
                 background-color: #5a6268;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-            
+
             /* Responsive */
             @media (max-width: 768px) {
                 .main-content {
@@ -167,17 +167,17 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        
+
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
-        
+
         <div class="main-content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
                     <i class="fas fa-tag me-2"></i>Thêm mã giảm giá mới
                 </h2>
-                
+
                 <!-- Form Card -->
                 <div class="card form-card">
                     <div class="card-header">
@@ -195,10 +195,8 @@
                             <!-- Coupon code -->
                             <div class="mb-3">
                                 <label for="couponCode" class="form-label required-field">Mã giảm giá</label>
-                                <input type="text" class="form-control ${not empty errors.code ? 'is-invalid' : ''}" 
+                                <input type="text" class="form-control" 
                                        id="couponCode" name="code" value="${param.code}" required maxlength="20">
-                                <div class="form-text">Nhập mã giảm giá không quá 20 ký tự, chỉ sử dụng chữ cái, số và dấu gạch dưới.</div>
-                                <div class="invalid-feedback">${errors.code}</div>
                             </div>
 
                             <!-- Discount type -->
@@ -206,61 +204,59 @@
                                 <label for="discountType" class="form-label required-field">Loại giảm giá</label>
                                 <select class="form-select" id="discountType" name="discount_type" required>
                                     <option value="" selected disabled>-- Chọn loại giảm giá --</option>
-                                    <option value="percentage">Phần trăm (%)</option>
-                                    <option value="fixed">Cố định (VNĐ)</option>
+                                    <option value="percentage" ${param.discount_type == 'percentage' ? 'selected' : ''}>Phần trăm (%)</option>
+                                    <option value="fixed" ${param.discount_type == 'fixed' ? 'selected' : ''}>Cố định (VNĐ)</option>
                                 </select>
                             </div>
-                            
+
                             <!-- Discount value -->
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control " id="discountValue" name="discount_value" value="${param.discount_value}" required min="0">
+                                    <input type="number" class="form-control " id="discountValue" name="discount_value" value="${param.discount_value}" required >
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
-                                <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
-                                <div class="invalid-feedback" id="discountValueFeedback">Vui lòng nhập giá trị hợp lệ.</div>
                             </div>
-                            
+
                             <!-- Max discount (only for percentage type) -->
                             <div class="mb-3" id="maxDiscountContainer" style="display:none;">
                                 <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="maxDiscount" name="max_discount" min="0">
+                                    <input type="number" class="form-control" 
+                                           id="maxDiscount" name="max_discount" value="${param.max_discount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
-                            
+
                             <!-- Minimum order amount -->
                             <div class="mb-3">
                                 <label for="minOrderAmount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="minOrderAmount" name="min_order_amount" min="0">
+                                    <input type="number" class="form-control" id="minOrderAmount" name="min_order_amount" value="${param.min_order_amount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
-                            
+
                             <!-- Usage limit -->
                             <div class="mb-3">
                                 <label for="usageLimit" class="form-label required-field">Số lần sử dụng tối đa</label>
-                                <input type="number" class="form-control" id="usageLimit" name="usage_limit" min="0">
+                                <input type="number" class="form-control" id="usageLimit" name="usage_limit" value="${param.usage_limit}" min="0">
                             </div>
-                            
+
                             <!-- Expiry date -->
                             <div class="mb-3">
                                 <label for="expiryDate" class="form-label required-field">Ngày hết hạn</label>
-                                <input type="date" class="form-control" id="expiryDate" name="expiry_date" required>
+                                <input type="date" class="form-control" id="expiryDate" name="expiry_date" value="${param.expiry_date}" required>
                             </div>
-                            
+
                             <!-- Status -->
                             <div class="mb-3">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="statusSwitch" name="status" value="active" checked>
-                                    <label class="form-check-label" for="statusSwitch"></label>
+                                    <input class="form-check-input" type="checkbox" id="statusSwitch" name="status" value="active" ${param.status == 'active' ? 'checked' : ''}>
                                 </div>
                                 <div class="form-text">Bật để kích hoạt mã giảm giá ngay lập tức.</div>
                             </div>
-                            
+
                             <!-- Buttons -->
                             <div class="d-flex justify-content-end mt-4">
                                 <a href="couponlist" class="btn btn-cancel me-2">
@@ -278,7 +274,7 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- Add JavaScript for sidebar and form functionality -->
         <script>
             $(document).ready(function () {
@@ -286,7 +282,7 @@
                 const today = new Date();
                 const formattedDate = today.toISOString().split('T')[0];
                 $('#expiryDate').attr('min', formattedDate);
-                
+
                 // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
@@ -304,74 +300,22 @@
                         }
                     }
                 });
-                
+
                 // Highlight current menu item
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
-                
+
                 // Handle discount type change
-                $('#discountType').on('change', function() {
+                $('#discountType').on('change', function () {
                     const selectedType = $(this).val();
                     if (selectedType === 'percentage') {
                         $('#discountSymbol').text('%');
                         $('#maxDiscountContainer').show();
-                        $('#discountValue').attr('max', 100);
                         $('#discountValueText').text('Nhập phần trăm giảm giá (1-100%).');
-                        $('#discountValueFeedback').text('Vui lòng nhập giá trị phần trăm từ 1 đến 100.');
                     } else {
                         $('#discountSymbol').text('₫');
                         $('#maxDiscountContainer').hide();
-                        $('#discountValue').removeAttr('max');
                         $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
-                        $('#discountValueFeedback').text('Vui lòng nhập giá trị hợp lệ.');
-                    }
-                });
-                
-                // Form validation
-                $('#couponForm').on('submit', function(e) {
-                    let isValid = true;
-                    
-                    // Validate coupon code
-                    const couponCode = $('#couponCode').val().trim();
-                    if (!couponCode || !/^[A-Za-z0-9_]+$/.test(couponCode)) {
-                        $('#couponCode').addClass('is-invalid');
-                        isValid = false;
-                    } else {
-                        $('#couponCode').removeClass('is-invalid');
-                    }
-                    
-                    // Validate discount value
-                    const discountType = $('#discountType').val();
-                    const discountValue = parseFloat($('#discountValue').val());
-                    
-                    if (discountType === 'percentage') {
-                        if (discountValue <= 0 || discountValue > 100) {
-                            $('#discountValue').addClass('is-invalid');
-                            isValid = false;
-                        } else {
-                            $('#discountValue').removeClass('is-invalid');
-                        }
-                    } else if (discountType === 'fixed') {
-                        if (discountValue <= 0) {
-                            $('#discountValue').addClass('is-invalid');
-                            isValid = false;
-                        } else {
-                            $('#discountValue').removeClass('is-invalid');
-                        }
-                    }
-                    
-                    // Validate expiry date
-                    const expiryDate = new Date($('#expiryDate').val());
-                    const currentDate = new Date();
-                    if (expiryDate <= currentDate) {
-                        $('#expiryDate').addClass('is-invalid');
-                        isValid = false;
-                    } else {
-                        $('#expiryDate').removeClass('is-invalid');
-                    }
-                    
-                    if (!isValid) {
-                        e.preventDefault();
                     }
                 });
             });
