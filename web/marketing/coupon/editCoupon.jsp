@@ -173,11 +173,9 @@
                     <div class="card-body">
                         <form action="editCoupon" method="POST" id="couponForm">
                             <input type="hidden" name="id" value="${coupon.id}">
-                            
-                            <!-- Display message if exists -->
-                            <c:if test="${not empty message}">
-                                <div class="alert alert-${messageType} alert-dismissible fade show" role="alert">
-                                    ${message}
+                            <c:if test="${not empty error}">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    ${error}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             </c:if>
@@ -185,7 +183,7 @@
                             <!-- Coupon code -->
                             <div class="mb-3">
                                 <label for="code" class="form-label required-field">Mã giảm giá</label>
-                                <input type="text" class="form-control" id="code" name="code" value="${coupon.code}" required maxlength="20">
+                                <input type="text" class="form-control" id="code" name="code" value="${not empty param.code ? param.code : coupon.code}" required maxlength="20">
                                 <div class="form-text">Nhập mã giảm giá không quá 20 ký tự, chỉ sử dụng chữ cái, số và dấu gạch dưới.</div>
                             </div>
 
@@ -202,7 +200,7 @@
                             <div class="mb-3">
                                 <label for="discount_value" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="discount_value" name="discount_value" value="${coupon.discount_value}" required min="0" step="1">
+                                    <input type="number" class="form-control" id="discount_value" name="discount_value" value="${coupon.discount_value}" required step="1">
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
                                 <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
@@ -212,7 +210,7 @@
                             <div class="mb-3" id="maxDiscountContainer">
                                 <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="max_discount" name="max_discount" value="${coupon.max_discount}" min="0" step="10">
+                                    <input type="number" class="form-control" id="max_discount" name="max_discount" value="${coupon.min_order_amount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -221,7 +219,7 @@
                             <div class="mb-3">
                                 <label for="min_order_amount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="min_order_amount" name="min_order_amount" value="${coupon.min_order_amount}" min="0" step="10">
+                                    <input type="number" class="form-control" id="min_order_amount" name="min_order_amount" value="${coupon.min_order_amount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -299,66 +297,16 @@
                     if (selectedType === 'percentage') {
                         $('#discountSymbol').text('%');
                         $('#maxDiscountContainer').show();
-                        $('#discount_value').attr('max', 100);
                         $('#discountValueText').text('Nhập phần trăm giảm giá (1-100%).');
                     } else {
                         $('#discountSymbol').text('₫');
                         $('#maxDiscountContainer').hide();
-                        $('#discount_value').removeAttr('max');
                         $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
                     }
                 }
                 
                 $('#discount_type').on('change', updateDiscountType);
                 updateDiscountType(); // Run on page load
-                
-                // Form validation
-                $('#couponForm').on('submit', function(e) {
-                    let isValid = true;
-                    
-                    // Validate coupon code
-                    const couponCode = $('#code').val().trim();
-                    if (!couponCode || !/^[A-Za-z0-9_]+$/.test(couponCode)) {
-                        $('#code').addClass('is-invalid');
-                        isValid = false;
-                    } else {
-                        $('#code').removeClass('is-invalid');
-                    }
-                    
-                    // Validate discount value
-                    const discountType = $('#discount_type').val();
-                    const discountValue = parseFloat($('#discount_value').val());
-                    
-                    if (discountType === 'percentage') {
-                        if (discountValue <= 0 || discountValue > 100) {
-                            $('#discount_value').addClass('is-invalid');
-                            isValid = false;
-                        } else {
-                            $('#discount_value').removeClass('is-invalid');
-                        }
-                    } else if (discountType === 'fixed') {
-                        if (discountValue <= 0) {
-                            $('#discountValue').addClass('is-invalid');
-                            isValid = false;
-                        } else {
-                            $('#discountValue').removeClass('is-invalid');
-                        }
-                    }
-                    
-                    // Validate expiry date
-                    const expiryDate = new Date($('#expiryDate').val());
-                    const currentDate = new Date();
-                    if (expiryDate <= currentDate) {
-                        $('#expiryDate').addClass('is-invalid');
-                        isValid = false;
-                    } else {
-                        $('#expiryDate').removeClass('is-invalid');
-                    }
-                    
-                    if (!isValid) {
-                        e.preventDefault();
-                    }
-                });
             });
         </script>
     </body>
