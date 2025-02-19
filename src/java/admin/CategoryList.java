@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @author thanh
  */
-@WebServlet(name = "CategoryList", urlPatterns = {"/categorylists"})
+@WebServlet(name = "CategoryList", urlPatterns = {"/admin/categorylists"})
 public class CategoryList extends HttpServlet {
 private static final int PAGE_SIZE = 5;
     /**
@@ -139,7 +139,7 @@ private static final int PAGE_SIZE = 5;
         request.setAttribute("sortBy", sortBy);
 
         // Forward to JSP
-        request.getRequestDispatcher("admin/categorylists.jsp").forward(request, response);
+        request.getRequestDispatcher("categorylists.jsp").forward(request, response);
 
     } catch (Exception e) {
         e.printStackTrace();

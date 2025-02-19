@@ -50,6 +50,7 @@
         </style>
     </head>
     <body class="bg-light">
+        <jsp:include page="/admin/adminsidebar.jsp" />
         <div class="container">
             <!-- Thông báo -->
             <c:if test="${not empty param.message}">

@@ -65,6 +65,7 @@
         </style>
     </head>
     <body class="bg-light">
+        <jsp:include page="/admin/adminsidebar.jsp" />
         <div class="container">
             <h1><i class="fas fa-folder-plus"></i> Thêm danh mục</h1>
 

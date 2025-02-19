@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author thanh
  */
-@WebServlet(name="CategoryDetailServlet", urlPatterns={"/categorydetail"})
+@WebServlet(name="CategoryDetailServlet", urlPatterns={"/admin/categorydetail"})
 public class CategoryDetailServlet extends HttpServlet {
    private CategoryDAO categoryDAO = new CategoryDAO();
     /** 
@@ -93,7 +93,7 @@ public class CategoryDetailServlet extends HttpServlet {
             request.setAttribute("potentialParents", potentialParents);
 
             // Forward to JSP
-            request.getRequestDispatcher("admin/categorydetail.jsp").forward(request, response);
+            request.getRequestDispatcher("categorydetail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendRedirect("categorylists?error=ID danh mục không hợp lệ");

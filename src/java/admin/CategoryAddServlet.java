@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author thanh
  */
-@WebServlet(name = "CategoryAddServlet", urlPatterns = {"/categoryadd"})
+@WebServlet(name = "CategoryAddServlet", urlPatterns = {"/admin/categoryadd"})
 public class CategoryAddServlet extends HttpServlet {
 
     private CategoryDAO categoryDAO = new CategoryDAO();
@@ -66,7 +66,7 @@ public class CategoryAddServlet extends HttpServlet {
             // Lấy danh sách các danh mục có thể chọn làm cha (level 1 và 2)
             List<Category> potentialParents = categoryDAO.getPotentialParents();
             request.setAttribute("potentialParents", potentialParents);
-            request.getRequestDispatcher("admin/addcategory.jsp").forward(request, response);
+            request.getRequestDispatcher("addcategory.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println("Error in CategoryAddServlet.doGet: " + e.getMessage());
             response.sendRedirect("error.jsp");
@@ -96,7 +96,7 @@ public class CategoryAddServlet extends HttpServlet {
             // Validate name
             if (name == null || name.trim().isEmpty()) {
                 request.setAttribute("error", "Vui lòng nhập tên danh mục");
-                request.getRequestDispatcher("admin/addcategory.jsp").forward(request, response);
+                request.getRequestDispatcher("addcategory.jsp").forward(request, response);
                 return;
             }
 
@@ -112,14 +112,14 @@ public class CategoryAddServlet extends HttpServlet {
                     if (parentCategory != null) {
                         if (parentCategory.getLevel() >= 3) {
                             request.setAttribute("error", "Không thể thêm danh mục con vào cấp 3");
-                            request.getRequestDispatcher("admin/addcategory.jsp").forward(request, response);
+                            request.getRequestDispatcher("addcategory.jsp").forward(request, response);
                             return;
                         }
                         level = parentCategory.getLevel() + 1;
                     }
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Danh mục cha không hợp lệ");
-                    request.getRequestDispatcher("admin/addcategory.jsp").forward(request, response);
+                    request.getRequestDispatcher("addcategory.jsp").forward(request, response);
                     return;
                 }
             }
@@ -139,13 +139,13 @@ public class CategoryAddServlet extends HttpServlet {
                 response.sendRedirect("categorylists");
             } else {
                 request.setAttribute("error", "Không thể thêm danh mục");
-                request.getRequestDispatcher("admin/addcategory.jsp").forward(request, response);
+                request.getRequestDispatcher("addcategory.jsp").forward(request, response);
             }
         } catch (Exception e) {
             System.out.println("Error in CategoryAddServlet.doPost: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi: " + e.getMessage());
-            request.getRequestDispatcher("admin/addcategory.jsp").forward(request, response);
+            request.getRequestDispatcher("addcategory.jsp").forward(request, response);
         }
     }
 
