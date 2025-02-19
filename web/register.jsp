@@ -8,12 +8,6 @@
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assests/css/LoginRegister.css">
     </head>
-    <style>
-        .fade-out {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-        }
-    </style>
     <body>
         <div class="container right-panel-active" id="main">
             <div class="sign-up">
@@ -45,9 +39,8 @@
                            pattern="(\+84|0)[1-9][0-9]{8,9}" title="Vui lòng nhập số điện thoại Việt Nam hợp lệ." 
                            value="${phone != null ? phone : ''}">
                     <div class="gender-wrapper">
-                        <label>Giới tính:</label>
                         <label>
-                            <input type="radio" name="gender" value="male" required 
+                            <input type="radio" name="gender" value="male" required
                                    ${gender == 'male' ? 'checked' : ''}> Nam
                         </label>
                         <label>

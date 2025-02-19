@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+/* General Styles */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -7,15 +8,19 @@
 }
 
 body {
-    align-items: center;
     display: flex;
     justify-content: center;
-    flex-direction: column;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    font-family: 'Poppins', sans-serif;
+    align-items: center;
     min-height: 100vh;
     margin: 0;
     padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    /* Background Image */
+    background: url('login.png') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .container {
@@ -23,11 +28,11 @@ body {
     width: 768px;
     max-width: 100%;
     min-height: 680px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1),
-                0 5px 15px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1),
+                0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 .sign-up, .sign-in {
@@ -49,8 +54,9 @@ body {
     z-index: 2;
 }
 
+/* Form Styles */
 form {
-    background: #fff;
+    background: transparent; /* Make form background transparent */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,36 +67,42 @@ form {
 }
 
 h1 {
-    font-weight: 700;
+    font-weight: 600;
     margin: 0 0 20px;
-    color: #2d3436;
+    color: #34495e; /* Dark grayish-blue */
     font-size: 28px;
 }
 
 p {
     font-size: 14px;
-    line-height: 1.5;
-    letter-spacing: 0.3px;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
     margin: 15px 0 20px;
-    color: #636e72;
+    color: #546e7a; /* Slate gray */
+}
+
+/* Input Styles */
+input {
+    background: rgba(255, 255, 255, 0.7); /* Semi-transparent input fields */
+    padding: 15px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #bdc3c7; /* Light silver */
+    outline: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    color: #34495e;
+}
+
+input:focus {
+    border-color: #2c3e50; /* Dark blue-gray */
+    box-shadow: 0 0 5px rgba(44, 62, 80, 0.3);
 }
 
 .form-input {
     position: relative;
     width: 100%;
-}
-
-input {
-    background: #f8f9fa;
-    padding: 15px;
-    padding-right: 45px; 
-    margin: 8px 0;
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #e1e1e1;
-    outline: none;
-    font-size: 14px;
-    transition: all 0.3s ease;
 }
 
 .password-toggle {
@@ -99,22 +111,18 @@ input {
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #636e72;
+    color: #7f8c8d; /* Grayish-blue */
     padding: 5px;
     z-index: 10;
 }
 
 .password-toggle:hover {
-    color: #ff4b2b;
+    color: #2c3e50;
 }
 
-input:focus {
-    border-color: #ff4b2b;
-    box-shadow: 0 0 0 2px rgba(255, 75, 43, 0.1);
-}
-
+/* Link Styles */
 a {
-    color: #ff4b2b;
+    color: #2c3e50;
     font-size: 14px;
     text-decoration: none;
     margin: 15px 0;
@@ -122,46 +130,50 @@ a {
 }
 
 a:hover {
-    color: #ff6b3d;
+    color: #34495e;
 }
 
+/* Button Styles */
 button {
-    color: #fff;
-    background: #ff4b2b;
+    color: #ecf0f1; /* Off-white */
+    background: #34495e; /* Dark grayish-blue */
     font-size: 14px;
     font-weight: 600;
     padding: 12px 45px;
     margin: 20px;
     border-radius: 50px;
-    border: 1px solid #ff4b2b;
+    border: none;
     outline: none;
     letter-spacing: 1px;
     text-transform: uppercase;
     transition: all 0.3s ease;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(255, 75, 43, 0.2);
+    box-shadow: 0 5px 15px rgba(52, 73, 94, 0.4);
 }
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 7px 20px rgba(255, 75, 43, 0.3);
+    box-shadow: 0 7px 20px rgba(52, 73, 94, 0.5);
 }
 
 button:active {
     transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(52, 73, 94, 0.4);
 }
 
 #signIn, #signUp {
     background-color: transparent;
-    border: 2px solid #fff;
+    border: 2px solid #ecf0f1;
     box-shadow: none;
+    color: #ecf0f1;
 }
 
 #signIn:hover, #signUp:hover {
-    background-color: #fff;
-    color: #ff4b2b;
+    background-color: #ecf0f1;
+    color: #34495e;
 }
 
+/* Right Panel Active Styles */
 .container.right-panel-active .sign-in {
     transform: translateX(100%);
 }
@@ -184,6 +196,7 @@ button:active {
     }
 }
 
+/* Overlay Styles */
 .overlay-container {
     position: absolute;
     top: 0;
@@ -205,7 +218,7 @@ button:active {
     left: -100%;
     height: 100%;
     width: 200%;
-    background: linear-gradient(45deg, #ff4b28, #ff228c);
+    background: linear-gradient(45deg, #34495e, #2c3e50); /* Updated gradient */
     transform: translateX(0);
     transition: transform 0.6s ease-in-out;
 }
@@ -261,6 +274,7 @@ button:active {
     transform: translateX(20%);
 }
 
+/* Social Container */
 .social-container {
     margin: 20px 0;
 }
@@ -272,61 +286,66 @@ button:active {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #ddd;
+    border: 1px solid #95a5a6; /* Dim gray */
     border-radius: 50%;
     transition: all 0.3s ease;
+    color: #7f8c8d;
 }
 
 .social-container a:hover {
-    background-color: #ff4b2b;
-    border-color: #ff4b2b;
+    background-color: #34495e;
+    border-color: #34495e;
     color: #fff;
 }
 
+/* Error and Success Messages */
+.error-message {
+    background-color: #fdeaea;
+    color: #c0392b; /* Dark red */
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #e57373;
+}
+
+.success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32; /* Dark green */
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #66bb6a;
+}
+
+/* Fade Out Animation */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+/* Gender Wrapper */
 .gender-wrapper {
     display: flex;
     align-items: center;
     width: 100%;
     margin: 15px 0;
     padding: 0 10px;
+    justify-content: center; /* Center the gender options */
 }
 
 .gender-wrapper label {
-    margin-right: 20px;
+    margin: 0 10px; /* Add some spacing between labels */
     display: flex;
     align-items: center;
-    color: #636e72;
+    color: #546e7a; /* Slate gray */
     font-size: 14px;
 }
 
 .gender-wrapper input[type="radio"] {
     margin-right: 5px;
     width: auto;
-}
-
-.error-message {
-    background-color: #fff5f5;
-    color: #ff4b2b;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    width: 100%;
-    text-align: center;
-    border: 1px solid #ffe3e3;
-}
-
-.success-message {
-    background-color: #f0fff4;
-    color: #38a169;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    width: 100%;
-    text-align: center;
-    border: 1px solid #c6f6d5;
-}
-
-.fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-out;
 }
