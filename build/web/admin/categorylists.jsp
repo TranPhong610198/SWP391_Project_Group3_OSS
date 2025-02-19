@@ -117,9 +117,9 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar 
-        -->
+        <!-- Include the sidebar -->
         <jsp:include page="/admin/adminsidebar.jsp" />
+        
         <div class="main-content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
@@ -197,6 +197,7 @@
                             <table class="table table-hover table-bordered mb-0">
                                 <thead>
                                     <tr class="bg-light">
+                                        <th class="text-center" style="width: 60px;">STT</th>
                                         <th>Tên danh mục</th>
                                         <th>Danh mục cha</th>
                                         <th>Cấp độ</th>
@@ -206,8 +207,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${categories}" var="category">
+                                    <c:forEach items="${categories}" var="category" varStatus="status">
                                         <tr>
+                                            <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
                                             <td>
                                                 <c:forEach begin="1" end="${category.level}" step="1">
                                                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -223,7 +225,7 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="categorydetail?id=${category.id}" class="btn btn-warning btn-sm btn-action">
+                                                <a href="categorydetail?id=${category.id}" class="btn btn-primary btn-sm btn-action">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-danger btn-sm btn-action" onclick="deleteCategory(${category.id})">

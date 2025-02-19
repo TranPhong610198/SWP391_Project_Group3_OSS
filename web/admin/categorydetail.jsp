@@ -282,6 +282,7 @@
                                     <table class="table table-hover table-bordered mb-0">
                                         <thead>
                                             <tr class="bg-light">
+                                                <th class="text-center" style="width: 60px;">STT</th>
                                                 <th>Tên danh mục</th>
                                                 <th>Mô tả</th>
                                                 <th>Trạng thái</th>
@@ -289,8 +290,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${childCategories}" var="child">
+                                            <c:forEach items="${childCategories}" var="child" varStatus="status">
                                                 <tr>
+                                                    <td class="text-center">${status.index + 1}</td>
                                                     <td>${child.name}</td>
                                                     <td>${child.description}</td>
                                                     <td>
