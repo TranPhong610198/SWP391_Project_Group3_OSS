@@ -17,32 +17,32 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -50,19 +50,19 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .filter-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             .search-box {
                 border-radius: 50px;
                 padding-left: 15px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .sort-link {
                 text-decoration: none;
                 color: var(--primary-color);
@@ -71,40 +71,40 @@
                 align-items: center;
                 justify-content: space-between;
             }
-            
+
             .sort-link:hover {
                 color: var(--accent-color);
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .badge {
                 padding: 6px 12px;
                 border-radius: 50px;
             }
-            
+
             .btn-action {
                 padding: 5px 10px;
                 margin: 0 2px;
             }
-            
+
             .pagination .page-link {
                 color: var(--primary-color);
                 border: 1px solid var(--border-color);
@@ -112,13 +112,13 @@
                 text-align: center;
                 margin: 0 3px;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: var(--accent-color);
                 border-color: var(--accent-color);
                 color: white;
             }
-            
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -127,7 +127,7 @@
                     display: block;
                 }
             }
-            
+
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -139,7 +139,7 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             @media (max-width: 768px) {
                 .sidebar-toggle {
                     display: flex;
@@ -152,7 +152,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="/admin/adminsidebar.jsp" />
-        
+
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -203,7 +203,7 @@
                                     <option value="Pending" ${status == 'Pending' ? 'selected' : ''}>Pending</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-filter me-2"></i>Lọc
@@ -304,38 +304,51 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach var="user" items="${users}" varStatus="status">
-                                        <tr>
-                                            <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
-                                            <td>${user.fullName}</td>
-                                            <td>${user.username}</td>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${user.gender == 'male' or user.gender == 'Male'}">Nam</c:when>
-                                                    <c:when test="${user.gender == 'female' or user.gender == 'Female'}">Nữ</c:when>
-                                                    <c:otherwise>Khác</c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                            <td>${user.email}</td>
-                                            <td>${user.mobile}</td>
-                                            <td><span class="badge bg-secondary rounded-pill">${user.role}</span></td>
-                                            <td>
-                                                <span class="badge bg-${user.status == 'active' ? 'success' : (user.status == 'inactive' ? 'danger' : 'warning')}">
-                                                    ${user.status}
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="userdetail/edit?id=${user.id}" class="btn btn-primary btn-sm btn-action">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm btn-action"
-                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
+                                    <c:choose>
+                                        <c:when test="${not empty users}">
+                                            <c:forEach var="user" items="${users}" varStatus="status">
+                                                <tr>
+                                                    <td class="text-center">${status.index + 1 + (currentPage - 1) * 10}</td>
+                                                    <td>${user.fullName}</td>
+                                                    <td>${user.username}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${user.gender == 'male' or user.gender == 'Male'}">Nam</c:when>
+                                                            <c:when test="${user.gender == 'female' or user.gender == 'Female'}">Nữ</c:when>
+                                                            <c:otherwise>Khác</c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td>${user.email}</td>
+                                                    <td>${user.mobile}</td>
+                                                    <td><span class="badge bg-secondary rounded-pill">${user.role}</span></td>
+                                                    <td>
+                                                        <span class="badge bg-${user.status == 'active' ? 'success' : (user.status == 'inactive' ? 'danger' : 'warning')}">
+                                                            ${user.status}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="userdetail/edit?id=${user.id}" class="btn btn-primary btn-sm btn-action">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="userdetail/delete?id=${user.id}" class="btn btn-danger btn-sm btn-action"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <tr>
+                                                <td colspan="9" class="text-center p-4">
+                                                    <i class="fas fa-user-slash fa-3x mb-3 text-muted"></i>
+                                                    <p class="text-muted">Không tìm thấy người dùng nào. Vui lòng thử lại với điều kiện tìm kiếm khác.</p> 
+                                                </td>
+                                            </tr>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -343,7 +356,7 @@
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center align-items-center mt-3">
-                    
+
                     <nav>
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">
@@ -375,37 +388,37 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-                
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="userlists"]').closest('.menu-item').addClass('active');
-                
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                });
-            });
+        <script>
+                               $(document).ready(function () {
+                                   // Toggle sidebar
+                                   $('.sidebar-toggle').on('click', function () {
+                                       $('.sidebar').toggleClass('active');
+                                       $('.main-content').toggleClass('active');
+                                       $(this).hide();
+                                   });
+
+                                   // Close sidebar when clicking outside on mobile
+                                   $(document).on('click', function (e) {
+                                       if ($(window).width() <= 768) {
+                                           if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                               $('.sidebar').removeClass('active');
+                                               $('.main-content').removeClass('active');
+                                               $('.sidebar-toggle').show();
+                                           }
+                                       }
+                                   });
+
+                                   // Highlight active menu item
+                                   $('.menu-item').removeClass('active');
+                                   $('.menu-item a[href="userlists"]').closest('.menu-item').addClass('active');
+
+                                   // Initialize tooltips
+                                   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                       return new bootstrap.Tooltip(tooltipTriggerEl)
+                                   });
+                               });
         </script>
     </body>
 </html>
