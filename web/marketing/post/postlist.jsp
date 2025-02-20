@@ -268,7 +268,7 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="${pageContext.request.contextPath}/marketing/detailPost?id=${post.getId()}" 
-                                                           class="btn btn-warning btn-sm action-btn me-1">
+                                                           class="btn btn-primary btn-sm action-btn me-1">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                         <a href="${pageContext.request.contextPath}/marketing/deletePost?id=${post.getId()}" 
@@ -296,12 +296,12 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex justify-content-center align-items-center mt-3">
                     <div class="text-muted small">
                         Hiển thị ${posts.size()} bài đăng
                     </div>
                     <nav>
-                        <ul class="pagination mb-0">
+                        <ul class="pagination">
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
                                     <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage-1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">
