@@ -71,9 +71,9 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="post" items="${posts}">
+                <c:forEach var="post" items="${posts}" varStatus="status">
                     <tr>
-                        <td>${post.getId()}</td>
+                        <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
                         <td>
                             <img src="${post.getThumbnail()}" alt="${post.getTitle()}" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
