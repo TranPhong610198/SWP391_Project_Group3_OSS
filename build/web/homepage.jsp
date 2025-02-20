@@ -14,49 +14,9 @@
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom CSS -->
-        <style>
-            .product-card, .post-card {
-                transition: transform 0.3s;
-                height: 100%;
-            }
-            .product-card:hover, .post-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            }
-            .carousel-item img {
-                height: 700px; /* Tăng từ 500px lên 700px */
-                object-fit: cover;
-                width: 100%;
-            }
-            #mainCarousel {
-                margin-bottom: 50px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            }
+        <link href="assests/css/Home.css" rel="stylesheet" type="text/css"/>
 
-            .carousel-caption {
-                background: rgba(0,0,0,0.5);
-                padding: 20px;
-                border-radius: 5px;
-            }
-            .thumbnail-img {
-                height: 200px;
-                object-fit: cover;
-            }
-            .section-title {
-                position: relative;
-                margin-bottom: 30px;
-                padding-bottom: 10px;
-            }
-            .section-title::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 50px;
-                height: 3px;
-                background-color: #007bff;
-            }
-        </style>
+
     </head>
     <body>
         <!-- Include header -->
@@ -222,106 +182,7 @@
 
         </div>
 
-        <style>
-            .ai-chat-widget {
-                position: fixed;
-                bottom: 80px;
-                right: 20px;
-                width: 350px;
-                height: 450px;
-                background: white;
-                border-radius: 10px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-                display: none;
-                flex-direction: column;
-                overflow: hidden;
-                z-index: 999;
-            }
 
-            .ai-chat-header {
-                background: #4285F4;
-                color: white;
-                padding: 15px;
-                font-weight: bold;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .ai-chat-close {
-                cursor: pointer;
-            }
-
-            .ai-chat-messages {
-                flex-grow: 1;
-                overflow-y: auto;
-                padding: 15px;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .ai-message {
-                padding: 10px;
-                border-radius: 10px;
-                max-width: 80%;
-                word-break: break-word;
-            }
-
-            .ai-message.user {
-                background: #E9EAEC;
-                align-self: flex-end;
-            }
-
-            .ai-message.bot {
-                background: #F1F3F4;
-                align-self: flex-start;
-            }
-
-            .ai-chat-input {
-                display: flex;
-                padding: 10px;
-                border-top: 1px solid #eee;
-            }
-
-            .ai-chat-input input {
-                flex-grow: 1;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                margin-right: 10px;
-            }
-
-            .ai-chat-input button {
-                background: #4285F4;
-                color: white;
-                border: none;
-                border-radius: 20px;
-                padding: 10px 15px;
-                cursor: pointer;
-            }
-
-            .ai-chat-button {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 1000;
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                background-color: #4285F4;
-                border: none;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .ai-chat-button:hover {
-                transform: scale(1.1);
-            }
-        </style>
 
         <!-- Chat Button -->
         <div class="ai-chat-button" onclick="toggleChatWidget()">
@@ -339,7 +200,7 @@
             </div>
             <div class="ai-chat-input">
                 <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn..." onkeypress="if (event.key === 'Enter')
-                    sendMessage()">
+                            sendMessage()">
                 <button onclick="sendMessage()">Gửi</button>
             </div>
         </div>
