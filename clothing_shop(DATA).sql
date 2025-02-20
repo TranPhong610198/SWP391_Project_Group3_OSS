@@ -454,3 +454,15 @@ VALUES
     ('NOP789MNO', 'percentage', 12.50, 60.00, 125.00, 250, 0, '2026-06-30 23:59:59', 'inactive'),
     ('QRS012JKL', 'fixed', 40.00, 200.00, NULL, 40, 0, '2025-01-31 23:59:59', 'expired'),
     ('TUV345GHI', 'percentage', 35.00, 500.00, 350.00, 20, 0, '2025-01-28 23:59:59', 'expired');
+
+INSERT INTO sliders (title, image_url, link, status, display_order, notes) VALUES
+('Summer Collection 2025', '/images/sliders/summer-2025.jpg', '/collections/summer-2025', 'active', 1, 'Highlighting our newest summer collection with bright colors and lightweight fabrics'),
+('End of Season Sale - Up to 70% Off', '/images/sliders/sale-banner.jpg', '/sale', 'active', 2, 'Major clearance sale on all winter items'),
+('New Arrivals - Spring Fashion', '/images/sliders/spring-arrivals.jpg', '/new-arrivals', 'active', 3, 'Featuring the latest spring trends and styles'),
+('Exclusive Designer Collection', '/images/sliders/designer-collection.jpg', '/designer', 'active', 4, 'Premium designer wear for both men and women'),
+('Sport & Active Wear', '/images/sliders/activewear.jpg', '/category/activewear', 'active', 5, 'High-performance sportswear for your active lifestyle'),
+('Wedding Season Special', '/images/sliders/wedding-collection.jpg', '/wedding-collection', 'active', 6, 'Elegant formal wear for wedding season'),
+('Kids Fashion Week', '/images/sliders/kids-fashion.jpg', '/category/kids', 'inactive', 7, 'Cute and comfortable clothing for children'),
+('Accessories Collection', '/images/sliders/accessories.jpg', '/category/accessories', 'active', 8, 'Complete your look with our trendy accessories'),
+('Sustainable Fashion Line', '/images/sliders/eco-friendly.jpg', '/sustainable-collection', 'active', 9, 'Eco-friendly clothing made from sustainable materials'),
+('Holiday Gift Guide', '/images/sliders/gift-guide.jpg', '/gift-guide', 'inactive', 10, 'Perfect gift ideas for your loved ones');
