@@ -296,10 +296,15 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-center align-items-center mt-3">
+                <!-- Hiển thị số bài đăng (vẫn nằm bên trái) -->
+                <div class="d-flex justify-content-start align-items-center mt-3">
                     <div class="text-muted small">
                         Hiển thị ${posts.size()} bài đăng
                     </div>
+                </div>
+
+                <!-- Pagination ở giữa danh sách bài đăng -->
+                <div class="d-flex justify-content-center mt-3">
                     <nav>
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">
@@ -309,13 +314,13 @@
                                     </a>
                                 </li>
                             </c:if>
-                            
+
                             <c:forEach var="i" begin="1" end="${totalPages}">
                                 <li class="page-item ${currentPage == i ? 'active' : ''}">
                                     <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">${i}</a>
                                 </li>
                             </c:forEach>
-                            
+
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
                                     <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage+1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">
@@ -326,6 +331,7 @@
                         </ul>
                     </nav>
                 </div>
+
             </div>
         </div>
 
