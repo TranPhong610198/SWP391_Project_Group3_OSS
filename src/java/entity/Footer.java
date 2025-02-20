@@ -14,16 +14,17 @@ public class Footer {
     private String fieldName;
     private String value;
     private String status;
-
+    private String image;
     public Footer() {
     }
 
-    public Footer(int id, String type, String fieldName, String value, String status) {
+    public Footer(int id, String type, String fieldName, String value, String status, String image) {
         this.id = id;
         this.type = type;
         this.fieldName = fieldName;
         this.value = value;
         this.status = status;
+        this.image = image;
     }
 
     public int getId() {
@@ -66,10 +67,15 @@ public class Footer {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Footer{" + "id=" + id + ", type=" + type + ", fieldName=" + fieldName + ", value=" + value + ", status=" + status + '}';
+    public String getImage() {
+        return image;
     }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    
 
     
 

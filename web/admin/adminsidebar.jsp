@@ -35,7 +35,7 @@
                     <a href="categorylists" class="text-decoration-none text-light">Danh sách danh mục</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="/admin/footersettinglist.jsp" class="text-decoration-none text-light">Những dấu ấn cuối trang</a>
+                    <a href="/admin/footer-settings" class="text-decoration-none text-light">Những dấu ấn cuối trang</a>
                 </li>
             </ul>
         </li>

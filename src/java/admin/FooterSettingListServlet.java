@@ -10,39 +10,33 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "FooterSettingListServlet", urlPatterns = {"/admin/footersettinglist"})
+@WebServlet(name = "FooterSettingsListServlet", urlPatterns = {"/admin/footer-settings"})
 public class FooterSettingListServlet extends HttpServlet {
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        String searchValue = request.getParameter("search");
-        String status = request.getParameter("status");
-        String sortBy = request.getParameter("sortBy");
-        String sortOrder = request.getParameter("sortOrder");
-        
-        // Set default sort if not specified
-        if (sortBy == null) sortBy = "id";
-        if (sortOrder == null) sortOrder = "ASC";
-        
-        FooterDAO dao = new FooterDAO();
-        List<Footer> footerList = dao.getAllFooters(searchValue, status, sortBy, sortOrder);
-        
-        request.setAttribute("footerList", footerList);
-        request.setAttribute("searchValue", searchValue);
-        request.setAttribute("status", status);
-        request.setAttribute("sortBy", sortBy);
-        request.setAttribute("sortOrder", sortOrder);
-        
-        request.getRequestDispatcher("../admin/footersettinglist.jsp").forward(request, response);
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        FooterDAO dao = new FooterDAO();
+        
+        String searchValue = request.getParameter("search");
+        String statusFilter = request.getParameter("status");
+        String sortColumn = request.getParameter("sort");
+        String sortOrder = request.getParameter("order");
+        
+        // Default sorting
+        if (sortColumn == null) sortColumn = "id";
+        if (sortOrder == null) sortOrder = "ASC";
+        
+        List<Footer> footers = dao.getAllFooters(searchValue, statusFilter, sortColumn, sortOrder);
+        
+        request.setAttribute("footers", footers);
+        request.setAttribute("searchValue", searchValue);
+        request.setAttribute("statusFilter", statusFilter);
+        request.setAttribute("sortColumn", sortColumn);
+        request.setAttribute("sortOrder", sortOrder);
+        
+        request.getRequestDispatcher("/admin/footersettinglist.jsp").forward(request, response);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,13 +44,13 @@ public class FooterSettingListServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         
         if ("toggleStatus".equals(action)) {
-            String newStatus = request.getParameter("status");
+            String currentStatus = request.getParameter("currentStatus");
+            String newStatus = "active".equals(currentStatus) ? "inactive" : "active";
+            
             FooterDAO dao = new FooterDAO();
-            dao.updateFooterStatus(id, newStatus);
-            response.sendRedirect(request.getContextPath() + "/admin/footersettinglist");
-            return;
+            dao.updateStatus(id, newStatus);
+            
+            response.sendRedirect(request.getContextPath() + "/admin/footer-settings");
         }
-        
-        processRequest(request, response);
     }
 }
