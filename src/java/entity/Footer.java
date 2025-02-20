@@ -75,8 +75,4 @@ public class Footer {
         this.image = image;
     }
 
-    
-
-    
-
 }
