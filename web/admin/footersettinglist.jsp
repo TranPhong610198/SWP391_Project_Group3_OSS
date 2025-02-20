@@ -202,7 +202,7 @@
                             <i class="fas fa-list me-2"></i>Danh sách cài đặt chân trang
                         </div>
                         <div>
-                            <a href="${pageContext.request.contextPath}/admin/footer-settings/new" class="btn btn-success btn-sm">
+                            <a href="${pageContext.request.contextPath}/admin/footer-settings/new" class="btn btn-primary btn-sm">
                                 <i class="fas fa-plus me-2"></i>Thêm cài đặt mới
                             </a>
                         </div>
@@ -266,7 +266,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="${pageContext.request.contextPath}/admin/footer-settings/edit?id=${footer.id}" 
-                                                   class="btn btn-warning btn-sm btn-action">
+                                                   class="btn btn-primary btn-sm btn-action">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <form action="${pageContext.request.contextPath}/admin/footer-settings" method="post" style="display: inline;">
