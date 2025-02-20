@@ -161,10 +161,10 @@
 
                 <!-- Model Table -->
                 <div class="info-section">
-                    <h5 class="mb-3">Chi tiết Model sản phẩm</h5>
+                    <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
                     <div class="d-flex justify-content-end mb-3">
                         <a href="addModel?productId=${inventory.productId}" class="btn btn-success">
-                            <i class="bi bi-plus-circle"></i> Thêm Model Mới
+                            <i class="bi bi-plus-circle"></i> Thêm Mẫu Mới
                         </a>
                     </div>
                     <div class="model-table-container">

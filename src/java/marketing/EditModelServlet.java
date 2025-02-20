@@ -119,7 +119,7 @@ public class EditModelServlet extends HttpServlet {
 
             // Kiểm tra xem combo model (màu sắc, kích thước) mới đã tồn tại ở variant khác hay chưa
             if (dao.isVariantExists(productId, newColor.getId(), newSize.getId(), variantId)) {
-                request.setAttribute("errorMessage", "Model với màu sắc và kích thước này đã tồn tại");
+                request.setAttribute("errorMessage", "Mẫu với màu sắc và kích thước này đã tồn tại");
                 request.setAttribute("variant", currentVariant);
                 request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
                 return;

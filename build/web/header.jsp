@@ -17,7 +17,7 @@
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">
                 <!-- Logo -->
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="home">
 
                     <img src="/fashionshop/uploads/logo/logoHuy.png" alt="Logo"/>
                 </a>

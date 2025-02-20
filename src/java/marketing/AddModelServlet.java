@@ -83,7 +83,7 @@ public class AddModelServlet extends HttpServlet {
 
             // kiểm tra model đã tồn tại
             if (dao.isVariantExists(productId, colorId, sizeId)) {
-                request.setAttribute("errorMessage", "Model này đã tồn tại");
+                request.setAttribute("errorMessage", "Mẫu này đã tồn tại");
                 request.setAttribute("productId", productId);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
