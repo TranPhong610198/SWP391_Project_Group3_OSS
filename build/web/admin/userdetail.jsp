@@ -160,9 +160,9 @@
 
                                     <div class="row">
                                         <div class="col-md-4 avatar-container">
-                                            <img src="${(user.avatar.contains('https')) ? user.avatar : '../'.concat(user.avatar)}" 
-                                                 alt="avatar" id="avatar-preview"
-                                                 onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
+                                            <img src="${(user.avatar.contains('https')) ? user.avatar : pageContext.request.contextPath.concat('/').concat(user.avatar)}" 
+     alt="avatar" id="avatar-preview"
+     onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
                                         </div>
 
                                         <div class="col-md-8">
