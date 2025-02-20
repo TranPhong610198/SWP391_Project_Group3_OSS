@@ -227,10 +227,10 @@
 
                         <!-- User Actions -->
                         <div class="user-actions">
-                            <a href="#" class="position-relative">
+                            <a href="login" class="position-relative">
                                 <i class="fas fa-user"></i>
                             </a>
-                            <a href="#" class="position-relative">
+                            <a href="cartdetail" class="position-relative">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span class="cart-count">0</span>
                             </a>

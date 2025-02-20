@@ -71,20 +71,20 @@
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <a href="#">
-                        <img src="https://hthaostudio.com/wp-content/uploads/2019/08/anh-sexxy-1.jpg.webp" class="d-block w-100" alt="Slide 1">
+                        <img src="https://m.yodycdn.com/fit-in/filters:format(webp)/products/media/collections/hero%2018-2xua%20xuan%2050%201800x600n.jpg" class="d-block w-100" alt="Slide 1">
                         
                     </a>
 
                 </div>
                 <div class="carousel-item">
                     <a href="#slide2-link">
-                        <img src="https://c.wallhere.com/photos/07/0d/500px_kneeling_mask_Maksim_Chuprin_women_lingerie_Disha_Shemetova-1342363.jpg!d" class="d-block w-100" alt="Slide 2">
+                        <img src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/d3bd2064-8035-4c95-87e5-9b7e71d1d27f/image.jpg" class="d-block w-100" alt="Slide 2">
                         
                     </a>
                 </div>
                 <div class="carousel-item">
                     <a href="#slide3-link">
-                        <img src="https://c.wallhere.com/photos/84/19/women_model_brunette_long_hair_women_outdoors_wavy_hair_500px_Damian_Pi_rko-10474.jpg!d" class="d-block w-100" alt="Slide 3">
+                        <img src="https://file.hstatic.net/1000284478/file/25_1920x700_9c1af1a2283c4b0fa53a1d720c9ac1cf.jpg" class="d-block w-100" alt="Slide 3">
                         
                     </a>
                 </div>
