@@ -65,7 +65,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 
     int page = 1;
-    int pageSize = 9;
+    int pageSize = 10;
     String search = request.getParameter("search");
     String authorIdStr = request.getParameter("authorId");
     String status = request.getParameter("status");
