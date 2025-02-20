@@ -1,0 +1,2 @@
+dao.FooterDAO
+dao.FooterSettingDAO
