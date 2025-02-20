@@ -113,7 +113,7 @@ public class AddCouponServlet extends HttpServlet {
                         maxDiscount, usageLimit, 0, (java.sql.Date) expiryDate, new java.sql.Date(new Date().getTime()), status);
 
                 if (couponDAO.addCoupon(coupon)) {
-                    response.sendRedirect("couponlist?success=true");
+                    response.sendRedirect("couponlist?success=add");
                     return;
                 } else {
                     errorMessages.append("Không thể thêm mã giảm giá. Vui lòng thử lại.");

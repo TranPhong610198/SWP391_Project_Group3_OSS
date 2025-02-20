@@ -106,16 +106,20 @@ public class CouponListServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            System.out.println(id);
-            CouponDAO couponDAO = new CouponDAO();
-            couponDAO.deleteCoupon(id);
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                CouponDAO couponDAO = new CouponDAO();
+                boolean deleted = couponDAO.deleteCoupon(id);
 
-            String currentURL = request.getHeader("referer");  // Lấy URL hiện tại
-            if (currentURL == null) {
-                currentURL = request.getContextPath() + "/marketing/couponlist";
+                if (deleted) {
+                    response.sendRedirect(request.getContextPath() + "/marketing/couponlist?success=delete");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/marketing/couponlist?error=delete");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/marketing/couponlist?error=delete");
             }
-            response.sendRedirect(currentURL);
         }
     }
 

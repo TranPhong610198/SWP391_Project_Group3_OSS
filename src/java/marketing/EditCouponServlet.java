@@ -134,7 +134,7 @@ public class EditCouponServlet extends HttpServlet {
             boolean updated = couponDAO.updateCoupon(coupon);
 
             if (updated) {
-                response.sendRedirect("couponlist?success=true");
+                response.sendRedirect("couponlist?success=edit");
             } else {
                 request.setAttribute("error", "Không thể cập nhật mã giảm giá. Vui lòng thử lại.");
                 request.setAttribute("coupon", coupon);

@@ -27,11 +27,11 @@
                 --success-color: #2ecc71;
                 --warning-color: #f39c12;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .sort-link {
                 text-decoration: none;
                 color: var(--primary-color);
@@ -40,15 +40,15 @@
                 align-items: center;
                 justify-content: space-between;
             }
-            
+
             .sort-link:hover {
                 color: var(--accent-color);
             }
-            
+
             .sort-icons {
                 margin-left: 5px;
             }
-            
+
             /* Main content styles */
             .main-content {
                 margin-left: 250px;
@@ -56,78 +56,78 @@
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .action-btn {
                 padding: 5px 15px;
                 border-radius: 4px;
                 transition: all 0.3s;
             }
-            
+
             .action-btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
-            
+
             .btn-view {
                 background-color: var(--accent-color);
                 color: white;
             }
-            
+
             .btn-view:hover {
                 background-color: #2980b9;
                 color: white;
             }
-            
+
             .search-box {
                 border-radius: 50px;
                 padding-left: 15px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .search-btn {
                 border-radius: 50px;
                 padding: 8px 20px;
             }
-            
+
             .filter-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -135,30 +135,30 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .empty-state {
                 padding: 40px;
                 text-align: center;
                 color: #6c757d;
             }
-            
+
             /* Badge Styles */
             .badge-status {
                 font-weight: 600;
                 padding: 5px 10px;
                 border-radius: 50px;
             }
-            
+
             .badge-active {
                 background-color: var(--success-color);
                 color: white;
             }
-            
+
             .badge-expired {
                 background-color: var(--danger-color);
                 color: white;
             }
-            
+
             .badge-discount-type {
                 background-color: rgba(52, 152, 219, 0.2);
                 color: var(--accent-color);
@@ -166,7 +166,7 @@
                 padding: 5px 10px;
                 border-radius: 50px;
             }
-            
+
             /* Toggle button */
             .sidebar-toggle {
                 position: fixed;
@@ -179,7 +179,7 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             /* Pagination styling */
             .pagination .page-item .page-link {
                 color: var(--primary-color);
@@ -187,17 +187,17 @@
                 min-width: 40px;
                 text-align: center;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: var(--accent-color);
                 border-color: var(--accent-color);
                 color: white;
             }
-            
+
             .pagination .page-item .page-link:hover {
                 background-color: var(--hover-color);
             }
-            
+
             /* Responsive */
             @media (max-width: 768px) {
                 .main-content {
@@ -210,7 +210,7 @@
                     display: block;
                 }
             }
-            
+
             /* Table responsiveness */
             @media (max-width: 768px) {
                 .table-responsive {
@@ -227,19 +227,36 @@
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
-        
+
         <div class="main-content">
             <div class="container-fluid p-4">
-                <c:if test="${param.success eq 'true'}">
+                <c:if test="${not empty param.success}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        Thêm mã giảm giá thành công!
+                        <c:choose>
+                            <c:when test="${param.success eq 'add'}">
+                                Thêm mã giảm giá thành công!
+                            </c:when>
+                            <c:when test="${param.success eq 'edit'}">
+                                Chỉnh sửa mã giảm giá thành công!
+                            </c:when>
+                            <c:when test="${param.success eq 'delete'}">
+                                Xóa mã giảm giá thành công!
+                            </c:when>
+                        </c:choose>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+
+                <c:if test="${param.error eq 'delete'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Không thể xóa mã giảm giá. Vui lòng thử lại!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
                 <h2 class="page-title">
                     <i class="fas fa-tags me-2"></i>Quản lý mã giảm giá
                 </h2>
-                
+
                 <!-- Filter Section -->
                 <div class="card filter-card">
                     <div class="card-header">
@@ -409,43 +426,43 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                
+
                                                 <!-- Delete Confirmation Modal -->
-                                                <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="couponlist?action=delete&id=${coupon.id}">Xác nhận xóa</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Bạn có chắc chắn muốn xóa mã giảm giá <strong>${coupon.code}</strong>?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                                <form action="couponlist" method="POST" style="display: inline;">
-                                                                    <input type="hidden" name="action" value="delete">
-                                                                    <input type="hidden" name="id" value="${coupon.id}">
-                                                                    <button type="submit" class="btn btn-danger">Xóa</button>
-                                                                </form>
-                                                            </div>
+                                            <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="couponlist?action=delete&id=${coupon.id}">Xác nhận xóa</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc chắn muốn xóa mã giảm giá <strong>${coupon.code}</strong>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                            <form action="couponlist" method="POST" style="display: inline;">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="id" value="${coupon.id}">
+                                                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <tr>
-                                                <td colspan="11" class="empty-state">
-                                                    <i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
-                                                    <p>Không tìm thấy mã giảm giá nào. Vui lòng thử lại với điều kiện tìm kiếm khác hoặc tạo mã giảm giá mới.</p>
-                                                    <a href="addCoupon" class="btn btn-primary mt-3">
-                                                        <i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </c:otherwise>
-                                    </c:choose>
+                                            </div>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr>
+                                            <td colspan="11" class="empty-state">
+                                                <i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
+                                                <p>Không tìm thấy mã giảm giá nào. Vui lòng thử lại với điều kiện tìm kiếm khác hoặc tạo mã giảm giá mới.</p>
+                                                <a href="addCoupon" class="btn btn-primary mt-3">
+                                                    <i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:otherwise>
+                                </c:choose>
                                 </tbody>
                             </table>
                         </div>
@@ -497,7 +514,7 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- Add JavaScript for sidebar functionality -->
         <script>
             $(document).ready(function () {
@@ -518,15 +535,15 @@
                         }
                     }
                 });
-                
+
                 // Highlight current menu item
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
-                
+
                 // Initialize tooltips
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
                 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                  return new bootstrap.Tooltip(tooltipTriggerEl)
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
                 });
             });
         </script>

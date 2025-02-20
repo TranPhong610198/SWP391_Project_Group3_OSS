@@ -127,7 +127,7 @@
                                                  onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
                                             <div class="user-info">
                                                 <span class="full-name">${sessionScope.acc.fullName}</span>
-                                                <span class="username">username: ${sessionScope.acc.username}</span>
+                                                <span class="username">${sessionScope.acc.username}</span>
                                             </div>
                                         </button>
                                         <div class="dropdown-content">

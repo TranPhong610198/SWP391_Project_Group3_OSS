@@ -136,7 +136,7 @@ public class EditModelServlet extends HttpServlet {
                 dao.cleanupOrphanSize(oldSizeId);
             }
 
-            response.sendRedirect("inventoryDetail?id=" + productId + "&success=updated");
+            response.sendRedirect("inventoryDetail?id=" + productId + "&success=edit");
 
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Dữ liệu không hợp lệ");
