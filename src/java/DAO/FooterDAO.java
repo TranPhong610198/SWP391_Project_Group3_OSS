@@ -1,68 +1,69 @@
+
 package DAO;
 
-import entity.Footer;
 import Context.DBContext;
-import java.sql.*;
-import java.util.*;
+import entity.Footer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FooterDAO extends DBContext {
-    public List<Footer> getAllFooters(String searchValue, String status, String sortBy, String sortOrder) {
+    public List<Footer> getAllFooters(String searchValue, String statusFilter, String sortColumn, String sortOrder) {
         List<Footer> list = new ArrayList<>();
+        String sql = "SELECT * FROM footer_settings WHERE 1=1";
+        
+        if (searchValue != null && !searchValue.trim().isEmpty()) {
+            sql += " AND value LIKE ?";
+        }
+        
+        if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+            sql += " AND status = ?";
+        }
+        
+        if (sortColumn != null && !sortColumn.trim().isEmpty()) {
+            sql += " ORDER BY " + sortColumn + " " + sortOrder;
+        }
+        
         try {
-            String sql = "SELECT * FROM footer_settings WHERE 1=1";
-            
-            if (searchValue != null && !searchValue.trim().isEmpty()) {
-                sql += " AND value LIKE ?";
-            }
-            
-            if (status != null && !status.trim().isEmpty()) {
-                sql += " AND status = ?";
-            }
-            
-            if (sortBy != null && !sortBy.trim().isEmpty()) {
-                // Convert camelCase to snake_case for database column names
-                String dbColumn = sortBy.equals("fieldName") ? "field_name" : sortBy;
-                sql += " ORDER BY " + dbColumn + " " + sortOrder;
-            }
-            
-            PreparedStatement st = connection.prepareStatement(sql);
-            
+            PreparedStatement ps = connection.prepareStatement(sql);
             int paramIndex = 1;
+            
             if (searchValue != null && !searchValue.trim().isEmpty()) {
-                st.setString(paramIndex++, "%" + searchValue + "%");
-            }
-            if (status != null && !status.trim().isEmpty()) {
-                st.setString(paramIndex, status);
+                ps.setString(paramIndex++, "%" + searchValue + "%");
             }
             
-            ResultSet rs = st.executeQuery();
+            if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+                ps.setString(paramIndex, statusFilter);
+            }
+            
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Footer footer = new Footer(
+                list.add(new Footer(
                     rs.getInt("id"),
                     rs.getString("type"),
                     rs.getString("field_name"),
                     rs.getString("value"),
-                    
-                    rs.getString("status")
-                );
-                list.add(footer);
+                    rs.getString("status"),
+                    rs.getString("image")
+                ));
             }
         } catch (SQLException e) {
-            System.out.println("Error getting footer list: " + e.getMessage());
+            System.out.println(e);
         }
         return list;
     }
     
-    public boolean updateFooterStatus(int id, String status) {
+    public void updateStatus(int id, String status) {
+        String sql = "UPDATE footer_settings SET status = ? WHERE id = ?";
         try {
-            String sql = "UPDATE footer_settings SET status = ? WHERE id = ?";
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, status);
-            st.setInt(2, id);
-            return st.executeUpdate() > 0;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error updating footer status: " + e.getMessage());
-            return false;
+            System.out.println(e);
         }
     }
 }

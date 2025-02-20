@@ -36,3 +36,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 };
+CKEDITOR.editorConfig = function (config) {
+    config.filebrowserUploadUrl = '${pageContext.request.contextPath}/uploadImage'; // Đường dẫn xử lý ảnh trên server
+    config.filebrowserUploadMethod = 'form';
+};
+
