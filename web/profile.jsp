@@ -422,7 +422,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-2"></i>Lưu địa chỉ
                                     </button>
-                                    <button type="button" class="btn btn-secondary" onclick="window.location.href = 'index.jsp'">
+                                    <button type="button" class="btn btn-secondary" onclick="window.location.href = '<%= request.getContextPath() %>/home'">
                                         <i class="fas fa-arrow-left me-2"></i>Quay lại
                                     </button>
                                 </div>

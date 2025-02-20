@@ -3,7 +3,7 @@
     Created on : Feb 18, 2025, 12:17:17 AM
     Author     : VuxD4t
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -119,6 +119,89 @@
             body {
                 padding-top: 70px; /* Điều chỉnh để tránh nội dung bị che */
             }
+            .user-dropdown {
+                position: relative;
+                display: inline-block;
+                margin-right: 15px;
+            }
+
+            .user-dropdown .fa-user {
+                font-size: 20px;
+                color: #666;
+            }
+
+            .user-dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 100%;
+                background-color: #fff;
+                min-width: 160px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border-radius: 4px;
+                padding: 8px 0;
+                z-index: 1000;
+            }
+
+            .user-dropdown:hover .user-dropdown-content {
+                display: block;
+            }
+
+            .user-dropdown-content a {
+                color: #333;
+                padding: 8px 16px;
+                text-decoration: none;
+                display: block;
+                font-size: 14px;
+            }
+
+            .user-dropdown-content a:hover {
+                background-color: #f5f5f5;
+            }
+
+            /* Style cho cart icon */
+            .cart-icon {
+                position: relative;
+                display: inline-block;
+            }
+
+            .cart-count {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background: #ff4444;
+                color: #fff;
+                font-size: 12px;
+                padding: 0 5px;
+                border-radius: 50%;
+                min-width: 18px;
+                height: 18px;
+                text-align: center;
+                line-height: 18px;
+            }
+
+            .search-form {
+                position: relative;
+                margin-right: 15px;
+            }
+
+            .search-form input {
+                padding: 8px 15px;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                width: 200px;
+                outline: none;
+            }
+
+            .user-actions {
+                display: flex;
+                align-items: center;
+            }
+
+            .fa-shopping-cart {
+                font-size: 20px;
+                color: #666;
+            }
 
         </style>
     </head>
@@ -218,7 +301,7 @@
                     <!-- Right Side Items -->
                     <div class="d-flex align-items-center">
                         <!-- Search Form -->
-                        <form class="search-form me-3">
+                        <form class="search-form">
                             <input type="text" placeholder="Tìm kiếm...">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
@@ -227,14 +310,32 @@
 
                         <!-- User Actions -->
                         <div class="user-actions">
-                            <a href="login" class="position-relative">
-                                <i class="fas fa-user"></i>
-                            </a>
-                            <a href="cartdetail" class="position-relative">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span class="cart-count">0</span>
-                            </a>
-                        </div>
+    <!-- User Profile/Login -->
+    <div class="user-dropdown">
+        <a href="#" class="position-relative">
+            <i class="fas fa-user"></i>
+        </a>
+        <div class="user-dropdown-content">
+            <c:choose>
+                <c:when test="${not empty sessionScope.acc}">
+                    <!-- Hiển thị khi đã đăng nhập -->
+                    <a href="profile"><i class="fas fa-user-circle"></i> Profile</a>
+                    <a href="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                </c:when>
+                <c:otherwise>
+                    <!-- Hiển thị khi chưa đăng nhập -->
+                    <a href="login"><i class="fas fa-sign-in-alt"></i> Đăng nhập</a>
+                    <a href="register"><i class="fas fa-user-plus"></i> Đăng ký</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+    <!-- Cart -->
+    <a href="cartdetail" class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </a>
+</div>
                     </div>
                 </div>
             </div>

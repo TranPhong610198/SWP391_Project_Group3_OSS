@@ -60,7 +60,7 @@ public class LoginControl extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("acc", existingUser);
                     session.setAttribute("userID", existingUser.getId());
-                    response.sendRedirect("index.jsp");
+                    response.sendRedirect(request.getContextPath() + "/home");
                     return;
                 } else {
                     userDao.insertGoogleUser(googleId, email, fullName, picture);
@@ -71,7 +71,8 @@ public class LoginControl extends HttpServlet {
                 session.setAttribute("acc", existingUser);
                 session.setAttribute("userID", existingUser.getId());
 
-                response.sendRedirect("index.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
+
                 return;
 
             } catch (Exception e) {
@@ -146,7 +147,8 @@ public class LoginControl extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("acc", account);
             session.setAttribute("userID", account.getId());
-            response.sendRedirect("index.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
+
         }
     }
 }
