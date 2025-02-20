@@ -66,4 +66,6 @@ public class FooterDAO extends DBContext {
             System.out.println(e);
         }
     }
+/////////////////////////////////////////////////////////////////////////////////    
+    
 }
