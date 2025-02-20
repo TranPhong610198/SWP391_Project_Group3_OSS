@@ -128,7 +128,7 @@
                 <!-- Logo -->
                 <a class="navbar-brand" href="#">
 
-                    <img src="/fashionshop/uploads/logo/Fashion.png" alt="Logo"/>
+                    <img src="/fashionshop/uploads/logo/logoHuy.png" alt="Logo"/>
                 </a>
 
                 <!-- Navbar Toggle Button -->
