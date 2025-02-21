@@ -5,27 +5,27 @@ import java.sql.Date;
 public class Slider {
     private int id;
     private String title;
-    private String image;
-    private String backlink;
+    private String image;        // Changed from imageUrl
+    private String backlink;     // Changed from link
     private String status;
-    private String note;
-    private Date createdAt;
-    private Date updatedAt;
+    private int displayOrder;    // Already matches
+    private String note;         // Changed from notes
 
     public Slider() {
     }
 
-    public Slider(int id, String title, String image, String backlink, String status, String note, Date createdAt, Date updatedAt) {
+    public Slider(int id, String title, String image, String backlink, String status, 
+                 int displayOrder, String note) {
         this.id = id;
         this.title = title;
         this.image = image;
         this.backlink = backlink;
         this.status = status;
+        this.displayOrder = displayOrder;
         this.note = note;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -66,27 +66,19 @@ public class Slider {
         this.status = status;
     }
 
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
     public String getNote() {
         return note;
     }
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    }   
 }
