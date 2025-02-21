@@ -388,7 +388,7 @@
                                                         </span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="inventoryDetail?id=${product.id}" class="stock-link">
+                                                        <a href="inventoryDetail?id=${product.id}&source=productlist" class="stock-link">
                                                             ${product.stock}
                                                             <i class="fas fa-external-link-alt ms-1"></i>
                                                         </a>

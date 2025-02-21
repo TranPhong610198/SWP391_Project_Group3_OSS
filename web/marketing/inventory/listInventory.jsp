@@ -251,7 +251,7 @@
                                     <button type="submit" class="btn btn-primary me-md-2">
                                         <i class="fas fa-filter me-2"></i>Lọc
                                     </button>
-                                    <a href="couponlist" class="btn btn-secondary">
+                                    <a href="inventorylist" class="btn btn-secondary">
                                         <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
                                     </a>
                                 </div>
@@ -324,7 +324,7 @@
                                                         <span class="badge-quantity">${item.totalQuantity}</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="inventoryDetail?id=${item.productId}" class="btn btn-outline-primary btn-sm">
+                                                        <a href="inventoryDetail?id=${item.productId}&source=inventorylist" class="btn btn-outline-primary btn-sm">
                                                             <i class="fas fa-eye me-1"></i> Xem
                                                         </a>
                                                     </td>
