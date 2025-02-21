@@ -41,17 +41,17 @@
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
-                padding: 10px;  
+                padding: 10px;
             }
 
             .main-content .container {
-                padding: 1rem;  
+                padding: 1rem;
                 background-color: #fff;
                 border: 1px solid #dee2e6;
                 border-radius: 0.25rem;
                 box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             }
-            
+
             .info-section {
                 border: 1px solid #dee2e6;
                 border-radius: 0.25rem;
@@ -212,9 +212,18 @@
                 </div>
 
                 <div class="d-flex justify-content-start mt-3">
-                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Quay lại
-                    </a>
+                    <c:choose>
+                        <c:when test="${param.source == 'productlist'}">
+                            <a href="productlist" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="inventorylist" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
@@ -251,7 +260,7 @@
         <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <script>
             $(document).ready(function () {
                 // Toggle sidebar
@@ -271,11 +280,11 @@
                         }
                     }
                 });
-                
+
                 // Highlight current menu item
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
-                
+
                 // Open product submenu by default
                 $('#productSubmenu').addClass('show');
             });

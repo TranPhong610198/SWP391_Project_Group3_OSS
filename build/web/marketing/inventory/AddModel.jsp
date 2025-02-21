@@ -115,7 +115,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="#" onclick="window.history.back()" class="btn btn-secondary">
+                            <a href="inventoryDetail?id=${productId}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>Quay lại
                             </a>
                             <button type="submit" class="btn btn-primary">
