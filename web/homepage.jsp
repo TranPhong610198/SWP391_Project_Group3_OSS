@@ -10,53 +10,13 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Homepage Template</title>
+        <title>Fashion Shop</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom CSS -->
-        <style>
-            .product-card, .post-card {
-                transition: transform 0.3s;
-                height: 100%;
-            }
-            .product-card:hover, .post-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            }
-            .carousel-item img {
-                height: 700px; /* Tăng từ 500px lên 700px */
-                object-fit: cover;
-                width: 100%;
-            }
-            #mainCarousel {
-                margin-bottom: 50px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            }
+        <link href="assests/css/Home.css" rel="stylesheet" type="text/css"/>
 
-            .carousel-caption {
-                background: rgba(0,0,0,0.5);
-                padding: 20px;
-                border-radius: 5px;
-            }
-            .thumbnail-img {
-                height: 200px;
-                object-fit: cover;
-            }
-            .section-title {
-                position: relative;
-                margin-bottom: 30px;
-                padding-bottom: 10px;
-            }
-            .section-title::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 50px;
-                height: 3px;
-                background-color: #007bff;
-            }
-        </style>
+
     </head>
     <body>
         <!-- Include header -->
@@ -71,21 +31,21 @@
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <a href="#">
-                        <img src="https://hthaostudio.com/wp-content/uploads/2019/08/anh-sexxy-1.jpg.webp" class="d-block w-100" alt="Slide 1">
-                        
+                        <img src="https://m.yodycdn.com/fit-in/filters:format(webp)/products/media/collections/hero%2018-2xua%20xuan%2050%201800x600n.jpg" class="d-block w-100" alt="Slide 1">
+
                     </a>
 
                 </div>
                 <div class="carousel-item">
                     <a href="#slide2-link">
-                        <img src="https://c.wallhere.com/photos/07/0d/500px_kneeling_mask_Maksim_Chuprin_women_lingerie_Disha_Shemetova-1342363.jpg!d" class="d-block w-100" alt="Slide 2">
-                        
+                        <img src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/d3bd2064-8035-4c95-87e5-9b7e71d1d27f/image.jpg" class="d-block w-100" alt="Slide 2">
+
                     </a>
                 </div>
                 <div class="carousel-item">
                     <a href="#slide3-link">
-                        <img src="https://c.wallhere.com/photos/84/19/women_model_brunette_long_hair_women_outdoors_wavy_hair_500px_Damian_Pi_rko-10474.jpg!d" class="d-block w-100" alt="Slide 3">
-                        
+                        <img src="https://file.hstatic.net/1000284478/file/25_1920x700_9c1af1a2283c4b0fa53a1d720c9ac1cf.jpg" class="d-block w-100" alt="Slide 3">
+
                     </a>
                 </div>
             </div>
@@ -218,12 +178,130 @@
                 </div>
             </section>
 
-          
+
 
         </div>
 
-<!-- Bootstrap JS -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-            <jsp:include page="footer.jsp" />
+
+
+        <!-- Chat Button -->
+        <div class="ai-chat-button" onclick="toggleChatWidget()">
+            <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
+        </div>
+
+        <!-- Chat Widget -->
+        <div class="ai-chat-widget" id="aiChatWidget">
+            <div class="ai-chat-header">
+                <div>Góc hỏi đáp</div>
+                <div class="ai-chat-close" onclick="toggleChatWidget()">✕</div>
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message bot">Chào bạn! Tôi là trợ lý của Fashion Shop. Tôi có thể giúp gì cho bạn?</div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn..." onkeypress="if (event.key === 'Enter')
+                            sendMessage()">
+                <button onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>
+        <script>
+            // Hiển thị/ẩn chat widget
+            function toggleChatWidget() {
+                const widget = document.getElementById('aiChatWidget');
+                if (widget.style.display === 'flex') {
+                    widget.style.display = 'none';
+                } else {
+                    widget.style.display = 'flex';
+                }
+            }
+
+            // Gửi tin nhắn đến API và hiển thị phản hồi
+            async function sendMessage() {
+                const input = document.getElementById('userInput');
+                const message = input.value.trim();
+
+                if (!message)
+                    return;
+
+                // Hiển thị tin nhắn của người dùng
+                addMessage('user', message);
+                input.value = '';
+
+                // Hiển thị đang nhập
+                const tempId = addMessage('bot', 'Đang nhập...');
+
+                try {
+                    // Gọi API Gemini
+                    const response = await callGeminiAPI(message);
+
+                    // Cập nhật tin nhắn bot
+                    updateMessage(tempId, response);
+                } catch (error) {
+                    updateMessage(tempId, "Xin lỗi, câu hỏi của bạn khó quá. Tôi không thể xử lý được. Hãy hỏi Trần Phong :>");
+                    console.error("Error calling Gemini API:", error);
+                }
+            }
+
+            // Thêm tin nhắn vào khung chat
+            function addMessage(type, content) {
+                const messagesContainer = document.getElementById('aiChatMessages');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('ai-message', type);
+                messageElement.textContent = content;
+
+                const id = 'msg-' + Date.now();
+                messageElement.id = id;
+
+                messagesContainer.appendChild(messageElement);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                return id;
+            }
+
+            // Cập nhật nội dung tin nhắn
+            function updateMessage(id, content) {
+                const messageElement = document.getElementById(id);
+                if (messageElement) {
+                    messageElement.textContent = content;
+                }
+            }
+
+            // Gọi Gemini API (cần thay API_KEY thực tế của bạn)
+            async function callGeminiAPI(prompt) {
+                const API_KEY = 'AIzaSyA12flOEGLDWppjXlvurjzZVwC2ug9rA-o'; // Thay bằng API key thực của bạn
+                const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+                const requestBody = {
+                    contents: [{
+                            parts: [{
+                                    text: `Bạn là trợ lý AI của Fashion Shop, một cửa hàng thời trang. Hãy trả lời câu hỏi sau một cách ngắn gọn, hữu ích: ${prompt}`
+                                }]
+                        }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 800
+                    }
+                };
+
+                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+
+                        const data = await response.json();
+
+                        if (data.candidates && data.candidates[0].content.parts[0].text) {
+                            return data.candidates[0].content.parts[0].text;
+                        } else {
+                            throw new Error('Không nhận được phản hồi hợp lệ');
+                        }
+                    }
+        </script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <jsp:include page="footer.jsp" />
     </body>
 </html>

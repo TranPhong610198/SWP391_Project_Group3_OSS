@@ -16,7 +16,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <style>
             .model-table-container {
-                max-height: 600px; /* scroll */
+                max-height: 600px;
                 overflow-y: auto;
                 border: 1px solid #dee2e6;
                 border-radius: 0.25rem;
@@ -51,7 +51,7 @@
                 border-radius: 0.25rem;
                 box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             }
-            /* Card styling for sections */
+            
             .info-section {
                 border: 1px solid #dee2e6;
                 border-radius: 0.25rem;
@@ -67,7 +67,6 @@
                 margin-bottom: 1rem;
             }
 
-            /* Better table styling */
             .table-hover tbody tr:hover {
                 background-color: rgba(0, 123, 255, 0.075);
             }
@@ -76,8 +75,6 @@
                 background-color: #f8f9fa;
             }
 
-
-            /* Responsive */
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -90,7 +87,6 @@
                 }
             }
 
-            /* Toggle button */
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -116,21 +112,33 @@
 
         <div class="main-content">
             <div class="container py-4">
-                <!-- Error/Success Messages -->
-                <c:if test="${not empty errorMessage}">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        ${errorMessage}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </c:if>
-                <c:if test="${not empty successMessage}">
+                <!-- Success Messages -->
+                <c:if test="${not empty param.success}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        ${successMessage}
+                        <c:choose>
+                            <c:when test="${param.success eq 'add'}">
+                                Thêm mẫu sản phẩm thành công!
+                            </c:when>
+                            <c:when test="${param.success eq 'edit'}">
+                                Chỉnh sửa mẫu sản phẩm thành công!
+                            </c:when>
+                            <c:when test="${param.success eq 'delete'}">
+                                Xóa mẫu sản phẩm thành công!
+                            </c:when>
+                        </c:choose>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
 
-                <!-- Product Info Section - Read Only -->
+                <!-- Error Messages -->
+                <c:if test="${not empty errorMessage || not empty param.error}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${not empty errorMessage ? errorMessage : 'Không thể xóa mẫu sản phẩm. Vui lòng thử lại!'}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+
+                <!-- Product Info Section -->
                 <div class="info-section">
                     <h5 class="mb-3">Thông tin sản phẩm</h5>
                     <div class="row">
@@ -158,13 +166,12 @@
                     </div>
                 </div>
 
-
-                <!-- Model Table -->
+                <!-- Model Table Section -->
                 <div class="info-section">
-                    <h5 class="mb-3">Chi tiết Model sản phẩm</h5>
+                    <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
                     <div class="d-flex justify-content-end mb-3">
                         <a href="addModel?productId=${inventory.productId}" class="btn btn-success">
-                            <i class="bi bi-plus-circle"></i> Thêm Model Mới
+                            <i class="fas fa-plus me-2"></i>Thêm Mẫu Mới
                         </a>
                     </div>
                     <div class="model-table-container">
@@ -175,7 +182,7 @@
                                     <th>Kích thước</th>
                                     <th>Số lượng</th>
                                     <th>Ngày cập nhật</th>
-                                    <th>Sửa/Xóa</th>
+                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -188,14 +195,13 @@
                                         <td>
                                             <div class="action-buttons">
                                                 <a href="editModel?variantId=${variant.id}&productId=${inventory.productId}" 
-                                                   class="btn btn-outline-primary btn-sm">Sửa</a>
-                                                <form action="inventoryDetail" method="POST" style="display: inline;">
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="productId" value="${inventory.productId}">
-                                                    <input type="hidden" name="variantId" value="${variant.id}">
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm" 
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xóa mẫu này?')">Xóa</button>
-                                                </form>
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                        data-bs-toggle="modal" data-bs-target="#deleteModal${variant.id}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -206,16 +212,46 @@
                 </div>
 
                 <div class="d-flex justify-content-start mt-3">
-                    <!--<a href="inventorylist" class="btn btn-secondary">Quay lại</a>-->
-                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Quay lại</a>
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại
+                    </a>
                 </div>
             </div>
         </div>
 
+        <!-- Delete Confirmation Modals -->
+        <c:forEach items="${variants}" var="variant">
+            <div class="modal fade" id="deleteModal${variant.id}" tabindex="-1" 
+                 aria-labelledby="deleteModalLabel${variant.id}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel${variant.id}">Xác nhận xóa</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Bạn có chắc chắn muốn xóa mẫu sản phẩm này?<br>
+                            Màu sắc: <strong>${variant.color.name}</strong><br>
+                            Kích thước: <strong>${variant.size.name}</strong>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <form action="inventoryDetail" method="POST" style="display: inline;">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="productId" value="${inventory.productId}">
+                                <input type="hidden" name="variantId" value="${variant.id}">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+
+        <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         
-        <!-- Add JavaScript for sidebar functionality -->
         <script>
             $(document).ready(function () {
                 // Toggle sidebar
@@ -236,7 +272,7 @@
                     }
                 });
                 
-                // Since inventory management is part of product management, highlight that menu item
+                // Highlight current menu item
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
                 

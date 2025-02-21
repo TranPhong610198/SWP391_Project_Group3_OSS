@@ -6,11 +6,11 @@ INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [
 GO
 INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (2, N'phongthhe186443', N'phongthhe186443@fpt.edu.vn', N'$2a$10$mqTbeXOjwWftYcp3HvgbF.vynnSvUqQfBUY6wj7m7m/tiEnv/YYA6', N'Tran Hoai Phong (K18 HL)', N'other', NULL, N'https://lh3.googleusercontent.com/a/ACg8ocLrSqjCMqEhVL5SMILJ6OOpPyI5S64iKP29HhPEV9aIOgF0i-g=s96-c', N'customer', N'active', CAST(N'2025-02-09T17:02:23.6133333' AS DateTime2), CAST(N'2025-02-09T17:02:23.6133333' AS DateTime2))
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (3, N'XiaoXunEr', N'XiaoXunEr@gmail.com', N'$2a$10$sYcqeKA5lzaWHHEHojLoxe378EtZni5873xBA8YfljCthxCADhmoy', N'Tiêu Huân Nhi', N'female', N'0987654321', N'uploads/avatars/default.jpg', N'customer', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (3, N'XiaoXunEr', N'XiaoXunEr@gmail.com', N'$2a$10$sYcqeKA5lzaWHHEHojLoxe378EtZni5873xBA8YfljCthxCADhmoy', N'Tiêu Huân Nhi', N'female', N'0987654321', N'uploads/avatars/huannhi.jpg', N'customer', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (4, N'YaoLao', N'YaoLao@gmail.com', N'$2a$10$XFl8Zk5zSXQo/PjN4df.k.twXuumSIvYM7jLRqVcvx2heTFVyW0Ca', N'Dược Lão', N'male', N'0912345678', N'uploads/avatars/default.jpg', N'marketing', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (4, N'YaoLao', N'YaoLao@gmail.com', N'$2a$10$XFl8Zk5zSXQo/PjN4df.k.twXuumSIvYM7jLRqVcvx2heTFVyW0Ca', N'Dược Lão', N'male', N'0912345678', N'uploads/avatars/duoclao.jpg', N'marketing', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (5, N'XiaoYan', N'XiaoYan@gmail.com', N'$2a$10$ojVPuuE5ZVLPE/wWOSRFIeNKLkBZh/CZeHE57ij4F.cfKYsdmIxAO', N'Tiêu Viêm', N'male', N'0978123456', N'uploads/avatars/default.jpg', N'sale', N'pending', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (5, N'XiaoYan', N'XiaoYan@gmail.com', N'$2a$10$ojVPuuE5ZVLPE/wWOSRFIeNKLkBZh/CZeHE57ij4F.cfKYsdmIxAO', N'Tiêu Viêm', N'male', N'0978123456', N'uploads/avatars/tieuviem.jpg', N'sale', N'pending', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
 INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (6, N'XiaoZhan', N'XiaoZhan@gmail.com', N'$2a$10$7d0sV4kA8mSbQoJhGmROJumQnBeqtpzzMxz7yslGGf5Z1lhx85M7O', N'Tiêu Chiến', N'male', N'0934567890', N'uploads/avatars/default.jpg', N'customer', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
@@ -454,3 +454,15 @@ VALUES
     ('NOP789MNO', 'percentage', 12.50, 60.00, 125.00, 250, 0, '2026-06-30 23:59:59', 'inactive'),
     ('QRS012JKL', 'fixed', 40.00, 200.00, NULL, 40, 0, '2025-01-31 23:59:59', 'expired'),
     ('TUV345GHI', 'percentage', 35.00, 500.00, 350.00, 20, 0, '2025-01-28 23:59:59', 'expired');
+
+INSERT INTO sliders (title, image_url, link, status, display_order, notes) VALUES
+('Summer Collection 2025', '/images/sliders/summer-2025.jpg', '/collections/summer-2025', 'active', 1, 'Highlighting our newest summer collection with bright colors and lightweight fabrics'),
+('End of Season Sale - Up to 70% Off', '/images/sliders/sale-banner.jpg', '/sale', 'active', 2, 'Major clearance sale on all winter items'),
+('New Arrivals - Spring Fashion', '/images/sliders/spring-arrivals.jpg', '/new-arrivals', 'active', 3, 'Featuring the latest spring trends and styles'),
+('Exclusive Designer Collection', '/images/sliders/designer-collection.jpg', '/designer', 'active', 4, 'Premium designer wear for both men and women'),
+('Sport & Active Wear', '/images/sliders/activewear.jpg', '/category/activewear', 'active', 5, 'High-performance sportswear for your active lifestyle'),
+('Wedding Season Special', '/images/sliders/wedding-collection.jpg', '/wedding-collection', 'active', 6, 'Elegant formal wear for wedding season'),
+('Kids Fashion Week', '/images/sliders/kids-fashion.jpg', '/category/kids', 'inactive', 7, 'Cute and comfortable clothing for children'),
+('Accessories Collection', '/images/sliders/accessories.jpg', '/category/accessories', 'active', 8, 'Complete your look with our trendy accessories'),
+('Sustainable Fashion Line', '/images/sliders/eco-friendly.jpg', '/sustainable-collection', 'active', 9, 'Eco-friendly clothing made from sustainable materials'),
+('Holiday Gift Guide', '/images/sliders/gift-guide.jpg', '/gift-guide', 'inactive', 10, 'Perfect gift ideas for your loved ones');

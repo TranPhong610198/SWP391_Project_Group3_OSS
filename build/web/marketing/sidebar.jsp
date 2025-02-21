@@ -36,23 +36,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item p-2">
-            <a href="#postManagementSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
-                <div>
-                    <i class="fas fa-edit me-2"></i>
-                    Quản lý bài đăng
-                </div>
-                <i class="fas fa-chevron-down ms-auto"></i>
-            </a>
-            <ul class="submenu collapse list-unstyled ms-3 mt-1" id="postManagementSubmenu">
-                <li class="submenu-item py-1">
-                    <a href="postList" class="text-decoration-none text-light">Danh sách bài đăng</a>
-                </li>
-                <li class="submenu-item py-1">
-                    <a href="addPost" class="text-decoration-none text-light">Thêm bài đăng mới</a>
-                </li>
-            </ul>
-        </li>
+        
 <!--        <li class="menu-item p-2">
             <a href="campaignlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
@@ -120,7 +104,7 @@
         </li>
         
         <li class="menu-item p-2">
-            <a href="../homepage.jsp" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="../home" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-home me-2 "></i>
                 Trang chủ
             </a>

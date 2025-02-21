@@ -1,357 +1,358 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý cài đặt Footer</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cài đặt chân trang</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #34495e;
+                --accent-color: #3498db;
+                --light-color: #ecf0f1;
+                --border-color: #dee2e6;
+                --hover-color: #f8f9fa;
+            }
+            
+            body {
+                background-color: #f8f9fa;
+            }
+            
+            .main-content {
+                margin-left: 250px;
+                transition: all 0.3s;
+                padding: 20px;
+                min-height: 100vh;
+            }
+            
+            .card {
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                border: 1px solid var(--border-color);
+                margin-bottom: 20px;
+            }
+            
+            .card-header {
+                background-color: #fff;
+                border-bottom: 1px solid var(--border-color);
+                padding: 15px 20px;
+                font-weight: 600;
+            }
+            
+            .page-title {
+                color: var(--primary-color);
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid var(--accent-color);
+                display: inline-block;
+            }
+            
+            .filter-card {
+                background-color: white;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+            
+            .search-box {
+                border-radius: 50px;
+                padding-left: 15px;
+                border: 1px solid var(--border-color);
+            }
+            
+            .sort-link {
+                text-decoration: none;
+                color: var(--primary-color);
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .sort-link:hover {
+                color: var(--accent-color);
+            }
+            
+            .table {
+                margin-bottom: 0;
+            }
+            
+            .table th {
+                font-weight: 600;
+                border-top: none;
+                background-color: rgba(52, 152, 219, 0.05);
+                vertical-align: middle;
+            }
+            
+            .table td {
+                vertical-align: middle;
+            }
+            
+            .table tbody tr:hover {
+                background-color: var(--hover-color);
+            }
+            
+            .badge {
+                padding: 6px 12px;
+                border-radius: 50px;
+            }
+            
+            .btn-action {
+                padding: 5px 10px;
+                margin: 0 2px;
+            }
+            
+            .pagination .page-link {
+                color: var(--primary-color);
+                border: 1px solid var(--border-color);
+                min-width: 40px;
+                text-align: center;
+                margin: 0 3px;
+            }
+            
+            .pagination .page-item.active .page-link {
+                background-color: var(--accent-color);
+                border-color: var(--accent-color);
+                color: white;
+            }
+            
+            @media (max-width: 768px) {
+                .main-content {
+                    margin-left: 0;
+                }
+                .sidebar-toggle {
+                    display: block;
+                }
+            }
+            
+            .sidebar-toggle {
+                position: fixed;
+                left: 10px;
+                top: 10px;
+                z-index: 1001;
+                display: none;
+                border-radius: 50%;
+                width: 42px;
+                height: 42px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            
+            @media (max-width: 768px) {
+                .sidebar-toggle {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Include the sidebar -->
+        <jsp:include page="/admin/adminsidebar.jsp" />
         
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .search-box {
-            flex: 1;
-            max-width: 300px;
-        }
-        
-        input, select {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-        }
-        
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        
-        .btn-icon {
-            padding: 4px 8px;
-            font-size: 14px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            cursor: pointer;
-        }
-        
-        th:hover {
-            background-color: #e9ecef;
-        }
-        
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-        
-        .status-active {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .status-inactive {
-            background-color: #f8f9fa;
-            color: #6c757d;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .btn-view {
-            background-color: #17a2b8;
-        }
-        
-        .btn-edit {
-            background-color: #ffc107;
-        }
-        
-        .btn-toggle {
-            background-color: #6c757d;
-        }
+        <button class="btn btn-primary sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        .truncate {
-            max-width: 300px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Quản lý cài đặt Footer</h1>
-            <button class="btn">
-                <i class="fas fa-plus"></i> Thêm cài đặt mới
-            </button>
-        </div>
-        
-        <div class="filters">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm theo giá trị..." 
-                       onkeyup="filterTable()">
+        <div class="main-content">
+            <div class="container-fluid p-4">
+                <h2 class="page-title">
+                    <i class="fas fa-cog me-2"></i>Cài đặt chân trang
+                </h2>
+
+                <!-- Filter Section -->
+                <div class="card filter-card">
+                    <div class="card-header">
+                        <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
+                    </div>
+                    <div class="card-body">
+                        <form action="${pageContext.request.contextPath}/admin/footer-settings" method="get" class="row g-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" name="search" value="${searchValue}" class="form-control search-box" 
+                                           placeholder="Tìm kiếm giá trị...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="status" class="form-select">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Active</option>
+                                    <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter me-2"></i>Lọc
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Footer Settings Table -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-list me-2"></i>Danh sách cài đặt chân trang
+                        </div>
+                        <div>
+                            <a href="${pageContext.request.contextPath}/admin/footer-settings/new" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus me-2"></i>Thêm cài đặt mới
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered mb-0">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th class="text-center" style="width: 60px;">STT</th>
+                                        <th>
+                                            <a href="?sort=field_name&order=${sortColumn == 'field_name' && sortOrder == 'ASC' ? 'DESC' : 'ASC'}&status=${statusFilter}&search=${searchValue}" 
+                                               class="sort-link">
+                                                Tên
+                                                <span class="sort-icons">
+                                                    ${sortColumn == 'field_name' ? (sortOrder == 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="?sort=value&order=${sortColumn == 'value' && sortOrder == 'ASC' ? 'DESC' : 'ASC'}&status=${statusFilter}&search=${searchValue}"
+                                               class="sort-link">
+                                                Giá trị
+                                                <span class="sort-icons">
+                                                    ${sortColumn == 'value' ? (sortOrder == 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="?sort=type&order=${sortColumn == 'type' && sortOrder == 'ASC' ? 'DESC' : 'ASC'}&status=${statusFilter}&search=${searchValue}"
+                                               class="sort-link">
+                                                Loại
+                                                <span class="sort-icons">
+                                                    ${sortColumn == 'type' ? (sortOrder == 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="?sort=status&order=${sortColumn == 'status' && sortOrder == 'ASC' ? 'DESC' : 'ASC'}&status=${statusFilter}&search=${searchValue}"
+                                               class="sort-link">
+                                                Trạng thái
+                                                <span class="sort-icons">
+                                                    ${sortColumn == 'status' ? (sortOrder == 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th class="text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${footers}" var="footer" varStatus="status">
+                                        <tr>
+                                            <td class="text-center">${status.index + 1 + (currentPage - 1) * pageSize}</td>
+                                            <td>${footer.fieldName}</td>
+                                            <td>${footer.value}</td>
+                                            <td>${footer.type}</td>
+                                            <td>
+                                                <span class="badge bg-${footer.status == 'active' ? 'success' : 'danger'}">
+                                                    ${footer.status}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="${pageContext.request.contextPath}/admin/footer-settings/edit?id=${footer.id}" 
+                                                   class="btn btn-primary btn-sm btn-action">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form action="${pageContext.request.contextPath}/admin/footer-settings" method="post" style="display: inline;">
+                                                    <input type="hidden" name="action" value="toggleStatus">
+                                                    <input type="hidden" name="id" value="${footer.id}">
+                                                    <input type="hidden" name="currentStatus" value="${footer.status}">
+                                                    <button type="submit" class="btn btn-${footer.status == 'active' ? 'danger' : 'success'} btn-sm btn-action"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn ${footer.status == 'active' ? 'hủy kích hoạt' : 'kích hoạt'} cài đặt này không?');">
+                                                        <i class="fas fa-${footer.status == 'active' ? 'times' : 'check'}"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <c:if test="${totalPages > 1}">
+                    <div class="d-flex justify-content-center align-items-center mt-3">
+                        <nav>
+                            <ul class="pagination">
+                                <c:if test="${currentPage > 1}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=${currentPage-1}&status=${statusFilter}&search=${searchValue}&sort=${sortColumn}&order=${sortOrder}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                </c:if>
+
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                        <a class="page-link" href="?page=${i}&status=${statusFilter}&search=${searchValue}&sort=${sortColumn}&order=${sortOrder}">${i}</a>
+                                    </li>
+                                </c:forEach>
+
+                                <c:if test="${currentPage < totalPages}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=${currentPage+1}&status=${statusFilter}&search=${searchValue}&sort=${sortColumn}&order=${sortOrder}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </ul>
+                        </nav>
+                    </div>
+                </c:if>
             </div>
-            <select id="statusFilter" onchange="filterTable()">
-                <option value="all">Tất cả trạng thái</option>
-                <option value="active">Đang kích hoạt</option>
-                <option value="inactive">Đã vô hiệu</option>
-            </select>
         </div>
 
-        <table id="settingsTable">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">ID <i class="fas fa-sort"></i></th>
-                    <th onclick="sortTable(1)">Tên định danh <i class="fas fa-sort"></i></th>
-                    <th onclick="sortTable(2)">Giá trị <i class="fas fa-sort"></i></th>
-                    <th onclick="sortTable(3)">Trạng thái <i class="fas fa-sort"></i></th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Dữ liệu mẫu -->
-                <tr>
-                    <td>1</td>
-                    <td>copyright_text</td>
-                    <td class="truncate">© 2024 Công ty TNHH ABC. Đã đăng ký bản quyền.</td>
-                    <td>
-                        <span class="status-badge status-active">Đang kích hoạt</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-icon btn-view" onclick="viewSetting(1)">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-icon btn-edit" onclick="editSetting(1)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-toggle" onclick="toggleStatus(1)">
-                                <i class="fas fa-power-off"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>contact_email</td>
-                    <td class="truncate">support@company.com</td>
-                    <td>
-                        <span class="status-badge status-active">Đang kích hoạt</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-icon btn-view" onclick="viewSetting(2)">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-icon btn-edit" onclick="editSetting(2)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-toggle" onclick="toggleStatus(2)">
-                                <i class="fas fa-power-off"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>social_links</td>
-                    <td class="truncate">{"facebook":"https://fb.com/company","twitter":"https://twitter.com/company","linkedin":"https://linkedin.com/company"}</td>
-                    <td>
-                        <span class="status-badge status-inactive">Đã vô hiệu</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-icon btn-view" onclick="viewSetting(3)">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-icon btn-edit" onclick="editSetting(3)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-toggle" onclick="toggleStatus(3)">
-                                <i class="fas fa-power-off"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>business_hours</td>
-                    <td class="truncate">{"weekdays":"8:00 AM - 5:00 PM","saturday":"8:00 AM - 12:00 PM","sunday":"Closed"}</td>
-                    <td>
-                        <span class="status-badge status-active">Đang kích hoạt</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-icon btn-view" onclick="viewSetting(4)">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-icon btn-edit" onclick="editSetting(4)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-toggle" onclick="toggleStatus(4)">
-                                <i class="fas fa-power-off"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>address</td>
-                    <td class="truncate">123 Đường ABC, Quận 1, TP.HCM</td>
-                    <td>
-                        <span class="status-badge status-active">Đang kích hoạt</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-icon btn-view" onclick="viewSetting(5)">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-icon btn-edit" onclick="editSetting(5)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-icon btn-toggle" onclick="toggleStatus(5)">
-                                <i class="fas fa-power-off"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <script>
+            $(document).ready(function () {
+                // Toggle sidebar
+                $('.sidebar-toggle').on('click', function () {
+                    $('.sidebar').toggleClass('active');
+                    $('.main-content').toggleClass('active');
+                    $(this).hide();
+                });
 
-    <script>
-        function filterTable() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const statusFilter = document.getElementById('statusFilter').value;
-            const table = document.getElementById('settingsTable');
-            const rows = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                const cells = row.getElementsByTagName('td');
-                const identifier = cells[1].textContent.toLowerCase();
-                const value = cells[2].textContent.toLowerCase();
-                const status = cells[3].textContent.toLowerCase();
-
-                const matchesSearch = identifier.includes(searchQuery) || 
-                                    value.includes(searchQuery);
-                const matchesStatus = statusFilter === 'all' || 
-                                    status.includes(statusFilter);
-
-                row.style.display = matchesSearch && matchesStatus ? '' : 'none';
-            }
-        }
-
-        function sortTable(columnIndex) {
-            const table = document.getElementById('settingsTable');
-            let switching = true;
-            let direction = 'asc';
-            let switchcount = 0;
-
-            while (switching) {
-                switching = false;
-                const rows = table.rows;
-
-                for (let i = 1; i < rows.length - 1; i++) {
-                    let shouldSwitch = false;
-                    const x = rows[i].getElementsByTagName('td')[columnIndex];
-                    const y = rows[i + 1].getElementsByTagName('td')[columnIndex];
-
-                    if (direction === 'asc') {
-                        if (x.textContent.toLowerCase() > y.textContent.toLowerCase()) {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    } else {
-                        if (x.textContent.toLowerCase() < y.textContent.toLowerCase()) {
-                            shouldSwitch = true;
-                            break;
+                // Close sidebar when clicking outside on mobile
+                $(document).on('click', function (e) {
+                    if ($(window).width() <= 768) {
+                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                            $('.sidebar').removeClass('active');
+                            $('.main-content').removeClass('active');
+                            $('.sidebar-toggle').show();
                         }
                     }
-
-                    if (shouldSwitch) {
-                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                        switching = true;
-                        switchcount++;
-                    }
-                }
-
-                if (switchcount === 0 && direction === 'asc') {
-                    direction = 'desc';
-                    switching = true;
-                }
-            }
-        }
-
-        function viewSetting(id) {
-            // Implement view functionality
-            alert('Xem chi tiết cài đặt ID: ' + id);
-        }
-
-        function editSetting(id) {
-            // Implement edit functionality
-            alert('Chỉnh sửa cài đặt ID: ' + id);
-        }
-
-        function toggleStatus(id) {
-            // Implement toggle status functionality
-            if (confirm('Bạn có chắc muốn thay đổi trạng thái của cài đặt này?')) {
-                // Send AJAX request to update status
-                alert('Đã thay đổi trạng thái cài đặt ID: ' + id);
-            }
-        }
-    </script>
-</body>
+                });
+                
+                // Highlight active menu item
+                $('.menu-item').removeClass('active');
+                $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
+                
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+            });
+        </script>
+    </body>
 </html>

@@ -158,13 +158,17 @@ public class CouponDAO extends DBContext {
         return false;
     }
 
-    public void deleteCoupon(int id) {
-        String sql = "DELETE FROM coupons WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
+    public boolean deleteCoupon(int id) {
+        try {
+            String sql = "DELETE FROM Coupons WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, id);
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected > 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

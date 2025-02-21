@@ -18,50 +18,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đổi Mật Khẩu</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            body {
-                background-color: #f8f9fa; /* Light gray background */
-            }
-            .card {
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-                border-radius: 8px; /* Rounded corners */
-            }
-            .card-header {
-                background-color: #972424; /* Blue header */
-                color: white;
-                border-radius: 8px 8px 0 0; /* Rounded top corners */
-                padding: 1rem 0; /* Increased padding */
-            }
-            .card-title {
-                font-weight: 600;
-            }
-            .form-label {
-                font-weight: 500;
-            }
-            .btn-primary {
-                background-color: #972424; /* Blue button */
-                border-color: #8b1f1f;
-            }
-            .btn-primary:hover {
-                background-color: #d90000; /* Darker blue on hover */
-                border-color: #cc0000;
-            }
-            .btn-secondary {
-                background-color: #6c757d; /* Gray button */
-                border-color: #6c757d;
-            }
-            .btn-secondary:hover {
-                background-color: #5a6268; /* Darker gray on hover */
-                border-color: #545b62;
-            }
-            .alert {
-                border-radius: 5px; /* Rounded alert corners */
-            }
-
-        </style>
+        <link href="assests/css/changepassword.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container mt-5">
+        <jsp:include page="header.jsp" />
+        
+        <div class="container-changepassword mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="card">
@@ -109,5 +71,7 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <jsp:include page="footer.jsp" />
     </body>
 </html>

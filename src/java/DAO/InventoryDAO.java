@@ -386,12 +386,11 @@ public class InventoryDAO extends DBContext {
         }
     }
 
-    public void deleteVariant(int variantId) {
+    public boolean deleteVariant(int variantId) {
         // lấy color_id and size_id
         String getIdsSQL = "SELECT color_id, size_id FROM product_variants WHERE id = ?";
         int colorId = 0;
         int sizeId = 0;
-
         try (PreparedStatement st = connection.prepareStatement(getIdsSQL)) {
             st.setInt(1, variantId);
             ResultSet rs = st.executeQuery();
@@ -401,19 +400,17 @@ public class InventoryDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
+            return false;
         }
-
         // Bắt đầu transaction
         try {
             connection.setAutoCommit(false);
-
             // Xóa từ bảng product_variants
             try (PreparedStatement st = connection.prepareStatement("DELETE FROM product_variants WHERE id = ?")) {
                 st.setInt(1, variantId);
                 st.executeUpdate();
             }
-
-            // Kiểm tra xem color có còn được sử dụng không
+            // Kiểm tra và xóa color nếu không còn sử dụng
             boolean colorInUse = false;
             try (PreparedStatement st = connection.prepareStatement("SELECT COUNT(*) FROM product_variants WHERE color_id = ?")) {
                 st.setInt(1, colorId);
@@ -422,16 +419,13 @@ public class InventoryDAO extends DBContext {
                     colorInUse = rs.getInt(1) > 0;
                 }
             }
-
-            // Nếu color không còn dùng, xóa khỏi product_colors
             if (!colorInUse) {
                 try (PreparedStatement st = connection.prepareStatement("DELETE FROM product_colors WHERE id = ?")) {
                     st.setInt(1, colorId);
                     st.executeUpdate();
                 }
             }
-
-            // Kiểm tra xem size có còn được sử dụng không
+            // Kiểm tra và xóa size nếu không còn sử dụng
             boolean sizeInUse = false;
             try (PreparedStatement st = connection.prepareStatement("SELECT COUNT(*) FROM product_variants WHERE size_id = ?")) {
                 st.setInt(1, sizeId);
@@ -440,17 +434,15 @@ public class InventoryDAO extends DBContext {
                     sizeInUse = rs.getInt(1) > 0;
                 }
             }
-
-            // Nếu size không còn dùng, xóa khỏi product_sizes
             if (!sizeInUse) {
                 try (PreparedStatement st = connection.prepareStatement("DELETE FROM product_sizes WHERE id = ?")) {
                     st.setInt(1, sizeId);
                     st.executeUpdate();
                 }
             }
-
             // Commit transaction
             connection.commit();
+            return true;
         } catch (SQLException e) {
             try {
                 connection.rollback(); // Rollback nếu có lỗi
@@ -458,6 +450,7 @@ public class InventoryDAO extends DBContext {
                 System.out.println("Error: " + e.getMessage());
             }
             System.out.println("Error: " + e.getMessage());
+            return false;
         } finally {
             try {
                 connection.setAutoCommit(true);

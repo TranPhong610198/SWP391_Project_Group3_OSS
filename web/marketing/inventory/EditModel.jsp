@@ -88,7 +88,7 @@
                     </div>
                 </c:if>
                 <div class="info-section">
-                    <h5>Chỉnh sửa Model</h5>
+                    <h5>Chỉnh Sửa Mẫu</h5>
                     <form action="editModel" method="POST">
                         <input type="hidden" name="productId" value="${variant.productId}">
                         <input type="hidden" name="variantId" value="${variant.id}">

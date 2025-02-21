@@ -89,7 +89,7 @@
                 </c:if>
 
                 <div class="info-section">
-                    <h5>Thêm Model Mới</h5>
+                    <h5>Thêm Mẫu Mới</h5>
                     <form action="addModel" method="POST">
                         <input type="hidden" name="productId" value="${productId}">
 

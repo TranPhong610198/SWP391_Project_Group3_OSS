@@ -8,13 +8,13 @@ import DAO.InventoryDAO;
 import entity.Color;
 import entity.Size;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -22,6 +22,9 @@ import java.sql.SQLException;
  */
 @WebServlet(name = "AddModelServlet", urlPatterns = {"/marketing/addModel"})
 public class AddModelServlet extends HttpServlet {
+
+    private static final Pattern COLOR_PATTERN = Pattern.compile("^([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+([ ]([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+)*$");
+    private static final int MAX_QUANTITY = 1000000;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -45,24 +48,44 @@ public class AddModelServlet extends HttpServlet {
             int productId = Integer.parseInt(request.getParameter("productId"));
             String colorName = request.getParameter("color").trim();
             String sizeName = request.getParameter("size").trim();
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            String quantityStr = request.getParameter("quantity");
 
-            // Validate input
-            if (colorName.isEmpty() || sizeName.isEmpty() || quantity < 0) {
-                request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin hợp lệ");
+            if (!COLOR_PATTERN.matcher(colorName).matches()) {
+                request.setAttribute("errorMessage", "Màu sắc chỉ được phép chứa chữ cái và khoảng trắng");
                 request.setAttribute("productId", productId);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
 
-            // lấy màu vs size của các đối tượng
+            // kiểm tra độ dài của chuỗi số lượng trước khi parse thành int
+            int quantity;
+            try {
+                // Kiểm tra xem số lượng có quá lớn không
+                if (quantityStr.length() > 9) { // Nếu số có hơn 9 chữ số (999,999,999)
+                    request.setAttribute("errorMessage", "Số lượng phải từ 0 đến 1,000,000");
+                    request.setAttribute("productId", productId);
+                    request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
+                    return;
+                }
+
+                quantity = Integer.parseInt(quantityStr);
+                if (quantity < 0 || quantity > MAX_QUANTITY) {
+                    request.setAttribute("errorMessage", "Số lượng phải từ 0 đến 1,000,000");
+                    request.setAttribute("productId", productId);
+                    request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Số lượng không hợp lệ");
+                request.setAttribute("productId", productId);
+                request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
+                return;
+            }
+
             Color color = dao.getColorByName(productId, colorName);
             Size size = dao.getSizeByName(productId, sizeName);
-            System.out.println(color);
-            System.out.println(size);
-            // Nhận hoặc tạo ID màu sắc và kích thước
-            int colorId, sizeId;
 
+            int colorId;
             if (color != null) {
                 colorId = color.getId();
             } else {
@@ -72,6 +95,7 @@ public class AddModelServlet extends HttpServlet {
                 }
             }
 
+            int sizeId;
             if (size != null) {
                 sizeId = size.getId();
             } else {
@@ -81,22 +105,17 @@ public class AddModelServlet extends HttpServlet {
                 }
             }
 
-            // kiểm tra model đã tồn tại
+            // Check if variant exists
             if (dao.isVariantExists(productId, colorId, sizeId)) {
-                request.setAttribute("errorMessage", "Model này đã tồn tại");
+                request.setAttribute("errorMessage", "Mẫu này đã tồn tại");
                 request.setAttribute("productId", productId);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
 
-            // Tạo new variant
             dao.addNewVariant(productId, colorId, sizeId, quantity);
+            response.sendRedirect("inventoryDetail?id=" + productId + "&success=add");
 
-            response.sendRedirect("inventoryDetail?id=" + productId + "&success=added");
-
-        } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Dữ liệu không hợp lệ");
-            request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);

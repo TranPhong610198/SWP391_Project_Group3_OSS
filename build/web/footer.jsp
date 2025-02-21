@@ -1,136 +1,191 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Footer</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            .footer-container {
+                background-color: #252A37;
+                color: white;
+                padding: 50px 0;
+                font-family: Arial, sans-serif;
+            }
+            .footer-content {
+                display: flex;
+                justify-content: space-between;
+                max-width: 1200px;
+                margin: 0 auto;
+                flex-wrap: wrap;
+            }
+            .footer-section {
+                width: 23%;
+                margin-bottom: 20px;
+            }
+            .footer-section h3 {
+                color: white;
+                margin-bottom: 20px;
+                position: relative;
+                padding-bottom: 10px;
+            }
+            .footer-section h3:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 2px;
+                background-color: #1E88E5;
+            }
+            .footer-section ul {
+                list-style: none;
+                padding: 0;
+            }
+            .footer-section ul li {
+                margin-bottom: 10px;
+            }
+            .footer-section ul li a {
+                color: #aaa;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+            .footer-section ul li a:hover {
+                color: white;
+            }
+            .social-icons {
+                display: flex;
+                gap: 15px;
+            }
+            .social-icons a {
+                color: white;
+                background-color: rgba(255,255,255,0.1);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.3s;
+                font-size: 18px;
+            }
+            .social-icons a:hover {
+                background-color: #1E88E5;
+            }
+            .footer-map {
+                width: 100%;
+                border-radius: 8px;
+                overflow: hidden;
+                margin-top: 15px;
+            }
+            @media (max-width: 768px) {
+                .footer-section {
+                    width: 48%;
+                    margin-bottom: 30px;
+                }
+                .footer-content {
+                    flex-direction: column;
+                    padding: 0 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <footer class="footer-container">
+            <div class="footer-content">
+                <!-- Thông tin công ty -->
+                <div class="footer-section">
+                    <h3>Thông tin công ty</h3>
+                    <ul>
+                        <c:forEach items="${companyInfo}" var="info">
+                            <li>
+                                <c:if test="${not empty info.image}">
+                                    <img src="${info.image}" alt="${info.fieldName}" style="max-width: 120px; margin-bottom: 15px;">
+                                </c:if>
+                                <c:if test="${info.fieldName eq 'logo'}">
+                                    <img src="${info.value}" alt="Company Logo" style="max-width: 120px; margin-bottom: 15px;">
+                                </c:if>
+                                <c:if test="${info.fieldName ne 'logo'}">
+                                    <strong>${info.fieldName}:</strong> ${info.value}
+                                </c:if>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
 
-<style>
-    .footer {
-        background: #f8f9fa;
-        padding: 50px 0 20px 0;
-        color: #333;
-    }
-    
-    .footer-content {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-        margin-bottom: 30px;
-    }
-    
-    .footer-section h3 {
-        margin-bottom: 20px;
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-    }
-    
-    .footer-section ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .footer-section ul li {
-        margin-bottom: 10px;
-    }
-    
-    .footer-section ul li a {
-        color: #666;
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-    
-    .footer-section ul li a:hover {
-        color: #ff4444;
-    }
-    
-    .footer-bottom {
-        text-align: center;
-        padding-top: 20px;
-        border-top: 1px solid #ddd;
-    }
+                <!-- Thông tin liên hệ -->
+                <div class="footer-section">
+                    <h3>Thông tin liên hệ</h3>
+                    <ul>
+                        <c:forEach items="${contactInfo}" var="contact">
+                            <li>
+                                <c:choose>
+                                    <c:when test="${contact.fieldName eq 'Địa chỉ'}">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </c:when>
+                                    <c:when test="${contact.fieldName eq 'Điện thoại'}">
+                                        <i class="fas fa-phone"></i>
+                                    </c:when>
+                                    <c:when test="${contact.fieldName eq 'Email'}">
+                                        <i class="fas fa-envelope"></i>
+                                    </c:when>
+                                    <c:when test="${contact.fieldName eq 'Giờ làm việc'}">
+                                        <i class="fas fa-clock"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fas fa-info-circle"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                                <span>${contact.fieldName}: ${contact.value}</span>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
 
-    .social-links a {
-        display: inline-block;
-        width: 35px;
-        height: 35px;
-        background: #333;
-        color: white;
-        text-align: center;
-        line-height: 35px;
-        border-radius: 50%;
-        margin-right: 10px;
-        transition: background 0.3s;
-    }
-
-    .social-links a:hover {
-        background: #ff4444;
-    }
-
-    .contact-info i {
-        width: 20px;
-        margin-right: 10px;
-        color: #666;
-    }
-</style>
-
-<footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <!-- Giới thiệu -->
-            <div class="footer-section">
-                <h3>Về chúng tôi</h3>
-                <ul>
-                    <li>SAVANI là thương hiệu thời trang nam được thành lập từ năm 2020, chuyên cung cấp các sản phẩm thời trang nam chất lượng cao.</li>
-                    <li class="social-links mt-3">
-                        <a href="https://www.facebook.com/Moriaty11"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                    </li>
-                </ul>
+                <!-- Liên kết nhanh và mạng xã hội -->
+                <div class="footer-section">
+                    <h3>Liên kết nhanh</h3>
+                    <div class="social-icons">
+                        <c:forEach items="${socialLinks}" var="social">
+                            <c:choose>
+                                <c:when test="${social.fieldName eq 'Facebook'}">
+                                    <a href="${social.value}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                    </c:when>
+                                    <c:when test="${social.fieldName eq 'Instagram'}">
+                                    <a href="${social.value}" target="_blank"><i class="fab fa-instagram"></i></a>
+                                    </c:when>
+                                    <c:when test="${social.fieldName eq 'Twitter'}">
+                                    <a href="${social.value}" target="_blank"><i class="fab fa-twitter"></i></a>
+                                    </c:when>
+                                    <c:when test="${social.fieldName eq 'Youtube'}">
+                                    <a href="${social.value}" target="_blank"><i class="fab fa-youtube"></i></a>
+                                    </c:when>
+                                    <c:when test="${social.fieldName eq 'LinkedIn'}">
+                                    <a href="${social.value}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                    <a href="${social.value}" target="_blank"><i class="fas fa-link"></i></a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Địa chỉ shop</h3>
+                    <div class="footer-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.5658496875026!2d105.53028539866351!3d21.02946918218991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134598cba855fa3%3A0xa996e7fddd39b07f!2zTmjDoCB0cuG7jSBNaW5oIFF1w6Ju!5e0!3m2!1sen!2s!4v1740045314800!5m2!1sen!2s"
+                            width="100%" 
+                            height="200" 
+                            style="border:0;" 
+                            allowfullscreen 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
             </div>
-
-            <!-- Liên hệ -->
-            <div class="footer-section">
-                <h3>Thông tin liên hệ</h3>
-                <ul class="contact-info">
-                    <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
-                    <li><i class="fas fa-phone"></i> Hotline: 1900 1234</li>
-                    <li><i class="fas fa-envelope"></i> Email: info@savani.com</li>
-                    <li><i class="fas fa-clock"></i> Giờ làm việc: 8:00 - 22:00</li>
-                </ul>
-            </div>
-
-            <!-- Chính sách -->
-            <div class="footer-section">
-                <h3>Chính sách</h3>
-                <ul>
-                    <li><a href="#">Chính sách bảo hành</a></li>
-                    <li><a href="#">Chính sách đổi trả</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Điều khoản dịch vụ</a></li>
-                    <li><a href="#">Hướng dẫn mua hàng</a></li>
-                    <li><a href="#">Phương thức thanh toán</a></li>
-                </ul>
-            </div>
-
-            <!-- Cửa hàng -->
-            <div class="footer-section">
-                <h3>Hệ thống cửa hàng</h3>
-                <ul>
-                    <li><strong>TP.HCM:</strong></li>
-                    <li>- 123 Nguyễn Trãi, Q.1</li>
-                    <li>- 456 Lê Văn Sỹ, Q.3</li>
-                    <li><strong>Hà Nội:</strong></li>
-                    <li>- 789 Láng Hạ, Q.Đống Đa</li>
-                    <li>- 321 Cầu Giấy, Q.Cầu Giấy</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Đội Báo. Tất cả các quyền được bảo lưu.</p>
-        </div>
-    </div>
-</footer>
-
-<!-- Font Awesome cho icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        </footer>
+    </body>
+</html>

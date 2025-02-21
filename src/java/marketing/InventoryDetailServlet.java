@@ -91,18 +91,19 @@ public class InventoryDetailServlet extends HttpServlet {
         String action = request.getParameter("action");
         int productId = Integer.parseInt(request.getParameter("productId"));
         InventoryDAO inventoryDAO = new InventoryDAO();
-
         try {
             if ("delete".equals(action)) {
                 int variantId = Integer.parseInt(request.getParameter("variantId"));
-
                 // xóa khỏi tất cả các bảng liên quan
-                inventoryDAO.deleteVariant(variantId);
-
-                response.sendRedirect("inventoryDetail?id=" + productId + "&success=deleted");
+                boolean deleted = inventoryDAO.deleteVariant(variantId);
+                if (deleted) {
+                    response.sendRedirect("inventoryDetail?id=" + productId + "&success=delete");
+                } else {
+                    response.sendRedirect("inventoryDetail?id=" + productId + "&error=delete");
+                }
             }
         } catch (Exception e) {
-            response.sendRedirect("error/404.jsp");
+            response.sendRedirect("inventoryDetail?id=" + productId + "&error=delete");
         }
     }
 }
