@@ -1,36 +1,150 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
 package marketing;
 
 import DAO.SliderDAO;
 import entity.Slider;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import java.io.File;
 
-@WebServlet(name = "SliderDetailServlet", urlPatterns = {"/marketing/sliderDetail"})
+/**
+ *
+ * @author DELL
+ */
+@WebServlet(name = "SliderDetailServlet", urlPatterns = {"/marketing/detailSlider"})
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,    // 1 MB
+    maxFileSize = 1024 * 1024 * 10,      // 10 MB
+    maxRequestSize = 1024 * 1024 * 15,   // 15 MB
+    location = ""
+)
 public class SliderDetailServlet extends HttpServlet {
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet SliderDetailServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet SliderDetailServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String sliderIdParam = request.getParameter("id");
-        if (sliderIdParam != null) {
-            try {
-                int sliderId = Integer.parseInt(sliderIdParam);
-                SliderDAO sliderDAO = new SliderDAO();
-                Slider slider = sliderDAO.getSliderById(sliderId);
-                
-                if (slider != null) {
-                    request.setAttribute("slider", slider);
-                    request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+        String sId = request.getParameter("id");
+        int sliderId;
+        try {
+            sliderId = Integer.parseInt(sId);
+            SliderDAO sliderDAO = new SliderDAO();
+            Slider slider = sliderDAO.getSliderById(sliderId);
+
+            request.setAttribute("slider", slider);
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            response.sendRedirect("sliderList");
         }
-        response.sendRedirect("sliderList");
     }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        int id = Integer.parseInt(request.getParameter("id"));
+        String title = request.getParameter("title");
+        String oldImage = request.getParameter("old_image");
+        String backlink = request.getParameter("backlink");
+        int displayOrder = Integer.parseInt(request.getParameter("display_order"));
+        String status = request.getParameter("status");
+        String note = request.getParameter("note");
+        
+        String image = oldImage; // Default to keeping old image
+        
+        try {
+            Part imagePart = request.getPart("image");
+            if (imagePart != null && imagePart.getSize() > 0) {
+                String uploadPath = request.getServletContext().getRealPath("") + "uploads";
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+                
+                String fileName = System.currentTimeMillis() + "_" + imagePart.getSubmittedFileName();
+                String filePath = uploadPath + File.separator + fileName;
+                
+                imagePart.write(filePath);
+                image = "uploads/" + fileName;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Slider slider = new Slider(id, title, image, backlink, status, displayOrder, note);
+
+        SliderDAO sliderDAO = new SliderDAO();
+        boolean isUpdated = sliderDAO.updateSlider(slider);
+
+        if (isUpdated) {
+            response.sendRedirect("sliderList");
+        } else {
+            Slider s = sliderDAO.getSliderById(id);
+            request.setAttribute("slider", s);
+            request.setAttribute("error", "Cập nhật thanh trượt thất bại.");
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+        }
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 }
