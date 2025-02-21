@@ -59,19 +59,6 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        FooterDAO dao = new FooterDAO();
-
-        // Fetch different types of footer content
-        List<Footer> companyInfo = dao.getCompanyInfo();
-        List<Footer> contactInfo = dao.getContactInfo();
-        List<Footer> socialLinks = dao.getSocialLinks();
-
-        // Set attributes
-        request.setAttribute("companyInfo", companyInfo);
-        request.setAttribute("contactInfo", contactInfo);
-        request.setAttribute("socialLinks", socialLinks);
-
-        // Forward to the JSP page
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
     }
 
