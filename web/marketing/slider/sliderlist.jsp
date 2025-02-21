@@ -181,7 +181,7 @@
                             <table class="table table-hover table-bordered mb-0">
                                 <thead>
                                     <tr class="bg-light">
-                                        <th class="text-center" style="width: 60px;">ID</th>
+                                        <th class="text-center" style="width: 60px;">STT</th>
                                         <th>Tiêu đề</th>
                                         <th class="text-center" style="width: 150px;">Hình ảnh</th>
                                         <th>Liên kết ngược</th>
@@ -193,9 +193,9 @@
                                 <tbody>
                                     <c:choose>
                                         <c:when test="${not empty sliders}">
-                                            <c:forEach var="slider" items="${sliders}">
+                                            <c:forEach var="slider" items="${sliders}" varStatus="status">
                                                 <tr>
-                                                    <td class="text-center">${slider.id}</td>
+                                                    <td class="text-center">${(currentPage - 1) * pageSize + status.index + 1}</td>
                                                     <td>${slider.title}</td>
                                                     <td class="text-center">
                                                         <img src="${slider.image_url}" alt="${slider.title}" class="slider-image">
@@ -240,9 +240,8 @@
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div class="text-muted">
-                        Hiển thị ${(currentPage-1)*pageSize + 1} - ${currentPage*pageSize > totalItems ? totalItems : currentPage*pageSize} 
-                        trên tổng số ${totalItems} slider
+                    <div class="text-muted small">
+                        Hiển thị ${sliders.size()} / ${totalItems} slider
                     </div>
                     
                     <nav>

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package marketing;
 
 import DAO.SliderDAO;
@@ -92,8 +88,7 @@ public class SliderListServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalItems", totalSliders);
-        request.setAttribute("search", search);
-        request.setAttribute("status", status);
+        request.setAttribute("pageSize", pageSize);  // Make sure pageSize is set as attribute
         
         // Forward to JSP
         request.getRequestDispatcher("/marketing/slider/sliderlist.jsp").forward(request, response);
