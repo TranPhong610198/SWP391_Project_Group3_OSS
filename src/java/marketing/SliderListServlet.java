@@ -91,6 +91,7 @@ public class SliderListServlet extends HttpServlet {
         request.setAttribute("sliders", sliders);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalItems", totalSliders);
         request.setAttribute("search", search);
         request.setAttribute("status", status);
         

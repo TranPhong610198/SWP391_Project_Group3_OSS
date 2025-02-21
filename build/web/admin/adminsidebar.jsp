@@ -67,24 +67,6 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="#contentSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
-                <div>
-                    <i class="fas fa-newspaper me-2"></i>
-                    Quản lý nội dung
-                </div>
-                <i class="fas fa-chevron-down ms-auto"></i>
-            </a>
-            <ul class="submenu collapse list-unstyled ms-3 mt-1" id="contentSubmenu">
-                <li class="submenu-item py-1">
-                    <a href="postList" class="text-decoration-none text-light">Bài đăng</a>
-                </li>
-                <li class="submenu-item py-1">
-                    <a href="content/social-posts.jsp" class="text-decoration-none text-light">Thanh Trượt</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-item p-2">
             <a href="customer-feedback.jsp" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-comments me-2"></i>
                 Phản hồi khách hàng

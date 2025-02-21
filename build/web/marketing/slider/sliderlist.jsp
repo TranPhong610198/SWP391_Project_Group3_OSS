@@ -198,17 +198,17 @@
                                                     <td class="text-center">${slider.id}</td>
                                                     <td>${slider.title}</td>
                                                     <td class="text-center">
-                                                        <img src="${slider.image}" alt="${slider.title}" class="slider-image">
+                                                        <img src="${slider.image_url}" alt="${slider.title}" class="slider-image">
                                                     </td>
-                                                    <td>${slider.backlink}</td>
-                                                    <td class="text-center">${slider.displayOrder}</td>
+                                                    <td>${slider.link}</td>
+                                                    <td class="text-center">${slider.display_order}</td>
                                                     <td class="text-center">
                                                         <span class="badge-status ${slider.status == 'active' ? 'badge-active' : 'badge-inactive'}">
                                                             ${slider.status == 'active' ? 'Hiển thị' : 'Ẩn'}
                                                         </span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="${pageContext.request.contextPath}/marketing/editSlider?id=${slider.id}" 
+                                                        <a href="${pageContext.request.contextPath}/marketing/detailSlider?id=${slider.id}" 
                                                            class="btn btn-primary btn-sm action-btn me-1" 
                                                            title="Chỉnh sửa">
                                                             <i class="fas fa-edit"></i>

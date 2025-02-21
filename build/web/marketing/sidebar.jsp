@@ -77,7 +77,7 @@
                     <a href="postList" class="text-decoration-none text-light">Bài đăng</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="content/social-posts.jsp" class="text-decoration-none text-light">Thanh Trượt</a>
+                    <a href="sliderList" class="text-decoration-none text-light">Thanh Trượt</a>
                 </li>
             </ul>
         </li>

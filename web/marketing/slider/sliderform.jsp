@@ -166,22 +166,22 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label for="image" class="form-label">Hình ảnh</label>
-                                <input type="file" class="form-control" id="image" name="image" 
+                                <label for="image_url" class="form-label">Hình ảnh</label>
+                                <input type="file" class="form-control" id="image_url" name="image_url" 
                                        accept="image/*" required onchange="previewImage(this)">
                                 <img id="image-preview" class="preview-image mt-2" style="display: none;">
                             </div>
 
                             <div class="col-md-12">
-                                <label for="backlink" class="form-label">Liên kết ngược</label>
-                                <input type="url" class="form-control" id="backlink" name="backlink" 
+                                <label for="link" class="form-label">Liên kết ngược</label>
+                                <input type="url" class="form-control" id="link" name="link" 
                                        placeholder="https://example.com" required>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="displayOrder" class="form-label">Thứ tự hiển thị</label>
-                                <input type="number" class="form-control" id="displayOrder" 
-                                       name="displayOrder" min="1" required>
+                                <label for="display_order" class="form-label">Thứ tự hiển thị</label>
+                                <input type="number" class="form-control" id="display_order" 
+                                       name="display_order" min="1" required>
                             </div>
 
                             <div class="col-md-6">

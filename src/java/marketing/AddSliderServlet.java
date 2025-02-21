@@ -34,12 +34,12 @@ public class AddSliderServlet extends HttpServlet {
         try {
             // Get parameters from the form
             String title = request.getParameter("title");
-            String backlink = request.getParameter("backlink");
+            String link = request.getParameter("link");
             String status = request.getParameter("status");
-            String note = request.getParameter("note");
-            int displayOrder = 0;
+            String notes = request.getParameter("notes");
+            int display_order = 0;
             try {
-                displayOrder = Integer.parseInt(request.getParameter("display_order"));
+                display_order = Integer.parseInt(request.getParameter("display_order"));
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Thứ tự hiển thị không hợp lệ!");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
@@ -47,9 +47,9 @@ public class AddSliderServlet extends HttpServlet {
             }
 
             // Handle image upload
-            String image = "";
+            String image_url = "";
             try {
-                Part filePart = request.getPart("image");
+                Part filePart = request.getPart("image_url");
                 if (filePart != null && filePart.getSize() > 0) {
                     String uploadPath = request.getServletContext().getRealPath("") + "uploads";
                     File uploadDir = new File(uploadPath);
@@ -61,7 +61,7 @@ public class AddSliderServlet extends HttpServlet {
                     String filePath = uploadPath + File.separator + fileName;
                     
                     filePart.write(filePath);
-                    image = "uploads/" + fileName;
+                    image_url = "uploads/" + fileName;
                 } else {
                     request.setAttribute("error", "Vui lòng chọn hình ảnh cho slider!");
                     request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
@@ -77,11 +77,11 @@ public class AddSliderServlet extends HttpServlet {
             // Create and save slider
             Slider slider = new Slider();
             slider.setTitle(title);
-            slider.setImage(image);
-            slider.setBacklink(backlink);
-            slider.setDisplayOrder(displayOrder);
+            slider.setImage_url(image_url);
+            slider.setLink(link);
+            slider.setDisplay_order(display_order);
             slider.setStatus(status);
-            slider.setNote(note);
+            slider.setNotes(notes);
 
             SliderDAO sliderDAO = new SliderDAO();
             boolean isAdded = sliderDAO.addSlider(slider);

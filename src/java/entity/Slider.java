@@ -5,27 +5,28 @@ import java.sql.Date;
 public class Slider {
     private int id;
     private String title;
-    private String image;        // Changed from imageUrl
-    private String backlink;     // Changed from link
+    private String image_url;        // Changed from imageUrl
+    private String link;     // Changed from link
     private String status;
-    private int displayOrder;    // Already matches
-    private String note;         // Changed from notes
+    private int display_order;    // Already matches
+    private String notes;         // Changed from notes
 
     public Slider() {
     }
 
-    public Slider(int id, String title, String image, String backlink, String status, 
-                 int displayOrder, String note) {
+    public Slider(int id, String title, String image_url, String link, String status, 
+                 int display_order, String notes) {
         this.id = id;
         this.title = title;
-        this.image = image;
-        this.backlink = backlink;
+        this.image_url = image_url;
+        this.link = link;
         this.status = status;
-        this.displayOrder = displayOrder;
-        this.note = note;
+        this.display_order = display_order;
+        this.notes = notes;
     }
 
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -42,20 +43,20 @@ public class Slider {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
-    public String getBacklink() {
-        return backlink;
+    public String getLink() {
+        return link;
     }
 
-    public void setBacklink(String backlink) {
-        this.backlink = backlink;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getStatus() {
@@ -66,19 +67,20 @@ public class Slider {
         this.status = status;
     }
 
-    public int getDisplayOrder() {
-        return displayOrder;
+    public int getDisplay_order() {
+        return display_order;
     }
 
-    public void setDisplayOrder(int displayOrder) {
-        this.displayOrder = displayOrder;
+    public void setDisplay_order(int display_order) {
+        this.display_order = display_order;
     }
 
-    public String getNote() {
-        return note;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }   
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+      
 }

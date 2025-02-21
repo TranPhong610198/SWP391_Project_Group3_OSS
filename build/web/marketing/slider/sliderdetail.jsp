@@ -129,12 +129,12 @@
                                 <i class="fas fa-eye me-2"></i>Xem trước thanh trượt
                             </div>
                             <div class="card-body">
-                                <img src="${pageContext.request.contextPath}/${slider.getImage()}" 
+                                <img src="${pageContext.request.contextPath}/${slider.getImage_url()}" 
                                      alt="${slider.getTitle()}" class="slider-image">
                                 <h3 class="mb-3">${slider.getTitle()}</h3>
                                 <div class="mb-3">
-                                    <p><strong>Liên kết:</strong> <a href="${slider.getBacklink()}" target="_blank">${slider.getBacklink()}</a></p>
-                                    <p><strong>Thứ tự hiển thị:</strong> ${slider.getDisplayOrder()}</p>
+                                    <p><strong>Liên kết:</strong> <a href="${slider.getLink()}" target="_blank">${slider.getLink()}</a></p>
+                                    <p><strong>Thứ tự hiển thị:</strong> ${slider.getDisplay_order()}</p>
                                     <p><strong>Trạng thái:</strong> 
                                         <span class="badge ${slider.getStatus() == 'active' ? 'bg-success' : 'bg-secondary'}">
                                             ${slider.getStatus() == 'active' ? 'Đang hoạt động' : 'Không hoạt động'}
@@ -170,19 +170,19 @@
                                         <label for="image" class="form-label fw-bold">Hình ảnh</label>
                                         <input type="file" class="form-control" id="image" name="image" 
                                                accept="image/*">
-                                        <input type="hidden" name="old_image" value="${slider.getImage()}">
+                                        <input type="hidden" name="old_image" value="${slider.getImage_url()}">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="backlink" class="form-label fw-bold">Liên kết ngược</label>
-                                        <input type="url" class="form-control" id="backlink" name="backlink" 
-                                               value="${slider.getBacklink()}" required>
+                                        <label for="link" class="form-label fw-bold">Liên kết ngược</label>
+                                        <input type="url" class="form-control" id="link" name="link" 
+                                               value="${slider.getLink()}" required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="displayOrder" class="form-label fw-bold">Thứ tự hiển thị</label>
-                                        <input type="number" class="form-control" id="displayOrder" name="displayOrder" 
-                                               value="${slider.getDisplayOrder()}" required min="1">
+                                        <label for="display_order" class="form-label fw-bold">Thứ tự hiển thị</label>
+                                        <input type="number" class="form-control" id="display_order" name="display_order" 
+                                               value="${slider.getDisplay_order()}" required min="1">
                                     </div>
 
                                     <div class="mb-3">

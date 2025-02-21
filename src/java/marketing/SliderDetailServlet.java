@@ -97,15 +97,15 @@ public class SliderDetailServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         String title = request.getParameter("title");
         String oldImage = request.getParameter("old_image");
-        String backlink = request.getParameter("backlink");
-        int displayOrder = Integer.parseInt(request.getParameter("display_order"));
+        String link = request.getParameter("link");
+        int display_order = Integer.parseInt(request.getParameter("display_order"));
         String status = request.getParameter("status");
-        String note = request.getParameter("note");
+        String notes = request.getParameter("notes");
         
-        String image = oldImage; // Default to keeping old image
+        String image_url = oldImage; // Default to keeping old image
         
         try {
-            Part imagePart = request.getPart("image");
+            Part imagePart = request.getPart("image_url");
             if (imagePart != null && imagePart.getSize() > 0) {
                 String uploadPath = request.getServletContext().getRealPath("") + "uploads";
                 File uploadDir = new File(uploadPath);
@@ -117,13 +117,13 @@ public class SliderDetailServlet extends HttpServlet {
                 String filePath = uploadPath + File.separator + fileName;
                 
                 imagePart.write(filePath);
-                image = "uploads/" + fileName;
+                image_url = "uploads/" + fileName;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Slider slider = new Slider(id, title, image, backlink, status, displayOrder, note);
+        Slider slider = new Slider(id, title, image_url,link, status, display_order, notes);
 
         SliderDAO sliderDAO = new SliderDAO();
         boolean isUpdated = sliderDAO.updateSlider(slider);

@@ -52,11 +52,11 @@ public class SliderDAO extends DBContext {
                     Slider slider = new Slider();
                     slider.setId(rs.getInt("id"));
                     slider.setTitle(rs.getString("title"));
-                    slider.setImage(rs.getString("image"));
-                    slider.setBacklink(rs.getString("backlink"));
-                    slider.setDisplayOrder(rs.getInt("display_order"));
+                    slider.setImage_url(rs.getString("image_url"));
+                    slider.setLink(rs.getString("link"));
+                    slider.setDisplay_order(rs.getInt("display_order"));
                     slider.setStatus(rs.getString("status"));
-                    slider.setNote(rs.getString("note"));
+                    slider.setNotes(rs.getString("notes"));
                     sliders.add(slider);
                 }
             }
@@ -107,11 +107,11 @@ public class SliderDAO extends DBContext {
                     Slider slider = new Slider();
                     slider.setId(rs.getInt("id"));
                     slider.setTitle(rs.getString("title"));
-                    slider.setImage(rs.getString("image"));
-                    slider.setBacklink(rs.getString("backlink"));
-                    slider.setDisplayOrder(rs.getInt("display_order"));
+                    slider.setImage_url(rs.getString("image_url"));
+                    slider.setLink(rs.getString("link"));
+                    slider.setDisplay_order(rs.getInt("display_order"));
                     slider.setStatus(rs.getString("status"));
-                    slider.setNote(rs.getString("note"));
+                    slider.setNotes(rs.getString("notes"));
                     return slider;
                 }
             }
@@ -123,16 +123,16 @@ public class SliderDAO extends DBContext {
     }
 
     public boolean addSlider(Slider slider) {
-        String sql = "INSERT INTO sliders (title, image, backlink, display_order, status, note) " +
+        String sql = "INSERT INTO sliders (title, image_url, link, display_order, status, notes) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, slider.getTitle());
-            st.setString(2, slider.getImage());
-            st.setString(3, slider.getBacklink());
-            st.setInt(4, slider.getDisplayOrder());
+            st.setString(2, slider.getImage_url());
+            st.setString(3, slider.getLink());
+            st.setInt(4, slider.getDisplay_order());
             st.setString(5, slider.getStatus());
-            st.setString(6, slider.getNote());
+            st.setString(6, slider.getNotes());
             
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -143,16 +143,16 @@ public class SliderDAO extends DBContext {
     }
 
     public boolean updateSlider(Slider slider) {
-        String sql = "UPDATE sliders SET title = ?, image = ?, backlink = ?, display_order = ?, " +
-                    "status = ?, note = ? WHERE id = ?";
+        String sql = "UPDATE sliders SET title = ?, image_url = ?, link = ?, display_order = ?, " +
+                    "status = ?, notes = ? WHERE id = ?";
         
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, slider.getTitle());
-            st.setString(2, slider.getImage());
-            st.setString(3, slider.getBacklink());
-            st.setInt(4, slider.getDisplayOrder());
+            st.setString(2, slider.getImage_url());
+            st.setString(3, slider.getLink());
+            st.setInt(4, slider.getDisplay_order());
             st.setString(5, slider.getStatus());
-            st.setString(6, slider.getNote());
+            st.setString(6, slider.getNotes());
             st.setInt(7, slider.getId());
             
             return st.executeUpdate() > 0;
