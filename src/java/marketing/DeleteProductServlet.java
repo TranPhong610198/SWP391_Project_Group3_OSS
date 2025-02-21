@@ -64,10 +64,25 @@ public class DeleteProductServlet extends HttpServlet {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             String uploadPath = getServletContext().getRealPath("/uploads/productImages");
+
+            if (productDAO.hasProcessOrders(productId)) {
+                response.sendRedirect("productlist?alert=ER1_OP");
+                return;
+            }
+
+            if (productDAO.hasStock(productId)) {
+                response.sendRedirect("productlist?alert=ER2_HS");
+                return;
+            }
+            
+            if (productDAO.hasProductInCart(productId)){
+                
+            }
+
             if (productDAO.deleteProduct(productId, uploadPath)) {
-                response.sendRedirect("productlist");
+                response.sendRedirect("productlist?alert=SS");
             } else {
-                response.sendRedirect("error/error.jsp");
+                response.sendRedirect("productlist?alert=Sản phẩm không thể xóa");
             }
         } catch (Exception e) {
             e.printStackTrace();

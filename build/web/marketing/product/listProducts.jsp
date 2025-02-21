@@ -217,6 +217,20 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${!alert.trim().isEmpty() && alert!=null}">
+                    <c:if test="${alert.equals('Xóa sản phẩm thành công')}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            ${alert}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                    <c:if test="${!alert.equals('Xóa sản phẩm thành công')}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            ${alert}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                </c:if>
                 <h2 class="page-title">
                     <i class="fas fa-box me-2"></i>Danh sách sản phẩm
                 </h2>

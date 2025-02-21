@@ -182,20 +182,55 @@ public class ProductDAO extends DBContext {
 //______________________________________________________Hết Phần DAO Cho Việc Add_________________________________________
 
 //_______________________________________________________Phần DAO Cho Việc Delete____________________________________________
-    public boolean canDeleteProduct(int productId) {
-        String query = "SELECT COUNT(*) FROM order_items oi "
-                + "JOIN orders o ON oi.order_id = o.id "
-                + "WHERE oi.product_id = ? AND o.status IN ('pending', 'processing', 'shipping')";
+    //Kiểm tra xem sản phẩm có trong cart hay không
+    public boolean hasProductInCart(int productId) {
+        String query = "SELECT COUNT(*) FROM cart_items WHERE product_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) == 0; // Nếu không có đơn hàng đang xử lý, có thể xóa
+                return rs.getInt(1) > 0; // Nếu COUNT > 0, sản phẩm đang có trong giỏ hàng
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    //Kiểm tra sản phẩm có trong order processing không
+    public boolean hasProcessOrders(int productId) {
+        String query = "SELECT COUNT(*) FROM order_items oi "
+                + "JOIN orders o ON oi.order_id = o.id "
+                + "WHERE oi.product_id = ? AND o.status IN ('pending', 'processing', 'shipped')";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu có đơn hàng đang xử lý, không thể xóa
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //Kiểm tra sản phẩm còn tồn hàng không    
+    public boolean hasStock(int productId) {
+        String query = "SELECT SUM(stock_quantity) FROM product_variants WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu tổng stock_quantity > 0, sản phẩm vẫn còn tồn kho
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean canDeleteProduct(int productId) {
+        return !hasProcessOrders(productId) && !hasStock(productId);
     }
 
     public boolean deleteProduct(int productId, String uploadPath) {
@@ -216,7 +251,6 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
             return false;
         }
-        
 
         // Lấy danh sách ảnh phụ của sản phẩm để xóa file
         List<String> imagePaths = getProductImages(productId);
@@ -259,4 +293,5 @@ public class ProductDAO extends DBContext {
         }
         return false;
     }
+
 }
