@@ -4,6 +4,7 @@
  */
 package marketing;
 
+import DAO.CartDAO;
 import DAO.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,6 +23,7 @@ import java.io.PrintWriter;
 public class DeleteProductServlet extends HttpServlet {
 
     private ProductDAO productDAO = new ProductDAO();
+    private CartDAO cartDAO = new CartDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -64,25 +66,30 @@ public class DeleteProductServlet extends HttpServlet {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             String uploadPath = getServletContext().getRealPath("/uploads/productImages");
-
+            //kiểm tra đơn
             if (productDAO.hasProcessOrders(productId)) {
                 response.sendRedirect("productlist?alert=ER1_OP");
                 return;
             }
-
+            //kiểm tra kho
             if (productDAO.hasStock(productId)) {
                 response.sendRedirect("productlist?alert=ER2_HS");
                 return;
             }
-            
-            if (productDAO.hasProductInCart(productId)){
-                
+
+            //kiểm tra giỏ
+            if (productDAO.hasProductInCart(productId)) {
+                if (!cartDAO.deleteProductFromCart(productId)) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Lỗi khi xóa sản phẩm trong giỏ hàng");
+                    return;
+                }
             }
 
             if (productDAO.deleteProduct(productId, uploadPath)) {
                 response.sendRedirect("productlist?alert=SS");
             } else {
-                response.sendRedirect("productlist?alert=Sản phẩm không thể xóa");
+//                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Lỗi khi xóa sản phẩm");
+                response.sendRedirect("productlist?alert=ERR");
             }
         } catch (Exception e) {
             e.printStackTrace();
