@@ -9,222 +9,15 @@
         <title>User Profile</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <style>
-            :root {
-                --primary:rgb(129, 33, 33);
-                --primary-dark: #b52626;
-                --secondary: #64748b;
-                --success: #10b981;
-                --surface: #ffffff;
-                --background: #f1f5f9;
-                --text: #1e293b;
-                --text-light: #64748b;
-                --border: #e2e8f0;
-                --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-                --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-                --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-            }
-
-            body {
-                background: var(--background);
-                font-family: system-ui, -apple-system, sans-serif;
-                color: var(--text);
-                line-height: 1.6;
-            }
-
-            .container {
-                max-width: 1200px;
-                padding: 2rem 1rem;
-            }
-
-            .profile-card {
-                background: var(--surface);
-                border-radius: 1rem;
-                box-shadow: var(--shadow-md);
-                transition: all 0.3s ease;
-                overflow: hidden;
-            }
-
-            .avatar-container {
-                position: relative;
-                width: 160px;
-                height: 160px;
-                margin: 2rem auto;
-            }
-
-            .profile-picture {
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 4px solid var(--surface);
-                box-shadow: var(--shadow-md);
-            }
-
-            .avatar-overlay {
-                position: absolute;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.6);
-                backdrop-filter: blur(2px);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                transition: opacity 0.3s;
-                cursor: pointer;
-            }
-
-            .avatar-overlay:hover {
-                opacity: 1;
-            }
-
-            .avatar-overlay i {
-                color: white;
-                font-size: 2rem;
-            }
-
-            .user-info {
-                padding: 1.5rem;
-                text-align: center;
-            }
-
-            .user-info h4 {
-                color: var(--text);
-                font-size: 1.5rem;
-                font-weight: 600;
-                margin-bottom: 1rem;
-            }
-
-            .contact-info {
-                color: var(--text-light);
-                margin-bottom: 1.5rem;
-            }
-
-            .contact-info i {
-                color: var(--primary);
-                width: 1.5rem;
-                margin-right: 0.5rem;
-            }
-
-            .form-control {
-                border: 1px solid var(--border);
-                padding: 0.75rem 1rem;
-                border-radius: 0.75rem;
-                transition: all 0.2s;
-            }
-
-            .form-control:focus {
-                border-color: var(--primary);
-                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-            }
-
-            .btn {
-                padding: 0.75rem 1.5rem;
-                border-radius: 0.75rem;
-                font-weight: 500;
-                transition: all 0.2s;
-            }
-
-            .btn-primary {
-                background: var(--primary);
-                border: none;
-            }
-
-            .btn-primary:hover {
-                background: var(--primary-dark);
-                transform: translateY(-1px);
-            }
-
-            .section-title {
-                color: var(--text);
-                font-size: 1.25rem;
-                font-weight: 600;
-                margin-bottom: 1.5rem;
-                padding-bottom: 0.75rem;
-                border-bottom: 2px solid var(--border);
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-
-            .section-title i {
-                color: var(--primary);
-            }
-
-            .address-item {
-                background: var(--surface);
-                border-radius: 1rem;
-                border: 1px solid var(--border);
-                padding: 1.5rem;
-                margin-bottom: 1rem;
-                transition: all 0.2s;
-            }
-
-            .address-item:hover {
-                border-color: var(--primary);
-                box-shadow: var(--shadow-md);
-            }
-
-            .address-item p {
-                margin-bottom: 0.5rem;
-            }
-
-            .address-item i {
-                color: var(--primary);
-                width: 1.5rem;
-            }
-
-            .preview-container {
-                margin-top: 1rem;
-                display: none;
-            }
-
-            .preview-container img {
-                max-width: 100%;
-                border-radius: 0.75rem;
-                margin-bottom: 1rem;
-            }
-
-            .upload-actions {
-                display: none;
-                gap: 0.5rem;
-            }
-
-            @media (max-width: 768px) {
-                .avatar-container {
-                    width: 120px;
-                    height: 120px;
-                }
-
-                .section-title {
-                    font-size: 1.125rem;
-                }
-
-                .btn {
-                    width: 100%;
-                    margin-bottom: 0.5rem;
-                }
-            }
-            .form-label {
-                font-weight: 500;
-            }
-            .form-select, .form-control {
-                border-radius: 0.75rem;
-                padding: 0.75rem 1rem;
-                border: 1px solid var(--border);
-            }
-            .form-select:focus, .form-control:focus {
-                border-color: var(--primary);
-                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-            }
-        </style>
+        <link href="assests/css/profile.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container">
+        <jsp:include page="header.jsp" />
+
+        <div class="container-profile">
             <div class="row g-4">
                 <!-- Profile Info Column -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="profile-card">
                         <div class="avatar-container">
                             <img src="${sessionScope.acc.avatar}" alt="avatar" class="profile-picture" 
@@ -261,15 +54,13 @@
                                 <a href="changepassword" class="btn btn-primary btn-sm">
                                     <i class="fas fa-key me-2"></i> Đổi mật khẩu
                                 </a>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Content Column -->
-                <div class="col-md-8">
+                <!-- Personal Info and Shipping Addresses Column -->
+                <div class="col-md-5">
                     <div class="profile-card p-4">
                         <h2 class="section-title">
                             <i class="fas fa-user-circle"></i>Thông tin cá nhân
@@ -310,8 +101,6 @@
                         <h3 class="section-title">
                             <i class="fas fa-map-marker-alt"></i>Địa chỉ vận chuyển
                         </h3>
-
-
                         <div class="addresses-container mb-4">
                             <c:forEach var="address" items="${addresses}">
                                 <div class="address-item">
@@ -339,7 +128,6 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </div>
-
                                             <p><i class="fas fa-user"></i>${address.recipientName}</p>
                                             <p><i class="fas fa-phone"></i>${address.phone}</p>
                                             <p class="mb-0"><i class="fas fa-home"></i>${address.address}</p>
@@ -360,7 +148,12 @@
                                 </div>
                             </c:forEach>
                         </div>
+                    </div>
+                </div>
 
+                <!-- Add New Address Column -->
+                <div class="col-md-4">
+                    <div class="profile-card p-4">
                         <h3 class="section-title">
                             <i class="fas fa-plus-circle"></i>Thêm địa chỉ mới
                         </h3>
@@ -402,8 +195,8 @@
 
                                 <div class="col-12">
                                     <label class="form-label">Địa chỉ cụ thể</label>
-                                    <input type="text" class="form-control" id="specific_address" 
-                                           placeholder="Số nhà, tên đường, khu vực" required>
+                                    <textarea class="form-control" id="specific_address" 
+                                              placeholder="Số nhà, tên đường, khu vực" required></textarea>
                                 </div>
 
                                 <!-- Hidden input để lưu địa chỉ đầy đủ -->
@@ -638,5 +431,7 @@
                                             })
                                         })()
         </script>
+
+        <jsp:include page="footer.jsp" />
     </body>
 </html>

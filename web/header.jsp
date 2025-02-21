@@ -125,7 +125,7 @@
                                         <button class="dropbtn">
                                             <img src="${sessionScope.acc.avatar}" alt="avatar" class="avatar-img" 
                                                  onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
-                                            <div class="user-info">
+                                            <div class="user-info-header">
                                                 <span class="full-name">${sessionScope.acc.fullName}</span>
                                                 <span class="username">${sessionScope.acc.username}</span>
                                             </div>
@@ -163,5 +163,42 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Custom JavaScript for navbar toggle -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var navbarToggler = document.querySelector('.navbar-toggler');
+                var navbarCollapse = document.querySelector('.navbar-collapse');
+
+                // Toggle aria-expanded attribute
+                navbarToggler.addEventListener('click', function() {
+                    var isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
+                    navbarToggler.setAttribute('aria-expanded', !isExpanded);
+                });
+
+                // Close navbar when clicking outside
+                document.addEventListener('click', function(event) {
+                    var isClickInside = navbarCollapse.contains(event.target) || navbarToggler.contains(event.target);
+                    
+                    if (!isClickInside && navbarCollapse.classList.contains('show')) {
+                        navbarCollapse.classList.remove('show');
+                        navbarToggler.classList.add('collapsed');
+                        navbarToggler.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Close navbar when clicking on a nav-link
+                var navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(function(navLink) {
+                    navLink.addEventListener('click', function() {
+                        if (window.innerWidth < 992) { // Only on mobile
+                            navbarCollapse.classList.remove('show');
+                            navbarToggler.classList.add('collapsed');
+                            navbarToggler.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

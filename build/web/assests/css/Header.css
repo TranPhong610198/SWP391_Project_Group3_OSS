@@ -150,7 +150,16 @@ body {
     color: #3498db;
 }
 
-/* User Menu */
+/* Main Navigation Items */
+.navbar-nav {
+    flex-wrap: nowrap; /* Prevent nav items from wrapping */
+}
+
+.nav-link {
+    white-space: nowrap; /* Keep nav text in one line */
+}
+
+/* User Menu Container */
 .user-menu {
     position: relative;
     display: inline-block;
@@ -183,7 +192,7 @@ body {
     object-fit: cover;
 }
 
-.user-info {
+.user-info-header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -194,22 +203,40 @@ body {
     font-weight: 500;
     color: #34495e;
     font-size: 14px;
+    max-width: 150px; /* Limit width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .username {
     font-size: 12px;
     color: #95a5a6;
+    max-width: 150px; /* Limit width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+/* Right side items container */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 
 .dropdown {
     position: relative;
     display: inline-block;
+    min-width: fit-content;
 }
 
 .dropdown-content {
     position: absolute;
     background: #fff;
-    min-width: 200px;
+    min-width: 100%;
+    white-space: nowrap;
     border-radius: 12px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
@@ -286,20 +313,17 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-wrap: nowrap; /* Prevent wrapping of elements */
 }
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
-    .mega-menu {
-        min-width: 100%;
-        position: static;
+    .user-info-header {
+        display: flex; /* Show user info even on mobile */
+        max-width: 150px; /* Smaller max-width on mobile */
     }
     
-    .search-form input {
-        width: 150px;
-    }
-    
-    .user-info {
-        display: none;
+    .full-name, .username {
+        max-width: 150px; /* Adjust maximum width for mobile */
     }
 }
