@@ -5,6 +5,7 @@
 package marketing;
 
 import DAO.InventoryDAO;
+import DAO.ProductDAO;
 import entity.Color;
 import entity.Size;
 import entity.Variant;
@@ -48,7 +49,8 @@ public class EditModelServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        InventoryDAO dao = new InventoryDAO();
+        InventoryDAO inventoryDao = new InventoryDAO();
+        ProductDAO productDao = new ProductDAO();
 
         try {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
@@ -60,20 +62,20 @@ public class EditModelServlet extends HttpServlet {
             // Validate input
             if (colorName.isEmpty() || sizeName.isEmpty() || quantity < 0) {
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin hợp lệ");
-                Variant variant = dao.getVariant(variantId);
+                Variant variant = inventoryDao.getVariant(variantId);
                 request.setAttribute("variant", variant);
                 request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
                 return;
             }
 
             // Lấy variant hiện tại
-            Variant currentVariant = dao.getVariant(variantId);
+            Variant currentVariant = inventoryDao.getVariant(variantId);
             if (currentVariant == null) {
                 response.sendRedirect("inventorylist");
                 return;
             }
 
-            // Lưu lại id màu sắc và kích thước cũ để sau này kiểm tra cleanup
+            // Lưu lại id màu sắc và kích thước cũ
             int oldColorId = currentVariant.getColor().getId();
             int oldSizeId = currentVariant.getSize().getId();
 
@@ -82,18 +84,14 @@ public class EditModelServlet extends HttpServlet {
             if (currentVariant.getColor().getName().equalsIgnoreCase(colorName)) {
                 newColor = currentVariant.getColor();
             } else {
-                // Tìm xem bản ghi với tên màu mới đã tồn tại chưa
-                newColor = dao.getColorByName(productId, colorName);
+                newColor = inventoryDao.getColorByName(productId, colorName);
                 if (newColor == null) {
-                    // Nếu chưa tồn tại, kiểm tra số variant đang sử dụng bản ghi màu hiện tại
-                    int usageCount = dao.countVariantsUsingColor(oldColorId);
+                    int usageCount = inventoryDao.countVariantsUsingColor(oldColorId);
                     if (usageCount == 1) {
-                        // Nếu chỉ có variant hiện tại sử dụng, cập nhật trực tiếp bản ghi đó
-                        dao.updateColor(oldColorId, colorName);
+                        inventoryDao.updateColor(oldColorId, colorName);
                         newColor = new entity.Color(oldColorId, colorName);
                     } else {
-                        // Nếu có nhiều variant sử dụng, thêm mới một bản ghi màu mới
-                        int newColorId = dao.addColor(productId, colorName);
+                        int newColorId = inventoryDao.addColor(productId, colorName);
                         newColor = new entity.Color(newColorId, colorName);
                     }
                 }
@@ -104,36 +102,42 @@ public class EditModelServlet extends HttpServlet {
             if (currentVariant.getSize().getName().equalsIgnoreCase(sizeName)) {
                 newSize = currentVariant.getSize();
             } else {
-                newSize = dao.getSizeByName(productId, sizeName);
+                newSize = inventoryDao.getSizeByName(productId, sizeName);
                 if (newSize == null) {
-                    int usageCount = dao.countVariantsUsingSize(oldSizeId);
+                    int usageCount = inventoryDao.countVariantsUsingSize(oldSizeId);
                     if (usageCount == 1) {
-                        dao.updateSize(oldSizeId, sizeName);
+                        inventoryDao.updateSize(oldSizeId, sizeName);
                         newSize = new entity.Size(oldSizeId, sizeName);
                     } else {
-                        int newSizeId = dao.addSize(productId, sizeName);
+                        int newSizeId = inventoryDao.addSize(productId, sizeName);
                         newSize = new entity.Size(newSizeId, sizeName);
                     }
                 }
             }
 
-            // Kiểm tra xem combo model (màu sắc, kích thước) mới đã tồn tại ở variant khác hay chưa
-            if (dao.isVariantExists(productId, newColor.getId(), newSize.getId(), variantId)) {
+            // Kiểm tra variant tồn tại
+            if (inventoryDao.isVariantExists(productId, newColor.getId(), newSize.getId(), variantId)) {
                 request.setAttribute("errorMessage", "Mẫu với màu sắc và kích thước này đã tồn tại");
                 request.setAttribute("variant", currentVariant);
                 request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
                 return;
             }
 
-            // Cập nhật variant với thông tin mới
-            dao.updateVariant(variantId, newColor.getId(), newSize.getId(), quantity);
+            // Cập nhật variant
+            inventoryDao.updateVariant(variantId, newColor.getId(), newSize.getId(), quantity);
 
-            // Cleanup: Nếu màu sắc hoặc kích thước cũ không còn được sử dụng, xóa bỏ bản ghi đó
+            // Kiểm tra tổng số hàng của product và cập nhật trạng thái nếu cần
+            int totalStock = productDao.getTotalStockByProductId(productId);
+            if (totalStock <= 0) {
+                productDao.updateProductStatus(productId, "EOStock");
+            }
+
+            // Cleanup
             if (oldColorId != newColor.getId()) {
-                dao.cleanupOrphanColor(oldColorId);
+                inventoryDao.cleanupOrphanColor(oldColorId);
             }
             if (oldSizeId != newSize.getId()) {
-                dao.cleanupOrphanSize(oldSizeId);
+                inventoryDao.cleanupOrphanSize(oldSizeId);
             }
 
             response.sendRedirect("inventoryDetail?id=" + productId + "&success=edit");
@@ -142,6 +146,5 @@ public class EditModelServlet extends HttpServlet {
             request.setAttribute("errorMessage", "Dữ liệu không hợp lệ");
             request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
         }
-
     }
 }

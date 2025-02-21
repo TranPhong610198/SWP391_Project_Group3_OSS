@@ -196,7 +196,7 @@ public class ProductDAO extends DBContext {
         }
         return false;
     }
-    
+
     //Kiểm tra sản phẩm có trong order processing không
     public boolean hasProcessOrders(int productId) {
         String query = "SELECT COUNT(*) FROM order_items oi "
@@ -227,6 +227,18 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // set status khi sản phẩm hết hàng
+    public void updateProductStatus(int productId, String status) {
+        String query = "UPDATE products SET status = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, status);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean canDeleteProduct(int productId) {
