@@ -59,7 +59,6 @@ public class EditModelServlet extends HttpServlet {
             String sizeName = request.getParameter("size").trim();
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-            // Validate input
             if (colorName.isEmpty() || sizeName.isEmpty() || quantity < 0) {
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin hợp lệ");
                 Variant variant = inventoryDao.getVariant(variantId);
@@ -68,18 +67,15 @@ public class EditModelServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy variant hiện tại
             Variant currentVariant = inventoryDao.getVariant(variantId);
             if (currentVariant == null) {
                 response.sendRedirect("inventorylist");
                 return;
             }
 
-            // Lưu lại id màu sắc và kích thước cũ
             int oldColorId = currentVariant.getColor().getId();
             int oldSizeId = currentVariant.getSize().getId();
 
-            // Xử lý cập nhật màu sắc
             entity.Color newColor;
             if (currentVariant.getColor().getName().equalsIgnoreCase(colorName)) {
                 newColor = currentVariant.getColor();
@@ -97,7 +93,6 @@ public class EditModelServlet extends HttpServlet {
                 }
             }
 
-            // Xử lý cập nhật kích thước
             entity.Size newSize;
             if (currentVariant.getSize().getName().equalsIgnoreCase(sizeName)) {
                 newSize = currentVariant.getSize();
@@ -115,7 +110,6 @@ public class EditModelServlet extends HttpServlet {
                 }
             }
 
-            // Kiểm tra variant tồn tại
             if (inventoryDao.isVariantExists(productId, newColor.getId(), newSize.getId(), variantId)) {
                 request.setAttribute("errorMessage", "Mẫu với màu sắc và kích thước này đã tồn tại");
                 request.setAttribute("variant", currentVariant);
@@ -126,11 +120,8 @@ public class EditModelServlet extends HttpServlet {
             // Cập nhật variant
             inventoryDao.updateVariant(variantId, newColor.getId(), newSize.getId(), quantity);
 
-            // Kiểm tra tổng số hàng của product và cập nhật trạng thái nếu cần
-            int totalStock = productDao.getTotalStockByProductId(productId);
-            if (totalStock <= 0) {
-                productDao.updateProductStatus(productId, "EOStock");
-            }
+            // Cập nhật trạng thái sản phẩm nếu cần
+            productDao.updateProductStatusIfNeeded(productId);
 
             // Cleanup
             if (oldColorId != newColor.getId()) {

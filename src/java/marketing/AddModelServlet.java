@@ -5,6 +5,7 @@
 package marketing;
 
 import DAO.InventoryDAO;
+import DAO.ProductDAO;
 import entity.Color;
 import entity.Size;
 import java.io.IOException;
@@ -42,7 +43,8 @@ public class AddModelServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        InventoryDAO dao = new InventoryDAO();
+        InventoryDAO inventoryDao = new InventoryDAO();
+        ProductDAO productDao = new ProductDAO();
 
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
@@ -57,11 +59,9 @@ public class AddModelServlet extends HttpServlet {
                 return;
             }
 
-            // kiểm tra độ dài của chuỗi số lượng trước khi parse thành int
             int quantity;
             try {
-                // Kiểm tra xem số lượng có quá lớn không
-                if (quantityStr.length() > 9) { // Nếu số có hơn 9 chữ số (999,999,999)
+                if (quantityStr.length() > 9) {
                     request.setAttribute("errorMessage", "Số lượng phải từ 0 đến 1,000,000");
                     request.setAttribute("productId", productId);
                     request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
@@ -82,14 +82,14 @@ public class AddModelServlet extends HttpServlet {
                 return;
             }
 
-            Color color = dao.getColorByName(productId, colorName);
-            Size size = dao.getSizeByName(productId, sizeName);
+            Color color = inventoryDao.getColorByName(productId, colorName);
+            Size size = inventoryDao.getSizeByName(productId, sizeName);
 
             int colorId;
             if (color != null) {
                 colorId = color.getId();
             } else {
-                colorId = dao.addColor(productId, colorName);
+                colorId = inventoryDao.addColor(productId, colorName);
                 if (colorId == -1) {
                     throw new SQLException("Không thể tạo màu mới");
                 }
@@ -99,21 +99,25 @@ public class AddModelServlet extends HttpServlet {
             if (size != null) {
                 sizeId = size.getId();
             } else {
-                sizeId = dao.addSize(productId, sizeName);
+                sizeId = inventoryDao.addSize(productId, sizeName);
                 if (sizeId == -1) {
                     throw new SQLException("Không thể tạo kích thước mới");
                 }
             }
 
-            // Check if variant exists
-            if (dao.isVariantExists(productId, colorId, sizeId)) {
+            if (inventoryDao.isVariantExists(productId, colorId, sizeId)) {
                 request.setAttribute("errorMessage", "Mẫu này đã tồn tại");
                 request.setAttribute("productId", productId);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
 
-            dao.addNewVariant(productId, colorId, sizeId, quantity);
+            // Thêm variant mới
+            inventoryDao.addNewVariant(productId, colorId, sizeId, quantity);
+
+            // Cập nhật trạng thái sản phẩm nếu cần
+            productDao.updateProductStatusIfNeeded(productId);
+
             response.sendRedirect("inventoryDetail?id=" + productId + "&success=add");
 
         } catch (SQLException e) {
