@@ -17,32 +17,32 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -50,19 +50,19 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .filter-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             .search-box {
                 border-radius: 50px;
                 padding-left: 15px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .sort-link {
                 text-decoration: none;
                 color: var(--primary-color);
@@ -71,40 +71,40 @@
                 align-items: center;
                 justify-content: space-between;
             }
-            
+
             .sort-link:hover {
                 color: var(--accent-color);
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .badge {
                 padding: 6px 12px;
                 border-radius: 50px;
             }
-            
+
             .btn-action {
                 padding: 5px 10px;
                 margin: 0 2px;
             }
-            
+
             .pagination .page-link {
                 color: var(--primary-color);
                 border: 1px solid var(--border-color);
@@ -112,13 +112,13 @@
                 text-align: center;
                 margin: 0 3px;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: var(--accent-color);
                 border-color: var(--accent-color);
                 color: white;
             }
-            
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -127,7 +127,7 @@
                     display: block;
                 }
             }
-            
+
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -139,7 +139,7 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             @media (max-width: 768px) {
                 .sidebar-toggle {
                     display: flex;
@@ -149,10 +149,10 @@
             }
         </style>
     </head>
-    <body>
-        <!-- Include the sidebar -->
+    <body>             
+        <!-- Include the sidebar -->        
         <jsp:include page="/admin/adminsidebar.jsp" />
-        
+
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -274,7 +274,7 @@
                                                     <input type="hidden" name="id" value="${footer.id}">
                                                     <input type="hidden" name="currentStatus" value="${footer.status}">
                                                     <button type="submit" class="btn btn-${footer.status == 'active' ? 'danger' : 'success'} btn-sm btn-action"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn ${footer.status == 'active' ? 'hủy kích hoạt' : 'kích hoạt'} cài đặt này không?');">
+                                                            onclick="return confirm('Bạn có chắc chắn muốn ${footer.status == 'active' ? 'hủy kích hoạt' : 'kích hoạt'} cài đặt này không?');">
                                                         <i class="fas fa-${footer.status == 'active' ? 'times' : 'check'}"></i>
                                                     </button>
                                                 </form>
@@ -322,37 +322,37 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-                
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
-                
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                });
-            });
+        <script>
+                                                                $(document).ready(function () {
+                                                                    // Toggle sidebar
+                                                                    $('.sidebar-toggle').on('click', function () {
+                                                                        $('.sidebar').toggleClass('active');
+                                                                        $('.main-content').toggleClass('active');
+                                                                        $(this).hide();
+                                                                    });
+
+                                                                    // Close sidebar when clicking outside on mobile
+                                                                    $(document).on('click', function (e) {
+                                                                        if ($(window).width() <= 768) {
+                                                                            if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                                $('.sidebar').removeClass('active');
+                                                                                $('.main-content').removeClass('active');
+                                                                                $('.sidebar-toggle').show();
+                                                                            }
+                                                                        }
+                                                                    });
+
+                                                                    // Highlight active menu item
+                                                                    $('.menu-item').removeClass('active');
+                                                                    $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
+
+                                                                    // Initialize tooltips
+                                                                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                                                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                                                        return new bootstrap.Tooltip(tooltipTriggerEl)
+                                                                    });
+                                                                });
         </script>
     </body>
 </html>

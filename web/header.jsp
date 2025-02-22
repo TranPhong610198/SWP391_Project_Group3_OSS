@@ -19,7 +19,7 @@
                 <!-- Logo -->
                 <a class="navbar-brand" href="home">
 
-                    <img src="/fashionshop/uploads/logo/logoHuy.png" alt="Logo"/>
+                    <img src="${pageContext.request.contextPath}/uploads/logo/logoHuy.png" alt="Logo"/>
                 </a>
 
                 <!-- Navbar Toggle Button -->
@@ -30,87 +30,32 @@
                 <!-- Main Navigation -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
-                        <!-- NAM -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">NAM</a>
-                            <div class="mega-menu">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5>ÁO</h5>
-                                        <ul>
-                                            <li><a href="#">Áo Polo</a></li>
-                                            <li><a href="#">Áo Măng Tô</a></li>
-                                            <li><a href="#">Áo Gile</a></li>
-                                            <li><a href="#">Áo T-Shirt</a></li>
-                                            <li><a href="#">Áo Sơ Mi</a></li>
-                                            <li><a href="#">Áo Ba Lỗ</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <h5>QUẦN</h5>
-                                        <ul>
-                                            <li><a href="#">Quần Âu</a></li>
-                                            <li><a href="#">Quần Nỉ</a></li>
-                                            <li><a href="#">Quần Jean</a></li>
-                                            <li><a href="#">Quần Kaki</a></li>
-                                            <li><a href="#">Quần Gió</a></li>
-                                            <li><a href="#">Quần Đùi</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <h5>ĐỒ BỘ</h5>
-                                        <ul>
-                                            <li><a href="#">Bộ Vest</a></li>
-                                            <li><a href="#">Bộ Đồ Hè</a></li>
-                                            <li><a href="#">Bộ Nỉ</a></li>
-                                            <li><a href="#">Bộ Gió</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <h5>PHỤ KIỆN</h5>
-                                        <ul>
-                                            <li><a href="#">Giày Da</a></li>
-                                            <li><a href="#">Ví Da</a></li>
-                                            <li><a href="#">Thắt Lưng</a></li>
-                                            <li><a href="#">Cà Vạt</a></li>
-                                        </ul>
+                        <c:forEach items="${level1Categories}" var="level1">
+                            <li class="nav-item">
+                                <a class="nav-link" href="marketing/productlist?categoryId=${level1.id}">${level1.name}</a>
+                                <div class="mega-menu">
+                                    <div class="row">
+                                        <c:forEach items="${level2ByParent[level1.id]}" var="level2">
+                                            <div class="col-md-3">
+                                                <h5><a href="marketing/productlist?categoryId=${level2.id}">${level2.name}</a></h5>
+                                                <ul>
+                                                    <c:forEach items="${level3ByParent[level2.id]}" var="level3">
+                                                        <li><a href="marketing/productlist?categoryId=${level3.id}">${level3.name}</a></li>
+                                                        </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </c:forEach>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-
-                        <!-- NỮ -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">NỮ</a>
-                            <!-- Tương tự như menu NAM -->
-                        </li>
-
-                        <!-- TRẺ EM -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">TRẺ EM</a>
-                        </li>
-
-                        <!-- ĐỒNG PHỤC -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">ĐỒNG PHỤC</a>
-                        </li>
-
-                        <!-- BỘ SƯU TẬP -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">BỘ SƯU TẬP</a>
-                        </li>
-
-                        <!-- SALE OFF -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">SALE OFF</a>
-                        </li>
+                            </li>
+                        </c:forEach>
                     </ul>
 
                     <!-- Right Side Items -->
                     <div class="d-flex align-items-center">
                         <!-- Search Form -->
-                        <form class="search-form">
-                            <input type="text" placeholder="Tìm kiếm...">
+                        <form class="search-form" action="marketing/productlist" method="GET">
+                            <input type="text" name="keyword" placeholder="Tìm kiếm...">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -163,23 +108,23 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- Custom JavaScript for navbar toggle -->
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 var navbarToggler = document.querySelector('.navbar-toggler');
                 var navbarCollapse = document.querySelector('.navbar-collapse');
 
                 // Toggle aria-expanded attribute
-                navbarToggler.addEventListener('click', function() {
+                navbarToggler.addEventListener('click', function () {
                     var isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
                     navbarToggler.setAttribute('aria-expanded', !isExpanded);
                 });
 
                 // Close navbar when clicking outside
-                document.addEventListener('click', function(event) {
+                document.addEventListener('click', function (event) {
                     var isClickInside = navbarCollapse.contains(event.target) || navbarToggler.contains(event.target);
-                    
+
                     if (!isClickInside && navbarCollapse.classList.contains('show')) {
                         navbarCollapse.classList.remove('show');
                         navbarToggler.classList.add('collapsed');
@@ -189,8 +134,8 @@
 
                 // Close navbar when clicking on a nav-link
                 var navLinks = document.querySelectorAll('.nav-link');
-                navLinks.forEach(function(navLink) {
-                    navLink.addEventListener('click', function() {
+                navLinks.forEach(function (navLink) {
+                    navLink.addEventListener('click', function () {
                         if (window.innerWidth < 992) { // Only on mobile
                             navbarCollapse.classList.remove('show');
                             navbarToggler.classList.add('collapsed');
