@@ -61,6 +61,27 @@ public class CategoryDAO extends DBContext {
         return thirdLevelCats;
     }
 
+    public List<Integer> getChildCategoryIds(int parentId) {
+        List<Integer> categoryIds = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "WITH RecursiveCategories AS ( "
+                + "   SELECT id FROM categories WHERE parent_id = ? "
+                + "   UNION ALL "
+                + "   SELECT c.id FROM categories c "
+                + "   INNER JOIN RecursiveCategories rc ON c.parent_id = rc.id) "
+                + "SELECT id FROM RecursiveCategories"
+        )) {
+            ps.setInt(1, parentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                categoryIds.add(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categoryIds;
+    }
+
     // Thêm phương thức lấy danh sách có phân trang
     public List<Category> getCategories(int page, int pageSize) {
         List<Category> categories = new ArrayList<>();

@@ -4,6 +4,7 @@
  */
 package entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class Product {
     private int id;
     private String title;
     private int categoryId;  // Sử dụng categoryId thay vì category name
-    private double originalPrice;
-    private double salePrice;
+    private BigDecimal originalPrice;
+    private BigDecimal salePrice;
     private String thumbnail;
     private String status;
     private int stock;
@@ -33,7 +34,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String title, int categoryId, double originalPrice, double salePrice, String thumbnail, String status, int stock, String description, int comboGroupId, boolean isCombo, String createdAt, String updatedAt, List<Product> comboProducts, List<String> subImages) {
+    public Product(int id, String title, int categoryId, BigDecimal originalPrice, BigDecimal salePrice, String thumbnail, String status, int stock, String description, int comboGroupId, boolean isCombo, String createdAt, String updatedAt, List<Product> comboProducts, List<String> subImages) {
         this.id = id;
         this.title = title;
         this.categoryId = categoryId;
@@ -51,7 +52,7 @@ public class Product {
         this.subImages = subImages;
     }
 
-    public Product(int id, String title, int categoryId, double originalPrice, double salePrice, String thumbnail, String status, int stock, String description, int comboGroupId, boolean isCombo, String createdAt, String updatedAt) {
+    public Product(int id, String title, int categoryId, BigDecimal originalPrice, BigDecimal salePrice, String thumbnail, String status, int stock, String description, int comboGroupId, boolean isCombo, String createdAt, String updatedAt) {
         this.id = id;
         this.title = title;
         this.categoryId = categoryId;
@@ -67,7 +68,7 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public Product(int id, String title, int categoryId, double originalPrice, double salePrice, String thumbnail, String status, int stock) {
+    public Product(int id, String title, int categoryId, BigDecimal originalPrice, BigDecimal salePrice, String thumbnail, String status, int stock) {
         this.id = id;
         this.title = title;
         this.categoryId = categoryId;
@@ -143,19 +144,19 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public double getOriginalPrice() {
+    public BigDecimal getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(double originalPrice) {
+    public void setOriginalPrice(BigDecimal originalPrice) {
         this.originalPrice = originalPrice;
     }
 
-    public double getSalePrice() {
+    public BigDecimal getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(double salePrice) {
+    public void setSalePrice(BigDecimal salePrice) {
         this.salePrice = salePrice;
     }
 

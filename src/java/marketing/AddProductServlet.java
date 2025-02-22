@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,8 +106,8 @@ public class AddProductServlet extends HttpServlet {
             String title = request.getParameter("title");
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
             String description = request.getParameter("description");
-            double originalPrice = Double.parseDouble(request.getParameter("originalPrice"));
-            double salePrice = Double.parseDouble(request.getParameter("salePrice"));
+            BigDecimal originalPrice = new BigDecimal(request.getParameter("originalPrice"));
+            BigDecimal salePrice = new BigDecimal(request.getParameter("salePrice"));
             boolean isCombo = request.getParameter("isCombo") != null;
             String comboGroupId = null;
 

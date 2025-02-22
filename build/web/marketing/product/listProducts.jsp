@@ -272,11 +272,32 @@
                             </div>
                             <div class="col-md-3">
                                 <select name="categoryId" class="form-select">
-                                    <option value="">Tất cả danh mục</option>
+                                    <option value="">📑 Tất cả danh mục</option>
                                     <c:forEach items="${categories}" var="category">
-                                        <option value="${category.id}" ${categoryId == category.id ? 'selected' : ''}>
-                                            ${category.name}
-                                        </option>
+                                        <c:choose>
+                                            <%-- Level 1 categories (parent categories) --%>
+                                            <c:when test="${category.level == 1}">
+                                                <option value="${category.id}" ${categoryId == category.id ? 'selected' : ''}>
+                                                    📁 ${category.name}
+                                                </option>
+                                                <%-- Display child categories --%>
+                                                <c:forEach items="${categories}" var="childCat">
+                                                    <c:if test="${childCat.parentId == category.id}">
+                                                        <option value="${childCat.id}" ${categoryId == childCat.id ? 'selected' : ''}>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;📎 ${childCat.name}
+                                                        </option>
+                                                        <%-- Display grandchild categories if any --%>
+                                                        <c:forEach items="${categories}" var="grandChildCat">
+                                                            <c:if test="${grandChildCat.parentId == childCat.id}">
+                                                                <option value="${grandChildCat.id}" ${categoryId == grandChildCat.id ? 'selected' : ''}>
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⤷ ${grandChildCat.name}
+                                                                </option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:when>
+                                        </c:choose>
                                     </c:forEach>
                                 </select>
                             </div>

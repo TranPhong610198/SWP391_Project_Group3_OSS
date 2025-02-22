@@ -47,8 +47,8 @@ public class ProductDAO extends DBContext {
                 product.setTitle(rs.getString("title"));
                 product.setCategoryId(rs.getInt("category_id"));
                 product.setDescription(rs.getString("description"));
-                product.setOriginalPrice(rs.getDouble("original_price"));
-                product.setSalePrice(rs.getDouble("sale_price"));
+                product.setOriginalPrice(rs.getBigDecimal("original_price"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
                 product.setThumbnail(rs.getString("thumbnail"));
                 product.setStatus(rs.getString("status"));
                 product.setIsCombo(rs.getBoolean("is_combo"));
@@ -79,8 +79,8 @@ public class ProductDAO extends DBContext {
                 comboProduct.setTitle(rs.getString("title"));
                 comboProduct.setCategoryId(rs.getInt("category_id"));
                 comboProduct.setDescription(rs.getString("description"));
-                comboProduct.setOriginalPrice(rs.getDouble("original_price"));
-                comboProduct.setSalePrice(rs.getDouble("sale_price"));
+                comboProduct.setOriginalPrice(rs.getBigDecimal("original_price"));
+                comboProduct.setSalePrice(rs.getBigDecimal("sale_price"));
                 comboProduct.setThumbnail(rs.getString("thumbnail"));
                 comboProduct.setStatus(rs.getString("status"));
                 comboProduct.setIsCombo(rs.getBoolean("is_combo"));
@@ -181,8 +181,8 @@ public class ProductDAO extends DBContext {
             ps.setString(1, product.getTitle());
             ps.setInt(2, product.getCategoryId());
             ps.setString(3, product.getDescription());
-            ps.setDouble(4, product.getOriginalPrice());
-            ps.setDouble(5, product.getSalePrice());
+            ps.setBigDecimal(4, product.getOriginalPrice());
+            ps.setBigDecimal(5, product.getSalePrice());
             ps.setString(6, product.getThumbnail());
             ps.setBoolean(7, product.isIsCombo());
             ps.setInt(8, product.getComboGroupId());
@@ -265,18 +265,6 @@ public class ProductDAO extends DBContext {
         return false;
     }
 
-    // set status khi sản phẩm hết hàng
-    public void updateProductStatus(int productId, String status) {
-        String query = "UPDATE products SET status = ? WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, status);
-            ps.setInt(2, productId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public boolean canDeleteProduct(int productId) {
         return !hasProcessOrders(productId) && !hasStock(productId);
     }
@@ -340,6 +328,18 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // set status khi sản phẩm hết hàng
+    public void updateProductStatus(int productId, String status) {
+        String query = "UPDATE products SET status = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, status);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

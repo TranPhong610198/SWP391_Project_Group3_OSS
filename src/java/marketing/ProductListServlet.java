@@ -19,6 +19,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -79,7 +80,7 @@ public class ProductListServlet extends HttpServlet {
             String alert = request.getParameter("alert");
 //            System.out.println(alert);
             request.setAttribute("alert", alert);
-            
+
             // Lấy parameters từ request
             String keyword = request.getParameter("keyword");
             String categoryId = request.getParameter("categoryId");
@@ -104,9 +105,21 @@ public class ProductListServlet extends HttpServlet {
 
             // Thêm điều kiện lọc
             if (categoryId != null && !categoryId.isEmpty()) {
-                sql.append(" AND p.category_id = ?");
-                params.add(Integer.parseInt(categoryId));
+                CategoryDAO cateDao = new CategoryDAO();
+                List<Integer> categoryIds = cateDao.getChildCategoryIds(Integer.parseInt(categoryId));
+
+                if (!categoryIds.isEmpty()) {
+                    String placeholders = categoryIds.stream()
+                            .map(id -> "?")
+                            .collect(Collectors.joining(", "));
+                    sql.append(" AND p.category_id IN (" + placeholders + ")");
+                    params.addAll(categoryIds);
+                } else {
+                    sql.append(" AND p.category_id = ?");
+                    params.add(Integer.parseInt(categoryId));
+                }
             }
+
             if (status != null && !status.isEmpty() && !status.equals("all")) {
                 sql.append(" AND p.status = ?");
                 params.add(status);
@@ -156,7 +169,6 @@ public class ProductListServlet extends HttpServlet {
 //                }
 //            }
 //            //________________________________________________________________________________
-
             //Lấy listcategory
             CategoryDAO cateDao = new CategoryDAO();
             List<Category> listCate = cateDao.getAll();
