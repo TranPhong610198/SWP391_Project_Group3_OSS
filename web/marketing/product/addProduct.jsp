@@ -127,7 +127,7 @@
                 }
             }
         </style>
-        <script src="../../ckeditor/ckeditor.js"></script>
+        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <!-- Include the sidebar -->
