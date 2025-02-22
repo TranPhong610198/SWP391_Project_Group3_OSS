@@ -123,17 +123,20 @@ public class AddProductServlet extends HttpServlet {
             //Xử lý ảnh chính (thumbnail)
             Part thumbnailPart = request.getPart("thumbnail");
             String thumbnail = saveImage(thumbnailPart, request);
+//            System.out.println("Dòng 126 AddProductServlet: kiểm tra thumbnail: " + thumbnail);
 
             //Xử lý ảnh phụ (tối đa 5 ảnh)
             List<String> subImages = new ArrayList<>();
             for (Part part : request.getParts()) {
-                if (part.getName().equals("subImages")) {
+                if (part.getName().equals("subImages")&& part.getSize()>0) {
                     String imageUrl = saveImage(part, request);
                     if (imageUrl != null) {
                         subImages.add(imageUrl);
                     }
                 }
+//                System.out.println("Dòng 137 AddProductServlet: kiểm tra Part: " + part.getName());
             }
+//            System.out.println("Dòng 139 AddProductServlet: kiểm tra subImages" + subImages.toString());
 
             //Tạo đối tượng sản phẩm
             Product product = new Product();
@@ -144,7 +147,7 @@ public class AddProductServlet extends HttpServlet {
             product.setSalePrice(salePrice);
             product.setThumbnail(thumbnail);
             product.setIsCombo(isCombo);
-            product.setComboGroupId(comboGroupId!=null && !comboGroupId.isEmpty()? Integer.parseInt(comboGroupId) : 0);
+            product.setComboGroupId(comboGroupId != null && !comboGroupId.isEmpty() ? Integer.parseInt(comboGroupId) : 0);
 //            product.setStatus(status);
 
             //Thêm sản phẩm vào database

@@ -84,6 +84,9 @@ public class DeleteProductServlet extends HttpServlet {
                     return;
                 }
             }
+            
+            //kiểm tra combo
+            
 
             if (productDAO.deleteProduct(productId, uploadPath)) {
                 response.sendRedirect("productlist?alert=SSD");

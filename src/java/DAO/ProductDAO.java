@@ -123,7 +123,7 @@ public class ProductDAO extends DBContext {
 //_______________________________________Hết Phần DAO Cho Việc List______________________________________________________________ 
 
 //_________________________________________Phần DAO Cho Việc Add____________________________________________________________    
-    // Lấy danh sách các sản phẩm combo
+    // Lấy danh sách các sản phẩm chính của 1 combo
     public List<Product> getComboProducts() {
         List<Product> comboProducts = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE is_combo = 1";
@@ -159,6 +159,7 @@ public class ProductDAO extends DBContext {
         return maxId;
     }
 
+    // Lấy danh sách ảnh phụ
     public List<String> getProductImages(int productId) {
         List<String> images = new ArrayList<>();
         String query = "SELECT image_url FROM product_images WHERE product_id = ?";
@@ -174,6 +175,7 @@ public class ProductDAO extends DBContext {
         return images;
     }
 
+    // Thêm sản phẩm vào db
     public boolean addProduct(Product product, List<String> subImages) {
         String insertProduct = "INSERT INTO products (title, category_id, description, original_price, sale_price, thumbnail, is_combo, combo_group_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -202,6 +204,7 @@ public class ProductDAO extends DBContext {
         return false;
     }
 
+    // Thêm ảnh phụ vào db
     private void addProductImages(int productId, List<String> subImages) {
         String insertImage = "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(insertImage)) {
@@ -265,10 +268,12 @@ public class ProductDAO extends DBContext {
         return false;
     }
 
+    //Kiểm tra xem có được phép xóa hay không
     public boolean canDeleteProduct(int productId) {
         return !hasProcessOrders(productId) && !hasStock(productId);
     }
 
+    //Thực hiện xóa
     public boolean deleteProduct(int productId, String uploadPath) {
         if (!canDeleteProduct(productId)) {
             return false; // Không thể xóa nếu sản phẩm có đơn hàng chưa hoàn tất

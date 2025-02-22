@@ -142,19 +142,6 @@
                 <h2 class="page-title">
                     <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
                 </h2>
-
-                <!-- Hiển thị thông báo thành công hoặc lỗi -->
-                <c:if test="${param.success != null}">
-                    <div class="alert alert-success" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>Thêm sản phẩm thành công!
-                    </div>
-                </c:if>
-                <c:if test="${param.error != null}">
-                    <div class="alert alert-danger" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>Có lỗi xảy ra, vui lòng thử lại.
-                    </div>
-                </c:if>
-
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-info-circle me-2"></i>Thông tin sản phẩm
@@ -163,14 +150,14 @@
                         <form action="addproduct" method="post" enctype="multipart/form-data" class="row g-3">
                             <!-- Tên sản phẩm -->
                             <div class="col-md-6">
-                                <label for="title" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                                <label for="title" class="form-label">Tên sản phẩm</label>
                                 <input type="text" class="form-control" id="title" name="title" required />
                                 <div class="form-text">Nhập tên sản phẩm đầy đủ và chính xác</div>
                             </div>
 
                             <!-- Chọn danh mục -->
                             <div class="col-md-6">
-                                <label for="categoryId" class="form-label">Danh mục <span class="text-danger">*</span></label>
+                                <label for="categoryId" class="form-label">Danh mục</label>
                                 <select class="form-select" id="categoryId" name="categoryId" required>
                                     <option value="" selected disabled>Chọn danh mục</option>
                                     <c:forEach var="category" items="${categories}">
@@ -183,13 +170,13 @@
 
                             <!-- Giá gốc -->
                             <div class="col-md-6">
-                                <label for="originalPrice" class="form-label">Giá gốc (₫) <span class="text-danger">*</span></label>
+                                <label for="originalPrice" class="form-label">Giá gốc (₫)</label>
                                 <input type="number" class="form-control" id="originalPrice" name="originalPrice" step="1000" min="0" required />
                             </div>
 
                             <!-- Giá khuyến mãi -->
                             <div class="col-md-6">
-                                <label for="salePrice" class="form-label">Giá bán (₫) <span class="text-danger">*</span></label>
+                                <label for="salePrice" class="form-label">Giá bán (₫)</label>
                                 <input type="number" class="form-control" id="salePrice" name="salePrice" step="1000" min="0" required />
                                 <div class="form-text">Giá bán phải lớn hơn hoặc bằng giá gốc</div>
                             </div>
@@ -221,7 +208,7 @@
 
                             <!-- Ảnh chính -->
                             <div class="col-md-6">
-                                <label for="thumbnail" class="form-label">Ảnh chính <span class="text-danger">*</span></label>
+                                <label for="thumbnail" class="form-label">Ảnh chính</label>
                                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" required onchange="previewThumbnail(this)" />
                                 <div class="form-text">Kích thước tối ưu: 800x800px, định dạng: JPG, PNG</div>
                                 <div id="thumbnailPreview"></div>
