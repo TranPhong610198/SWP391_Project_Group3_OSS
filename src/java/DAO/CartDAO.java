@@ -1,4 +1,7 @@
-<<<<<<< HEAD
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DAO;
 
 import Context.DBContext;
@@ -11,6 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartDAO extends DBContext {
+
+    public boolean deleteProductFromCart(int productId) {
+        String query = "DELETE FROM cart_items WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            return ps.executeUpdate() > 0; // Trả về true nếu có ít nhất 1 dòng bị xóa
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public Cart createCart(int userId) {
         Cart cart = new Cart();
         String sql = "INSERT INTO cart (user_id, created_at) VALUES (?, NOW())";
@@ -18,12 +33,12 @@ public class CartDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             st.setInt(1, userId);
             st.executeUpdate();
-            
+
             ResultSet rs = st.getGeneratedKeys();
             if (rs.next()) {
                 cart.setId(rs.getInt(1));
                 cart.setUserId(userId);
-               cart.setCreatedAt(rs.getTimestamp("created_at"));
+                cart.setCreatedAt(rs.getTimestamp("created_at"));
                 cart.setItems(new ArrayList<>());
             }
             rs.close();
@@ -44,6 +59,7 @@ public class CartDAO extends DBContext {
         }
         return total;
     }
+
     // Lấy thông tin Cart và CartItems
     public Cart getCartByUserId(int userId) {
         Cart cart = null;
@@ -65,18 +81,18 @@ public class CartDAO extends DBContext {
         }
         return cart;
     }
-    
+
     // Lấy chi tiết sản phẩm trong giỏ hàng
     private List<CartItem> getCartItems(int cartId) {
         List<CartItem> items = new ArrayList<>();
-        String sql = "SELECT ci.*, pv.size_id, pv.color_id, " +
-                    "ps.size, pc.color, p.title, p.thumbnail, p.sale_price " +
-                    "FROM cart_items ci " +
-                    "INNER JOIN product_variants pv ON ci.variant_id = pv.id " +
-                    "INNER JOIN product_sizes ps ON pv.size_id = ps.id " +
-                    "INNER JOIN product_colors pc ON pv.color_id = pc.id " +
-                    "INNER JOIN products p ON ci.product_id = p.id " +
-                    "WHERE ci.cart_id = ?";
+        String sql = "SELECT ci.*, pv.size_id, pv.color_id, "
+                + "ps.size, pc.color, p.title, p.thumbnail, p.sale_price "
+                + "FROM cart_items ci "
+                + "INNER JOIN product_variants pv ON ci.variant_id = pv.id "
+                + "INNER JOIN product_sizes ps ON pv.size_id = ps.id "
+                + "INNER JOIN product_colors pc ON pv.color_id = pc.id "
+                + "INNER JOIN products p ON ci.product_id = p.id "
+                + "WHERE ci.cart_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cartId);
@@ -86,16 +102,16 @@ public class CartDAO extends DBContext {
                 item.setId(rs.getInt("id"));
                 item.setCartId(cartId);
                 item.setProductId(rs.getInt("product_id"));
-                item.setVariantId(rs.getInt("variant_id")); 
+                item.setVariantId(rs.getInt("variant_id"));
                 item.setQuantity(rs.getInt("quantity"));
-                
+
                 // Set thông tin sản phẩm
                 item.setProductTitle(rs.getString("title"));
                 item.setProductThumbnail(rs.getString("thumbnail"));
                 item.setProductPrice(rs.getDouble("sale_price"));
                 item.setSize(rs.getString("size"));
                 item.setColor(rs.getString("color"));
-                
+
                 items.add(item);
             }
         } catch (SQLException e) {
@@ -146,34 +162,5 @@ public class CartDAO extends DBContext {
             return false;
         }
     }
-    
-}
-=======
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package DAO;
-
-import Context.DBContext;
-import java.sql.*;
-
-/**
- *
- * @author tphon
- */
-public class CartDAO extends DBContext {
-
-    public boolean deleteProductFromCart(int productId) {
-        String query = "DELETE FROM cart_items WHERE product_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, productId);
-            return ps.executeUpdate() > 0; // Trả về true nếu có ít nhất 1 dòng bị xóa
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
 }
->>>>>>> ec20250e017b519d44a7d423d48d19e9c00148ae
