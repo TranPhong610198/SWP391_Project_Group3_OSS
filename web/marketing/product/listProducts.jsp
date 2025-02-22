@@ -237,12 +237,18 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
-                        <c:otherwise>
+                        <c:when test="${alert.equals('SSD')}">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                Xóa sản phẩm thành công.
+                                Xóa sản phẩm thành công
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                        </c:otherwise>
+                        </c:when>
+                        <c:when test="${alert.equals('SSA')}">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Thêm sản phẩm thành công
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
                     </c:choose>
                 </c:if>
                 <h2 class="page-title">

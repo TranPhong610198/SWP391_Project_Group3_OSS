@@ -86,7 +86,7 @@ public class DeleteProductServlet extends HttpServlet {
             }
 
             if (productDAO.deleteProduct(productId, uploadPath)) {
-                response.sendRedirect("productlist?alert=SS");
+                response.sendRedirect("productlist?alert=SSD");
             } else {
 //                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Lỗi khi xóa sản phẩm");
                 response.sendRedirect("productlist?alert=ERR");

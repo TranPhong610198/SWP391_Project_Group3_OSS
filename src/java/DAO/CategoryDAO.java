@@ -36,6 +36,31 @@ public class CategoryDAO extends DBContext {
         return categories;
     }
 
+    public List<Category> getThirdLevelCategories() {
+        List<Category> thirdLevelCats = new ArrayList<>();
+        String sql = "SELECT * FROM categories WHERE level = 3";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Category cat = new Category();
+                cat.setId(rs.getInt("id"));
+                cat.setName(rs.getString("name"));
+                cat.setDescription(rs.getString("description"));
+                cat.setParentId(rs.getInt("parent_id"));
+                cat.setStatus(rs.getString("status"));
+                thirdLevelCats.add(cat);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting third level categories: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return thirdLevelCats;
+    }
+
     // Thêm phương thức lấy danh sách có phân trang
     public List<Category> getCategories(int page, int pageSize) {
         List<Category> categories = new ArrayList<>();
