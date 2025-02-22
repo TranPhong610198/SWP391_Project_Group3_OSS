@@ -49,6 +49,9 @@
                                 </div>
                             </li>
                         </c:forEach>
+                        <li class="nav-item">
+                            <a class="nav-link" href="DucChuaLam">Các bài đăng</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Items -->
@@ -142,7 +145,7 @@
                             navbarToggler.setAttribute('aria-expanded', 'false');
                         }
                     });
-                });               
+                });
             });
         </script>
     </body>
