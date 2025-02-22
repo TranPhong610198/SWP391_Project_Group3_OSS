@@ -57,12 +57,12 @@
             </a>
         </li>
 
-        <li class="menu-item p-2">
+<!--        <li class="menu-item p-2">
             <a href="analytics.jsp" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-chart-line me-2"></i>
                 Phân tích dữ liệu
             </a>
-        </li>
+        </li>-->
 
         <li class="menu-item p-2">
             <a href="#contentSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
@@ -77,7 +77,7 @@
                     <a href="postList" class="text-decoration-none text-light">Bài đăng</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="content/social-posts.jsp" class="text-decoration-none text-light">Thanh Trượt</a>
+                    <a href="sliderList" class="text-decoration-none text-light">Thanh Trượt</a>
                 </li>
             </ul>
         </li>

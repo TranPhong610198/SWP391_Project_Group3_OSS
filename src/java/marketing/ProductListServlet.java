@@ -75,6 +75,11 @@ public class ProductListServlet extends HttpServlet {
             throws ServletException, IOException {
 //        processRequest(request, response);
         try {
+            //Lấy thông báo xủ lý
+            String alert = request.getParameter("alert");
+//            System.out.println(alert);
+            request.setAttribute("alert", alert);
+            
             // Lấy parameters từ request
             String keyword = request.getParameter("keyword");
             String categoryId = request.getParameter("categoryId");

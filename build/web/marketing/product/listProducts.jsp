@@ -217,6 +217,34 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${alert != null && !alert.trim().isEmpty()}">
+                    <c:choose>
+                        <c:when test="${alert.equals('ER1_OP')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Sản phẩm không thể xóa vì đang có trong đơn hàng chưa hoàn thành.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ER2_HS')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Sản phẩm không thể xóa vì vẫn còn tồn kho.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ERR')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Lỗi không xác định.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Xóa sản phẩm thành công.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
                 <h2 class="page-title">
                     <i class="fas fa-box me-2"></i>Danh sách sản phẩm
                 </h2>
@@ -360,7 +388,7 @@
                                                         </span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="inventoryDetail?id=${product.id}" class="stock-link">
+                                                        <a href="inventoryDetail?id=${product.id}&source=productlist" class="stock-link">
                                                             ${product.stock}
                                                             <i class="fas fa-external-link-alt ms-1"></i>
                                                         </a>

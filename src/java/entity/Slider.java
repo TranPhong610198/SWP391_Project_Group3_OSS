@@ -5,26 +5,27 @@ import java.sql.Date;
 public class Slider {
     private int id;
     private String title;
-    private String image;
-    private String backlink;
+    private String image_url;        // Changed from imageUrl
+    private String link;     // Changed from link
     private String status;
-    private String note;
-    private Date createdAt;
-    private Date updatedAt;
+    private int display_order;    // Already matches
+    private String notes;         // Changed from notes
 
     public Slider() {
     }
 
-    public Slider(int id, String title, String image, String backlink, String status, String note, Date createdAt, Date updatedAt) {
+    public Slider(int id, String title, String image_url, String link, String status, 
+                 int display_order, String notes) {
         this.id = id;
         this.title = title;
-        this.image = image;
-        this.backlink = backlink;
+        this.image_url = image_url;
+        this.link = link;
         this.status = status;
-        this.note = note;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.display_order = display_order;
+        this.notes = notes;
     }
+
+    // Getters and Setters
 
     public int getId() {
         return id;
@@ -42,20 +43,20 @@ public class Slider {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
-    public String getBacklink() {
-        return backlink;
+    public String getLink() {
+        return link;
     }
 
-    public void setBacklink(String backlink) {
-        this.backlink = backlink;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getStatus() {
@@ -66,27 +67,20 @@ public class Slider {
         this.status = status;
     }
 
-    public String getNote() {
-        return note;
+    public int getDisplay_order() {
+        return display_order;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setDisplay_order(int display_order) {
+        this.display_order = display_order;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+      
 }
