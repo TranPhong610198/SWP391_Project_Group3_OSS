@@ -7,7 +7,6 @@ package marketing;
 import DAO.CouponDAO;
 import entity.Coupon;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,111 +21,142 @@ import java.util.Date;
 @WebServlet(name = "AddCouponServlet", urlPatterns = {"/marketing/addCoupon"})
 public class AddCouponServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AddCouponServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AddCouponServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+    private static final double MAX_AMOUNT = 10_000_000; // 10 triệu VNĐ
+    private static final int MAX_USAGE_LIMIT = 1_000_000; // 1 triệu lần
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        CouponDAO couponDAO = new CouponDAO();
+        StringBuilder errorMessages = new StringBuilder();
+
+        String code = request.getParameter("code");
+        String discountType = request.getParameter("discount_type");
+        String discountValueStr = request.getParameter("discount_value");
+        String minOrderAmountStr = request.getParameter("min_order_amount");
+        String expiryDateStr = request.getParameter("expiry_date");
+        String usageLimitStr = request.getParameter("usage_limit");
+        String maxDiscountStr = request.getParameter("max_discount");
+        String status = request.getParameter("status") != null ? "active" : "inactive";
+
+        if (!validateCouponData(couponDAO, code, discountType, discountValueStr, minOrderAmountStr,
+                maxDiscountStr, usageLimitStr, expiryDateStr, errorMessages)) {
+            request.setAttribute("error", errorMessages.toString());
+            request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
+            return;
+        }
+
         try {
-            CouponDAO couponDAO = new CouponDAO();
-
-            String code = request.getParameter("code");
-            String discountType = request.getParameter("discount_type");
-            String discountValueStr = request.getParameter("discount_value");
-            String minOrderAmountStr = request.getParameter("min_order_amount");
-            String expiryDateStr = request.getParameter("expiry_date");
-            String usageLimitStr = request.getParameter("usage_limit");
-            String maxDiscountStr = request.getParameter("max_discount");
-
-            StringBuilder errorMessages = new StringBuilder();
-
-            // Validate coupon code
-            if (code == null || code.trim().isEmpty() || !code.matches("^[A-Za-z0-9_]+$") || code.length() > 20) {
-                errorMessages.append("Mã giảm giá không hợp lệ. Chỉ được chứa chữ cái, số và dấu gạch dưới, không quá 20 ký tự.<br>");
-            } else if (couponDAO.isCouponCodeExists(code)) {
-                errorMessages.append("Mã giảm giá đã tồn tại.<br>");
-            }
-
-            // Validate discount value
+            // Parse dữ liệu
             double discountValue = Double.parseDouble(discountValueStr);
-            if ("percentage".equals(discountType) && (discountValue <= 0 || discountValue > 100)) {
-                errorMessages.append("Giá trị giảm giá theo phần trăm phải nằm trong khoảng 1-100%.<br>");
-            } else if ("fixed".equals(discountType) && discountValue <= 0) {
-                errorMessages.append("Giá trị giảm giá cố định ít nhất là 1.000đ.<br>");
+            double minOrderAmount = Double.parseDouble(minOrderAmountStr);
+            int usageLimit = Integer.parseInt(usageLimitStr);
+            double maxDiscount = "percentage".equals(discountType) ? Double.parseDouble(maxDiscountStr) : 0;
+            java.sql.Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
+            java.sql.Date createdAt = new java.sql.Date(new Date().getTime());
+
+            // Tạo đối tượng Coupon
+            Coupon coupon = new Coupon(0, code, discountType, discountValue, minOrderAmount,
+                    maxDiscount, usageLimit, 0, expiryDate, createdAt, status);
+
+            // Thêm coupon vào DB
+            if (couponDAO.addCoupon(coupon)) {
+                response.sendRedirect("couponlist?success=add");
+            } else {
+                request.setAttribute("error", "Không thể thêm mã giảm giá. Vui lòng thử lại.");
+                request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
             }
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Dữ liệu số không hợp lệ. Vui lòng kiểm tra lại.");
+            request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", "Ngày không hợp lệ. Vui lòng kiểm tra lại định dạng ngày.");
+            request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Đã xảy ra lỗi không mong muốn: " + e.getMessage());
+            request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
+        }
+    }
 
-            if (errorMessages.length() == 0) {
-                double minOrderAmount = Double.parseDouble(minOrderAmountStr);
-                int usageLimit = Integer.parseInt(usageLimitStr);
-                double maxDiscount = "percentage".equals(discountType) ? Double.parseDouble(maxDiscountStr) : 0;
-                Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
-                String status = request.getParameter("status") != null ? "active" : "inactive";
+    private boolean validateCouponData(CouponDAO couponDAO, String code, String discountType,
+            String discountValueStr, String minOrderAmountStr, String maxDiscountStr,
+            String usageLimitStr, String expiryDateStr, StringBuilder errorMessages) {
+        boolean isValid = true;
 
-                Coupon coupon = new Coupon(0, code, discountType, discountValue, minOrderAmount,
-                        maxDiscount, usageLimit, 0, (java.sql.Date) expiryDate, new java.sql.Date(new Date().getTime()), status);
+        // Kiểm tra mã giảm giá
+        if (code == null || code.trim().isEmpty() || !code.matches("^[A-Za-z0-9_]+$") || code.length() < 3 || code.length() > 20) {
+            errorMessages.append("Mã giảm giá chỉ chứa chữ cái, số, dấu gạch dưới và có độ dài từ 3-20 ký tự.<br>");
+            isValid = false;
+        } else if (couponDAO.isCouponCodeExists(code)) {
+            errorMessages.append("Mã giảm giá đã tồn tại.<br>");
+            isValid = false;
+        }
 
-                if (couponDAO.addCoupon(coupon)) {
-                    response.sendRedirect("couponlist?success=add");
-                    return;
-                } else {
-                    errorMessages.append("Không thể thêm mã giảm giá. Vui lòng thử lại.");
+        // Kiểm tra loại giảm giá
+        if (!"percentage".equals(discountType) && !"fixed".equals(discountType)) {
+            errorMessages.append("Loại giảm giá không hợp lệ.<br>");
+            isValid = false;
+        }
+
+        try {
+            // Kiểm tra giá trị giảm giá
+            double discountValue = Double.parseDouble(discountValueStr);
+            if ("percentage".equals(discountType)) {
+                if (discountValue <= 0 || discountValue > 50) {
+                    errorMessages.append("Giá trị giảm giá theo phần trăm phải từ 1-50%.<br>");
+                    isValid = false;
+                }
+                // Kiểm tra giảm tối đa nếu là percentage
+                double maxDiscount = Double.parseDouble(maxDiscountStr);
+                if (maxDiscount <= 0 || maxDiscount > MAX_AMOUNT) {
+                    errorMessages.append("Giảm tối đa phải từ 1.000 VNĐ đến 10 triệu VNĐ.<br>");
+                    isValid = false;
+                } else if (maxDiscount < discountValue) {
+                    errorMessages.append("Giảm tối đa không thể nhỏ hơn phần trăm giảm giá.<br>");
+                    isValid = false;
+                }
+            } else if ("fixed".equals(discountType)) {
+                if (discountValue < 1000 || discountValue > MAX_AMOUNT) {
+                    errorMessages.append("Giá trị giảm giá cố định phải từ 1.000 VNĐ đến 10 triệu VNĐ.<br>");
+                    isValid = false;
                 }
             }
 
-            request.setAttribute("error", errorMessages.toString());
-            request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            request.getRequestDispatcher("/marketing/coupon/addCoupon.jsp").forward(request, response);
+            // Kiểm tra giá trị đơn hàng tối thiểu
+            double minOrderAmount = Double.parseDouble(minOrderAmountStr);
+            if (minOrderAmount < 1000 || minOrderAmount > MAX_AMOUNT) {
+                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 10 triệu VNĐ.<br>");
+                isValid = false;
+            }
+
+            // Kiểm tra số lần sử dụng tối đa
+            int usageLimit = Integer.parseInt(usageLimitStr);
+            if (usageLimit <= 0 || usageLimit > MAX_USAGE_LIMIT) {
+                errorMessages.append("Số lần sử dụng tối đa phải từ 1 đến 1.000.000 lần.<br>");
+                isValid = false;
+            }
+
+            // Kiểm tra ngày hết hạn
+            java.sql.Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
+            if (expiryDate.before(new Date())) {
+                errorMessages.append("Ngày hết hạn phải lớn hơn thời gian hiện tại.<br>");
+                isValid = false;
+            }
+        } catch (NumberFormatException e) {
+            errorMessages.append("Dữ liệu số không hợp lệ. Vui lòng kiểm tra lại.<br>");
+            isValid = false;
+        } catch (IllegalArgumentException e) {
+            errorMessages.append("Ngày không hợp lệ. Vui lòng kiểm tra lại định dạng ngày.<br>");
+            isValid = false;
         }
+
+        return isValid;
     }
 
     /**

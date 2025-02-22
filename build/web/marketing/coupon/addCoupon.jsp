@@ -213,17 +213,17 @@
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control " id="discountValue" name="discount_value" value="${param.discount_value}" required >
+                                    <input type="number" class="form-control" id="discountValue" name="discount_value" value="${param.discount_value}" required>
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
+                                <span id="discountValueText" class="form-text">text thay đổi theo loại giảm giá</span>
                             </div>
 
                             <!-- Max discount (only for percentage type) -->
                             <div class="mb-3" id="maxDiscountContainer" style="display:none;">
                                 <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" 
-                                           id="maxDiscount" name="max_discount" value="${param.max_discount}" min="0">
+                                    <input type="number" class="form-control"  id="maxDiscount" name="max_discount" value="${param.max_discount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -278,11 +278,6 @@
         <!-- Add JavaScript for sidebar and form functionality -->
         <script>
             $(document).ready(function () {
-                // Set minimum date for expiry date as today
-                const today = new Date();
-                const formattedDate = today.toISOString().split('T')[0];
-                $('#expiryDate').attr('min', formattedDate);
-
                 // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
@@ -304,20 +299,46 @@
                 // Highlight current menu item
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
+            });
+        </script>
 
-                // Handle discount type change
-                $('#discountType').on('change', function () {
-                    const selectedType = $(this).val();
+        <script>
+            $(document).ready(function () {
+                // Lấy các phần tử một lần để tái sử dụng
+                const $discountType = $('#discountType');
+                const $discountSymbol = $('#discountSymbol');
+                const $maxDiscountContainer = $('#maxDiscountContainer');
+                const $maxDiscount = $('#maxDiscount');
+                const $discountValueText = $('#discountValueText');
+
+                // Hàm xử lý thay đổi loại giảm giá
+                function handleDiscountTypeChange() {
+                    const selectedType = $discountType.val();
                     if (selectedType === 'percentage') {
-                        $('#discountSymbol').text('%');
-                        $('#maxDiscountContainer').show();
-                        $('#discountValueText').text('Nhập phần trăm giảm giá (1-100%).');
+                        $discountSymbol.text('%');
+                        $maxDiscountContainer.show();
+                        if ($discountValueText.length) {
+                            $discountValueText.text('Nhập phần trăm giảm giá (1-50%).'); 
+                        }
                     } else {
-                        $('#discountSymbol').text('₫');
-                        $('#maxDiscountContainer').hide();
-                        $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
+                        $discountSymbol.text('₫');
+                        $maxDiscountContainer.hide();
+                        $maxDiscount.val(''); 
+                        if ($discountValueText.length) {
+                            $discountValueText.text('Nhập số tiền giảm giá cố định.');
+                        }
                     }
-                });
+                }
+
+                // Kiểm tra trạng thái ban đầu
+                handleDiscountTypeChange();
+
+                // Gán sự kiện change
+                $discountType.on('change', handleDiscountTypeChange);
+
+                // Set minimum date for expiry date as today
+                const today = new Date().toISOString().split('T')[0];
+                $('#expiryDate').attr('min', today);
             });
         </script>
     </body>
