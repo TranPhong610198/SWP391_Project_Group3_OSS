@@ -123,6 +123,42 @@ public class ProductDAO extends DBContext {
 //_______________________________________Hết Phần DAO Cho Việc List______________________________________________________________ 
 
 //_________________________________________Phần DAO Cho Việc Add____________________________________________________________    
+    // Lấy danh sách các sản phẩm combo
+    public List<Product> getComboProducts() {
+        List<Product> comboProducts = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE is_combo = 1";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setComboGroupId(rs.getInt("combo_group_id"));
+                comboProducts.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return comboProducts;
+    }
+
+    // Lấy giá trị combo_group_id lớn nhất
+    public int getMaxComboGroupId() {
+        int maxId = 0;
+        String sql = "SELECT MAX(combo_group_id) as max_id FROM products";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                maxId = rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maxId;
+    }
+
     public List<String> getProductImages(int productId) {
         List<String> images = new ArrayList<>();
         String query = "SELECT image_url FROM product_images WHERE product_id = ?";

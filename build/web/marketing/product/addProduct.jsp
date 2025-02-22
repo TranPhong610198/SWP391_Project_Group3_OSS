@@ -138,6 +138,23 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${alert != null && !alert.trim().isEmpty()}">
+                    <c:choose>
+                        <c:when test="${alert.equals('ERR')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Lỗi không xác định.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Thêm sản phẩm thành công.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
                 <h2 class="page-title">
                     <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
                 </h2>
@@ -344,6 +361,32 @@
                                             }
                                         }
                                     }
+
+                                    $(document).ready(function () {
+                                        // Khởi tạo trạng thái ban đầu
+                                        updateComboGroupIdVisibility();
+
+                                        // Xử lý khi checkbox isCombo thay đổi
+                                        $('#isCombo').change(function () {
+                                            updateComboGroupIdVisibility();
+                                        });
+
+                                        function updateComboGroupIdVisibility() {
+                                            const isCombo = $('#isCombo').is(':checked'); // Kiểm tra trạng thái checkbox
+                                            const comboBoxElement = $("#comboGroupId");
+
+                                            if (isCombo) {
+                                                // Nếu checkbox được chọn, vô hiệu hóa select và xóa giá trị
+                                                comboBoxElement.prop("disabled", true);
+                                                comboBoxElement.val(""); // Đặt về option mặc định
+                                            } else {
+                                                // Nếu checkbox không được chọn, kích hoạt lại select
+                                                comboBoxElement.prop("disabled", false);
+                                            }
+                                        }
+                                    });
         </script>
+
+
     </body>
 </html>

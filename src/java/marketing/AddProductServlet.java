@@ -73,8 +73,13 @@ public class AddProductServlet extends HttpServlet {
             throws ServletException, IOException {
         //Lấy listcategory
         CategoryDAO cateDao = new CategoryDAO();
-        List<Category> listCate = cateDao.getAll();
+        List<Category> listCate = cateDao.getThirdLevelCategories();
         request.setAttribute("categories", listCate);
+
+        // Lấy danh sách sản phẩm combo
+        ProductDAO productDao = new ProductDAO();
+        List<Product> comboProducts = productDao.getComboProducts();
+        request.setAttribute("comboProducts", comboProducts);
 
         request.getRequestDispatcher("/marketing/product/addProduct.jsp").forward(request, response);
 
@@ -102,7 +107,17 @@ public class AddProductServlet extends HttpServlet {
             String description = request.getParameter("description");
             double originalPrice = Double.parseDouble(request.getParameter("originalPrice"));
             double salePrice = Double.parseDouble(request.getParameter("salePrice"));
-//            String status = request.getParameter("status");
+            boolean isCombo = request.getParameter("isCombo") != null;
+            String comboGroupId = null;
+
+            if (isCombo) {
+                // Nếu là combo, tạo comboGroupId mới
+                int newComboGroupId = productDAO.getMaxComboGroupId() + 1;
+                comboGroupId = String.valueOf(newComboGroupId);
+            } else {
+                // Nếu không phải combo, lấy comboGroupId được chọn
+                comboGroupId = request.getParameter("comboGroupId");
+            }
 
             //Xử lý ảnh chính (thumbnail)
             Part thumbnailPart = request.getPart("thumbnail");
@@ -127,17 +142,19 @@ public class AddProductServlet extends HttpServlet {
             product.setOriginalPrice(originalPrice);
             product.setSalePrice(salePrice);
             product.setThumbnail(thumbnail);
+            product.setIsCombo(isCombo);
+            product.setComboGroupId(comboGroupId!=null && !comboGroupId.isEmpty()? Integer.parseInt(comboGroupId) : 0);
 //            product.setStatus(status);
 
             //Thêm sản phẩm vào database
             if (productDAO.addProduct(product, subImages)) {
-                response.sendRedirect("productlist");
+                response.sendRedirect("productlist?alert=SSA");
             } else {
-                response.sendRedirect("addProduct");
+                response.sendRedirect("addProduct?alert=ERR");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("addProduct.jsp?error=true");
+            response.sendRedirect("addProduct?alert=ERR");
         }
 
     }
