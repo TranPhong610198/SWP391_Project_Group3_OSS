@@ -19,6 +19,7 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public class AddProductServlet extends HttpServlet {
 
             // Kiểm tra đuôi file
             for (Part part : request.getParts()) {
-                if (part.getName().equals("subImages") || part.getName().equals("thumbnail")) {
+                if ((part.getName().equals("subImages") || part.getName().equals("thumbnail")) && part.getSize()>0) {
                     if (!isValidImage(part)) {
                         response.sendRedirect("productlist?alert=ER1_IVImg");
                         return;
@@ -176,7 +177,9 @@ public class AddProductServlet extends HttpServlet {
     // Hàm lưu ảnh vào thư mục uploads/productImages
     private String saveImage(Part part, HttpServletRequest request) {
         try {
-            String fileName = "img_" + System.currentTimeMillis() + ".jpg"; // Tạo tên file mới
+            String oldFName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+             String fileExtension = oldFName.substring(oldFName.lastIndexOf("."));
+            String fileName = "img_" + System.currentTimeMillis() + fileExtension; // Tạo tên file mới
             String uploadDir = request.getServletContext().getRealPath("/uploads/productImages"); // Đường dẫn thư mục
 
             File uploadFolder = new File(uploadDir);
