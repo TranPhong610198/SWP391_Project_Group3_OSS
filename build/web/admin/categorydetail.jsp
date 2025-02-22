@@ -17,18 +17,18 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -36,87 +36,87 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .info-label {
                 font-weight: 600;
                 color: var(--primary-color);
                 margin-bottom: 5px;
             }
-            
+
             .edit-buttons {
                 display: none;
             }
-            
+
             .editing .edit-buttons {
                 display: block;
             }
-            
+
             .editing .view-content {
                 display: none;
             }
-            
+
             .edit-content {
                 display: none;
             }
-            
+
             .editing .edit-content {
                 display: block;
             }
-            
+
             .status-badge {
                 padding: 6px 12px;
                 border-radius: 20px;
                 font-size: 14px;
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .breadcrumb {
                 background-color: transparent;
                 padding: 0;
                 margin-bottom: 1rem;
             }
-            
+
             .breadcrumb-item a {
                 color: var(--accent-color);
                 text-decoration: none;
             }
-            
+
             .breadcrumb-item.active {
                 color: var(--primary-color);
             }
-            
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -127,7 +127,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="/admin/adminsidebar.jsp" />
-        
+
         <div class="main-content">
             <div class="container-fluid p-4">
                 <!-- Breadcrumb -->
@@ -230,7 +230,7 @@
                                     <!-- Parent Category -->
                                     <div class="mb-3">
                                         <div class="info-label">Danh mục cha</div>
-                                        <div class="view-content">
+                                        <div>
                                             <c:choose>
                                                 <c:when test="${parentCategory != null}">
                                                     <a href="categorydetail?id=${parentCategory.id}" class="text-primary">
@@ -334,29 +334,29 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <script>
-            function toggleEdit() {
-                document.querySelector('#categoryForm').classList.add('editing');
-                document.getElementById('editButton').style.display = 'none';
-            }
+                        function toggleEdit() {
+                            document.querySelector('#categoryForm').classList.add('editing');
+                            document.getElementById('editButton').style.display = 'none';
+                        }
 
-            function cancelEdit() {
-                document.querySelector('#categoryForm').classList.remove('editing');
-                document.getElementById('editButton').style.display = 'block';
-            }
+                        function cancelEdit() {
+                            document.querySelector('#categoryForm').classList.remove('editing');
+                            document.getElementById('editButton').style.display = 'block';
+                        }
 
-            function deleteCategory(categoryId) {
-                if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-                    window.location.href = 'categorydelete?id=' + categoryId;
-                }
-            }
+                        function deleteCategory(categoryId) {
+                            if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+                                window.location.href = 'categorydelete?id=' + categoryId;
+                            }
+                        }
 
-            // Highlight active menu item
-            $(document).ready(function () {
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
-            });
+                        // Highlight active menu item
+                        $(document).ready(function () {
+                            $('.menu-item').removeClass('active');
+                            $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
+                        });
         </script>
     </body>
 </html>
