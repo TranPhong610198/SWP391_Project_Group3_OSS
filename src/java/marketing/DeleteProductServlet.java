@@ -6,6 +6,7 @@ package marketing;
 
 import DAO.CartDAO;
 import DAO.ProductDAO;
+import entity.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  *
@@ -84,9 +86,16 @@ public class DeleteProductServlet extends HttpServlet {
                     return;
                 }
             }
-            
-            //kiểm tra combo
-            
+
+            //kiểm tra combo -> lấy danh sách sản phẩm thuộc combo -> chuyển is Id sang sản phẩm cùng combo gần nhất
+            Product tempP = productDAO.getProductById(productId);
+            if (tempP.isIsCombo()) {
+                List<Product> comboList = productDAO.getComboProduct(tempP.getComboGroupId());
+                if (comboList.size() >= 2) {
+                    int upProductId = comboList.get(comboList.size() - 2).getId();
+                    productDAO.setIsComboByProductId(upProductId, true);
+                }
+            }
 
             if (productDAO.deleteProduct(productId, uploadPath)) {
                 response.sendRedirect("productlist?alert=SSD");

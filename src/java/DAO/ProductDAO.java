@@ -20,6 +20,7 @@ public class ProductDAO extends DBContext {
 //_______________________________________Phần DAO Cho Việc List______________________________________________________________ 
     private static final int RECORDS_PER_PAGE = 10;
 
+    //Lấy tổng hàng tồn của 1 sản phẩm
     public int getTotalStockByProductId(int productId) {
         String query = "SELECT SUM(stock_quantity) AS total_stock FROM product_variants WHERE product_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -34,6 +35,7 @@ public class ProductDAO extends DBContext {
         return 0;
     }
 
+    //Lấy danh sách sản phẩm thông qua lọc
     public List<Product> getProductsByFilter(String filterQuery, List<Object> params) {
         List<Product> products = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(filterQuery)) {
@@ -67,6 +69,7 @@ public class ProductDAO extends DBContext {
         return products;
     }
 
+    //Lấy danh sách những sản phẩm thuộc 1 combo
     public List<Product> getComboProduct(int comboGroupId) {
         List<Product> products = new ArrayList<>();
         String query = "SELECT * FROM products WHERE combo_group_id = ? ORDER BY id DESC";
@@ -97,6 +100,7 @@ public class ProductDAO extends DBContext {
         return products;
     }
 
+    //Lấy tổng sản phẩm đã đc lọc
     public int getTotalFilteredRecords(String filterQuery, List<Object> params) {
         String countQuery = "SELECT COUNT(*) AS total FROM (" + filterQuery + ") AS filtered";
         try (PreparedStatement ps = connection.prepareStatement(countQuery)) {
@@ -221,6 +225,21 @@ public class ProductDAO extends DBContext {
 //______________________________________________________Hết Phần DAO Cho Việc Add_________________________________________
 
 //_______________________________________________________Phần DAO Cho Việc Delete____________________________________________
+    // Chuyển sản phẩm chính
+    public boolean setIsComboByProductId(int productId, boolean isCombo) {
+        String sql = "UPDATE products SET is_combo = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setBoolean(1, isCombo);
+            ps.setInt(2, productId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi
+    }
+
     //Kiểm tra xem sản phẩm có trong cart hay không
     public boolean hasProductInCart(int productId) {
         String query = "SELECT COUNT(*) FROM cart_items WHERE product_id = ?";
@@ -333,6 +352,36 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+//_______________________________________________________Hết Phần DAO Cho Việc Delete____________________________________________
+
+//_______________________________________________________Phần DAO Cho Việc EDIT____________________________________________    
+    // Lấy sản phẩm bằng Id
+    public Product getProductById(int productId) {
+        String sql = "SELECT * FROM products WHERE id = ?";
+        Product product = null;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setCategoryId(rs.getInt("category_id"));
+                product.setDescription(rs.getString("description"));
+                product.setOriginalPrice(rs.getBigDecimal("original_price"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
+                product.setThumbnail(rs.getString("thumbnail"));
+                product.setStatus(rs.getString("status"));
+                product.setIsCombo(rs.getBoolean("is_combo"));
+                product.setComboGroupId(rs.getInt("combo_group_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product; // Trả về product (hoặc null nếu không tìm thấy)
     }
 
     // set status khi sản phẩm hết hàng
