@@ -120,6 +120,16 @@ public class AddProductServlet extends HttpServlet {
                 comboGroupId = request.getParameter("comboGroupId");
             }
 
+            // Kiểm tra đuôi file
+            for (Part part : request.getParts()) {
+                if (part.getName().equals("subImages") || part.getName().equals("thumbnail")) {
+                    if (!isValidImage(part)) {
+                        response.sendRedirect("productlist?alert=ER1_IVImg");
+                        return;
+                    }
+                }
+            }
+
             //Xử lý ảnh chính (thumbnail)
             Part thumbnailPart = request.getPart("thumbnail");
             String thumbnail = saveImage(thumbnailPart, request);
@@ -128,7 +138,7 @@ public class AddProductServlet extends HttpServlet {
             //Xử lý ảnh phụ (tối đa 5 ảnh)
             List<String> subImages = new ArrayList<>();
             for (Part part : request.getParts()) {
-                if (part.getName().equals("subImages")&& part.getSize()>0) {
+                if (part.getName().equals("subImages") && part.getSize() > 0) {
                     String imageUrl = saveImage(part, request);
                     if (imageUrl != null) {
                         subImages.add(imageUrl);
@@ -154,7 +164,7 @@ public class AddProductServlet extends HttpServlet {
             if (productDAO.addProduct(product, subImages)) {
                 response.sendRedirect("productlist?alert=SSA");
             } else {
-                response.sendRedirect("addProduct?alert=ERR");
+                response.sendRedirect("productlist?alert=ERR");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,6 +191,15 @@ public class AddProductServlet extends HttpServlet {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Hàm kiểm tra đuôi file
+    private boolean isValidImage(Part part) {
+        String contentType = part.getContentType();
+        return contentType.equals("image/jpeg")
+                || contentType.equals("image/png")
+                || contentType.equals("image/gif")
+                || contentType.equals("image/webp");
     }
 
     /**

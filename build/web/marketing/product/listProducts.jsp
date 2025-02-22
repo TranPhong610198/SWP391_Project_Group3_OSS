@@ -231,6 +231,12 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
+                        <c:when test="${alert.equals('ER1_IVImg')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
                         <c:when test="${alert.equals('ERR')}">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 Lỗi không xác định.

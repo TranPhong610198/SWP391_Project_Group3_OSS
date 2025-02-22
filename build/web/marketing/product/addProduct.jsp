@@ -258,12 +258,12 @@
                                             }
                                         });
 
-                                        // Highlight active menu item
+                                        // In đậm vị trí trang trên sidebar
                                         $('.menu-item').removeClass('active');
                                         $('.menu-item a[href="addproduct"]').closest('.menu-item').addClass('active');
                                         $('#productSubmenu').addClass('show');
 
-                                        // Validate sale price is less than or equal to original price
+                                        // Kiểm tra tính hợp lệ của giá
                                         $('#salePrice').on('change', function () {
                                             const originalPrice = parseFloat($('#originalPrice').val()) || 0;
                                             const salePrice = parseFloat($('#salePrice').val()) || 0;
@@ -275,12 +275,24 @@
                                         });
                                     });
 
-                                    // Preview thumbnail image
+                                    // Hàm kiểm tra đuôi file
+                                    function isValidImage(file) {
+                                        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                        return allowedTypes.includes(file.type);
+                                    }
+
+                                    // Xem trước ảnh chính
                                     function previewThumbnail(input) {
                                         const preview = document.getElementById('thumbnailPreview');
                                         preview.innerHTML = '';
 
                                         if (input.files && input.files[0]) {
+                                            const file = input.files[0];
+                                            if (!isValidImage(file)) {
+                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                input.value = ''; //xóa nội dung ko phải ảnh
+                                                return;
+                                            }
                                             const reader = new FileReader();
 
                                             reader.onload = function (e) {
@@ -294,7 +306,7 @@
                                         }
                                     }
 
-                                    // Preview multiple sub-images
+                                    // Xem trước các ảnh phụ
                                     function previewSubImages(input) {
                                         const preview = document.getElementById('subImagesPreview');
                                         preview.innerHTML = '';
@@ -304,8 +316,13 @@
                                             const maxFiles = 5;
 
                                             for (let i = 0; i < Math.min(filesAmount, maxFiles); i++) {
+                                                const file = input.files[i];
+                                                if (!isValidImage(file)) {
+                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                    input.value = ''; //xóa nội dung ko phải ảnh
+                                                    return;
+                                                }
                                                 const reader = new FileReader();
-
                                                 reader.onload = function (e) {
                                                     const img = document.createElement('img');
                                                     img.src = e.target.result;
