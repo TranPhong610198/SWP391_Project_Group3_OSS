@@ -327,16 +327,16 @@
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>Loại giảm giá</th>
+                                        <th>Loại mã</th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=discount_value&sortOrder=${sortField == 'discount_value' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Giá trị 
+                                                Giá trị
                                                 <span class="sort-icons">
                                                     ${sortField == 'discount_value' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>Đơn hàng</th>
+                                        <th>Tối thiểu</th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=max_discount&sortOrder=${sortField == 'max_discount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Giảm tối đa
@@ -347,7 +347,7 @@
                                         </th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=usage_limit&sortOrder=${sortField == 'usage_limit' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Sử dụng tối đa
+                                                Lượt dùng
                                                 <span class="sort-icons">
                                                     ${sortField == 'usage_limit' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                 </span>
@@ -381,7 +381,7 @@
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${coupon.discount_type == 'percentage'}">
-                                                                ${coupon.discount_value}%
+                                                                <fmt:formatNumber value="${coupon.discount_value}" maxFractionDigits="0"/>%
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <fmt:formatNumber value="${coupon.discount_value}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>

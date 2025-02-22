@@ -164,6 +164,8 @@
                 <h2 class="page-title">
                     <i class="fas fa-edit me-2"></i>Chỉnh sửa mã giảm giá
                 </h2>
+
+                <!-- Form Card -->
                 <div class="card form-card">
                     <div class="card-header">
                         <i class="fas fa-pen-square me-2"></i>Thông tin mã giảm giá
@@ -198,26 +200,26 @@
                             <div class="mb-3">
                                 <label for="discount_value" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="discount_value" name="discount_value" value="${param.discount_value != null ? param.discount_value : coupon.discount_value}" required step="1">
+                                    <input type="number" class="form-control" id="discount_value" name="discount_value" value="${param.discount_value != null ? param.discount_value : coupon.discount_value}" required step="1" maxFractionDigits="0">
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
                                 <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
-                            </div>
-
-                            <!-- Max discount -->
-                            <div class="mb-3" id="maxDiscountContainer">
-                                <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="max_discount" name="max_discount" value="${param.max_discount != null ? param.max_discount : coupon.max_discount}" min="0" step="1">
-                                    <span class="input-group-text">₫</span>
-                                </div>
                             </div>
 
                             <!-- Minimum order amount -->
                             <div class="mb-3">
                                 <label for="min_order_amount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="min_order_amount" name="min_order_amount" value="${param.min_order_amount != null ? param.min_order_amount : coupon.min_order_amount}" min="0" step="1">
+                                    <input type="number" class="form-control" id="min_order_amount" name="min_order_amount" value="${param.min_order_amount != null ? param.min_order_amount : coupon.min_order_amount}" min="0">
+                                    <span class="input-group-text">₫</span>
+                                </div>
+                            </div>
+
+                            <!-- Max discount -->
+                            <div class="mb-3" id="maxDiscountContainer">
+                                <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="max_discount" name="max_discount" value="${param.max_discount != null ? param.max_discount : coupon.max_discount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -225,7 +227,7 @@
                             <!-- Usage limit -->
                             <div class="mb-3">
                                 <label for="usage_limit" class="form-label required-field">Số lần sử dụng tối đa</label>
-                                <input type="number" class="form-control" id="usage_limit" name="usage_limit" value="${param.usage_limit != null ? param.usage_limit : coupon.usage_limit}" min="0" step="1">
+                                <input type="number" class="form-control" id="usage_limit" name="usage_limit" value="${param.usage_limit != null ? param.usage_limit : coupon.usage_limit}" min="0">
                             </div>
 
                             <!-- Expiry date -->

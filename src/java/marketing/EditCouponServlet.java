@@ -22,9 +22,9 @@ import java.util.Date;
 @WebServlet(name = "EditCouponServlet", urlPatterns = {"/marketing/editCoupon"})
 public class EditCouponServlet extends HttpServlet {
 
+    private static final BigDecimal MIN_AMOUNT = new BigDecimal("1000"); // 1.000 VNĐ
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("10000000"); // 10 triệu VNĐ
     private static final int MAX_USAGE_LIMIT = 1_000_000; // 1 triệu lần
-    private static final BigDecimal MIN_AMOUNT = new BigDecimal("1000"); // 1.000 VNĐ
     private static final BigDecimal MAX_PERCENTAGE = new BigDecimal("50"); // 50%
 
     @Override

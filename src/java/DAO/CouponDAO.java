@@ -10,7 +10,6 @@ package DAO;
  */
 import Context.DBContext;
 import entity.Coupon;
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -204,13 +203,13 @@ public class CouponDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, coupon.getCode());
             ps.setString(2, coupon.getDiscount_type());
-            ps.setBigDecimal(3, BigDecimal.valueOf(coupon.getDiscount_value()));
-            ps.setBigDecimal(4, BigDecimal.valueOf(coupon.getMin_order_amount()));
-            ps.setBigDecimal(5, BigDecimal.valueOf(coupon.getMax_discount()));
+            ps.setDouble(3, coupon.getDiscount_value());
+            ps.setDouble(4, coupon.getMin_order_amount());
+            ps.setDouble(5, coupon.getMax_discount());
             ps.setInt(6, coupon.getUsage_limit());
             ps.setDate(7, coupon.getExpiry_date());
             ps.setString(8, coupon.getStatus());
-            ps.setInt(9, coupon.getId());
+            ps.setInt(9, coupon.getId());  
             int result = ps.executeUpdate();
             return result > 0;
         } catch (SQLException e) {

@@ -219,20 +219,20 @@
                                 <span id="discountValueText" class="form-text">text thay đổi theo loại giảm giá</span>
                             </div>
 
-                            <!-- Max discount (only for percentage type) -->
-                            <div class="mb-3" id="maxDiscountContainer" style="display:none;">
-                                <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control"  id="maxDiscount" name="max_discount" value="${param.max_discount}" min="0">
-                                    <span class="input-group-text">₫</span>
-                                </div>
-                            </div>
-
                             <!-- Minimum order amount -->
                             <div class="mb-3">
                                 <label for="minOrderAmount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="minOrderAmount" name="min_order_amount" value="${param.min_order_amount}" min="0">
+                                    <span class="input-group-text">₫</span>
+                                </div>
+                            </div>
+                                    
+                            <!-- Max discount (only for percentage type) -->
+                            <div class="mb-3" id="maxDiscountContainer" style="display:none;">
+                                <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control"  id="maxDiscount" name="max_discount" value="${param.max_discount}" min="0">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -318,12 +318,12 @@
                         $discountSymbol.text('%');
                         $maxDiscountContainer.show();
                         if ($discountValueText.length) {
-                            $discountValueText.text('Nhập phần trăm giảm giá (1-50%).'); 
+                            $discountValueText.text('Nhập phần trăm giảm giá (1-50%).');
                         }
                     } else {
                         $discountSymbol.text('₫');
                         $maxDiscountContainer.hide();
-                        $maxDiscount.val(''); 
+                        $maxDiscount.val('');
                         if ($discountValueText.length) {
                             $discountValueText.text('Nhập số tiền giảm giá cố định.');
                         }

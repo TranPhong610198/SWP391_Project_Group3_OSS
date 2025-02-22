@@ -335,6 +335,27 @@ public class ProductDAO extends DBContext {
         return false;
     }
 
+    // set status khi thêm số lượng cho sp mới
+    public void updateProductStatusIfNeeded(int productId) {
+        int totalStock = getTotalStockByProductId(productId);
+        String query = "SELECT status FROM products WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String currentStatus = rs.getString("status");
+                // Cập nhật trạng thái nếu cần
+                if (totalStock > 0 && "EOStock".equalsIgnoreCase(currentStatus)) {
+                    updateProductStatus(productId, "active");
+                } else if (totalStock <= 0 && !"EOStock".equalsIgnoreCase(currentStatus)) {
+                    updateProductStatus(productId, "EOStock");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // set status khi sản phẩm hết hàng
     public void updateProductStatus(int productId, String status) {
         String query = "UPDATE products SET status = ? WHERE id = ?";
