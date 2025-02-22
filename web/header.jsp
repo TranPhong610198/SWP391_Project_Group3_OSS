@@ -142,7 +142,7 @@
                             navbarToggler.setAttribute('aria-expanded', 'false');
                         }
                     });
-                });
+                });               
             });
         </script>
     </body>

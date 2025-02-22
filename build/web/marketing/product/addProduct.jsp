@@ -127,6 +127,7 @@
                 }
             }
         </style>
+        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <!-- Include the sidebar -->
@@ -138,23 +139,6 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
-                <c:if test="${alert != null && !alert.trim().isEmpty()}">
-                    <c:choose>
-                        <c:when test="${alert.equals('ERR')}">
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                Lỗi không xác định.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                Thêm sản phẩm thành công.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
-                </c:if>
-
                 <h2 class="page-title">
                     <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
                 </h2>
@@ -210,35 +194,24 @@
                                 <div class="form-text">Giá bán phải lớn hơn hoặc bằng giá gốc</div>
                             </div>
 
-                            <!--Trạng thái--> 
-                            <!--                        <div class="col-md-6">
-                                                        <label for="status" class="form-label">Trạng thái <span class="text-danger">*</span></label>
-                                                        <select class="form-select" id="status" name="status" required>
-                                                            <option value="active">Đang bán</option>
-                                                            <option value="inactive">Ngưng bán</option>
-                                                        </select>
-                                                    </div>-->
-
-                            <!-- Checkbox chọn combo -->
-                            <div class="col-md-6">
-                                <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" id="isCombo" name="isCombo">
-                                    <label class="form-check-label" for="isCombo">
-                                        Là sản phẩm chính của combo
-                                    </label>
-                                </div>
-                            </div>
-
                             <!-- Chọn nhóm combo -->
-                            <div class="col-md-6" id="comboGroupIdContainer">
-                                <label for="comboGroupId" class="form-label">Nhóm combo</label>
-                                <select class="form-select" id="comboGroupId" name="comboGroupId">
+                            <div class="col-md-12 d-flex flex-column justify-content-center align-items-center">
+                                <label for="comboGroupId" class="form-label mb-2">
+                                    <div class="form-check d-flex justify-content-center align-items-center" style="height: 100%;">
+                                        <input class="form-check-input me-2" type="checkbox" id="isCombo" name="isCombo">
+                                        <label class="form-check-label" for="isCombo">
+                                            Là sản phẩm chính của combo
+                                        </label>
+                                    </div>
+                                </label>
+                                <select class="form-select" id="comboGroupId" name="comboGroupId" style="width: 50%;">
                                     <option value="">Không thuộc combo nào</option>
                                     <c:forEach var="comboProduct" items="${comboProducts}">
                                         <option value="${comboProduct.comboGroupId}">${comboProduct.title}</option>
                                     </c:forEach>
                                 </select>
                             </div>
+
 
                             <!-- Mô tả -->
                             <div class="col-12">
@@ -385,6 +358,8 @@
                                             }
                                         }
                                     });
+
+                                    CKEDITOR.replace('description');
         </script>
 
 
