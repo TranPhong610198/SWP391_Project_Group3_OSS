@@ -102,7 +102,7 @@ public class AddPostServlet extends HttpServlet {
         try {
             Part filePart = request.getPart("thumbnail");
             if (filePart != null && filePart.getSize() > 0) {
-                String uploadPath = request.getServletContext().getRealPath("") + "uploads";
+                String uploadPath = request.getServletContext().getRealPath("") + "uploads/post/";
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
@@ -112,7 +112,7 @@ public class AddPostServlet extends HttpServlet {
                 String filePath = uploadPath + File.separator + fileName;
                 
                 filePart.write(filePath);
-                thumbnail = "uploads/" + fileName;
+                thumbnail = "uploads/post/" + fileName;
             }
         } catch (Exception e) {
             e.printStackTrace();

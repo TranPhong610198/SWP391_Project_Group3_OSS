@@ -148,6 +148,9 @@
                                     <small class="text-muted">
                                         <i class="fas fa-user me-2"></i>${post.getUser().getFullName()}
                                         <i class="fas fa-clock ms-3 me-2"></i>${post.getCreatedAt()}
+                                        <c:if test="${post.getUpdatedAt() != null}">
+                                            <i class="fas fa-edit ms-3 me-2"></i>Cập nhật: ${post.getUpdatedAt()}
+                                        </c:if>
                                     </small>
                                 </div>
                                 <div class="mb-4">
@@ -265,5 +268,6 @@
                 height: 400
             });
         </script>
+        <jsp:include page="/footer.jsp" />
     </body>
 </html>

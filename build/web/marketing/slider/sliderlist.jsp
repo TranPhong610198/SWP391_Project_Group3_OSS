@@ -182,8 +182,8 @@
                                 <thead>
                                     <tr class="bg-light">
                                         <th class="text-center" style="width: 60px;">STT</th>
-                                        <th>Tiêu đề</th>
                                         <th class="text-center" style="width: 150px;">Hình ảnh</th>
+                                        <th>Tiêu đề</th>
                                         <th>Liên kết ngược</th>
                                         <th class="text-center" style="width: 100px;">Thứ tự</th>
                                         <th class="text-center">Trạng thái</th>
@@ -195,11 +195,11 @@
                                         <c:when test="${not empty sliders}">
                                             <c:forEach var="slider" items="${sliders}" varStatus="status">
                                                 <tr>
-                                                    <td class="text-center">${(currentPage - 1) * pageSize + status.index + 1}</td>
-                                                    <td>${slider.title}</td>
+                                                    <td class="text-center">${(currentPage - 1) * pageSize + status.index + 1}</td>                                                  
                                                     <td class="text-center">
                                                         <img src="${slider.image_url}" alt="${slider.title}" class="slider-image">
                                                     </td>
+                                                    <td>${slider.title}</td>
                                                     <td>${slider.link}</td>
                                                     <td class="text-center">${slider.display_order}</td>
                                                     <td class="text-center">
@@ -317,5 +317,6 @@
                 document.querySelector('.menu-item a[href*="slider"]')?.closest('.menu-item').classList.add('active');
             });
         </script>
+        <jsp:include page="/footer.jsp" />
     </body>
 </html>

@@ -207,8 +207,8 @@
                             <div class="col-md-3">
                                 <select name="status" class="form-select">
                                     <option value="">Tất cả trạng thái</option>
-                                    <option value="published" ${status == 'published' ? 'selected' : ''}>Đã xuất bản</option>
-                                    <option value="draft" ${status == 'draft' ? 'selected' : ''}>Bản thảo</option>
+                                    <option value="published" ${param.status == 'published' ? 'selected' : ''}>Đã xuất bản</option>
+                                    <option value="draft" ${param.status == 'draft' ? 'selected' : ''}>Bản thảo</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -297,33 +297,39 @@
 
                 <!-- Pagination -->
                 <!-- Hiển thị số bài đăng (vẫn nằm bên trái) -->
-                <div class="d-flex justify-content-start align-items-center mt-3">
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-muted small">
-                        Hiển thị ${posts.size()} bài đăng
+                        Hiển thị ${posts.size()} / ${totalItems} bài đăng
                     </div>
-                </div>
-
-                <!-- Pagination ở giữa danh sách bài đăng -->
-                <div class="d-flex justify-content-center mt-3">
                     <nav>
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage-1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage-1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}" aria-label="Previous">
                                         <i class="fas fa-chevron-left"></i>
                                     </a>
                                 </li>
                             </c:if>
 
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">${i}</a>
-                                </li>
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <c:choose>
+                                    <c:when test="${i == currentPage}">
+                                        <li class="page-item active">
+                                            <span class="page-link">${i}</span>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item">
+                                            <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${i}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">${i}</a>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage+1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/marketing/postList?page=${currentPage+1}&search=${param.search}&authorId=${param.authorId}&status=${param.status}" aria-label="Next">
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
