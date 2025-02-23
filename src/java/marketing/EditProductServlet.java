@@ -245,7 +245,6 @@ public class EditProductServlet extends HttpServlet {
                 for (Part part : request.getParts()) {
                     if (part.getName().equals("newSubImage") && part.getSize() > 0) {
                         if (currentImages.size() >= 5) {
-                            response.sendRedirect("editproduct?id=" + productId);
                             break;
                         }
                         String newImageUrl = saveImage(part, request);
@@ -258,6 +257,7 @@ public class EditProductServlet extends HttpServlet {
                         }
                     }
                 }
+                response.sendRedirect("editproduct?id=" + productId);
 
             }
 
