@@ -5,10 +5,10 @@
 package marketing;
 
 import DAO.InventoryDAO;
+import DAO.ProductDAO;
 import entity.Inventory;
 import entity.Variant;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -51,6 +51,7 @@ public class InventoryDetailServlet extends HttpServlet {
         int productId = Integer.parseInt(request.getParameter("productId"));
         String source = request.getParameter("source"); 
         InventoryDAO inventoryDAO = new InventoryDAO();
+        ProductDAO productDAO = new ProductDAO();
 
         System.out.println("Source in doPost: " + source);
 
@@ -59,6 +60,13 @@ public class InventoryDetailServlet extends HttpServlet {
                 int variantId = Integer.parseInt(request.getParameter("variantId"));
                 // Xóa khỏi tất cả các bảng liên quan
                 boolean deleted = inventoryDAO.deleteVariant(variantId);
+                if (deleted) {
+                    List<Variant> remainingVariants = inventoryDAO.getProductVariants(productId);
+                    if (remainingVariants == null || remainingVariants.isEmpty()) {
+                        // Nếu không còn variant nào, cập nhật trạng thái sản phẩm thành EOStock
+                        productDAO.updateProductStatus(productId, "EOStock");
+                    }
+                }
                 
                 // Tạo URL chuyển hướng với source
                 String redirectUrl = "inventoryDetail?id=" + productId;

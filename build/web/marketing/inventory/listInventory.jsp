@@ -238,14 +238,45 @@
                                     <input type="text" name="search" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm sản phẩm...">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+<!--                            <div class="col-md-3">
                                 <select name="category" class="form-select">
                                     <option value="">Tất cả danh mục</option>
                                     <c:forEach items="${categoryList}" var="cat">
                                         <option value="${cat.id}" ${cat.id == selectedCategory ? 'selected' : ''}>${cat.name}</option>
                                     </c:forEach>
                                 </select>
-                            </div>
+                            </div>-->
+                            <div class="col-md-3">
+                                <select name="category" class="form-select">
+                                    <option value="">📑 Tất cả danh mục</option>
+                                    <c:forEach items="${categoryList}" var="cat">
+                                        <c:choose>
+                                            <%-- Level 1 categories (parent categories) --%>
+                                            <c:when test="${cat.level == 1}">
+                                                <option value="${cat.id}" ${selectedCategory == cat.id ? 'selected' : ''}>
+                                                    📁 ${cat.name}
+                                                </option>
+                                                <%-- Display child categories --%>
+                                                <c:forEach items="${categoryList}" var="childCat">
+                                                    <c:if test="${childCat.parentId == cat.id}">
+                                                        <option value="${childCat.id}" ${selectedCategory == childCat.id ? 'selected' : ''}>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;📎 ${childCat.name}
+                                                        </option>
+                                                        <%-- Display grandchild categories if any --%>
+                                                        <c:forEach items="${categoryList}" var="grandChildCat">
+                                                            <c:if test="${grandChildCat.parentId == childCat.id}">
+                                                                <option value="${grandChildCat.id}" ${selectedCategory == grandChildCat.id ? 'selected' : ''}>
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⤷ ${grandChildCat.name}
+                                                                </option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:when>
+                                        </c:choose>
+                                    </c:forEach>
+                                </select>
+                            </div>    
                             <div class="col-md-3">
                                 <div class="d-grid gap-2 d-md-flex">
                                     <button type="submit" class="btn btn-primary me-md-2">
