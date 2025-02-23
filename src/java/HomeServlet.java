@@ -71,16 +71,16 @@ public class HomeServlet extends HttpServlet {
 
         // Existing code for sliders and posts...
         List<Slider> activeSliders = sliderDAO.getAllSliders(1, 5, "", "active");
-//        List<Post> featuredPosts = postDAO.getAllPosts(1, 3, "", null, "published", true, "created_at", "DESC");
-//        List<Post> latestPosts = postDAO.getAllPosts(1, 2, "", null, "published", null, "created_at", "DESC");
+        List<Post> featuredPosts = postDAO.getPostToHome(1, 3, "", null, "published", true, "created_at", "DESC");
+        List<Post> latestPosts = postDAO.getPostToHome(1, 2, "", null, "published", null, "created_at", "DESC");
 
         // Get featured products
-        List<Product> featuredProducts = productDAO.getFeaturedProducts(4); // Get top 4 featured products
+        List<Product> featuredProducts = productDAO.getFeaturedProducts(8); // Get top 4 featured products
 
         // Set attributes
         request.setAttribute("sliders", activeSliders);
-//        request.setAttribute("featuredPosts", featuredPosts);
-//        request.setAttribute("latestPosts", latestPosts);
+        request.setAttribute("featuredPosts", featuredPosts);
+        request.setAttribute("latestPosts", latestPosts);
         request.setAttribute("featuredProducts", featuredProducts); // Add this line
 
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
