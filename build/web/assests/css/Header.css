@@ -1,3 +1,12 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 23, 2025, 5:14:26 PM
+    Author     : nguye
+*/
+
 /* Header.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -15,6 +24,17 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Chỉnh sửa container-header để linh hoạt theo nội dung */
+.container-header {
+    width: 100%; /* Đảm bảo container-header mở rộng toàn chiều rộng */
+    max-width: none; /* Loại bỏ max-width mặc định của Bootstrap */
+    display: flex; /* Sử dụng flex để các phần tử bên trong tự điều chỉnh */
+    justify-content: space-between; /* Phân bố không gian giữa các phần tử */
+    align-items: center; /* Canh giữa theo chiều dọc */
+    padding: 0 15px; /* Giữ padding mặc định của Bootstrap */
+}
+
+/* Các kiểu khác không thay đổi tên class */
 .navbar-brand {
     display: flex;
     align-items: center;
@@ -22,11 +42,11 @@ body {
 }
 
 .navbar-brand img {
-    height: 80px; /* Tăng kích thước logo */
+    height: 80px;
     width: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
-    margin: -15px 0; /* Điều chỉnh margin âm để logo không đẩy header cao lên */
+    margin: -15px 0;
 }
 
 .navbar-brand:hover img {
@@ -43,7 +63,6 @@ body {
     text-transform: uppercase; 
     letter-spacing: 1px;      
 }
-
 
 .nav-link::after {
     content: '';
@@ -67,20 +86,22 @@ body {
 
 /* Mega Menu */
 .mega-menu {
-    background: rgba(255, 255, 255, 0.98);
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-    border-top: 3px solid #3498db;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     position: absolute;
     left: 0;
     width: 100%;
-    min-width: 800px;
+    min-width: 600px;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
     z-index: 1000;
+    top: 100%;
+    margin-top: 5px;
 }
+
 
 .nav-item:hover .mega-menu {
     opacity: 1;
@@ -90,27 +111,40 @@ body {
 .mega-menu h5 {
     color: #2c3e50;
     font-weight: 600;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f1f1f1;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.mega-menu h5 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.mega-menu h5 a:hover {
+    color: #3498db;
 }
 
 .mega-menu ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+}
+
+.mega-menu ul li {
+    margin: 8px 0;
 }
 
 .mega-menu ul li a {
     color: #34495e;
-    padding: 8px 0;
+    font-size: 14px;
+    padding: 4px 0;
     display: block;
-    transition: all 0.3s ease;
     text-decoration: none;
 }
 
 .mega-menu ul li a:hover {
     color: #3498db;
-    transform: translateX(5px);
 }
 
 /* Search Form */
@@ -152,11 +186,11 @@ body {
 
 /* Main Navigation Items */
 .navbar-nav {
-    flex-wrap: nowrap; /* Prevent nav items from wrapping */
+    flex-wrap: nowrap;
 }
 
 .nav-link {
-    white-space: nowrap; /* Keep nav text in one line */
+    white-space: nowrap;
 }
 
 /* User Menu Container */
@@ -203,7 +237,7 @@ body {
     font-weight: 500;
     color: #34495e;
     font-size: 14px;
-    max-width: 150px; /* Limit width */
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -212,7 +246,7 @@ body {
 .username {
     font-size: 12px;
     color: #95a5a6;
-    max-width: 150px; /* Limit width */
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -223,8 +257,8 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-shrink: 0; /* Ngăn user-actions bị co lại quá mức */
 }
-
 
 .dropdown {
     position: relative;
@@ -284,6 +318,7 @@ body {
     padding: 8px;
     border-radius: 50%;
     transition: all 0.3s ease;
+    flex-shrink: 0; /* Ngăn cart-icon bị co lại */
 }
 
 .cart-icon:hover {
@@ -313,17 +348,47 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    flex-wrap: nowrap; /* Prevent wrapping of elements */
+    flex-wrap: nowrap;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
+    .container-header {
+        flex-direction: column; /* Chuyển sang dọc trên mobile */
+        align-items: flex-start;
+    }
+
+    .navbar-collapse {
+        width: 100%; /* Đảm bảo navbar-collapse chiếm toàn bộ chiều rộng */
+    }
+
+    .user-actions {
+        margin-top: 10px; /* Thêm khoảng cách trên mobile */
+        width: 100%; /* Đảm bảo user-actions chiếm toàn chiều rộng */
+        justify-content: flex-end; /* Canh phải trên mobile */
+    }
+
     .user-info-header {
-        display: flex; /* Show user info even on mobile */
-        max-width: 150px; /* Smaller max-width on mobile */
+        display: flex;
+        max-width: 150px;
     }
     
     .full-name, .username {
-        max-width: 150px; /* Adjust maximum width for mobile */
+        max-width: 150px;
+    }
+    
+        .mega-menu {
+        min-width: 100%;
+        position: static;
+        padding: 15px;
+        margin-top: 0; /* Bỏ margin trên mobile */
+    }
+    
+    .nav-item {
+        padding-bottom: 0; /* Bỏ padding trên mobile */
+    }
+    
+    .nav-item::after {
+        display: none; /* Ẩn pseudo-element trên mobile */
     }
 }

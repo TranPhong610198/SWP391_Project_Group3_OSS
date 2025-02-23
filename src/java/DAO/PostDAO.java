@@ -15,44 +15,60 @@ public class PostDAO extends DBContext {
 
     public static UserDAO userDao = new UserDAO();
 
-    public List<Post> getAllPosts(int page, int pageSize, String search, Integer authorId, String status) {
+    public List<Post> getAllPosts(int page, int pageSize, String search, Integer authorId, String status,
+            Boolean isFeatured, String sortBy, String sortDirection) {
         List<Post> posts = new ArrayList<>();
-
         StringBuilder sql = new StringBuilder("SELECT * FROM posts");
         List<Object> params = new ArrayList<>();
 
         // Điều kiện WHERE
         boolean hasCondition = false;
         if (search != null && !search.isEmpty()) {
-            sql.append(hasCondition ? " AND" : " WHERE").append(" title LIKE ?");
+            sql.append(" WHERE title LIKE ?");
             params.add("%" + search + "%");
             hasCondition = true;
         }
-        
-        if (authorId != null && authorId != 0) { // Nếu chọn "All Authors" thì bỏ qua lọc
-    sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
-    params.add(authorId);
-    hasCondition = true;
-}
+
+        if (authorId != null && authorId != 0) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
+            params.add(authorId);
+            hasCondition = true;
+        }
 
         if (status != null && !status.isEmpty()) {
             sql.append(hasCondition ? " AND" : " WHERE").append(" status = ?");
             params.add(status);
+            hasCondition = true;
         }
 
-        // Danh sách các cột hợp lệ
-        sql.append(" ORDER BY created_at ASC");
+        // Thêm điều kiện featured
+        if (isFeatured != null) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" is_featured = ?");
+            params.add(isFeatured);
+        }
 
-        // Phân trang (đảm bảo FETCH NEXT > 0)
+        // Sắp xếp
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sql.append(" ORDER BY ").append(sortBy);
+            if ("DESC".equalsIgnoreCase(sortDirection)) {
+                sql.append(" DESC");
+            } else {
+                sql.append(" ASC");
+            }
+        }
+
+        // Phân trang
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        params.add((page - 1) * pageSize); // OFFSET
-        params.add(Math.max(pageSize, 1)); // FETCH NEXT (phải > 0)
+        params.add((page - 1) * pageSize);
+        params.add(Math.max(pageSize, 1));
 
         // Thực thi truy vấn
         try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 if (params.get(i) instanceof Integer) {
                     st.setInt(i + 1, (Integer) params.get(i));
+                } else if (params.get(i) instanceof Boolean) {
+                    st.setBoolean(i + 1, (Boolean) params.get(i));
                 } else {
                     st.setString(i + 1, (String) params.get(i));
                 }
@@ -90,7 +106,7 @@ public class PostDAO extends DBContext {
             sql.append(" AND title LIKE ?");
             params.add("%" + search + "%");
         }
-        
+
         if (authorId != null) {
             sql.append(" AND author_id = ?");
             params.add(authorId);
@@ -130,7 +146,7 @@ public class PostDAO extends DBContext {
                     post.setId(rs.getInt("id"));
                     post.setTitle(rs.getString("title"));
                     post.setThumbnail(rs.getString("thumbnail"));
-                    
+
                     post.setSummary(rs.getString("summary"));
                     post.setContent(rs.getString("content"));
 
@@ -162,10 +178,10 @@ public class PostDAO extends DBContext {
             st.setString(7, post.getStatus());
             st.setDate(8, post.getCreatedAt());
             if (post.getUpdatedAt() != null) {
-    st.setDate(9, new java.sql.Date(post.getUpdatedAt().getTime()));
-} else {
-    st.setNull(9, java.sql.Types.DATE);
-}
+                st.setDate(9, new java.sql.Date(post.getUpdatedAt().getTime()));
+            } else {
+                st.setNull(9, java.sql.Types.DATE);
+            }
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -174,32 +190,30 @@ public class PostDAO extends DBContext {
         return false;
     }
 
-   public boolean updatePost(Post post) {
-    String sql = "UPDATE posts SET title = ?, thumbnail = ?,  summary = ?, content = ?, status = ?, updated_at = ? WHERE id = ?";
-    try (PreparedStatement st = connection.prepareStatement(sql)) {
-        st.setString(1, post.getTitle());
-        st.setString(2, post.getThumbnail());
-        st.setString(3, post.getSummary());
-        st.setString(4, post.getContent());
-        st.setString(5, post.getStatus());
+    public boolean updatePost(Post post) {
+        String sql = "UPDATE posts SET title = ?, thumbnail = ?,  summary = ?, content = ?, status = ?, updated_at = ? WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, post.getTitle());
+            st.setString(2, post.getThumbnail());
+            st.setString(3, post.getSummary());
+            st.setString(4, post.getContent());
+            st.setString(5, post.getStatus());
 
-       
-        if (post.getUpdatedAt() != null) {
-            st.setDate(6, new java.sql.Date(post.getUpdatedAt().getTime()));
-        } else {
-            st.setNull(6, java.sql.Types.DATE);
+            if (post.getUpdatedAt() != null) {
+                st.setDate(6, new java.sql.Date(post.getUpdatedAt().getTime()));
+            } else {
+                st.setNull(6, java.sql.Types.DATE);
+            }
+
+            st.setInt(7, post.getId());
+
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating post: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        st.setInt(7, post.getId()); 
-
-        return st.executeUpdate() > 0;
-    } catch (SQLException e) {
-        System.err.println("Error updating post: " + e.getMessage());
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
-
 
     public boolean deletePost(int postId) {
         String sql = "DELETE FROM posts WHERE id = ?";
@@ -212,26 +226,23 @@ public class PostDAO extends DBContext {
         return false;
     }
 
-public List<User> getAuthorsByRole() {
-    List<User> authors = new ArrayList<>();
-    String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
+    public List<User> getAuthorsByRole() {
+        List<User> authors = new ArrayList<>();
+        String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
 
-    try (PreparedStatement stmt = connection.prepareStatement(query);
-         ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setFullName(rs.getString("full_name"));
-            user.setRole(rs.getString("role"));
-            authors.add(user);
+        try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setRole(rs.getString("role"));
+                authors.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return authors;
     }
-    return authors;
-}
-
-
 
     public static void main(String[] args) {
         PostDAO postDAO = new PostDAO();

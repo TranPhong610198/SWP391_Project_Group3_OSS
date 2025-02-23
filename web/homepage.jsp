@@ -3,7 +3,9 @@
     Created on : Feb 18, 2025, 12:13:18 AM
     Author     : VuxD4t
 --%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -24,30 +26,27 @@
         <!-- Thanh trượt (Carousel) -->
         <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="2000">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+                <c:forEach items="${sliders}" var="slider" varStatus="loop">
+                    <button type="button" data-bs-target="#mainCarousel" 
+                            data-bs-slide-to="${loop.index}" 
+                            class="${loop.index == 0 ? 'active' : ''}">
+                    </button>
+                </c:forEach>
             </div>
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <a href="#">
-                        <img src="https://m.yodycdn.com/fit-in/filters:format(webp)/products/media/collections/hero%2018-2xua%20xuan%2050%201800x600n.jpg" class="d-block w-100" alt="Slide 1">
-
-                    </a>
-
-                </div>
-                <div class="carousel-item">
-                    <a href="#slide2-link">
-                        <img src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/d3bd2064-8035-4c95-87e5-9b7e71d1d27f/image.jpg" class="d-block w-100" alt="Slide 2">
-
-                    </a>
-                </div>
-                <div class="carousel-item">
-                    <a href="#slide3-link">
-                        <img src="https://file.hstatic.net/1000284478/file/25_1920x700_9c1af1a2283c4b0fa53a1d720c9ac1cf.jpg" class="d-block w-100" alt="Slide 3">
-
-                    </a>
-                </div>
+                <c:forEach items="${sliders}" var="slider" varStatus="loop">
+                    <div class="carousel-item ${loop.index == 0 ? 'active' : ''}">
+                        <a href="${slider.link}">
+                            <img src="${slider.image_url}" 
+                                 class="d-block w-100" 
+                                 alt="${slider.title}">
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>${slider.title}</h5>
+                            <p>${slider.notes}</p>
+                        </div>
+                    </div>
+                </c:forEach>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
@@ -59,42 +58,32 @@
 
         <div class="container">
             <!-- Bài đăng hot -->
+            <!-- Bài đăng nổi bật -->
             <section class="mb-5">
                 <h2 class="section-title">Bài đăng nổi bật</h2>
                 <div class="row g-4">
-                    <div class="col-md-4">
-                        <a href="#post1-link" class="text-decoration-none text-dark">
-                            <div class="card post-card">
-                                <img src="/api/placeholder/400/300" class="card-img-top thumbnail-img" alt="Post 1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tiêu đề bài đăng 1</h5>
-                                    <p class="card-text">Thông tin tóm tắt về bài đăng 1...</p>
+                    <c:forEach items="${featuredPosts}" var="post">
+                        <div class="col-md-4">
+                            <a href="post-detail?id=${post.id}" class="text-decoration-none text-dark">
+                                <div class="card post-card">
+                                    <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${post.title}</h5>
+                                        <p class="card-text">
+                                            <c:choose>
+                                                <c:when test="${fn:length(post.summary) > 150}">
+                                                    ${fn:substring(post.summary, 0, 150)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${post.summary}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="#post2-link" class="text-decoration-none text-dark">
-                            <div class="card post-card">
-                                <img src="/api/placeholder/400/300" class="card-img-top thumbnail-img" alt="Post 2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tiêu đề bài đăng 2</h5>
-                                    <p class="card-text">Thông tin tóm tắt về bài đăng 2...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="#post3-link" class="text-decoration-none text-dark">
-                            <div class="card post-card">
-                                <img src="/api/placeholder/400/300" class="card-img-top thumbnail-img" alt="Post 3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tiêu đề bài đăng 3</h5>
-                                    <p class="card-text">Thông tin tóm tắt về bài đăng 3...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                    </c:forEach>
                 </div>
             </section>
 
@@ -102,50 +91,31 @@
             <section class="mb-5">
                 <h2 class="section-title">Sản phẩm nổi bật</h2>
                 <div class="row g-4">
-                    <div class="col-md-3">
-                        <a href="#product1-link" class="text-decoration-none text-dark">
-                            <div class="card product-card">
-                                <img src="/api/placeholder/300/300" class="card-img-top thumbnail-img" alt="Product 1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tên sản phẩm 1</h5>
-                                    <p class="card-text">Thông tin tóm tắt về sản phẩm 1...</p>
+                    <c:forEach items="${featuredProducts}" var="product">
+                        <div class="col-md-3">
+                            <a href="product-detail?id=${product.id}" class="text-decoration-none text-dark">
+                                <div class="card product-card">
+                                    <img src="${product.thumbnail}" class="card-img-top thumbnail-img" alt="${product.title}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${product.title}</h5>
+                                        <p class="card-text">
+                                            <c:choose>
+                                                <c:when test="${fn:length(product.description) > 100}">
+                                                    ${fn:substring(product.description, 0, 100)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${product.description}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                        <p class="fw-bold text-primary">
+                                        <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ"/>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#product2-link" class="text-decoration-none text-dark">
-                            <div class="card product-card">
-                                <img src="/api/placeholder/300/300" class="card-img-top thumbnail-img" alt="Product 2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tên sản phẩm 2</h5>
-                                    <p class="card-text">Thông tin tóm tắt về sản phẩm 2...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#product3-link" class="text-decoration-none text-dark">
-                            <div class="card product-card">
-                                <img src="/api/placeholder/300/300" class="card-img-top thumbnail-img" alt="Product 3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tên sản phẩm 3</h5>
-                                    <p class="card-text">Thông tin tóm tắt về sản phẩm 3...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#product4-link" class="text-decoration-none text-dark">
-                            <div class="card product-card">
-                                <img src="/api/placeholder/300/300" class="card-img-top thumbnail-img" alt="Product 4">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tên sản phẩm 4</h5>
-                                    <p class="card-text">Thông tin tóm tắt về sản phẩm 4...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                    </c:forEach>
                 </div>
             </section>
 
@@ -153,28 +123,28 @@
             <section class="mb-5">
                 <h2 class="section-title">Bài đăng mới nhất</h2>
                 <div class="row g-4">
-                    <div class="col-md-6">
-                        <a href="#latest1-link" class="text-decoration-none text-dark">
-                            <div class="card post-card">
-                                <img src="/api/placeholder/600/400" class="card-img-top thumbnail-img" alt="Latest Post 1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tiêu đề bài đăng mới 1</h5>
-                                    <p class="card-text">Thông tin tóm tắt về bài đăng mới 1...</p>
+                    <c:forEach items="${latestPosts}" var="post">
+                        <div class="col-md-6">
+                            <a href="post-detail?id=${post.id}" class="text-decoration-none text-dark">
+                                <div class="card post-card">
+                                    <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${post.title}</h5>
+                                        <p class="card-text">
+                                            <c:choose>
+                                                <c:when test="${fn:length(post.summary) > 200}">
+                                                    ${fn:substring(post.summary, 0, 200)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${post.summary}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="#latest2-link" class="text-decoration-none text-dark">
-                            <div class="card post-card">
-                                <img src="/api/placeholder/600/400" class="card-img-top thumbnail-img" alt="Latest Post 2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tiêu đề bài đăng mới 2</h5>
-                                    <p class="card-text">Thông tin tóm tắt về bài đăng mới 2...</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                    </c:forEach>
                 </div>
             </section>
 

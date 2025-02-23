@@ -537,4 +537,31 @@ public class ProductDAO extends DBContext {
         }
     }
 
+    //VTĐ lấy sản phẩm nổi bật hiển lên home
+    public List<Product> getFeaturedProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT TOP (?) id, title, description, thumbnail, sale_price "
+                + "FROM products "
+                + "WHERE status = 'active' "
+                + "ORDER BY created_at DESC ";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setDescription(rs.getString("description"));
+                product.setThumbnail(rs.getString("thumbnail"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
 }

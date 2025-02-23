@@ -15,10 +15,9 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg fixed-top">
-            <div class="container">
+            <div class="container-header">
                 <!-- Logo -->
                 <a class="navbar-brand" href="home">
-
                     <img src="${pageContext.request.contextPath}/uploads/logo/logoHuy.png" alt="Logo"/>
                 </a>
 
@@ -55,7 +54,7 @@
                     </ul>
 
                     <!-- Right Side Items -->
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center justify-content-end">
                         <!-- Search Form -->
                         <form class="search-form" action="marketing/productlist" method="GET">
                             <input type="text" name="keyword" placeholder="Tìm kiếm...">
@@ -118,13 +117,11 @@
                 var navbarToggler = document.querySelector('.navbar-toggler');
                 var navbarCollapse = document.querySelector('.navbar-collapse');
 
-                // Toggle aria-expanded attribute
                 navbarToggler.addEventListener('click', function () {
                     var isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
                     navbarToggler.setAttribute('aria-expanded', !isExpanded);
                 });
 
-                // Close navbar when clicking outside
                 document.addEventListener('click', function (event) {
                     var isClickInside = navbarCollapse.contains(event.target) || navbarToggler.contains(event.target);
 
@@ -135,11 +132,10 @@
                     }
                 });
 
-                // Close navbar when clicking on a nav-link
                 var navLinks = document.querySelectorAll('.nav-link');
                 navLinks.forEach(function (navLink) {
                     navLink.addEventListener('click', function () {
-                        if (window.innerWidth < 992) { // Only on mobile
+                        if (window.innerWidth < 992) {
                             navbarCollapse.classList.remove('show');
                             navbarToggler.classList.add('collapsed');
                             navbarToggler.setAttribute('aria-expanded', 'false');
