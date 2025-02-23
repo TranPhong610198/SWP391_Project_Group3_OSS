@@ -170,7 +170,7 @@
                 <div class="info-section">
                     <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
                     <div class="d-flex justify-content-end mb-3">
-                        <a href="addModel?productId=${inventory.productId}" class="btn btn-success">
+                        <a href="addModel?productId=${inventory.productId}&source=${param.source}" class="btn btn-success">
                             <i class="fas fa-plus me-2"></i>Thêm Mẫu Mới
                         </a>
                     </div>
@@ -194,7 +194,7 @@
                                         <td><fmt:formatDate value="${variant.lastRestockDate}" pattern="dd/MM/yyyy"/></td>
                                         <td>
                                             <div class="action-buttons">
-                                                <a href="editModel?variantId=${variant.id}&productId=${inventory.productId}" 
+                                                <a href="editModel?variantId=${variant.id}&productId=${inventory.productId}&source=${param.source}" 
                                                    class="btn btn-outline-primary btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
@@ -249,6 +249,7 @@
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="productId" value="${inventory.productId}">
                                 <input type="hidden" name="variantId" value="${variant.id}">
+                                <input type="hidden" name="source" value="${param.source}"> 
                                 <button type="submit" class="btn btn-danger">Xóa</button>
                             </form>
                         </div>

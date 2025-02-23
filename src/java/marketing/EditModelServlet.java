@@ -29,6 +29,7 @@ public class EditModelServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
+            String source = request.getParameter("source"); 
             InventoryDAO dao = new InventoryDAO();
             Variant variant = dao.getVariant(variantId);
 
@@ -38,6 +39,7 @@ public class EditModelServlet extends HttpServlet {
             }
 
             request.setAttribute("variant", variant);
+            request.setAttribute("source", source); 
             request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
@@ -55,14 +57,18 @@ public class EditModelServlet extends HttpServlet {
         try {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
             int productId = Integer.parseInt(request.getParameter("productId"));
+            String source = request.getParameter("source"); // Lấy source từ form
             String colorName = request.getParameter("color").trim();
             String sizeName = request.getParameter("size").trim();
             int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+            System.out.println("Source in doPost: " + source); 
 
             if (colorName.isEmpty() || sizeName.isEmpty() || quantity < 0) {
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin hợp lệ");
                 Variant variant = inventoryDao.getVariant(variantId);
                 request.setAttribute("variant", variant);
+                request.setAttribute("source", source); // Truyền lại source khi forward
                 request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
                 return;
             }
@@ -113,6 +119,7 @@ public class EditModelServlet extends HttpServlet {
             if (inventoryDao.isVariantExists(productId, newColor.getId(), newSize.getId(), variantId)) {
                 request.setAttribute("errorMessage", "Mẫu với màu sắc và kích thước này đã tồn tại");
                 request.setAttribute("variant", currentVariant);
+                request.setAttribute("source", source); // Truyền lại source khi forward
                 request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
                 return;
             }
@@ -131,10 +138,17 @@ public class EditModelServlet extends HttpServlet {
                 inventoryDao.cleanupOrphanSize(oldSizeId);
             }
 
-            response.sendRedirect("inventoryDetail?id=" + productId + "&success=edit");
+            // Tạo URL chuyển hướng với source
+            String redirectUrl = "inventoryDetail?id=" + productId + "&success=edit";
+            if (source != null && !source.trim().isEmpty()) {
+                redirectUrl += "&source=" + source;
+            }
+            response.sendRedirect(redirectUrl);
 
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Dữ liệu không hợp lệ");
+            request.setAttribute("variant", inventoryDao.getVariant(Integer.parseInt(request.getParameter("variantId"))));
+            request.setAttribute("source", request.getParameter("source")); // Truyền lại source khi forward
             request.getRequestDispatcher("/marketing/inventory/EditModel.jsp").forward(request, response);
         }
     }
