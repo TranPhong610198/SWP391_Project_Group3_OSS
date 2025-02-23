@@ -221,13 +221,13 @@
                     <c:choose>
                         <c:when test="${alert.equals('ER1_OP')}">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                Sản phẩm không thể xóa vì đang có trong đơn hàng chưa hoàn thành.
+                                Sản phẩm đang có trong đơn hàng chưa hoàn thành.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
                         <c:when test="${alert.equals('ER2_HS')}">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                Sản phẩm không thể xóa vì vẫn còn tồn kho.
+                                Sản phẩm còn tồn kho.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
@@ -430,7 +430,7 @@
 <!--                                                        <a href="product/view?id=${product.id}" class="btn btn-sm btn-info me-1" title="Xem chi tiết">
                                                             <i class="fas fa-eye"></i>
                                                         </a>-->
-                                                        <a href="edit?id=${product.id}" class="btn btn-primary btn-sm" title="Chỉnh sửa">
+                                                        <a href="editproduct?id=${product.id}" class="btn btn-primary btn-sm" title="Chỉnh sửa">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                         <button onclick="deleteProduct(${product.id})" class="btn btn-danger btn-sm" title="Xóa">

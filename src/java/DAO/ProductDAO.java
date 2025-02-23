@@ -384,6 +384,89 @@ public class ProductDAO extends DBContext {
         return product; // Trả về product (hoặc null nếu không tìm thấy)
     }
 
+    // Cập nhật thông tin sản phẩm
+    public boolean updateProduct(Product product, String uploadPath) {
+        String sql = "UPDATE products SET title = ?, category_id = ?, description = ?, "
+                + "original_price = ?, sale_price = ?, thumbnail = ?, is_combo = ?, "
+                + "combo_group_id = ?, updated_at = GETDATE() WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, product.getTitle());
+            ps.setInt(2, product.getCategoryId());
+            ps.setString(3, product.getDescription());
+            ps.setBigDecimal(4, product.getOriginalPrice());
+            ps.setBigDecimal(5, product.getSalePrice());
+            ps.setString(6, product.getThumbnail());
+            ps.setBoolean(7, product.isIsCombo());
+            ps.setObject(8, product.getComboGroupId() > 0 ? product.getComboGroupId() : null, Types.INTEGER);
+            ps.setInt(9, product.getId());
+
+            int rowsAffected = ps.executeUpdate();
+            updateProductStatusIfNeeded(product.getId()); // Cập nhật trạng thái nếu cần
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Cập nhật ảnh phụ riêng lẻ
+    public boolean updateProductImage(int imageId, String newImageUrl) {
+        String sql = "UPDATE product_images SET image_url = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newImageUrl);
+            ps.setInt(2, imageId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Xóa ảnh phụ
+    public boolean deleteProductImage(int imageId, String uploadPath) {
+        String imageUrl = null;
+        String selectQuery = "SELECT image_url FROM product_images WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(selectQuery)) {
+            ps.setInt(1, imageId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                imageUrl = rs.getString("image_url");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (imageUrl != null) {
+            File file = new File(uploadPath + File.separator + imageUrl.replace("uploads/productImages/", ""));
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+
+        String deleteQuery = "DELETE FROM product_images WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(deleteQuery)) {
+            ps.setInt(1, imageId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Thêm ảnh phụ mới
+    public boolean addSingleProductImage(int productId, String imageUrl) {
+        String insertImage = "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(insertImage)) {
+            ps.setInt(1, productId);
+            ps.setString(2, imageUrl);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // set status khi thêm số lượng cho sp mới
     public void updateProductStatusIfNeeded(int productId) {
         int totalStock = getTotalStockByProductId(productId);

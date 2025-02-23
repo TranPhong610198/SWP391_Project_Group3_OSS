@@ -123,7 +123,7 @@ public class AddProductServlet extends HttpServlet {
 
             // Kiểm tra đuôi file
             for (Part part : request.getParts()) {
-                if ((part.getName().equals("subImages") || part.getName().equals("thumbnail")) && part.getSize()>0) {
+                if ((part.getName().equals("subImages") || part.getName().equals("thumbnail")) && part.getSize() > 0) {
                     if (!isValidImage(part)) {
                         response.sendRedirect("productlist?alert=ER1_IVImg");
                         return;
@@ -178,7 +178,7 @@ public class AddProductServlet extends HttpServlet {
     private String saveImage(Part part, HttpServletRequest request) {
         try {
             String oldFName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-             String fileExtension = oldFName.substring(oldFName.lastIndexOf("."));
+            String fileExtension = oldFName.substring(oldFName.lastIndexOf("."));
             String fileName = "img_" + System.currentTimeMillis() + fileExtension; // Tạo tên file mới
             String uploadDir = request.getServletContext().getRealPath("/uploads/productImages"); // Đường dẫn thư mục
 
