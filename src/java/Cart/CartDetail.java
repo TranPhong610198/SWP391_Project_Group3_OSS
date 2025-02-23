@@ -7,6 +7,7 @@ package Cart;
 import DAO.CartDAO;
 import DAO.CouponDAO;
 import entity.Cart;
+import entity.CartItem;
 import entity.Coupon;
 import entity.User;
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class CartDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
         if (user == null) {
@@ -161,58 +162,84 @@ public class CartDetail extends HttpServlet {
         response.sendRedirect("cartdetail");
     }
 
-   private void handleCheckout(HttpServletRequest request, HttpServletResponse response) 
-        throws ServletException, IOException {
-    HttpSession session = request.getSession();
+    private void handleCheckout(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
-    // Lấy danh sách sản phẩm được chọn
-    String[] selectedIds = request.getParameterValues("selectedItems");
-    
-    if (selectedIds == null || selectedIds.length == 0) {
-        request.setAttribute("error", "Vui lòng chọn sản phẩm");
-        doGet(request, response);
-        return;
-    }
+        // Lấy danh sách sản phẩm được chọn
+        String[] selectedIds = request.getParameterValues("selectedItems");
 
-    // Tạo danh sách lưu ID và số lượng
-    List<String> selectedItemIds = new ArrayList<>();
-    List<String> selectedQuantities = new ArrayList<>();
-    
-    // Lấy số lượng tương ứng cho từng sản phẩm được chọn
-    for (String itemId : selectedIds) {
-        String quantity = request.getParameter("quantity_" + itemId);
-        selectedItemIds.add(itemId);
-        selectedQuantities.add(quantity);
-    }
-
-    // Lưu vào session để cartcontact có thể sử dụng
-    session.setAttribute("selectedItemIds", selectedItemIds);
-    session.setAttribute("selectedQuantities", selectedQuantities);
-
-    // Chuyển hướng sang trang contact
-    response.sendRedirect("cartcontact");
-}
-
-   private void handleUpdateQuantity(HttpServletRequest request) {
-    try {
-        int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        
-        // Thêm logging
-        System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
-        
-        boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
-        
-        if (!success) {
-            System.out.println("Failed to update cart item quantity");
+        if (selectedIds == null || selectedIds.length == 0) {
+            request.setAttribute("error", "Vui lòng chọn sản phẩm");
+            doGet(request, response);
+            return;
         }
-    } catch (NumberFormatException e) {
-        System.out.println("Error parsing quantity: " + e.getMessage());
-        // Log the parameters for debugging
-        System.out.println("cartItemId: " + request.getParameter("cartItemId"));
-        System.out.println("quantity: " + request.getParameter("quantity"));
+
+        // Tạo danh sách lưu ID và số lượng
+        List<String> selectedItemIds = new ArrayList<>();
+        List<String> selectedQuantities = new ArrayList<>();
+
+        // Lấy số lượng tương ứng cho từng sản phẩm được chọn
+        for (String itemId : selectedIds) {
+            String quantity = request.getParameter("quantity_" + itemId);
+            selectedItemIds.add(itemId);
+            selectedQuantities.add(quantity);
+        }
+
+        // Lưu vào session các sản phẩm được chọn
+        session.setAttribute("selectedItemIds", selectedItemIds);
+        session.setAttribute("selectedQuantities", selectedQuantities);
+
+        // Lưu thông tin giảm giá hiện tại vào session
+        String currentCoupon = request.getParameter("couponCode");
+        if (currentCoupon != null && !currentCoupon.isEmpty()) {
+            // Tính lại giảm giá dựa trên tổng tiền của các sản phẩm được chọn
+            Cart cart = cartDAO.getCartByUserId(((User) session.getAttribute("acc")).getId());
+            double totalSelected = 0;
+            for (int i = 0; i < selectedIds.length; i++) {
+                for (CartItem item : cart.getItems()) {
+                    if (String.valueOf(item.getId()).equals(selectedIds[i])) {
+                        totalSelected += item.getProductPrice()
+                                * Integer.parseInt(request.getParameter("quantity_" + selectedIds[i]));
+                        break;
+                    }
+                }
+            }
+
+            try {
+                double discount = validateAndCalculateCouponDiscount(currentCoupon, totalSelected);
+                session.setAttribute("cartDiscount", discount);
+                session.setAttribute("appliedCoupon", currentCoupon);
+            } catch (Exception e) {
+                session.removeAttribute("cartDiscount");
+                session.removeAttribute("appliedCoupon");
+            }
+        }
+
+        // Chuyển hướng sang trang contact
+        response.sendRedirect("cartcontact");
     }
-}
+
+    private void handleUpdateQuantity(HttpServletRequest request) {
+        try {
+            int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+            // Thêm logging
+            System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
+
+            boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
+
+            if (!success) {
+                System.out.println("Failed to update cart item quantity");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing quantity: " + e.getMessage());
+            // Log the parameters for debugging
+            System.out.println("cartItemId: " + request.getParameter("cartItemId"));
+            System.out.println("quantity: " + request.getParameter("quantity"));
+        }
+    }
 
     private void handleDeleteItem(HttpServletRequest request) {
         try {
@@ -297,8 +324,6 @@ public class CartDetail extends HttpServlet {
 
         return discount;
     }
-    
-    
 
     /**
      * Returns a short description of the servlet.
@@ -307,7 +332,7 @@ public class CartDetail extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        
+
         return "Short description";
     }// </editor-fold>
 

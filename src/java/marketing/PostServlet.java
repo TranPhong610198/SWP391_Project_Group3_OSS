@@ -81,16 +81,7 @@ public class PostServlet extends HttpServlet {
         }
 
         PostDAO postDAO = new PostDAO();
-        List<Post> posts = postDAO.getAllPosts(
-                page, // page number 
-                pageSize, // pageSize
-                search, // search keyword
-                authorId, // authorId
-                status, // status
-                null, // isFeatured (null = không lọc)
-                "created_at", // sortBy
-                "ASC" // sortDirection
-        );
+        List<Post> posts = postDAO.getAllPosts(page, pageSize, search, authorId, status);
 
         UserDAO userDAO = new UserDAO();
         List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'

@@ -15,8 +15,306 @@
         <title>Fashion Shop</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Thêm vào phần head, sau Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.css">
         <!-- Custom CSS -->
-        <link href="assests/css/Home.css" rel="stylesheet" type="text/css"/>
+        <style>
+            .productSwiper {
+                padding: 2rem 1rem;
+                position: relative;
+            }
+
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: #0984e3;
+                background: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 1.2rem;
+            }
+
+            .swiper-pagination-bullet {
+                width: 10px;
+                height: 10px;
+            }
+
+            .swiper-pagination-bullet-active {
+                background: #0984e3;
+            }
+
+            .swiper-slide {
+                height: auto;
+            }
+            .featured-products {
+                position: relative;
+                padding: 2rem 0;
+            }
+
+            .product-card {
+                border: none;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                transition: all 0.3s ease;
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .product-card .thumbnail-img {
+                height: 350px;
+                object-fit: cover;
+                transition: all 0.5s ease;
+            }
+
+            .product-card:hover .thumbnail-img {
+                transform: scale(1.05);
+            }
+
+            .product-card .card-body {
+                padding: 1.5rem;
+                background: white;
+            }
+
+            .product-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #2d3436;
+            }
+
+            .product-description {
+                font-size: 0.9rem;
+                color: #636e72;
+                margin-bottom: 1rem;
+            }
+
+            .product-price {
+                font-size: 1.2rem;
+                color: #0984e3;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .product-badge {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: #00b894;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+            /* Optional: Add a gradient overlay to section title */
+            .section-title {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                position: relative;
+            }
+
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100px;
+                height: 4px;
+                background: linear-gradient(to right, #0984e3, #00b894);
+                border-radius: 2px;
+            }
+            /* For Bài đăng nổi bật - equal height cards */
+            .post-card {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .post-card .card-body {
+                flex: 1; /* This makes all card bodies take up equal space */
+            }
+
+            /* For Sản phẩm nổi bật & Bài đăng mới nhất - larger images */
+            .product-card .thumbnail-img,
+            .post-card .thumbnail-img {
+                height: 400px; /* Increased from 200px */
+                object-fit: cover;
+                width: 100%;
+            }
+
+            /* Optional: Make cards slightly larger overall */
+            .product-card,
+            .post-card {
+                margin-bottom: 20px;
+            }
+
+            /* Ensure text content doesn't overflow */
+            .card-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .card-text {
+                font-size: 0.9rem;
+            }
+            .product-card, .post-card {
+                transition: transform 0.3s;
+                height: 100%;
+            }
+            .product-card:hover, .post-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+            .carousel-item img {
+                height: 700px; /* Tăng từ 500px lên 700px */
+                object-fit: cover;
+                width: 100%;
+            }
+            #mainCarousel {
+                margin-bottom: 50px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .carousel-caption {
+                background: rgba(0,0,0,0.5);
+                padding: 20px;
+                border-radius: 5px;
+            }
+            .thumbnail-img {
+                height: 200px;
+                object-fit: cover;
+            }
+            .section-title {
+                position: relative;
+                margin-bottom: 30px;
+                padding-bottom: 10px;
+            }
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background-color: #007bff;
+            }
+            /*....................*/
+
+            /*.............................................*/
+
+            .ai-chat-widget {
+                position: fixed;
+                bottom: 80px;
+                right: 20px;
+                width: 350px;
+                height: 450px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                display: none;
+                flex-direction: column;
+                overflow: hidden;
+                z-index: 999;
+            }
+
+            .ai-chat-header {
+                background: #4285F4;
+                color: white;
+                padding: 15px;
+                font-weight: bold;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .ai-chat-close {
+                cursor: pointer;
+            }
+
+            .ai-chat-messages {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .ai-message {
+                padding: 10px;
+                border-radius: 10px;
+                max-width: 80%;
+                word-break: break-word;
+            }
+
+            .ai-message.user {
+                background: #E9EAEC;
+                align-self: flex-end;
+            }
+
+            .ai-message.bot {
+                background: #F1F3F4;
+                align-self: flex-start;
+            }
+
+            .ai-chat-input {
+                display: flex;
+                padding: 10px;
+                border-top: 1px solid #eee;
+            }
+
+            .ai-chat-input input {
+                flex-grow: 1;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                margin-right: 10px;
+            }
+
+            .ai-chat-input button {
+                background: #4285F4;
+                color: white;
+                border: none;
+                border-radius: 20px;
+                padding: 10px 15px;
+                cursor: pointer;
+            }
+
+            .ai-chat-button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background-color: #4285F4;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .ai-chat-button:hover {
+                transform: scale(1.1);
+            }
+        </style>
 
 
     </head>
@@ -68,17 +366,7 @@
                                 <div class="card post-card">
                                     <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
                                     <div class="card-body">
-                                        <h5 class="card-title">${post.title}</h5>
-                                        <p class="card-text">
-                                            <c:choose>
-                                                <c:when test="${fn:length(post.summary) > 150}">
-                                                    ${fn:substring(post.summary, 0, 150)}...
-                                                </c:when>
-                                                <c:otherwise>
-                                                    ${post.summary}
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </p>
+                                        <h5 class="card-title">${post.title}</h5>                                        
                                     </div>
                                 </div>
                             </a>
@@ -88,34 +376,45 @@
             </section>
 
             <!-- Sản phẩm nổi bật -->
-            <section class="mb-5">
-                <h2 class="section-title">Sản phẩm nổi bật</h2>
-                <div class="row g-4">
-                    <c:forEach items="${featuredProducts}" var="product">
-                        <div class="col-md-3">
-                            <a href="product-detail?id=${product.id}" class="text-decoration-none text-dark">
-                                <div class="card product-card">
-                                    <img src="${product.thumbnail}" class="card-img-top thumbnail-img" alt="${product.title}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${product.title}</h5>
-                                        <p class="card-text">
-                                            <c:choose>
-                                                <c:when test="${fn:length(product.description) > 100}">
-                                                    ${fn:substring(product.description, 0, 100)}...
-                                                </c:when>
-                                                <c:otherwise>
-                                                    ${product.description}
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </p>
-                                        <p class="fw-bold text-primary">
-                                        <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ"/>
-                                        </p>
-                                    </div>
+            <!-- Sản phẩm nổi bật -->
+            <section class="featured-products mb-5">
+                <div class="container">
+                    <h2 class="section-title">Sản phẩm mới nhất</h2>
+                    <div class="swiper productSwiper">
+                        <div class="swiper-wrapper">
+                            <c:forEach items="${featuredProducts}" var="product">
+                                <div class="swiper-slide">
+                                    <a href="product-detail?id=${product.id}" class="text-decoration-none">
+                                        <div class="card product-card">
+                                            <div class="position-relative">
+                                                <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
+                                                <span class="product-badge">Hot</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="product-title">${product.title}</h5>
+                                                <p class="product-description">
+                                                    <c:choose>
+                                                        <c:when test="${fn:length(product.description) > 100}">
+                                                            ${fn:substring(product.description, 0, 100)}...
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${product.description}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                                <div class="product-price">
+                                                    <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ"/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
+                            </c:forEach>
                         </div>
-                    </c:forEach>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </section>
 
@@ -273,5 +572,36 @@
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <jsp:include page="footer.jsp" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.js"></script>
+        <script>
+                    var swiper = new Swiper(".productSwiper", {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                        loop: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                        autoplay: {
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        },
+                        breakpoints: {
+                            640: {
+                                slidesPerView: 2,
+                            },
+                            768: {
+                                slidesPerView: 3,
+                            },
+                            1024: {
+                                slidesPerView: 4,
+                            },
+                        },
+                    });
+        </script>
     </body>
 </html>

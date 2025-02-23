@@ -194,7 +194,6 @@
                                                                 ${parent.id == category.parentId ? 'selected' : ''}
                                                                 data-level="${parent.level}">
                                                             <c:if test="${parent.level == 2}">
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;
                                                             </c:if>
                                                             ${parent.name}
                                                             (Cấp ${parent.level})
