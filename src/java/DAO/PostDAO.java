@@ -28,12 +28,12 @@ public class PostDAO extends DBContext {
             params.add("%" + search + "%");
             hasCondition = true;
         }
-        
+
         if (authorId != null && authorId != 0) { // Nếu chọn "All Authors" thì bỏ qua lọc
-    sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
-    params.add(authorId);
-    hasCondition = true;
-}
+            sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
+            params.add(authorId);
+            hasCondition = true;
+        }
 
         if (status != null && !status.isEmpty()) {
             sql.append(hasCondition ? " AND" : " WHERE").append(" status = ?");
@@ -90,7 +90,7 @@ public class PostDAO extends DBContext {
             sql.append(" AND title LIKE ?");
             params.add("%" + search + "%");
         }
-        
+
         if (authorId != null) {
             sql.append(" AND author_id = ?");
             params.add(authorId);
@@ -130,7 +130,7 @@ public class PostDAO extends DBContext {
                     post.setId(rs.getInt("id"));
                     post.setTitle(rs.getString("title"));
                     post.setThumbnail(rs.getString("thumbnail"));
-                    
+
                     post.setSummary(rs.getString("summary"));
                     post.setContent(rs.getString("content"));
 
@@ -162,10 +162,10 @@ public class PostDAO extends DBContext {
             st.setString(7, post.getStatus());
             st.setDate(8, post.getCreatedAt());
             if (post.getUpdatedAt() != null) {
-    st.setDate(9, new java.sql.Date(post.getUpdatedAt().getTime()));
-} else {
-    st.setNull(9, java.sql.Types.DATE);
-}
+                st.setDate(9, new java.sql.Date(post.getUpdatedAt().getTime()));
+            } else {
+                st.setNull(9, java.sql.Types.DATE);
+            }
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -174,32 +174,31 @@ public class PostDAO extends DBContext {
         return false;
     }
 
-   public boolean updatePost(Post post) {
-    String sql = "UPDATE posts SET title = ?, thumbnail = ?,  summary = ?, content = ?, status = ?, is_featured = ?, updated_at = ? WHERE id = ?";
-    try (PreparedStatement st = connection.prepareStatement(sql)) {
-        st.setString(1, post.getTitle());
-        st.setString(2, post.getThumbnail());
-        st.setString(3, post.getSummary());
-        st.setString(4, post.getContent());
-        st.setString(5, post.getStatus());
-        st.setBoolean(6, post.isIsFeatured());
-       
-        if (post.getUpdatedAt() != null) {
-            st.setDate(7, new java.sql.Date(post.getUpdatedAt().getTime()));
-        } else {
-            st.setNull(7, java.sql.Types.DATE);
+    public boolean updatePost(Post post) {
+        String sql = "UPDATE posts SET title = ?, thumbnail = ?,  summary = ?, content = ?, status = ?, is_featured = ?, updated_at = ? WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, post.getTitle());
+            st.setString(2, post.getThumbnail());
+            st.setString(3, post.getSummary());
+            st.setString(4, post.getContent());
+            st.setString(5, post.getStatus());
+            st.setBoolean(6, post.isIsFeatured());
+
+            if (post.getUpdatedAt() != null) {
+                st.setDate(7, new java.sql.Date(post.getUpdatedAt().getTime()));
+            } else {
+                st.setNull(7, java.sql.Types.DATE);
+            }
+
+            st.setInt(8, post.getId());
+
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating post: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        st.setInt(8, post.getId()); 
-
-        return st.executeUpdate() > 0;
-    } catch (SQLException e) {
-        System.err.println("Error updating post: " + e.getMessage());
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
-
 
     public boolean deletePost(int postId) {
         String sql = "DELETE FROM posts WHERE id = ?";
@@ -212,31 +211,31 @@ public class PostDAO extends DBContext {
         return false;
     }
 
-public List<User> getAuthorsByRole() {
-    List<User> authors = new ArrayList<>();
-    String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
+    public List<User> getAuthorsByRole() {
+        List<User> authors = new ArrayList<>();
+        String query = "SELECT id, full_name, role FROM users WHERE role IN ('admin', 'marketing')";
 
-    try (PreparedStatement stmt = connection.prepareStatement(query);
-         ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setFullName(rs.getString("full_name"));
-            user.setRole(rs.getString("role"));
-            authors.add(user);
+        try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setRole(rs.getString("role"));
+                authors.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return authors;
     }
-    return authors;
-}
- public List<Post> getLatestPublishedPosts(int limit) {
+
+    public List<Post> getLatestPublishedPosts(int limit) {
         List<Post> posts = new ArrayList<>();
         String sql = "SELECT * FROM posts WHERE status = 'published' ORDER BY updated_at DESC OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY";
-        
+
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, limit);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     Post post = new Post();
@@ -251,7 +250,7 @@ public List<User> getAuthorsByRole() {
                     post.setUpdatedAt(rs.getDate("updated_at"));
                     User user = userDao.getUserById(rs.getInt("author_id"));
                     post.setUser(user);
-                    
+
                     posts.add(post);
                 }
             }
@@ -260,7 +259,7 @@ public List<User> getAuthorsByRole() {
         }
         return posts;
     }
-    
+
     // Get total count of published posts for pagination
     public int getPublishedPostsCount(String search) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM posts WHERE status = 'published'");
@@ -330,7 +329,7 @@ public List<User> getAuthorsByRole() {
                     post.setUpdatedAt(rs.getDate("updated_at"));
                     User user = userDao.getUserById(rs.getInt("author_id"));
                     post.setUser(user);
-                    
+
                     posts.add(post);
                 }
             }
@@ -339,7 +338,6 @@ public List<User> getAuthorsByRole() {
         }
         return posts;
     }
-
 
     public static void main(String[] args) {
         PostDAO postDAO = new PostDAO();
@@ -405,6 +403,7 @@ public List<User> getAuthorsByRole() {
 //        }
 //        }
     }
+
     //VTĐ add get post lên home
     public List<Post> getPostToHome(int page, int pageSize, String search, Integer authorId, String status,
             Boolean isFeatured, String sortBy, String sortDirection) {
