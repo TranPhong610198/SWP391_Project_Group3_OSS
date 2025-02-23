@@ -31,15 +31,15 @@
                     <ul class="navbar-nav mx-auto">
                         <c:forEach items="${level1Categories}" var="level1">
                             <li class="nav-item">
-                                <a class="nav-link" href="marketing/productlist?categoryId=${level1.id}">${level1.name}</a>
+                                <a class="nav-link" href="listproduct?category=${level1.id}">${level1.name}</a>
                                 <div class="mega-menu">
                                     <div class="row">
                                         <c:forEach items="${level2ByParent[level1.id]}" var="level2">
                                             <div class="col-md-3">
-                                                <h5><a href="marketing/productlist?categoryId=${level2.id}">${level2.name}</a></h5>
+                                                <h5><a href="listproduct?category=${level2.id}">${level2.name}</a></h5>
                                                 <ul>
                                                     <c:forEach items="${level3ByParent[level2.id]}" var="level3">
-                                                        <li><a href="marketing/productlist?categoryId=${level3.id}">${level3.name}</a></li>
+                                                        <li><a href="listproduct?category=${level3.id}">${level3.name}</a></li>
                                                         </c:forEach>
                                                 </ul>
                                             </div>
@@ -56,7 +56,7 @@
                     <!-- Right Side Items -->
                     <div class="d-flex align-items-center justify-content-end">
                         <!-- Search Form -->
-                        <form class="search-form" action="marketing/productlist" method="GET">
+                        <form class="search-form" action="listproduct" method="GET">
                             <input type="text" name="keyword" placeholder="Tìm kiếm...">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
