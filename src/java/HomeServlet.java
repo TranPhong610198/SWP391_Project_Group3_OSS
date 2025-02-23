@@ -70,7 +70,7 @@ public class HomeServlet extends HttpServlet {
         ProductDAO productDAO = new ProductDAO(); // Add this line
 
         // Existing code for sliders and posts...
-        List<Slider> activeSliders = sliderDAO.getAllSliders(1, 5, "", "active");
+        List<Slider> activeSliders = sliderDAO.getAllSliders(1, 10, "", "active");
         List<Post> featuredPosts = postDAO.getPostToHome(1, 3, "", null, "published", true, "created_at", "DESC");
         List<Post> latestPosts = postDAO.getPostToHome(1, 2, "", null, "published", null, "created_at", "DESC");
 
