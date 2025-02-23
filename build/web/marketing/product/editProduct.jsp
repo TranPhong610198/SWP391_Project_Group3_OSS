@@ -146,7 +146,8 @@
                     <div class="card-header"><i class="fas fa-info-circle me-2"></i>Thông tin sản phẩm</div>
                     <div class="card-body">
                         <form action="editproduct" method="post" enctype="multipart/form-data" class="row g-3">
-                            <input type="hidden" name="id" value="${product.id}">
+                            <input type="hidden" name="action" value="updateProduct">
+                            <input type="hidden" name="productId" value="${product.id}">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Tên sản phẩm</label>
                                 <input type="text" class="form-control" id="title" name="title" value="${product.title}" required />
@@ -175,7 +176,7 @@
                                     </div>
                                 </label>
                                 <select class="form-select" id="comboGroupId" name="comboGroupId" style="width: 50%;">
-                                    <option value="">Không thuộc combo nào</option>
+                                    <option value="0" ${0 == product.comboGroupId ? 'selected' : ''}>Không thuộc combo nào</option>
                                     <c:forEach var="comboProduct" items="${comboProducts}">
                                         <option value="${comboProduct.comboGroupId}" ${comboProduct.comboGroupId == product.comboGroupId ? 'selected' : ''}>${comboProduct.title}</option>
                                     </c:forEach>
@@ -186,37 +187,7 @@
                                 <textarea class="form-control" id="description" name="description">${product.description}</textarea>
                             </div>
 
-                            <!-- Phần ảnh phụ -->
-                            <div class="col-12 mt-3">
-                                <label class="form-label">Ảnh phụ</label>
-                                <div class="sub-images-container">
-                                    <c:forEach var="subImage" items="${product.subImages}" varStatus="loop">
-                                        <div class="sub-image-card">
-                                            <img src="${pageContext.request.contextPath}/${subImage}" class="sub-image-preview" alt="Sub Image ${loop.count}" onclick="previewSubImage('${pageContext.request.contextPath}/${subImage}')">
-                                            <div class="sub-image-actions">
-                                                <form action="editproduct" method="post" enctype="multipart/form-data" class="mb-2">
-                                                    <input type="hidden" name="imageId" value="${productDAO.getImageIdByUrl(subImage)}">
-                                                    <input type="hidden" name="productId" value="${product.id}">
-                                                    <input type="file" class="form-control" name="subImage" accept="image/*" onchange="previewSubImageUpload(this)">
-                                                </form>
-                                                <form action="editproduct" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa ảnh này?')">
-                                                    <input type="hidden" name="action" value="deleteSubImage">
-                                                    <input type="hidden" name="imageId" value="${productDAO.getImageIdByUrl(subImage)}">
-                                                    <input type="hidden" name="productId" value="${product.id}">
-                                                    <button type="submit" class="btn btn-danger btn-sm" style="height: 38px">Xóa</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                </div>
-                                <!--                                <div class="mt-3">
-                                                                    <form action="editproduct" method="post" enctype="multipart/form-data">
-                                                                        <input type="hidden" name="productId" value="${product.id}">
-                                                                        <input type="file" class="form-control" name="newSubImage" accept="image/*" onchange="previewNewSubImage(this)">
-                                                                        <div class="form-text">Thêm ảnh phụ mới (tối đa 5 ảnh)</div>
-                                                                    </form>
-                                                                </div>-->
-                            </div>
+
 
                             <!-- Phần ảnh chính -->
                             <div class="col-md-6 mt-3">
@@ -226,10 +197,41 @@
                             </div>
 
                             <div class="col-12 mt-4">
-                                <button type="submit" name="action" value="updateProduct" class="btn btn-primary"><i class="fas fa-save me-2"></i>Lưu thay đổi</button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Lưu thay đổi</button>
                                 <a href="productlist" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
                             </div>
                         </form>
+                        <!-- Phần ảnh phụ -->
+                        <div class="col-12 mt-3">
+                            <label class="form-label">Ảnh phụ</label>
+                            <div class="sub-images-container">
+                                <c:forEach var="subImage" items="${product.subImages}" varStatus="loop">
+                                    <div class="sub-image-card">
+                                        <img src="${pageContext.request.contextPath}/${subImage}" class="sub-image-preview" alt="Sub Image ${loop.count}" onclick="previewSubImage('${pageContext.request.contextPath}/${subImage}')">
+                                        <div class="sub-image-actions">
+                                            <form action="editproduct" method="post" enctype="multipart/form-data" class="mb-2">
+                                                <input type="hidden" name="imageId" value="${productDAO.getImageIdByUrl(subImage)}">
+                                                <input type="hidden" name="productId" value="${product.id}">
+                                                <input type="file" class="form-control" name="subImage" accept="image/*" onchange="previewSubImageUpload(this)">
+                                            </form>
+                                            <form action="editproduct" method="post" enctype="multipart/form-data" onsubmit="return confirm('Bạn có chắc muốn xóa ảnh này?')">
+                                                <input type="hidden" name="action" value="deleteSubImage">
+                                                <input type="hidden" name="imageId" value="${productDAO.getImageIdByUrl(subImage)}">
+                                                <input type="hidden" name="productId" value="${product.id}">
+                                                <button type="submit" class="btn btn-danger btn-sm" style="height: 38px">Xóa</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                            <!--                                <div class="mt-3">
+                                                                <form action="editproduct" method="post" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="productId" value="${product.id}">
+                                                                    <input type="file" class="form-control" name="newSubImage" accept="image/*" onchange="previewNewSubImage(this)">
+                                                                    <div class="form-text">Thêm ảnh phụ mới (tối đa 5 ảnh)</div>
+                                                                </form>
+                                                            </div>-->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,110 +240,135 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                    $(document).ready(function () {
-                                        $('.sidebar-toggle').on('click', function () {
-                                            $('.sidebar').toggleClass('active');
-                                            $('.main-content').toggleClass('active');
-                                            $(this).hide();
-                                        });
+                                                // In đậm vị trí trang trên sidebar
+                                                $('.menu-item').removeClass('active');
+                                                $('.menu-item a[href="addproduct"]').closest('.menu-item').addClass('active');
+                                                $('#productSubmenu').addClass('show');
+                                                $(document).ready(function () {
+                                                    $('.sidebar-toggle').on('click', function () {
+                                                        $('.sidebar').toggleClass('active');
+                                                        $('.main-content').toggleClass('active');
+                                                        $(this).hide();
+                                                    });
 
-                                        $(document).on('click', function (e) {
-                                            if ($(window).width() <= 768) {
-                                                if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                                                    $('.sidebar').removeClass('active');
-                                                    $('.main-content').removeClass('active');
-                                                    $('.sidebar-toggle').show();
+                                                    $(document).on('click', function (e) {
+                                                        if ($(window).width() <= 768) {
+                                                            if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                $('.sidebar').removeClass('active');
+                                                                $('.main-content').removeClass('active');
+                                                                $('.sidebar-toggle').show();
+                                                            }
+                                                        }
+                                                    });
+
+                                                    $('.menu-item a[href="editproduct"]').closest('.menu-item').addClass('active');
+                                                    CKEDITOR.replace('description');
+
+                                                    $('#salePrice').on('change', function () {
+                                                        const originalPrice = parseInt($('#originalPrice').val()) || 0;
+                                                        const salePrice = parseInt($('#salePrice').val()) || 0;
+
+                                                        if (salePrice < originalPrice) {
+                                                            alert('Giá bán không được nhỏ hơn giá gốc!');
+                                                            $('#salePrice').val(originalPrice);
+                                                        }
+                                                    });
+                                                });
+
+                                                function isValidImage(file) {
+                                                    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                                    return allowedTypes.includes(file.type);
                                                 }
-                                            }
-                                        });
 
-                                        $('.menu-item a[href="editproduct"]').closest('.menu-item').addClass('active');
-                                        CKEDITOR.replace('description');
+                                                function previewThumbnail(input) {
+                                                    const preview = document.getElementById('thumbnailPreview');
+                                                    preview.innerHTML = '';
 
-                                        $('#salePrice').on('change', function () {
-                                            const originalPrice = parseInt($('#originalPrice').val()) || 0;
-                                            const salePrice = parseInt($('#salePrice').val()) || 0;
+                                                    if (input.files && input.files[0]) {
+                                                        const file = input.files[0];
+                                                        if (!isValidImage(file)) {
+                                                            alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                            input.value = '';
+                                                            return;
+                                                        }
+                                                        const reader = new FileReader();
 
-                                            if (salePrice < originalPrice) {
-                                                alert('Giá bán không được nhỏ hơn giá gốc!');
-                                                $('#salePrice').val(originalPrice);
-                                            }
-                                        });
-                                    });
+                                                        reader.onload = function (e) {
+                                                            const img = document.createElement('img');
+                                                            img.src = e.target.result;
+                                                            img.className = 'preview-image';
+                                                            preview.appendChild(img);
+                                                        }
 
-                                    function isValidImage(file) {
-                                        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                                        return allowedTypes.includes(file.type);
-                                    }
+                                                        reader.readAsDataURL(input.files[0]);
+                                                    }
+                                                }
 
-                                    function previewThumbnail(input) {
-                                        const preview = document.getElementById('thumbnailPreview');
-                                        preview.innerHTML = '';
+                                                function previewSubImageUpload(input) {
+                                                    if (input.files && input.files[0]) {
+                                                        const file = input.files[0];
+                                                        if (!isValidImage(file)) {
+                                                            alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                            input.value = '';
+                                                            return;
+                                                        }
+                                                        const reader = new FileReader();
 
-                                        if (input.files && input.files[0]) {
-                                            const file = input.files[0];
-                                            if (!isValidImage(file)) {
-                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
-                                                input.value = '';
-                                                return;
-                                            }
-                                            const reader = new FileReader();
+                                                        reader.onload = function (e) {
+                                                            const img = input.closest('.sub-image-card').querySelector('.sub-image-preview');
+                                                            img.src = e.target.result;
+                                                        }
 
-                                            reader.onload = function (e) {
-                                                const img = document.createElement('img');
-                                                img.src = e.target.result;
-                                                img.className = 'preview-image';
-                                                preview.appendChild(img);
-                                            }
+                                                        reader.readAsDataURL(file);
+                                                    }
+                                                }
 
-                                            reader.readAsDataURL(input.files[0]);
-                                        }
-                                    }
+                                                function previewNewSubImage(input) {
+                                                    if (input.files && input.files[0]) {
+                                                        const file = input.files[0];
+                                                        if (!isValidImage(file)) {
+                                                            alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                            input.value = '';
+                                                            return;
+                                                        }
+                                                        const reader = new FileReader();
 
-                                    function previewSubImageUpload(input) {
-                                        if (input.files && input.files[0]) {
-                                            const file = input.files[0];
-                                            if (!isValidImage(file)) {
-                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
-                                                input.value = '';
-                                                return;
-                                            }
-                                            const reader = new FileReader();
+                                                        reader.onload = function (e) {
+                                                            const newImg = document.createElement('img');
+                                                            newImg.src = e.target.result;
+                                                            newImg.className = 'sub-image-preview';
+                                                            const subImagesContainer = document.querySelector('.sub-images-container');
+                                                            subImagesContainer.appendChild(newImg);
+                                                        }
 
-                                            reader.onload = function (e) {
-                                                const img = input.closest('.sub-image-card').querySelector('.sub-image-preview');
-                                                img.src = e.target.result;
-                                            }
+                                                        reader.readAsDataURL(file);
+                                                    }
+                                                }
+                                                function previewSubImage(imageUrl) {
+                                                    window.open(imageUrl, '_blank');
+                                                }
+                                                $(document).ready(function () {
+                                                    // Xử lý khi checkbox isCombo thay đổi
+                                                    updateComboGroupIdVisibility();
+                                                    $('#isCombo').change(function () {
+                                                        updateComboGroupIdVisibility();
+                                                    });
 
-                                            reader.readAsDataURL(file);
-                                        }
-                                    }
+                                                    function updateComboGroupIdVisibility() {
+                                                        const isCombo = $('#isCombo').is(':checked'); // Kiểm tra trạng thái checkbox
+                                                        const comboBoxElement = $("#comboGroupId");
 
-                                    function previewNewSubImage(input) {
-                                        if (input.files && input.files[0]) {
-                                            const file = input.files[0];
-                                            if (!isValidImage(file)) {
-                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
-                                                input.value = '';
-                                                return;
-                                            }
-                                            const reader = new FileReader();
-
-                                            reader.onload = function (e) {
-                                                const newImg = document.createElement('img');
-                                                newImg.src = e.target.result;
-                                                newImg.className = 'sub-image-preview';
-                                                const subImagesContainer = document.querySelector('.sub-images-container');
-                                                subImagesContainer.appendChild(newImg);
-                                            }
-
-                                            reader.readAsDataURL(file);
-                                        }
-                                    }
-
-                                    function previewSubImage(imageUrl) {
-                                        window.open(imageUrl, '_blank');
-                                    }
+                                                        if (isCombo) {
+                                                            // Nếu checkbox được chọn, vô hiệu hóa select và xóa giá trị
+                                                            comboBoxElement.prop("disabled", true);
+                                                            comboBoxElement.val(${requestScope.product.getComboGroupId()}); // Đặt về option mặc định
+                                                        } else {
+                                                            // Nếu checkbox không được chọn, kích hoạt lại select
+                                                            comboBoxElement.val(${requestScope.product.getComboGroupId()});
+                                                            comboBoxElement.prop("disabled", false);
+                                                        }
+                                                    }
+                                                });
         </script>
     </body>
 </html>

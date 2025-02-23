@@ -255,6 +255,12 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
+                        <c:when test="${alert.equals('SSU')}">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Sửa sản phẩm thành công
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
                     </c:choose>
                 </c:if>
                 <h2 class="page-title">

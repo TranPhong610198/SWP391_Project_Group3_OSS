@@ -384,6 +384,21 @@ public class ProductDAO extends DBContext {
         return product; // Trả về product (hoặc null nếu không tìm thấy)
     }
 
+    // Lấy ID của ảnh phụ dựa trên URL
+    public int getImageIdByUrl(String imageUrl) {
+        String query = "SELECT id FROM product_images WHERE image_url = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, imageUrl);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu không tìm thấy
+    }
+
     // Cập nhật thông tin sản phẩm
     public boolean updateProduct(Product product, String uploadPath) {
         String sql = "UPDATE products SET title = ?, category_id = ?, description = ?, "
@@ -397,7 +412,7 @@ public class ProductDAO extends DBContext {
             ps.setBigDecimal(5, product.getSalePrice());
             ps.setString(6, product.getThumbnail());
             ps.setBoolean(7, product.isIsCombo());
-            ps.setObject(8, product.getComboGroupId() > 0 ? product.getComboGroupId() : null, Types.INTEGER);
+            ps.setObject(8, product.getComboGroupId());
             ps.setInt(9, product.getId());
 
             int rowsAffected = ps.executeUpdate();
@@ -409,10 +424,32 @@ public class ProductDAO extends DBContext {
         return false;
     }
 
-    // Cập nhật ảnh phụ riêng lẻ
-    public boolean updateProductImage(int imageId, String newImageUrl) {
-        String sql = "UPDATE product_images SET image_url = ? WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    // Thay thế ảnh phụ
+    public boolean replaceProductImage(int imageId, String newImageUrl, String uploadPath) {
+        // Lấy URL ảnh cũ để xóa file
+        String oldImageUrl = null;
+        String selectQuery = "SELECT image_url FROM product_images WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(selectQuery)) {
+            ps.setInt(1, imageId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                oldImageUrl = rs.getString("image_url");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Xóa ảnh cũ khỏi thư mục
+        if (oldImageUrl != null) {
+            File oldFile = new File(uploadPath + File.separator + oldImageUrl.replace("uploads/productImages/", ""));
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
+        }
+        // Cập nhật ảnh mới vào cơ sở dữ liệu
+        String updateQuery = "UPDATE product_images SET image_url = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(updateQuery)) {
             ps.setString(1, newImageUrl);
             ps.setInt(2, imageId);
             return ps.executeUpdate() > 0;
