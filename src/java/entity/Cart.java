@@ -64,7 +64,7 @@ public class Cart {
     }
 
     // Method tính tổng tiền
-    private void calculateTotal() {
+    public void calculateTotal() {
         this.totalAmount = 0;
         if (items != null) {
             for (CartItem item : items) {

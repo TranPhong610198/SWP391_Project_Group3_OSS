@@ -80,76 +80,76 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <div class="table-responsive">
-                                    <table class="table align-middle">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="selectAll" onchange="toggleAllProducts()">
-                                                        <label class="form-check-label" for="selectAll">Tất cả</label>
-                                                    </div>
-                                                </th>
-                                                <th scope="col">Sản phẩm</th>
-                                                <th scope="col">Giá</th>
-                                                <th scope="col">Số lượng</th>
-                                                <th scope="col">Tổng tiền</th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${cart.items}" var="item">
+                                <form id="checkoutForm" action="cartdetail" method="POST">
+                                    <input type="hidden" name="action" value="checkout">
+                                    <div class="table-responsive">
+                                        <table class="table align-middle">
+                                            <thead>
                                                 <tr>
-                                                    <td>
+                                                    <th scope="col">
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input product-select" 
-                                                                   onchange="updateTotalAmount()">
+                                                            <input type="checkbox" class="form-check-input" id="selectAll" onchange="toggleAllProducts()">
+                                                            <label class="form-check-label" for="selectAll">Tất cả</label>
                                                         </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="${item.productThumbnail}" alt="${item.productTitle}" 
-                                                                 class="product-image me-3">
-                                                            <div>
-                                                                <h6 class="mb-0">${item.productTitle}</h6>
-                                                                <small class="text-muted">
-                                                                    Size: ${item.size} | Màu: ${item.color}
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <fmt:formatNumber value="${item.productPrice}" type="currency" 
-                                                                        currencySymbol="₫" maxFractionDigits="0"/>
-                                                    </td>
-                                                    <td>
-                                                        <div class="quantity-control">
-                                                            <div class="input-group">
-                                                                <button type="button" class="btn btn-outline-secondary" 
-                                                                        onclick="updateQuantity(this, -1)">-</button>
-                                                                <input type="number" value="${item.quantity}" min="1" 
-                                                                       class="form-control text-center"
-                                                                       onchange="handleQuantityChange(this)">
-                                                                <button type="button" class="btn btn-outline-secondary" 
-                                                                        onclick="updateQuantity(this, 1)">+</button>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <fmt:formatNumber value="${item.productPrice * item.quantity}" 
-                                                                        type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-link text-danger" 
-                                                                onclick="deleteItem(${item.id})">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </td>
+                                                    </th>
+                                                    <th scope="col">Sản phẩm</th>
+                                                    <th scope="col">Giá</th>
+                                                    <th scope="col">Số lượng</th>
+                                                    
+                                                    <th scope="col"></th>
                                                 </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${cart.items}" var="item">
+                                                    <tr data-id="${item.id}">
+                                                        <td>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input product-select" 
+                                                                       name="selectedItems" value="${item.id}"
+                                                                       onchange="updateTotalAmount()">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="${item.productThumbnail}" alt="${item.productTitle}" 
+                                                                     class="product-image me-3">
+                                                                <div>
+                                                                    <h6 class="mb-0">${item.productTitle}</h6>
+                                                                    <small class="text-muted">
+                                                                        Size: ${item.size} | Màu: ${item.color}
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                        </td>
+                                                        <td>
+                                                            <div class="quantity-control">
+                                                                <div class="input-group">
+                                                                    <button type="button" class="btn btn-outline-secondary" 
+                                                                            onclick="updateQuantity(this, -1)">-</button>
+                                                                    <input type="number" value="${item.quantity}" min="1" 
+                                                                           class="form-control text-center quantity-input"
+                                                                           data-item-id="${item.id}"
+                                                                           onchange="handleQuantityChange(this)">
+                                                                    <button type="button" class="btn btn-outline-secondary" 
+                                                                            onclick="updateQuantity(this, 1)">+</button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-link text-danger" 
+                                                                    onclick="deleteItem(${item.id})">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -211,7 +211,7 @@
                             <strong class="text-primary" id="finalTotal">₫0</strong>
                         </div>
                         
-                        <button onclick="checkout()" class="btn btn-primary w-100" id="checkoutBtn" disabled>
+                        <button type="button" onclick="submitCheckout()" class="btn btn-primary w-100" id="checkoutBtn" disabled>
                             Thanh toán<i class="fas fa-arrow-right ms-2"></i>
                         </button>
                     </div>
@@ -224,27 +224,40 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+    function submitCheckout() {
+        const form = document.getElementById('checkoutForm');
+        form.submit();
+    }
+
     function updateTotalAmount() {
         const checkboxes = document.getElementsByClassName('product-select');
         let totalAmount = 0;
         let selectedCount = 0;
 
-        // Calculate total from selected products
         for (let checkbox of checkboxes) {
             if (checkbox.checked) {
                 const row = checkbox.closest('tr');
-                const price = parseFloat(row.querySelector('td:nth-child(3)').textContent.replace(/[^\d]/g, ''));
-                const quantity = parseInt(row.querySelector('input[type="number"]').value);
+                const priceText = row.querySelector('td:nth-child(3)').textContent;
+                const price = parseFloat(priceText.replace(/[^\d]/g, ''));
+                const quantity = parseInt(row.querySelector('.quantity-input').value);
                 totalAmount += price * quantity;
                 selectedCount++;
             }
         }
 
-        // Update selected count and total
         document.getElementById('selectedCount').textContent = selectedCount;
         document.getElementById('selectedTotal').textContent = formatCurrency(totalAmount);
 
-        // Calculate discount
+        let discount = calculateDiscount(totalAmount);
+        updateDiscountDisplay(discount);
+
+        const finalTotal = Math.max(0, totalAmount - discount);
+        document.getElementById('finalTotal').textContent = formatCurrency(finalTotal);
+
+        document.getElementById('checkoutBtn').disabled = selectedCount === 0;
+    }
+
+    function calculateDiscount(totalAmount) {
         let discount = 0;
         const select = document.querySelector('select[name="couponCode"]');
         if (select.value && totalAmount > 0) {
@@ -265,8 +278,10 @@
                 }
             }
         }
+        return discount;
+    }
 
-        // Update discount display
+    function updateDiscountDisplay(discount) {
         const discountRow = document.getElementById('discountRow');
         if (discount > 0) {
             document.getElementById('discountAmount').textContent = '-' + formatCurrency(discount);
@@ -274,13 +289,6 @@
         } else {
             discountRow.style.display = 'none';
         }
-
-        // Update final total
-        const finalTotal = Math.max(0, totalAmount - discount);
-        document.getElementById('finalTotal').textContent = formatCurrency(finalTotal);
-
-        // Enable/disable checkout button
-        document.getElementById('checkoutBtn').disabled = selectedCount === 0;
     }
 
     function formatCurrency(amount) {
@@ -296,51 +304,67 @@
         updateTotalAmount();
     }
 
-    function updateQuantity(button, change) {
-        const input = button.parentElement.querySelector('input');
-        const newValue = parseInt(input.value) + change;
-        if (newValue >= 1) {
-            input.value = newValue;
+   function updateQuantity(button, change) {
+    const input = button.parentElement.querySelector('input');
+    const currentValue = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
+    const newValue = currentValue + change;
+    
+    if (newValue >= 1) {
+        input.value = newValue;
+        const itemId = input.dataset.itemId;
+        if (itemId) {
+            updateQuantityOnServer(itemId, newValue);
             updateTotalAmount();
         }
     }
+}
 
-    function handleQuantityChange(input) {
-        const value = parseInt(input.value);
-        if (value >= 1) {
-            updateTotalAmount();
-        } else {
-            input.value = 1;
-        }
+function handleQuantityChange(input) {
+    let value = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
+    
+    // Đảm bảo giá trị tối thiểu là 1
+    if (value < 1) {
+        value = 1;
+    }
+    
+    input.value = value; // Cập nhật giá trị input
+    
+    const itemId = input.dataset.itemId;
+    if (itemId) {
+        updateQuantityOnServer(itemId, value);
+        updateTotalAmount();
+    }
+}
+
+function updateQuantityOnServer(itemId, quantity) {
+    // Kiểm tra tính hợp lệ của dữ liệu
+    if (!itemId || !quantity || quantity < 1) {
+        console.error('Invalid itemId or quantity');
+        return;
     }
 
-    function deleteItem(itemId) {
-        if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-            window.location.href = 'cartdetail?action=delete&cartItemId=' + itemId;
-        }
-    }
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('cartItemId', itemId);
+    formData.append('quantity', quantity);
 
-    function checkout() {
-        const selectedItems = [];
-        const checkboxes = document.getElementsByClassName('product-select');
-        for (let checkbox of checkboxes) {
-            if (checkbox.checked) {
-                const row = checkbox.closest('tr');
-                selectedItems.push({
-                    id: row.dataset.itemId,
-                    quantity: row.querySelector('input[type="number"]').value
-                });
-            }
+    fetch('cartdetail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString()
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-
-        if (selectedItems.length > 0) {
-            sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-            window.location.href = 'checkout';
-        }
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', updateTotalAmount);
+    })
+    .catch(error => {
+        console.error('Error updating quantity:', error);
+        // Có thể thêm thông báo lỗi cho người dùng ở đây
+    });
+}
     </script>
 </body>
 </html>

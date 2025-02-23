@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -69,7 +71,7 @@ public class CartDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+       HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
         if (user == null) {
@@ -79,7 +81,7 @@ public class CartDetail extends HttpServlet {
 
         Cart cart = getOrCreateCart(user.getId());
 
-        // Lấy danh sách mã giảm giá có thể sử dụng
+        // Lấy danh sách mã giảm giá có thể sử dụng 
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
 
@@ -104,8 +106,7 @@ public class CartDetail extends HttpServlet {
         request.setAttribute("discount", discount);
         request.setAttribute("finalAmount", totalAmount - discount);
 
-        HttpSession session = request.getSession();
-        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+        String appliedCoupon = (String) request.getSession().getAttribute("appliedCoupon");
         if (appliedCoupon != null) {
             request.setAttribute("appliedCoupon", appliedCoupon);
             Coupon couponDetails = couponDAO.getCouponByCode(appliedCoupon);
@@ -152,20 +153,60 @@ public class CartDetail extends HttpServlet {
         } else if ("applyCoupon".equals(action)) {
             handleApplyCoupon(request, response);
             return;
+        } else if ("checkout".equals(action)) {
+            handleCheckout(request, response);
+            return;
         }
 
         response.sendRedirect("cartdetail");
     }
 
-    private void handleUpdateQuantity(HttpServletRequest request) {
-        try {
-            int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            cartDAO.updateCartItemQuantity(cartItemId, quantity);
-        } catch (NumberFormatException e) {
-            System.out.println("Lỗi khi parse số lượng: " + e.getMessage());
-        }
+    private void handleCheckout(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+    
+    // Lấy các sản phẩm được chọn
+    String[] selectedItems = request.getParameterValues("selectedItems");
+    
+    // Kiểm tra có sản phẩm được chọn không
+    if (selectedItems == null || selectedItems.length == 0) {
+        request.setAttribute("error", "Vui lòng chọn sản phẩm");
+        doGet(request, response);
+        return;
     }
+
+    // Lưu vào session
+    session.setAttribute("selectedItems", selectedItems);
+    
+    // Lưu thông tin giảm giá nếu có
+    if (session.getAttribute("appliedCoupon") != null) {
+        double cartDiscount = (Double) request.getAttribute("discount");
+        session.setAttribute("cartDiscount", cartDiscount);
+    }
+
+    // Chuyển hướng sang trang contact
+    response.sendRedirect("cartcontact");}
+
+   private void handleUpdateQuantity(HttpServletRequest request) {
+    try {
+        int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        
+        // Thêm logging
+        System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
+        
+        boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
+        
+        if (!success) {
+            System.out.println("Failed to update cart item quantity");
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("Error parsing quantity: " + e.getMessage());
+        // Log the parameters for debugging
+        System.out.println("cartItemId: " + request.getParameter("cartItemId"));
+        System.out.println("quantity: " + request.getParameter("quantity"));
+    }
+}
 
     private void handleDeleteItem(HttpServletRequest request) {
         try {
@@ -181,7 +222,6 @@ public class CartDetail extends HttpServlet {
         HttpSession session = request.getSession();
         String couponCode = request.getParameter("couponCode");
 
-        // Get cart from session since it's not in request yet
         User user = (User) session.getAttribute("acc");
         Cart cart = cartDAO.getCartByUserId(user.getId());
 
@@ -198,14 +238,6 @@ public class CartDetail extends HttpServlet {
 
             session.setAttribute("appliedCoupon", couponCode);
             session.setAttribute("cartDiscount", discount);
-
-            Coupon couponDetails = couponDAO.getCouponByCode(couponCode);
-            if (couponDetails != null) {
-                String message = String.format("Áp dụng thành công mã giảm giá %s, bạn được giảm %,.0f₫",
-                        couponCode, discount);
-                request.setAttribute("couponMessage", message);
-            }
-
         } catch (Exception e) {
             session.removeAttribute("appliedCoupon");
             session.removeAttribute("cartDiscount");
@@ -259,6 +291,8 @@ public class CartDetail extends HttpServlet {
 
         return discount;
     }
+    
+    
 
     /**
      * Returns a short description of the servlet.
@@ -267,6 +301,7 @@ public class CartDetail extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
+        
         return "Short description";
     }// </editor-fold>
 
