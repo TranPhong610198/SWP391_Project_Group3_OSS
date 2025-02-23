@@ -170,6 +170,10 @@ public class EditProductServlet extends HttpServlet {
                 Part thumbnailPart = request.getPart("thumbnail");
                 String thumbnail = product.getThumbnail(); // Giữ nguyên nếu không upload ảnh mới
                 if (thumbnailPart != null && thumbnailPart.getSize() > 0) {
+                    // Xóa ảnh cũ nếu có
+                    if (thumbnail != null && !thumbnail.isEmpty()) {
+                        deleteImage(thumbnail, uploadPath);
+                    }
                     thumbnail = saveImage(thumbnailPart, request);
                 }
 
@@ -230,12 +234,11 @@ public class EditProductServlet extends HttpServlet {
                 }
                 // Xử lý từng ảnh trong danh sách
                 for (Part part : request.getParts()) {
-                    if (part.getName().equals("newSubImages") && part.getSize() > 0) {
+                    if (part.getName().equals("newSubImage") && part.getSize() > 0) {
                         if (currentImages.size() >= 5) {
                             response.sendRedirect("editproduct?id=" + productId);
-                            return;
+                            break;
                         }
-
                         String newImageUrl = saveImage(part, request);
                         if (newImageUrl != null) {
                             productDAO.addSingleProductImage(productId, newImageUrl);
@@ -246,6 +249,7 @@ public class EditProductServlet extends HttpServlet {
                         }
                     }
                 }
+
             }
 
         } catch (Exception e) {
@@ -283,6 +287,17 @@ public class EditProductServlet extends HttpServlet {
                 || contentType.equals("image/png")
                 || contentType.equals("image/gif")
                 || contentType.equals("image/webp"));
+    }
+
+    private void deleteImage(String imagePath, String uploadPath) {
+        imagePath = imagePath.replace("uploads/productImages/", "");
+        File file = new File(uploadPath + File.separator + imagePath);
+        if (file.exists()) {
+            file.delete();
+//            System.out.println("Đã xóa ảnh cũ: " + file.getAbsolutePath());
+        } else {
+//            System.out.println("Ảnh cũ không tồn tại: " + file.getAbsolutePath());
+        }
     }
 
     /**

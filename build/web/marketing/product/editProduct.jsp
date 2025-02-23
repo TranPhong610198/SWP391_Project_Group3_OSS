@@ -223,7 +223,7 @@
                                 <form action="editproduct" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="action" value="addNewSubImage">
                                     <input type="hidden" name="productId" value="${product.id}">
-                                    <input type="file" class="form-control" name="newSubImage" accept="image/*" onchange="this.form.submit();" multiple>
+                                    <input type="file" class="form-control" name="newSubImage" accept="image/*" multiple onchange="this.form.submit();">
                                     <div class="form-text">Thêm ảnh phụ mới (tối đa 5 ảnh)</div>
                                 </form>
                             </div>
