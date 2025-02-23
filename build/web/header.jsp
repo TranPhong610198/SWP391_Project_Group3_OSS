@@ -49,7 +49,7 @@
                             </li>
                         </c:forEach>
                         <li class="nav-item">
-                            <a class="nav-link" href="postl.jsp">Các bài đăng</a>
+                            <a class="nav-link" href="posts">Các bài đăng</a>
                         </li>
                     </ul>
 

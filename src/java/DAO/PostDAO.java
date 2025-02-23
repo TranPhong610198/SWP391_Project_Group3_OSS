@@ -405,5 +405,88 @@ public List<User> getAuthorsByRole() {
 //        }
 //        }
     }
+    //VTĐ add get post lên home
+    public List<Post> getPostToHome(int page, int pageSize, String search, Integer authorId, String status,
+            Boolean isFeatured, String sortBy, String sortDirection) {
+        List<Post> posts = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM posts");
+        List<Object> params = new ArrayList<>();
+
+        // Điều kiện WHERE
+        boolean hasCondition = false;
+        if (search != null && !search.isEmpty()) {
+            sql.append(" WHERE title LIKE ?");
+            params.add("%" + search + "%");
+            hasCondition = true;
+        }
+
+        if (authorId != null && authorId != 0) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" author_id = ?");
+            params.add(authorId);
+            hasCondition = true;
+        }
+
+        if (status != null && !status.isEmpty()) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" status = ?");
+            params.add(status);
+            hasCondition = true;
+        }
+
+        // Thêm điều kiện featured
+        if (isFeatured != null) {
+            sql.append(hasCondition ? " AND" : " WHERE").append(" is_featured = ?");
+            params.add(isFeatured);
+        }
+
+        // Sắp xếp
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sql.append(" ORDER BY ").append(sortBy);
+            if ("DESC".equalsIgnoreCase(sortDirection)) {
+                sql.append(" DESC");
+            } else {
+                sql.append(" ASC");
+            }
+        }
+
+        // Phân trang
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add((page - 1) * pageSize);
+        params.add(Math.max(pageSize, 1));
+
+        // Thực thi truy vấn
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                if (params.get(i) instanceof Integer) {
+                    st.setInt(i + 1, (Integer) params.get(i));
+                } else if (params.get(i) instanceof Boolean) {
+                    st.setBoolean(i + 1, (Boolean) params.get(i));
+                } else {
+                    st.setString(i + 1, (String) params.get(i));
+                }
+            }
+
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    Post post = new Post();
+                    post.setId(rs.getInt("id"));
+                    post.setTitle(rs.getString("title"));
+                    post.setThumbnail(rs.getString("thumbnail"));
+                    post.setSummary(rs.getString("summary"));
+                    post.setContent(rs.getString("content"));
+                    post.setIsFeatured(rs.getBoolean("is_featured"));
+                    post.setStatus(rs.getString("status"));
+                    post.setCreatedAt(rs.getDate("created_at"));
+                    post.setUpdatedAt(rs.getDate("updated_at"));
+                    User user = userDao.getUserById(rs.getInt("author_id"));
+                    post.setUser(user);
+
+                    posts.add(post);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return posts;
+    }
 
 }
