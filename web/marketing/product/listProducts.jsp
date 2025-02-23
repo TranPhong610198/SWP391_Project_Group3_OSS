@@ -417,7 +417,7 @@
                                                     <!--<td>${product.id}</td>-->
                                                     <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
                                                     <td>
-                                                        <img src="../${product.thumbnail}" alt="${product.title}" class="product-thumbnail">
+                                                        <img src="${product.thumbnail.contains('https')? product.thumbnail : pageContext.request.contextPath.concat('/').concat(product.thumbnail)}" alt="${product.title}" class="product-thumbnail">
                                                     </td>
                                                     <td>${product.title}</td>
                                                     <td>

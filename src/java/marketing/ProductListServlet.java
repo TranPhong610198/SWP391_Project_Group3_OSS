@@ -119,7 +119,7 @@ public class ProductListServlet extends HttpServlet {
                     params.add(Integer.parseInt(categoryId));
                 }
             }
-
+            
             if (status != null && !status.isEmpty() && !status.equals("all")) {
                 sql.append(" AND p.status = ?");
                 params.add(status);

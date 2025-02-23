@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -24,6 +25,9 @@ import java.util.List;
  */
 @WebServlet(urlPatterns = {"/listproduct"})
 public class ListProductServlet extends HttpServlet {
+
+    private static final int RECORDS_PER_PAGE = 10;
+    private ProductDAO productDAO = new ProductDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -63,91 +67,127 @@ public class ListProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductDAO productDAO = new ProductDAO();
-        CategoryDAO categoryDAO = new CategoryDAO();
+        try {
+            CategoryDAO categoryDAO = new CategoryDAO();
 
-        // Get filter parameters
-        String keyword = request.getParameter("keyword");
-        String categoryId = request.getParameter("category");
-        String minPrice = request.getParameter("minPrice");
-        String maxPrice = request.getParameter("maxPrice");
-        String sortBy = request.getParameter("sortBy");
-        String page = request.getParameter("page");
+            // Get filter parameters
+            String keyword = request.getParameter("keyword");
+            String categoryId = request.getParameter("category");
+            String minPrice = request.getParameter("minPrice");
+            String maxPrice = request.getParameter("maxPrice");
+            String sortBy = request.getParameter("sortBy");
+//            String status = request.getParameter("status");
 
-        // Build filter query
-        StringBuilder filterQuery = new StringBuilder("SELECT * FROM products WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            filterQuery.append(" AND (title LIKE ? OR description LIKE ?)");
-            params.add("%" + keyword + "%");
-            params.add("%" + keyword + "%");
-        }
-
-        if (categoryId != null && !categoryId.isEmpty()) {
-            filterQuery.append(" AND category_id = ?");
-            params.add(Integer.parseInt(categoryId));
-        }
-
-        if (minPrice != null && !minPrice.isEmpty()) {
-            filterQuery.append(" AND sale_price >= ?");
-            params.add(new BigDecimal(minPrice));
-        }
-
-        if (maxPrice != null && !maxPrice.isEmpty()) {
-            filterQuery.append(" AND sale_price <= ?");
-            params.add(new BigDecimal(maxPrice));
-        }
-
-        // Add sorting
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "price_asc":
-                    filterQuery.append(" ORDER BY sale_price ASC");
-                    break;
-                case "price_desc":
-                    filterQuery.append(" ORDER BY sale_price DESC");
-                    break;
-                case "newest":
-                    filterQuery.append(" ORDER BY created_at DESC");
-                    break;
-                default:
-                    filterQuery.append(" ORDER BY id DESC");
+            // Handle pagination
+            int page = 1;
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page").trim());
             }
-        } else {
-            filterQuery.append(" ORDER BY id DESC");
-        }
 
-        // Pagination
-        int currentPage = (page != null && !page.isEmpty()) ? Integer.parseInt(page) : 1;
-        List<Product> products = productDAO.getPaginatedProducts(filterQuery.toString(), params, currentPage);
-        int totalRecords = productDAO.getTotalFilteredRecords(filterQuery.toString(), params);
-        int totalPages = (int) Math.ceil((double) totalRecords / 10);
+            // Build base query
+            StringBuilder sql = new StringBuilder("SELECT p.*, c.name as category_name FROM products p "
+                    + "JOIN categories c ON p.category_id = c.id WHERE p.status = 'active' AND 1=1");
+            List<Object> params = new ArrayList<>();
 
-        // Get all categories for filter
-        List<Category> categories = categoryDAO.getAll();
-
-        String categoryName = null;
-        if (categoryId != null && !categoryId.isEmpty()) {
-            Category category = categoryDAO.getCategoryById(Integer.parseInt(categoryId));
-            if (category != null) {
-                categoryName = category.getName();
+            // Add category filter with subcategories support
+            if (categoryId != null && !categoryId.trim().isEmpty()) {
+                List<Integer> categoryIds = categoryDAO.getChildCategoryIds(Integer.parseInt(categoryId.trim()));
+                if (!categoryIds.isEmpty()) {
+                    String placeholders = categoryIds.stream()
+                            .map(id -> "?")
+                            .collect(Collectors.joining(", "));
+                    sql.append(" AND p.category_id IN (" + placeholders + ")");
+                    params.addAll(categoryIds);
+                } else {
+                    sql.append(" AND p.category_id = ?");
+                    params.add(Integer.parseInt(categoryId.trim()));
+                }
             }
+
+            // Add keyword search
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                sql.append(" AND (p.title LIKE ? OR p.description LIKE ?)");
+                params.add("%" + keyword + "%");
+                params.add("%" + keyword + "%");
+            }
+
+            // Add price range filter
+            if (minPrice != null && !minPrice.isEmpty()) {
+                sql.append(" AND p.sale_price >= ?");
+                params.add(new BigDecimal(minPrice));
+            }
+            if (maxPrice != null && !maxPrice.isEmpty()) {
+                sql.append(" AND p.sale_price <= ?");
+                params.add(new BigDecimal(maxPrice));
+            }
+
+            // Get total records for pagination
+            int totalRecords = productDAO.getTotalFilteredRecords(sql.toString(), params);
+            int totalPages = (int) Math.ceil(totalRecords * 1.0 / RECORDS_PER_PAGE);
+//            System.out.println(totalRecords + ";" + totalPages + "Dòng 133");
+//            System.out.println(page);
+
+            // Add sorting
+            if (sortBy != null) {
+                switch (sortBy) {
+                    case "price_asc":
+                        sql.append(" ORDER BY p.sale_price ASC");
+                        break;
+                    case "price_desc":
+                        sql.append(" ORDER BY p.sale_price DESC");
+                        break;
+                    case "newest":
+                        sql.append(" ORDER BY p.created_at DESC");
+                        break;
+                    default:
+                        sql.append(" ORDER BY p.id DESC");
+                }
+            } else {
+                sql.append(" ORDER BY p.id DESC");
+            }
+
+            // Add pagination
+            int offset = (page - 1) * RECORDS_PER_PAGE;
+            sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+            params.add(offset);
+            params.add(RECORDS_PER_PAGE);
+
+            // Execute query
+            List<Product> products = productDAO.getProductsByFilter(sql.toString(), params);
+
+            // Get category name if category filter is applied
+            String categoryName = null;
+            if (categoryId != null && !categoryId.trim().isEmpty()) {
+                Category category = categoryDAO.getCategoryById(Integer.parseInt(categoryId));
+                if (category != null) {
+                    categoryName = category.getName();
+                }
+            }
+
+            // Get all categories for filter
+            List<Category> categories = categoryDAO.getAll();
+
+            // Set attributes for JSP
+            request.setAttribute("products", products);
+            request.setAttribute("categories", categories);
+            request.setAttribute("categoryName", categoryName);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("selectedCategory", categoryId);
+            request.setAttribute("minPrice", minPrice);
+            request.setAttribute("maxPrice", maxPrice);
+            request.setAttribute("sortBy", sortBy);
+//            request.setAttribute("status", status);
+            request.setAttribute("totalItems", totalRecords);
+
+            // Forward to JSP
+            request.getRequestDispatcher("productList.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/error.jsp");
         }
-        request.setAttribute("categoryName", categoryName);
-
-        // Set attributes
-        request.setAttribute("products", products);
-        request.setAttribute("categories", categories);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("selectedCategory", categoryId);
-        request.setAttribute("minPrice", minPrice);
-        request.setAttribute("maxPrice", maxPrice);
-        request.setAttribute("sortBy", sortBy);
-
-        request.getRequestDispatcher("productList.jsp").forward(request, response);
     }
 
     /**
