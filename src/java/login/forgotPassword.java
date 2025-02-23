@@ -94,6 +94,10 @@ public class forgotPassword extends HttpServlet {
             request.setAttribute("mess", "Email không tồn tại trong hệ thống.");
             request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
             return;
+        } else if (user.getStatus().equals("pending")){
+            request.setAttribute("mess", "Taì khoản chưa được xác thực.");
+            request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
+            return;
         }
 
         // Tạo token và thời gian hết hạn (30 phút)
