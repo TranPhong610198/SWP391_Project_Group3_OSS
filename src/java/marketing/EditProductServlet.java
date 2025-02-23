@@ -164,8 +164,8 @@ public class EditProductServlet extends HttpServlet {
                         }
                     }
                 }
-                System.out.println(comboGroupId);
-                System.out.println(isCombo + "Dòng 168 EDIT");
+//                System.out.println(comboGroupId);
+//                System.out.println(isCombo + "Dòng 168 EDIT");
                 // Xử lý ảnh chính (thumbnail)
                 Part thumbnailPart = request.getPart("thumbnail");
                 String thumbnail = product.getThumbnail(); // Giữ nguyên nếu không upload ảnh mới
@@ -193,15 +193,16 @@ public class EditProductServlet extends HttpServlet {
                 
             } else if ("replaceSubImage".equals(action)) {
                 // Xử lý thay thế ảnh phụ
-                int imageId = Integer.parseInt(request.getParameter("imageId"));
+                String oldImg = request.getParameter("oldSubImg");
+                int imageId = productDAO.getImageIdByUrl(oldImg);
                 Part subImagePart = request.getPart("subImage");
                 if (subImagePart != null && subImagePart.getSize() > 0) {
                     String newImageUrl = saveImage(subImagePart, request);
                     if (newImageUrl != null) {
                         productDAO.replaceProductImage(imageId, newImageUrl, uploadPath);
+                        response.sendRedirect("editproduct?id="+productId);
                     } else {
-                        request.setAttribute("error", "Lỗi khi lưu ảnh phụ mới.");
-                        request.getRequestDispatcher("/editProduct.jsp").forward(request, response);
+                        response.sendRedirect("productlist?alert=ERR");
                         return;
                     }
                 }
