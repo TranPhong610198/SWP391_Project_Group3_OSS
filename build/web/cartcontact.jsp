@@ -10,38 +10,220 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
-            /* Previous styles remain the same */
-            .product-item {
-                display: flex;
-                align-items: center;
-                padding: 10px;
-                border-bottom: 1px solid #eee;
-            }
-            .product-image {
-                width: 80px;
-                height: 80px;
-                object-fit: cover;
-                border-radius: 4px;
-                margin-right: 15px;
-            }
-            .product-details {
-                flex-grow: 1;
-            }
-            .product-title {
-                font-weight: 500;
-                margin-bottom: 5px;
-            }
-            .product-variant {
-                font-size: 0.9em;
-                color: #666;
-            }
-            .product-price {
-                font-weight: 500;
-                color: #333;
-            }
+            <style>
+/* Container spacing */
+.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1140px;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    padding: 0.75rem 0;
+    margin-bottom: 2rem;
+    background: transparent;
+}
+
+.breadcrumb-item a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+/* Card styling */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 1.25rem;
+}
+
+/* Product item styling */
+.product-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 0.5rem;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-right: 1.25rem;
+}
+
+.product-details {
+    flex-grow: 1;
+}
+
+.product-title {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.product-variant {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.product-price {
+    font-weight: 600;
+    color: #0d6efd;
+    font-size: 1rem;
+}
+
+/* Address section styling */
+.address-item {
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.address-item:hover {
+    background-color: #f8f9fa;
+}
+
+.form-check-input {
+    margin-top: 0.3rem;
+}
+
+.badge {
+    padding: 0.4em 0.6em;
+    font-size: 0.75rem;
+}
+
+/* Shipping and payment methods styling */
+.shipping-method, .payment-method {
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.shipping-method:hover, .payment-method:hover {
+    background-color: #f8f9fa;
+}
+
+/* Summary section styling */
+.card .d-flex {
+    margin-bottom: 0.75rem;
+}
+
+.text-primary {
+    color: #0d6efd !important;
+}
+
+/* Button styling */
+.btn {
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Modal styling */
+.modal-content {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1.25rem 1.5rem;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.375rem;
+    border-color: #dee2e6;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .product-image {
+        width: 80px;
+        height: 80px;
+        margin-right: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .d-flex.justify-content-between {
+        flex-direction: column;
+    }
+}
+</style>
         </style>
     </head>
     <body>
+        <div> <jsp:include page="/header.jsp" /></div><br><br><br><br>
         <div class="container">
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
@@ -286,8 +468,8 @@
                     </form>
                 </div>
             </div>
-        </div>
-
+        </div><br><br><br><br>
+<div> <jsp:include page="/footer.jsp" /></div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
                                                    // API URLs for address selection

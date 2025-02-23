@@ -225,9 +225,34 @@
     
     <script>
     function submitCheckout() {
-        const form = document.getElementById('checkoutForm');
-        form.submit();
+    const form = document.getElementById('checkoutForm');
+    const checkboxes = document.getElementsByClassName('product-select');
+    let hasSelectedItems = false;
+
+    // Thêm input hidden cho số lượng của từng sản phẩm được chọn
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            hasSelectedItems = true;
+            const row = checkbox.closest('tr');
+            const itemId = checkbox.value;
+            const quantity = row.querySelector('.quantity-input').value;
+            
+            // Thêm input hidden cho số lượng
+            const quantityInput = document.createElement('input');
+            quantityInput.type = 'hidden';
+            quantityInput.name = 'quantity_' + itemId;
+            quantityInput.value = quantity;
+            form.appendChild(quantityInput);
+        }
     }
+
+    if (!hasSelectedItems) {
+        alert('Vui lòng chọn ít nhất một sản phẩm');
+        return;
+    }
+
+    form.submit();
+}
 
     function updateTotalAmount() {
         const checkboxes = document.getElementsByClassName('product-select');
