@@ -103,7 +103,7 @@ INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (11, N'Quần short siêu nhân', 3, N'Quần short với họa tiết siêu nhân, dành cho trẻ em', CAST(550000.00 AS Decimal(10, 2)), CAST(480000.00 AS Decimal(10, 2)), N'combo_quan_ao_mua_he.jpg', N'active', 0, N'2', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (12, N'Áo so mi xanh', 1, N'Áo sơ mi xanh phong cách, phù hợp với mọi dịp', CAST(200000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'ao_so_mi_trang.jpg', N'active', 0, N'1', CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2), CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (12, N'Áo so mi xanh', 1, N'Áo sơ mi xanh phong cách, phù hợp với mọi dịp', CAST(200000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://bizweb.dktcdn.net/100/455/439/products/bla-9254.jpg?v=1653388487927', N'active', 0, N'1', CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2), CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2))
 GO
 SET IDENTITY_INSERT [dbo].[products] OFF
 GO
