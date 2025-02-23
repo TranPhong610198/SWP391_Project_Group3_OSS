@@ -161,31 +161,37 @@ public class CartDetail extends HttpServlet {
         response.sendRedirect("cartdetail");
     }
 
-    private void handleCheckout(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
+   private void handleCheckout(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
+
+    // Lấy danh sách sản phẩm được chọn
+    String[] selectedIds = request.getParameterValues("selectedItems");
     
-    // Lấy các sản phẩm được chọn
-    String[] selectedItems = request.getParameterValues("selectedItems");
-    
-    // Kiểm tra có sản phẩm được chọn không
-    if (selectedItems == null || selectedItems.length == 0) {
+    if (selectedIds == null || selectedIds.length == 0) {
         request.setAttribute("error", "Vui lòng chọn sản phẩm");
         doGet(request, response);
         return;
     }
 
-    // Lưu vào session
-    session.setAttribute("selectedItems", selectedItems);
+    // Tạo danh sách lưu ID và số lượng
+    List<String> selectedItemIds = new ArrayList<>();
+    List<String> selectedQuantities = new ArrayList<>();
     
-    // Lưu thông tin giảm giá nếu có
-    if (session.getAttribute("appliedCoupon") != null) {
-        double cartDiscount = (Double) request.getAttribute("discount");
-        session.setAttribute("cartDiscount", cartDiscount);
+    // Lấy số lượng tương ứng cho từng sản phẩm được chọn
+    for (String itemId : selectedIds) {
+        String quantity = request.getParameter("quantity_" + itemId);
+        selectedItemIds.add(itemId);
+        selectedQuantities.add(quantity);
     }
 
+    // Lưu vào session để cartcontact có thể sử dụng
+    session.setAttribute("selectedItemIds", selectedItemIds);
+    session.setAttribute("selectedQuantities", selectedQuantities);
+
     // Chuyển hướng sang trang contact
-    response.sendRedirect("cartcontact");}
+    response.sendRedirect("cartcontact");
+}
 
    private void handleUpdateQuantity(HttpServletRequest request) {
     try {

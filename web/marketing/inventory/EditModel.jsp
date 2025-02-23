@@ -92,6 +92,7 @@
                     <form action="editModel" method="POST">
                         <input type="hidden" name="productId" value="${variant.productId}">
                         <input type="hidden" name="variantId" value="${variant.id}">
+                        <input type="hidden" name="source" value="${param.source}"> 
 
                         <div class="row g-3">
                             <div class="col-md-4">
@@ -117,13 +118,21 @@
                             </div>
                         </div>
 
-
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="inventoryDetail?id=${variant.productId}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Quay lại
-                            </a>
+                            <c:choose>
+                                <c:when test="${param.source == 'productlist'}">
+                                    <a href="productlist" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="inventorylist" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-plus me-2"></i>Cập nhật
+                                <i class="fas fa-save me-2"></i>Cập nhật
                             </button>
                         </div>
                     </form>
