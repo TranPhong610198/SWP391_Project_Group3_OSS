@@ -3,14 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-import DAO.FooterDAO;
+package Post;
+
 import DAO.PostDAO;
-import DAO.ProductDAO;
-import DAO.SliderDAO;
-import entity.Footer;
 import entity.Post;
-import entity.Product;
-import entity.Slider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -22,41 +18,38 @@ import java.util.List;
 
 /**
  *
- * @author VuxD4t
+ * @author DELL
  */
-@WebServlet(urlPatterns = {"/home"})
-public class HomeServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="UserPostListServlet", urlPatterns={"/posts"})
+public class UserPostListServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeServlet</title>");
+            out.println("<title>Servlet UserPostListServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UserPostListServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -64,32 +57,46 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        SliderDAO sliderDAO = new SliderDAO();
+    throws ServletException, IOException {
+        int page = 1;
+        int pageSize = 10; // Show 9 posts per page for grid layout
+        String search = request.getParameter("search");
+
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+
         PostDAO postDAO = new PostDAO();
-        ProductDAO productDAO = new ProductDAO(); // Add this line
+        List<Post> posts;
+        List<Post> latestPosts;
+        int totalItems;
 
-        // Existing code for sliders and posts...
-        List<Slider> activeSliders = sliderDAO.getAllSliders(1, 5, "", "active");
-//        List<Post> featuredPosts = postDAO.getAllPosts(1, 3, "", null, "published", true, "created_at", "DESC");
-//        List<Post> latestPosts = postDAO.getAllPosts(1, 2, "", null, "published", null, "created_at", "DESC");
+        // Nếu không có tham số search, lấy tất cả bài viết
+        if (search == null || search.trim().isEmpty()) {
+            posts = postDAO.getAllPosts(page, pageSize, null, null, "published");
+            latestPosts = postDAO.getLatestPublishedPosts(5);
+            totalItems = postDAO.getTotalPostsCount(null, null, "published");
+        } else {
+            // Nếu có tham số search, lọc theo search
+            posts = postDAO.getAllPosts(page, pageSize, search, null, "published");
+            latestPosts = postDAO.getLatestPublishedPosts(5);
+            totalItems = postDAO.getTotalPostsCount(search, null, "published");
+        }
 
-        // Get featured products
-        List<Product> featuredProducts = productDAO.getFeaturedProducts(4); // Get top 4 featured products
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
-        // Set attributes
-        request.setAttribute("sliders", activeSliders);
-//        request.setAttribute("featuredPosts", featuredPosts);
-//        request.setAttribute("latestPosts", latestPosts);
-        request.setAttribute("featuredProducts", featuredProducts); // Add this line
+        request.setAttribute("posts", posts);
+        request.setAttribute("latestPosts", latestPosts);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalItems", totalItems);
+        request.setAttribute("search", search);
 
-        request.getRequestDispatcher("homepage.jsp").forward(request, response);
+        request.getRequestDispatcher("postl.jsp").forward(request, response);
+    } 
 
-    }
-
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -97,13 +104,12 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

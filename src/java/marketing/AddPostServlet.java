@@ -96,6 +96,8 @@ public class AddPostServlet extends HttpServlet {
         String content = request.getParameter("content");
         String status = request.getParameter("status");
         Date createdAt = new Date(System.currentTimeMillis());
+        boolean isFeatured = request.getParameter("isFeatured") != null;
+        
         
         // Xử lý file ảnh
         String thumbnail = "";
@@ -138,6 +140,7 @@ public class AddPostServlet extends HttpServlet {
         post.setStatus(status);
         post.setCreatedAt(createdAt);
         post.setUser(existingUser);
+        post.setIsFeatured(isFeatured); 
 
         PostDAO postDAO = new PostDAO();
         boolean isAdded = postDAO.addPost(post);
