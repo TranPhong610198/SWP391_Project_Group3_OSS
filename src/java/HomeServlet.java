@@ -4,7 +4,13 @@
  */
 
 import DAO.FooterDAO;
+import DAO.PostDAO;
+import DAO.ProductDAO;
+import DAO.SliderDAO;
 import entity.Footer;
+import entity.Post;
+import entity.Product;
+import entity.Slider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -59,7 +65,26 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        SliderDAO sliderDAO = new SliderDAO();
+        PostDAO postDAO = new PostDAO();
+        ProductDAO productDAO = new ProductDAO(); // Add this line
+
+        // Existing code for sliders and posts...
+        List<Slider> activeSliders = sliderDAO.getAllSliders(1, 5, "", "active");
+        List<Post> featuredPosts = postDAO.getAllPosts(1, 3, "", null, "published", true, "created_at", "DESC");
+        List<Post> latestPosts = postDAO.getAllPosts(1, 2, "", null, "published", null, "created_at", "DESC");
+
+        // Get featured products
+        List<Product> featuredProducts = productDAO.getFeaturedProducts(4); // Get top 4 featured products
+
+        // Set attributes
+        request.setAttribute("sliders", activeSliders);
+        request.setAttribute("featuredPosts", featuredPosts);
+        request.setAttribute("latestPosts", latestPosts);
+        request.setAttribute("featuredProducts", featuredProducts); // Add this line
+
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
+
     }
 
     /**

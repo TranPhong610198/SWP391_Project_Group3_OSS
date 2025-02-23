@@ -61,46 +61,53 @@ public class PostServlet extends HttpServlet {
      */
     @Override
 
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    int page = 1;
-    int pageSize = 10;
-    String search = request.getParameter("search");
-    String authorIdStr = request.getParameter("authorId");
-    String status = request.getParameter("status");
-    String sortField = request.getParameter("sortField"); // Thêm dòng này
-    String sortDir = request.getParameter("sortDir");
-    
+        int page = 1;
+        int pageSize = 10;
+        String search = request.getParameter("search");
+        String authorIdStr = request.getParameter("authorId");
+        String status = request.getParameter("status");
+        String sortField = request.getParameter("sortField"); // Thêm dòng này
+        String sortDir = request.getParameter("sortDir");
 
-    Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
-            ? Integer.parseInt(authorIdStr)
-            : null;
+        Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
+                ? Integer.parseInt(authorIdStr)
+                : null;
 
-    if (request.getParameter("page") != null) {
-        page = Integer.parseInt(request.getParameter("page"));
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+
+        PostDAO postDAO = new PostDAO();
+        List<Post> posts = postDAO.getAllPosts(
+                page, // page number 
+                pageSize, // pageSize
+                search, // search keyword
+                authorId, // authorId
+                status, // status
+                null, // isFeatured (null = không lọc)
+                "created_at", // sortBy
+                "ASC" // sortDirection
+        );
+
+        UserDAO userDAO = new UserDAO();
+        List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'
+
+        int totalItems = postDAO.getTotalPostsCount(search, authorId, status);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        request.setAttribute("posts", posts);
+        request.setAttribute("authors", authors); // Gửi danh sách authors đến JSP
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalItems", totalItems);
+        request.setAttribute("sortField", sortField); // Thêm dòng này
+        request.setAttribute("sortDir", sortDir);
+
+        request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
     }
-
-    PostDAO postDAO = new PostDAO();
-    List<Post> posts = postDAO.getAllPosts(page, pageSize, search, authorId, status);
-
-    UserDAO userDAO = new UserDAO();
-    List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'
-
-    int totalItems = postDAO.getTotalPostsCount(search, authorId, status);
-    int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-
-    request.setAttribute("posts", posts);
-    request.setAttribute("authors", authors); // Gửi danh sách authors đến JSP
-    request.setAttribute("currentPage", page);
-    request.setAttribute("totalPages", totalPages);
-    request.setAttribute("totalItems", totalItems);
-    request.setAttribute("sortField", sortField); // Thêm dòng này
-    request.setAttribute("sortDir", sortDir);
-
-    request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
-}
-
 
     /**
      * Handles the HTTP <code>POST</code> method.
