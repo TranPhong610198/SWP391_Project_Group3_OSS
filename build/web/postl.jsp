@@ -113,7 +113,7 @@
                                 <c:forEach var="post" items="${posts}">
                                     <div class="col-md-6">
                                         <div class="card post-card h-100">
-                                            <a href="${pageContext.request.contextPath}/post/detail?id=${post.getId()}" 
+                                            <a href="${pageContext.request.contextPath}/post?id=${post.getId()}" 
                                                class="text-decoration-none">
                                                 <img src="${post.getThumbnail()}" 
                                                      class="card-img-top post-image" alt="${post.getTitle()}">
