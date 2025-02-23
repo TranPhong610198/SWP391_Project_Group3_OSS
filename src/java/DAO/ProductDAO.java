@@ -403,7 +403,7 @@ public class ProductDAO extends DBContext {
     public boolean updateProduct(Product product, String uploadPath) {
         String sql = "UPDATE products SET title = ?, category_id = ?, description = ?, "
                 + "original_price = ?, sale_price = ?, thumbnail = ?, is_combo = ?, "
-                + "combo_group_id = ?, updated_at = GETDATE() WHERE id = ?";
+                + "combo_group_id = ?, status=? , updated_at = GETDATE() WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, product.getTitle());
             ps.setInt(2, product.getCategoryId());
@@ -413,7 +413,12 @@ public class ProductDAO extends DBContext {
             ps.setString(6, product.getThumbnail());
             ps.setBoolean(7, product.isIsCombo());
             ps.setObject(8, product.getComboGroupId());
-            ps.setInt(9, product.getId());
+            if ("EOStock".equals(product.getStatus())) {
+                ps.setString(9, "EOStock");
+            } else {
+                ps.setString(9, product.getStatus());
+            }
+            ps.setInt(10, product.getId());
 
             int rowsAffected = ps.executeUpdate();
             updateProductStatusIfNeeded(product.getId()); // Cập nhật trạng thái nếu cần

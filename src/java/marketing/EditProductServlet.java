@@ -129,6 +129,7 @@ public class EditProductServlet extends HttpServlet {
 
             if ("updateProduct".equals(action)) {
                 // Xử lý cập nhật sản phẩm
+                String status = request.getParameter("status");
                 String title = request.getParameter("title");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 String description = request.getParameter("description");
@@ -176,7 +177,15 @@ public class EditProductServlet extends HttpServlet {
                     }
                     thumbnail = saveImage(thumbnailPart, request);
                 }
-
+                if ("EOStock".equals(product.getStatus())) {
+                    status = "EOStock";
+                } else {
+                    // Chỉ chấp nhận "active" hoặc "inactive"
+                    if (!"active".equals(status) && !"inactive".equals(status)) {
+                        status = "inactive"; // Nếu không hợp lệ, đặt mặc định là "inactive"
+                    }
+                }
+                product.setStatus(status);
                 product.setTitle(title);
                 product.setCategoryId(categoryId);
                 product.setDescription(description);

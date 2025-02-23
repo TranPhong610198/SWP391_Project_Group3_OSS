@@ -162,7 +162,7 @@
                                 <label for="salePrice" class="form-label">Giá bán (₫)</label>
                                 <input type="number" class="form-control" id="salePrice" name="salePrice" value="${product.salePrice.intValue()}" step="1000" min="0" required />
                             </div>
-                            <div class="col-md-12 d-flex flex-column justify-content-center align-items-center">
+                            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                                 <label for="comboGroupId" class="form-label mb-2">
                                     <div class="form-check d-flex justify-content-center align-items-center">
                                         <input class="form-check-input me-2" type="checkbox" id="isCombo" name="isCombo" ${product.isCombo ? 'checked' : ''}>
@@ -176,11 +176,18 @@
                                     </c:forEach>
                                 </select>
                             </div>
+                            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                                <label for="status" class="form-label mb-2">Trạng thái sản phẩm</label>
+                                <select class="form-select" id="status" name="status" style="width: 50%;" ${product.status.equals('EOStock') ? 'disabled' : ''}>
+                                    <option value="active" ${product.status eq 'active' ? 'selected' : ''}>Đang Bán</option>
+                                    <option value="inactive" ${product.status eq 'inactive' ? 'selected' : ''}>Ngưng Bán</option>
+                                    <option value="EOStock" ${product.status.equals('EOStock') ? 'selected' : ''}>Hết hàng</option>
+                                </select>
+                            </div>
                             <div class="col-12">
                                 <label for="description" class="form-label">Mô tả sản phẩm</label>
                                 <textarea class="form-control" id="description" name="description">${product.description}</textarea>
                             </div>
-
 
 
                             <!-- Phần ảnh chính -->
