@@ -261,6 +261,12 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
+                        <c:when test="${alert.equals('ER1_FULL')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Không thể thêm ảnh mới vì đã đạt tối đa 5 ảnh phụ.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
                     </c:choose>
                 </c:if>
                 <h2 class="page-title">

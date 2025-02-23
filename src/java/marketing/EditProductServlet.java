@@ -189,8 +189,10 @@ public class EditProductServlet extends HttpServlet {
                         return;
                     }
                 }
-                if (updated) response.sendRedirect("productlist?alert=SSU");
-                
+                if (updated) {
+                    response.sendRedirect("productlist?alert=SSU");
+                }
+
             } else if ("replaceSubImage".equals(action)) {
                 // Xử lý thay thế ảnh phụ
                 String oldImg = request.getParameter("oldSubImg");
@@ -200,7 +202,7 @@ public class EditProductServlet extends HttpServlet {
                     String newImageUrl = saveImage(subImagePart, request);
                     if (newImageUrl != null) {
                         productDAO.replaceProductImage(imageId, newImageUrl, uploadPath);
-                        response.sendRedirect("editproduct?id="+productId);
+                        response.sendRedirect("editproduct?id=" + productId);
                     } else {
                         response.sendRedirect("productlist?alert=ERR");
                         return;
@@ -208,37 +210,47 @@ public class EditProductServlet extends HttpServlet {
                 }
             } else if ("deleteSubImage".equals(action)) {
                 // Xử lý xóa ảnh phụ
-                int imageId = Integer.parseInt(request.getParameter("imageId"));
-                productDAO.deleteProductImage(imageId, uploadPath);
+                String oldImg = request.getParameter("oldSubImg");
+                int imageId = productDAO.getImageIdByUrl(oldImg);
+                if (productDAO.deleteProductImage(imageId, uploadPath)) {
+                    response.sendRedirect("editproduct?id=" + productId);
+                } else {
+                    response.sendRedirect("productlist?alert=ERR");
+                    return;
+                }
             } else if ("addNewSubImage".equals(action)) {
                 // Xử lý thêm ảnh phụ mới
-                Part newSubImagePart = request.getPart("newSubImage");
-                if (newSubImagePart != null && newSubImagePart.getSize() > 0) {
-                    List<String> currentImages = productDAO.getProductImages(productId);
-                    if (currentImages == null) {
-                        currentImages = new ArrayList<>(); // Khởi tạo danh sách rỗng nếu null
-                    }
-                    if (currentImages.size() >= 5) {
-                        request.setAttribute("error", "Không thể thêm ảnh mới vì đã đạt tối đa 5 ảnh phụ.");
-                        request.getRequestDispatcher("/editProduct.jsp").forward(request, response);
-                        return;
-                    }
+                List<String> currentImages = productDAO.getProductImages(productId);
+                if (currentImages == null) {
+                    currentImages = new ArrayList<>(); // Khởi tạo danh sách rỗng nếu null
+                }
+                if (currentImages.size() >= 5) {
+                    response.sendRedirect("productlist?alert=ER1_FULL");
+                    return;
+                }
+                // Xử lý từng ảnh trong danh sách
+                for (Part part : request.getParts()) {
+                    if (part.getName().equals("newSubImages") && part.getSize() > 0) {
+                        if (currentImages.size() >= 5) {
+                            response.sendRedirect("editproduct?id=" + productId);
+                            return;
+                        }
 
-                    String newImageUrl = saveImage(newSubImagePart, request);
-                    if (newImageUrl != null) {
-                        productDAO.addSingleProductImage(productId, newImageUrl);
-                    } else {
-                        request.setAttribute("error", "Lỗi khi lưu ảnh phụ mới.");
-                        request.getRequestDispatcher("/editProduct.jsp").forward(request, response);
-                        return;
+                        String newImageUrl = saveImage(part, request);
+                        if (newImageUrl != null) {
+                            productDAO.addSingleProductImage(productId, newImageUrl);
+                            currentImages.add(newImageUrl); // Cập nhật danh sách ảnh
+                        } else {
+                            response.sendRedirect("productlist?alert=ERR");
+                            return;
+                        }
                     }
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Đã xảy ra lỗi khi chỉnh sửa sản phẩm: " + e.getMessage());
-            request.getRequestDispatcher("/editProduct.jsp").forward(request, response);
+            response.sendRedirect("productlist?alert=ERR");
         }
     }
     // Hàm lưu ảnh vào thư mục uploads/productImages (giống AddProductServlet)
