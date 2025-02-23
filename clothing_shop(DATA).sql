@@ -634,16 +634,16 @@ GO
 
 
 INSERT INTO sliders (title, image_url, link, status, display_order, notes) VALUES
-('Summer Collection 2025', 'https://m.yodycdn.com/fit-in/filters:format(webp)/products/media/collections/hero%2018-2xua%20xuan%2050%201800x600n.jpg', '/collections/summer-2025', 'active', 1, 'Highlighting our newest summer collection with bright colors and lightweight fabrics'),
-('End of Season Sale - Up to 70% Off', 'https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/d3bd2064-8035-4c95-87e5-9b7e71d1d27f/image.jpg', '/sale', 'active', 2, 'Major clearance sale on all winter items'),
-('New Arrivals - Spring Fashion', 'https://file.hstatic.net/1000284478/file/25_1920x700_9c1af1a2283c4b0fa53a1d720c9ac1cf.jpg', '/new-arrivals', 'active', 3, 'Featuring the latest spring trends and styles'),
-('Exclusive Designer Collection', '/images/sliders/designer-collection.jpg', '/designer', 'active', 4, 'Premium designer wear for both men and women'),
-('Sport & Active Wear', '/images/sliders/activewear.jpg', '/category/activewear', 'active', 5, 'High-performance sportswear for your active lifestyle'),
-('Wedding Season Special', '/images/sliders/wedding-collection.jpg', '/wedding-collection', 'active', 6, 'Elegant formal wear for wedding season'),
-('Kids Fashion Week', '/images/sliders/kids-fashion.jpg', '/category/kids', 'inactive', 7, 'Cute and comfortable clothing for children'),
-('Accessories Collection', '/images/sliders/accessories.jpg', '/category/accessories', 'active', 8, 'Complete your look with our trendy accessories'),
-('Sustainable Fashion Line', '/images/sliders/eco-friendly.jpg', '/sustainable-collection', 'active', 9, 'Eco-friendly clothing made from sustainable materials'),
-('Holiday Gift Guide', '/images/sliders/gift-guide.jpg', '/gift-guide', 'inactive', 10, 'Perfect gift ideas for your loved ones');
+('Summer Collection 2025', 'https://file.hstatic.net/200000775589/article/hippie-style_cd4cf3dfcf234ac7aa46653dd6b140cc.jpg', 'http://localhost:9999/fashionshop/post?id=18', 'active', 1, 'Highlighting our newest summer collection with bright colors and lightweight fabrics'),
+('End of Season Sale - Up to 70% Off', 'https://bestprint.vn/wp-content/uploads/2022/07/1657921823_567_Cac-nha-ban-le-co-can-mot-chien-luoc-thoi.png', 'http://localhost:9999/fashionshop/post?id=16', 'active', 2, 'Major clearance sale on all winter items'),
+('New Arrivals - Spring Fashion', 'https://style-republik.com/wp-content/uploads/2021/12/Viettien.png', 'http://localhost:9999/fashionshop/post?id=15', 'active', 3, 'Featuring the latest spring trends and styles'),
+('Exclusive Designer Collection', 'https://ims.baoyenbai.com.vn/NewsImg/6_2023/286023_1tt.jpg', 'http://localhost:9999/fashionshop/post?id=13', 'active', 4, 'Premium designer wear for both men and women'),
+('Sport & Active Wear', 'https://lh4.googleusercontent.com/G-N1LdssK9CFqmlFcq9e6SUDeBLlwYVhcDxZNwgDDZmtcaEkmH-xsB3jrdQqSOdjjGLNVbe7YTN9V91Ywq1CCOjUN65wl3IhQHzVp3Juzh5G9Vub7Iss4v7CWZLU17hL8eqO8Eb8', 'http://localhost:9999/fashionshop/post?id=12', 'active', 5, 'High-performance sportswear for your active lifestyle'),
+('Wedding Season Special', 'https://static.ybox.vn/2015/08/c55b53fec37cc226e1ed8ffeb10d7f33.jpg', 'http://localhost:9999/fashionshop/post?id=11', 'active', 6, 'Elegant formal wear for wedding season'),
+('Kids Fashion Week', 'https://aodaivietnam.vceo.vn/images/upload/images/a8-1400520557-700x0-1400555235_680x0.jpg', 'http://localhost:9999/fashionshop/post?id=10', 'inactive', 7, 'Cute and comfortable clothing for children'),
+('Accessories Collection', 'https://songkhoeannhien.vn/wp-content/uploads/2023/02/Lua-chon-quan-ao-vai-tot-skan-2000x1333.jpg', 'http://localhost:9999/fashionshop/post?id=9', 'active', 8, 'Complete your look with our trendy accessories'),
+('Sustainable Fashion Line', 'https://media-cdn-v2.laodong.vn/storage/newsportal/2022/6/14/1056388/Vr-And-Ar-For-Busine.jpg', 'http://localhost:9999/fashionshop/post?id=8', 'active', 9, 'Eco-friendly clothing made from sustainable materials'),
+('Holiday Gift Guide', 'https://www.elle.vn/wp-content/uploads/2019/07/19/Su-khac-biet-giua-thoi-trang-phong-cach-vintage-va-retro.jpg', 'http://localhost:9999/fashionshop/post?id=7', 'inactive', 10, 'Perfect gift ideas for your loved ones');
 
 
 SET IDENTITY_INSERT [dbo].[cart] ON 
