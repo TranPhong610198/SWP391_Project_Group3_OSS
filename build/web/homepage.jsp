@@ -379,7 +379,7 @@
             <!-- Sản phẩm nổi bật -->
             <section class="featured-products mb-5">
                 <div class="container">
-                    <h2 class="section-title">Sản phẩm nổi bật</h2>
+                    <h2 class="section-title">Sản phẩm mới nhất</h2>
                     <div class="swiper productSwiper">
                         <div class="swiper-wrapper">
                             <c:forEach items="${featuredProducts}" var="product">
