@@ -95,7 +95,7 @@ public class forgotPassword extends HttpServlet {
             request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
             return;
         } else if (user.getStatus().equals("pending")){
-            request.setAttribute("mess", "Taì khoản chưa được xác thực.");
+            request.setAttribute("mess", "Tài khoản chưa được xác thực.");
             request.getRequestDispatcher("requestEmail.jsp").forward(request, response);
             return;
         }
