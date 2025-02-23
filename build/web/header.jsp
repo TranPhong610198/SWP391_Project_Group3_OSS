@@ -78,8 +78,12 @@
                                             </div>
                                         </button>
                                         <div class="dropdown-content">
+                                            <c:if test="${sessionScope.acc.role == 'admin'}">
+                                                <a href="./admin/userlists">Trang quản trị</a>
+                                                <a href="./marketing/productlist">Trang quản lý tiếp thị</a>
+                                            </c:if>
+                                            <a href="profile">Trang cá nhân</a>
                                             <a href="logout">Đăng xuất</a>
-                                            <a href="profile">Profile</a>
                                         </div>
                                     </div>
                                 </c:if>

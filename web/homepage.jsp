@@ -354,8 +354,7 @@
             </button>
         </div>
 
-        <div class="container">
-            <!-- Bài đăng hot -->
+        <div class="container">           
             <!-- Bài đăng nổi bật -->
             <section class="mb-5">
                 <h2 class="section-title">Bài đăng nổi bật</h2>
@@ -374,8 +373,7 @@
                     </c:forEach>
                 </div>
             </section>
-
-            <!-- Sản phẩm nổi bật -->
+            
             <!-- Sản phẩm nổi bật -->
             <section class="featured-products mb-5">
                 <div class="container">
