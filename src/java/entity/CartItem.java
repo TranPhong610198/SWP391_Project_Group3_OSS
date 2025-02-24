@@ -1,6 +1,7 @@
 package entity;
 
 public class CartItem {
+
     private int id;
     private int cartId;
     private int productId;
@@ -17,6 +18,13 @@ public class CartItem {
 
     public CartItem(int id, int cartId, int productId, int variantId, int quantity) {
         this.id = id;
+        this.cartId = cartId;
+        this.productId = productId;
+        this.variantId = variantId;
+        this.quantity = quantity;
+    }
+
+    public CartItem(int cartId, int productId, int variantId, int quantity) {
         this.cartId = cartId;
         this.productId = productId;
         this.variantId = variantId;

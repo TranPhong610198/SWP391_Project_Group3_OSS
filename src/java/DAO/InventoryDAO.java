@@ -45,7 +45,7 @@ public class InventoryDAO extends DBContext {
                 + " ORDER BY " + (sortField.equals("category") ? "c.name" : sortField.equals("totalQuantity") ? "total_stock_quantity" : "p.title") + " " + (sortOrder.equalsIgnoreCase("asc") ? "ASC" : "DESC")
                 + " OFFSET ? ROWS "
                 + " FETCH NEXT ? ROWS ONLY) ";
-        
+
         query += """
                  SELECT 
                      pp.product_id, 
@@ -549,4 +549,21 @@ public class InventoryDAO extends DBContext {
         }
         return 0;
     }
+
+    public int getVariantId(int productId, int colorId, int sizeId) {
+        String sql = "SELECT id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            st.setInt(2, colorId);
+            st.setInt(3, sizeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return -1; // Trả về -1 nếu không tìm thấy variant
+    }
+
 }

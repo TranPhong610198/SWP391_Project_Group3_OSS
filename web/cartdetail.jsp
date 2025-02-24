@@ -156,7 +156,7 @@
                     </div>
 
                     <div class="text-center mb-4">
-                        <a href="products" class="btn btn-outline-primary">
+                        <a href="listproduct" class="btn btn-outline-primary">
                             <i class="fas fa-plus me-2"></i>Thêm sản phẩm
                         </a>
                     </div>

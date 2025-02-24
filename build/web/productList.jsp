@@ -316,14 +316,14 @@
                                             <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
                                         </div>
                                 </a>
-                                <div class="product-buttons">
+<!--                                <div class="product-buttons">
                                     <button onclick="window.location.href = 'cart?action=buyNow&productId=${product.id}'" class="btn-buy-now">
                                         <i class="fas fa-bolt"></i> Mua ngay
                                     </button>
                                     <button onclick="window.location.href = 'cart?action=add&productId=${product.id}'" class="btn-add-cart">
                                         <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
                                     </button>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </c:forEach>

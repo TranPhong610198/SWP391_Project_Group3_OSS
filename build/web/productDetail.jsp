@@ -318,19 +318,19 @@
                             <!--</div>-->
                             <%--</c:if>--%>
                         </div>
-
-                        <div class="product-description">
+                        <!--Tạm thời ẩn phần mô tả đã do lỗi ckeditor-->
+<!--                        <div class="product-description">
                             ${product.description}
-                        </div>
+                        </div>-->
 
-                        <form action="productdetail" method="GET">
+                        <form action="productdetail" method="POST">
                             <input type="hidden" name="id" value="${product.id}">
 
                             <!-- Size và Color Selector trên cùng một hàng -->
                             <div class="options-row">
                                 <div class="options-col">
                                     <label for="sizeId" class="option-label">Chọn Size</label>
-                                    <select id="sizeId" name="sizeId" class="form-select" onchange="this.form.submit()">
+                                    <select id="sizeId" name="sizeId" class="form-select" required="" onchange="this.form.submit()">
                                         <option value="">Chọn Size</option>
                                         <c:forEach items="${sizes}" var="size">
                                             <option value="${size.id}" ${sizeId == size.id ? 'selected' : ''}>${size.name}</option>
@@ -340,7 +340,7 @@
 
                                 <div class="options-col">
                                     <label for="colorId" class="option-label">Chọn Màu</label>
-                                    <select id="colorId" name="colorId" class="form-select" onchange="this.form.submit()">
+                                    <select id="colorId" name="colorId" class="form-select" required="" onchange="this.form.submit()">
                                         <option value="">Chọn Màu</option>
                                         <c:forEach items="${colors}" var="color">
                                             <option value="${color.id}" ${colorId == color.id ? 'selected' : ''}>${color.name}</option>
