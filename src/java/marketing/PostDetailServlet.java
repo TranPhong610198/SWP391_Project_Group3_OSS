@@ -109,7 +109,7 @@ public class PostDetailServlet extends HttpServlet {
         
         Part thumbnailPart = request.getPart("thumbnail");
         String thumbnail = oldThumbnail; // Giữ ảnh cũ mặc định
-        
+        boolean isFeatured = request.getParameter("isFeatured") != null;
         try {
             Part filePart = request.getPart("thumbnail");
             if (filePart != null && filePart.getSize() > 0) {
@@ -130,7 +130,7 @@ public class PostDetailServlet extends HttpServlet {
         }
 
         Post post = new Post(id, title, thumbnail, summary, content, status, updatedAt);
-
+        post.setIsFeatured(isFeatured);
         PostDAO postDAO = new PostDAO();
         boolean isUpdated = postDAO.updatePost(post);
 

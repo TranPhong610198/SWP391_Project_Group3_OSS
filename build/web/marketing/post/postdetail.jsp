@@ -211,6 +211,14 @@
                                             </option>
                                         </select>
                                     </div>
+                                                
+                                            <div class="mb-3 form-check">
+                                                <input type="checkbox" class="form-check-input" id="isFeatured" name="isFeatured" 
+                                                       ${post.isIsFeatured() ? 'checked' : ''}>
+                                                <label class="form-check-label fw-bold" for="isFeatured">
+                                                    <i class="fas fa-star text-warning me-2"></i>Đánh dấu là bài viết nổi bật
+                                                </label>
+                                            </div>            
 
                                     <div class="d-flex gap-2">
                                         <button type="submit" class="btn btn-primary">
