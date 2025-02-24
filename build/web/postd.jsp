@@ -45,7 +45,7 @@
                         </div>
                         <hr>
                         <div class="text-center">
-                            <img src="${pageContext.request.contextPath}/${post.thumbnail}" alt="${post.title}" class="img-fluid rounded mb-4">
+                            <img src="${post.getThumbnail()}" alt="${post.title}" class="img-fluid rounded mb-4">
                         </div>
                         <div class="content">${post.content}</div>
                     </article>
