@@ -176,7 +176,7 @@
                         </div>
                         <div class="card-body p-0">
                             <c:forEach var="post" items="${latestPosts}">
-                                <a href="${pageContext.request.contextPath}/post/detail?id=${post.getId()}" 
+                                <a href="${pageContext.request.contextPath}/post?id=${post.getId()}" 
                                    class="text-decoration-none">
                                     <div class="latest-post-card p-3 border-bottom">
                                         <div class="d-flex">

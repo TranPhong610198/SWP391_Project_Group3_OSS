@@ -141,8 +141,7 @@
                                 <i class="fas fa-eye me-2"></i>Xem trước bài đăng
                             </div>
                             <div class="card-body">
-                                <img src="${pageContext.request.contextPath}/${post.getThumbnail()}" 
-                                     alt="${post.getTitle()}" class="post-thumbnail">
+                                <img src="${post.getThumbnail().contains('https')? post.getThumbnail() : pageContext.request.contextPath.concat('/').concat(post.getThumbnail())}" alt="${post.getTitle()}" class="post-thumbnail">
                                 <h3 class="mb-3">${post.getTitle()}</h3>
                                 <div class="mb-3">
                                     <small class="text-muted">
