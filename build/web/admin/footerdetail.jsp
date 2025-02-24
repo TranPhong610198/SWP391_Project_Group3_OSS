@@ -17,32 +17,32 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -50,23 +50,23 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .form-label {
                 font-weight: 500;
                 color: var(--primary-color);
             }
-            
+
             .form-control:focus, .form-select:focus {
                 border-color: var(--accent-color);
                 box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
             }
-            
+
             .required::after {
                 content: "*";
                 color: red;
                 margin-left: 4px;
             }
-            
+
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -78,14 +78,14 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             .action-buttons {
                 display: flex;
                 justify-content: center;
                 gap: 30px;
                 margin-top: 30px;
             }
-            
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -101,7 +101,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="/admin/adminsidebar.jsp" />
-        
+
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -126,7 +126,8 @@
                                 </c:if>
 
                                 <form action="${pageContext.request.contextPath}/admin/footer-settings/edit" 
-                                      method="post" class="needs-validation" novalidate>
+                                      method="post" class="needs-validation" novalidate
+                                      enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="${footer.id}">
 
                                     <div class="mb-4">
@@ -175,34 +176,44 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="form-label">Trạng thái</label>
+                                        <label class="form-label required">Trạng thái</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light">
                                                 <i class="fas fa-toggle-on text-muted"></i>
                                             </span>
-                                            <div class="form-control bg-light">
-                                                <span class="badge bg-${footer.status == 'active' ? 'success' : 'danger'} px-3 py-2">
-                                                    <i class="fas fa-${footer.status == 'active' ? 'check-circle' : 'times-circle'} me-1"></i>
-                                                    ${footer.status == 'active' ? 'Active' : 'Inactive'}
-                                                </span>
-                                                <input type="hidden" name="status" value="${footer.status}">
-                                            </div>
+                                            <select class="form-select" id="status" name="status" required>
+                                                <option value="active" ${footer.status == 'active' ? 'selected' : ''}>Active</option>
+                                                <option value="inactive" ${footer.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                            </select>
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Vui lòng chọn trạng thái
                                         </div>
                                     </div>
 
                                     <div class="mb-4" id="imageField" style="display: none;">
-                                        <label for="image" class="form-label">Icon Link</label>
+                                        <label for="image" class="form-label">Icon</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light">
                                                 <i class="fas fa-image text-muted"></i>
                                             </span>
-                                            <input type="text" class="form-control" id="image" 
-                                                   name="image" value="${footer.image}">
+                                            <input type="file" class="form-control" id="image" 
+                                                   name="image" accept="image/*" onchange="previewImage(this)">
                                         </div>
                                         <div class="form-text text-muted">
                                             <i class="fas fa-info-circle me-1"></i>
-                                            Nhập link icon cho liên kết nhanh (nếu có)
+                                            Chọn icon cho liên kết nhanh (nếu có)
                                         </div>
+                                        <div id="imagePreview" class="mt-2"></div>
+                                        <!-- Hiển thị ảnh hiện tại nếu có -->
+                                        <c:if test="${not empty footer.image}">
+                                            <div class="mt-2">
+                                                <p class="form-text">Icon hiện tại:</p>
+                                                <img src="${pageContext.request.contextPath}/${footer.image}" 
+                                                     alt="Current Icon" style="max-width: 100px; max-height: 100px;" class="border">
+                                                <input type="hidden" name="currentImage" value="${footer.image}">
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <div class="action-buttons">
@@ -213,7 +224,7 @@
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save me-2"></i>Lưu thay đổi
                                         </button>
-                                        
+
                                     </div>
                                 </form>
                             </div>
@@ -227,57 +238,89 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            $(document).ready(function () {
-                // Form validation
-                (function () {
-                    'use strict'
-                    var forms = document.querySelectorAll('.needs-validation')
-                    Array.prototype.slice.call(forms)
-                            .forEach(function (form) {
-                                form.addEventListener('submit', function (event) {
-                                    if (!form.checkValidity()) {
-                                        event.preventDefault()
-                                        event.stopPropagation()
-                                    }
-                                    form.classList.add('was-validated')
-                                }, false)
-                            })
-                })()
+                                                       $(document).ready(function () {
+                                                           // Form validation
+                                                           (function () {
+                                                               'use strict'
+                                                               var forms = document.querySelectorAll('.needs-validation')
+                                                               Array.prototype.slice.call(forms)
+                                                                       .forEach(function (form) {
+                                                                           form.addEventListener('submit', function (event) {
+                                                                               if (!form.checkValidity()) {
+                                                                                   event.preventDefault()
+                                                                                   event.stopPropagation()
+                                                                               }
+                                                                               form.classList.add('was-validated')
+                                                                           }, false)
+                                                                       })
+                                                           })()
 
-                // Show/hide image field based on type selection
-                $('#type').change(function () {
-                    if ($(this).val() === 'social') {
-                        $('#imageField').show();
-                    } else {
-                        $('#imageField').hide();
-                    }
-                });
+                                                           // Show/hide image field based on type selection
+                                                           $('#type').change(function () {
+                                                               if ($(this).val() === 'social') {
+                                                                   $('#imageField').show();
+                                                               } else {
+                                                                   $('#imageField').hide();
+                                                               }
+                                                           });
 
-                // Trigger change event on page load
-                $('#type').trigger('change');
-                
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
+                                                           // Trigger change event on page load
+                                                           $('#type').trigger('change');
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-                
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
-            });
+                                                           // Toggle sidebar
+                                                           $('.sidebar-toggle').on('click', function () {
+                                                               $('.sidebar').toggleClass('active');
+                                                               $('.main-content').toggleClass('active');
+                                                               $(this).hide();
+                                                           });
+
+                                                           // Close sidebar when clicking outside on mobile
+                                                           $(document).on('click', function (e) {
+                                                               if ($(window).width() <= 768) {
+                                                                   if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                       $('.sidebar').removeClass('active');
+                                                                       $('.main-content').removeClass('active');
+                                                                       $('.sidebar-toggle').show();
+                                                                   }
+                                                               }
+                                                           });
+
+                                                           // Highlight active menu item
+                                                           $('.menu-item').removeClass('active');
+                                                           $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
+                                                       });
+                                                       // Xem trước ảnh icon
+                                                       function previewImage(input) {
+                                                           const preview = document.getElementById('imagePreview');
+                                                           preview.innerHTML = '';
+
+                                                           if (input.files && input.files[0]) {
+                                                               const file = input.files[0];
+                                                               if (!isValidImage(file)) {
+                                                                   alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                                   input.value = ''; // xóa nội dung không phải ảnh
+                                                                   return;
+                                                               }
+
+                                                               const reader = new FileReader();
+                                                               reader.onload = function (e) {
+                                                                   const img = document.createElement('img');
+                                                                   img.src = e.target.result;
+                                                                   img.style.maxWidth = '100px';
+                                                                   img.style.maxHeight = '100px';
+                                                                   img.className = 'border mt-2';
+                                                                   preview.appendChild(img);
+                                                               }
+
+                                                               reader.readAsDataURL(input.files[0]);
+                                                           }
+                                                       }
+
+// Hàm kiểm tra đuôi file
+                                                       function isValidImage(file) {
+                                                           const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                                           return allowedTypes.includes(file.type);
+                                                       }
         </script>
     </body>
 </html>

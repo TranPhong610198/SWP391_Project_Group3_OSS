@@ -7,6 +7,49 @@
         <title>Footer</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
+
+            /* Liên kết nhanh */
+            .social-icons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                max-width: 100%;
+            }
+
+            .social-icons a {
+                color: white;
+                background-color: rgba(255,255,255,0.1);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.3s;
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            /* Để hiển thị tối đa 6 icon trên mỗi hàng */
+            @media (min-width: 768px) {
+                .social-icons {
+                    width: 100%;
+                }
+
+                .social-icons a {
+                    flex: 0 0 calc(16.666% - 13px);
+                    max-width: calc(16.666% - 13px);
+                }
+            }
+
+            /* Điều chỉnh cho màn hình nhỏ hơn */
+            @media (max-width: 767px) {
+                .social-icons a {
+                    flex: 0 0 calc(33.333% - 10px);
+                    max-width: calc(33.333% - 10px);
+                }
+            }
+            /*-------------------------------------------*/
             .footer-container {
                 background-color: #252A37;
                 color: white;
@@ -165,12 +208,22 @@
                                     <a href="${social.value}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                                     </c:when>
                                     <c:otherwise>
-                                    <a href="${social.value}" target="_blank"><i class="fas fa-link"></i></a>
+                                        <c:choose>
+                                            <c:when test="${not empty social.image}">
+                                            <a href="${social.value}" target="_blank">
+                                                <img src="${social.image}" alt="${social.fieldName}" style="width: 22px; height: 22px; object-fit: contain;">
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${social.value}" target="_blank"><i class="fas fa-link"></i></a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>
                     </div>
                 </div>
+
                 <div class="footer-section">
                     <h3>Địa chỉ shop</h3>
                     <div class="footer-map">

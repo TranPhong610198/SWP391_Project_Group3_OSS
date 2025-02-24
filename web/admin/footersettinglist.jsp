@@ -216,7 +216,7 @@
                                         <th>
                                             <a href="?sort=field_name&order=${sortColumn == 'field_name' && sortOrder == 'ASC' ? 'DESC' : 'ASC'}&status=${statusFilter}&search=${searchValue}" 
                                                class="sort-link">
-                                                Tên
+                                                Tên trường
                                                 <span class="sort-icons">
                                                     ${sortColumn == 'field_name' ? (sortOrder == 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                 </span>
@@ -265,19 +265,26 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="${pageContext.request.contextPath}/admin/footer-settings/edit?id=${footer.id}" 
-                                                   class="btn btn-primary btn-sm btn-action">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="${pageContext.request.contextPath}/admin/footer-settings" method="post" style="display: inline;">
-                                                    <input type="hidden" name="action" value="toggleStatus">
-                                                    <input type="hidden" name="id" value="${footer.id}">
-                                                    <input type="hidden" name="currentStatus" value="${footer.status}">
-                                                    <button type="submit" class="btn btn-${footer.status == 'active' ? 'danger' : 'success'} btn-sm btn-action"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn ${footer.status == 'active' ? 'hủy kích hoạt' : 'kích hoạt'} cài đặt này không?');">
-                                                        <i class="fas fa-${footer.status == 'active' ? 'times' : 'check'}"></i>
-                                                    </button>
-                                                </form>
+                                                <div class="action-buttons">
+                                                    <a href="${pageContext.request.contextPath}/admin/footer-settings/edit?id=${footer.id}" 
+                                                       class="btn btn-primary btn-sm btn-action" title="Chỉnh sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+
+                                                    <form id="deleteForm${footer.id}" action="${pageContext.request.contextPath}/admin/footer-settings" method="post" style="display: inline-block; margin: 0;">
+                                                        <input type="hidden" name="action" value="deleteFooter">
+                                                        <input type="hidden" name="id" value="${footer.id}">
+                                                        <input type="hidden" name="search" value="${searchValue}">
+                                                        <input type="hidden" name="status" value="${statusFilter}">
+                                                        <input type="hidden" name="sort" value="${sortColumn}">
+                                                        <input type="hidden" name="order" value="${sortOrder}">
+                                                        <input type="hidden" name="page" value="${currentPage}">
+                                                        <button type="submit" class="btn btn-danger btn-sm btn-action" title="Xóa"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa cài đặt này không? Hành động này không thể hoàn tác.');">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>                                            
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -324,35 +331,35 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-                                                                $(document).ready(function () {
-                                                                    // Toggle sidebar
-                                                                    $('.sidebar-toggle').on('click', function () {
-                                                                        $('.sidebar').toggleClass('active');
-                                                                        $('.main-content').toggleClass('active');
-                                                                        $(this).hide();
-                                                                    });
+            $(document).ready(function () {
+                // Toggle sidebar
+                $('.sidebar-toggle').on('click', function () {
+                    $('.sidebar').toggleClass('active');
+                    $('.main-content').toggleClass('active');
+                    $(this).hide();
+                });
 
-                                                                    // Close sidebar when clicking outside on mobile
-                                                                    $(document).on('click', function (e) {
-                                                                        if ($(window).width() <= 768) {
-                                                                            if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                                                                                $('.sidebar').removeClass('active');
-                                                                                $('.main-content').removeClass('active');
-                                                                                $('.sidebar-toggle').show();
-                                                                            }
-                                                                        }
-                                                                    });
+                // Close sidebar when clicking outside on mobile
+                $(document).on('click', function (e) {
+                    if ($(window).width() <= 768) {
+                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                            $('.sidebar').removeClass('active');
+                            $('.main-content').removeClass('active');
+                            $('.sidebar-toggle').show();
+                        }
+                    }
+                });
 
-                                                                    // Highlight active menu item
-                                                                    $('.menu-item').removeClass('active');
-                                                                    $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
+                // Highlight active menu item
+                $('.menu-item').removeClass('active');
+                $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
 
-                                                                    // Initialize tooltips
-                                                                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                                                                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                                                                        return new bootstrap.Tooltip(tooltipTriggerEl)
-                                                                    });
-                                                                });
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+            });
         </script>
     </body>
 </html>
