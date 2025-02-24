@@ -105,22 +105,34 @@ public class SliderDetailServlet extends HttpServlet {
         String image_url = oldImage; // Default to keeping old image
         
         try {
-            Part imagePart = request.getPart("image_url");
+            Part imagePart = request.getPart("image");
             if (imagePart != null && imagePart.getSize() > 0) {
-                String uploadPath = request.getServletContext().getRealPath("") + "uploads";
+                String uploadPath = request.getServletContext().getRealPath("")+ File.separator + "uploads/sliders/";
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
                 }
                 
+                if (oldImage != null && !oldImage.startsWith("http") && !oldImage.isEmpty()) {
+                String oldImagePath = request.getServletContext().getRealPath("") + File.separator + oldImage;
+                File oldFile = new File(oldImagePath);
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                }
+            }
                 String fileName = System.currentTimeMillis() + "_" + imagePart.getSubmittedFileName();
                 String filePath = uploadPath + File.separator + fileName;
                 
                 imagePart.write(filePath);
-                image_url = "uploads/" + fileName;
+                image_url = "uploads/sliders/" + fileName;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            request.setAttribute("error","Lỗi khi tải hình ảnh lên: "+e.getMessage());
+            Slider currentSlider = new SliderDAO().getSliderById(id);
+            request.setAttribute("slider", currentSlider);
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+            return;
         }
 
         Slider slider = new Slider(id, title, image_url,link, status, display_order, notes);
@@ -129,6 +141,7 @@ public class SliderDetailServlet extends HttpServlet {
         boolean isUpdated = sliderDAO.updateSlider(slider);
 
         if (isUpdated) {
+            request.getSession().setAttribute("successMessage","Cập nhật thanh trượt thành công.");
             response.sendRedirect("sliderList");
         } else {
             Slider s = sliderDAO.getSliderById(id);

@@ -322,7 +322,7 @@
         <!-- Include header -->
         <jsp:include page="header.jsp" />
         <!-- Thanh trượt (Carousel) -->
-        <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="2000">
+        <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <c:forEach items="${sliders}" var="slider" varStatus="loop">
                     <button type="button" data-bs-target="#mainCarousel" 
@@ -354,30 +354,45 @@
             </button>
         </div>
 
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo carousel với tùy chọn tương tự như Swiper
+            const carousel = document.getElementById('mainCarousel');
+            const carouselInstance = new bootstrap.Carousel(carousel, {
+                interval: 3000,    // Thời gian chuyển slide - 3 giây
+                pause: 'hover',    // Tạm dừng khi di chuột qua
+                wrap: true,        // Quay vòng khi đến slide cuối cùng
+                keyboard: true,    // Cho phép điều khiển bằng bàn phím
+                touch: true        // Cho phép điều khiển bằng cảm ứng
+            });
+    
+            // Lấy chỉ số slide đã lưu (nếu có)
+            const savedSlideIndex = localStorage.getItem('mainCarouselIndex');
+            if (savedSlideIndex !== null) {
+                carouselInstance.to(parseInt(savedSlideIndex));
+            }
+    
+            // Lưu chỉ số slide khi người dùng chuyển slide
+            carousel.addEventListener('slide.bs.carousel', function(event) {
+                localStorage.setItem('mainCarouselIndex', event.to);
+            });
+        });
+        </script>
+
         <div class="container">           
-            <!-- Bài đăng nổi bật -->
-            <section class="mb-5">
-                <h2 class="section-title">Bài đăng nổi bật</h2>
-                <div class="row g-4">
-                    <c:forEach items="${featuredPosts}" var="post">
-                        <div class="col-md-4">
-                            <a href="post?id=${post.id}" class="text-decoration-none text-dark">
-                                <div class="card post-card">
-                                    <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${post.title}</h5>                                        
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </c:forEach>
-                </div>
-            </section>
-            
-            <!-- Sản phẩm nổi bật -->
+
+            <!-- Sản phẩm mới nhất -->
             <section class="featured-products mb-5">
                 <div class="container">
-                    <h2 class="section-title">Sản phẩm mới nhất</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0">Sản phẩm mới nhất</h2>
+                        <a href="listproduct" class="btn btn-outline-primary">
+                            Xem tất cả
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
                     <div class="swiper productSwiper">
                         <div class="swiper-wrapper">
                             <c:forEach items="${featuredProducts}" var="product">
@@ -416,13 +431,85 @@
                 </div>
             </section>
 
+            <!-- Quần áo nam -->
+            <section class="mb-5">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0">Quần áo nam</h2>
+                        <a href="listproduct?category=1" class="btn btn-outline-primary">
+                            Xem tất cả
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="row g-4">
+                        <c:forEach items="${menClothingProducts}" var="product">
+                            <div class="col-md-3 col-6">
+                                <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <div class="card product-card h-100">
+                                        <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
+                                        <div class="card-body">
+                                            <h5 class="product-title">${product.title}</h5>
+                                            <div class="product-price">
+                                                <span>${product.salePrice}đ</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quần áo nữ -->
+            <section class="mb-5">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0">Quần áo nữ</h2>
+                        <a href="listproduct?category=2" class="btn btn-outline-primary">
+                            Xem tất cả
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="row g-4">
+                        <c:forEach items="${womanClothingProducts}" var="product">
+                            <div class="col-md-3 col-6">
+                                <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <div class="card product-card h-100">
+                                        <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
+                                        <div class="card-body">
+                                            <h5 class="product-title">${product.title}</h5>
+                                            <div class="product-price">
+                                                <span>${product.salePrice}đ</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </section>
+            
             <!-- Bài đăng mới nhất -->
             <section class="mb-5">
-                <h2 class="section-title">Bài đăng mới nhất</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="section-title mb-0">Bài đăng mới nhất</h2>
+                    <a href="posts" class="btn btn-outline-primary">
+                        Xem tất cả
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
+                    </a>
+                </div>
                 <div class="row g-4">
                     <c:forEach items="${latestPosts}" var="post">
                         <div class="col-md-6">
-                            <a href="post-detail?id=${post.id}" class="text-decoration-none text-dark">
+                            <a href="post?id=${post.id}" class="text-decoration-none text-dark">
                                 <div class="card post-card">
                                     <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
                                     <div class="card-body">
@@ -444,8 +531,6 @@
                     </c:forEach>
                 </div>
             </section>
-
-
 
         </div>
 

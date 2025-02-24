@@ -48,9 +48,6 @@
                                 </div>
                             </li>
                         </c:forEach>
-                        <li class="nav-item">
-                            <a class="nav-link" href="posts">Các bài đăng</a>
-                        </li>
                     </ul>
 
                     <!-- Right Side Items -->

@@ -107,6 +107,14 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
             
+            .preview-image {
+                max-width: 200px;
+                max-height: 200px;
+                border-radius: 4px;
+                border: 1px solid var(--border-color);
+                margin-top: 10px;
+            }
+            
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -116,6 +124,11 @@
                     align-items: center;
                     justify-content: center;
                 }
+            }
+            
+            /* Ẩn phần chọn hình ảnh ban đầu */
+            #imageSection {
+                display: none;
             }
         </style>
     </head>
@@ -144,7 +157,7 @@
                         <i class="fas fa-edit me-2"></i>Thông tin cài đặt
                     </div>
                     <div class="card-body p-4">
-                        <form action="${pageContext.request.contextPath}/admin/footer-settings/new" method="post">
+                        <form action="${pageContext.request.contextPath}/admin/footer-settings/new" method="post" enctype="multipart/form-data">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="fieldName" class="form-label">
@@ -170,7 +183,7 @@
                                     <label for="type" class="form-label">
                                         <i class="fas fa-list-alt me-1"></i>Loại <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select" id="type" name="type" required>
+                                    <select class="form-select" id="type" name="type" required onchange="toggleImageSection()">
                                         <option value="">-- Chọn loại --</option>
                                         <option value="info">Thông tin công ty</option>
                                         <option value="contact">Thông tin liên hệ</option>
@@ -192,16 +205,13 @@
                                 </div>
                             </div>
                             
-                            <div class="mb-4">
+                            <div class="mb-4" id="imageSection">
                                 <label for="image" class="form-label">
-                                    <i class="fas fa-image me-1"></i>Link hình ảnh (tùy chọn)
+                                    <i class="fas fa-image me-1"></i>Hình ảnh (tùy chọn)
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-link"></i></span>
-                                    <input type="text" class="form-control" id="image" name="image" 
-                                           placeholder="https://example.com/image.jpg">
-                                </div>
-                                <div class="form-text text-muted">URL hình ảnh icon của liên kết nhanh</div>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(this)">
+                                <div class="form-text text-muted">Hình ảnh icon cho liên kết nhanh (định dạng: JPG, PNG, GIF, WEBP)</div>
+                                <div id="imagePreview"></div>
                             </div>
                             
                             <hr class="my-4">
@@ -268,7 +278,56 @@
                 $('input, select').on('input change', function() {
                     $(this).removeClass('is-invalid');
                 });
+                
+                // Kiểm tra loại khi trang được tải
+                toggleImageSection();
             });
+            
+            // Hàm hiển thị phần chọn hình ảnh khi loại là "social"
+            function toggleImageSection() {
+                const type = document.getElementById('type').value;
+                const imageSection = document.getElementById('imageSection');
+                
+                if (type === 'social') {
+                    imageSection.style.display = 'block';
+                } else {
+                    imageSection.style.display = 'none';
+                    // Xóa file đã chọn khi chuyển sang loại khác
+                    document.getElementById('image').value = '';
+                    document.getElementById('imagePreview').innerHTML = '';
+                }
+            }
+            
+            // Hàm kiểm tra đuôi file
+            function isValidImage(file) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                return allowedTypes.includes(file.type);
+            }
+            
+            // Xem trước ảnh
+            function previewImage(input) {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '';
+                
+                if (input.files && input.files[0]) {
+                    const file = input.files[0];
+                    if (!isValidImage(file)) {
+                        alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                        input.value = ''; // Xóa nội dung không phải ảnh
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        preview.appendChild(img);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
         </script>
     </body>
 </html>
