@@ -250,27 +250,27 @@ SET IDENTITY_INSERT [dbo].[categories] OFF
 GO
 SET IDENTITY_INSERT [dbo].[products] ON 
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (1, N'Áo sơ mi trắng', 12, N'Áo sơ mi trắng phong cách, phù hợp với mọi dịp', CAST(200000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://lamia.com.vn/storage/so-mi/ao-so-mi-trang-phoi-ren-xep-ly-la300-2-3.jpg', N'active', 1, N'1', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (1, N'Áo sơ mi trắng', 12, N'Áo sơ mi trắng phong cách, phù hợp với mọi dịp', CAST(180000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), N'https://lamia.com.vn/storage/so-mi/ao-so-mi-trang-phoi-ren-xep-ly-la300-2-3.jpg', N'active', 1, N'1', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (2, N'Quần tây đen', 46, N'Quần tây màu đen lịch lãm, phù hợp cho công sở', CAST(300000.00 AS Decimal(10, 2)), CAST(280000.00 AS Decimal(10, 2)), N'https://js0fpsb45jobj.vcdn.cloud/storage/upload/media/gumac/QE12080/2-DEN-QE12080.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (2, N'Quần tây đen', 46, N'Quần tây màu đen lịch lãm, phù hợp cho công sở', CAST(280000.00 AS Decimal(10, 2)), CAST(300000.00 AS Decimal(10, 2)), N'https://js0fpsb45jobj.vcdn.cloud/storage/upload/media/gumac/QE12080/2-DEN-QE12080.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (3, N'Đầm hoa mùa hè', 14, N'Đầm hoa nhẹ nhàng, thoải mái, phù hợp cho mùa hè', CAST(400000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://file.hstatic.net/200000503583/file/vay-hoa-mua-he__11__c2791afbbda941238c114b00b403ec57.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (3, N'Đầm hoa mùa hè', 14, N'Đầm hoa nhẹ nhàng, thoải mái, phù hợp cho mùa hè', CAST(350000.00 AS Decimal(10, 2)), CAST(400000.00 AS Decimal(10, 2)), N'https://file.hstatic.net/200000503583/file/vay-hoa-mua-he__11__c2791afbbda941238c114b00b403ec57.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (4, N'Chân váy denim', 50, N'Chân váy denim thời trang, dễ phối đồ', CAST(250000.00 AS Decimal(10, 2)), CAST(220000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (4, N'Chân váy denim', 50, N'Chân váy denim thời trang, dễ phối đồ', CAST(220000.00 AS Decimal(10, 2)), CAST(250000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (5, N'Áo thun siêu nhân', 53, N'Áo thun với họa tiết siêu nhân, dành cho trẻ em', CAST(150000.00 AS Decimal(10, 2)), CAST(120000.00 AS Decimal(10, 2)), N'https://target.scene7.com/is/image/Target/GUEST_1079d260-d8e2-4d6e-b757-7dd7254ddda5?wid=800&hei=800&qlt=80&fmt=webp', N'active', 1, N'2', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (5, N'Áo thun siêu nhân', 53, N'Áo thun với họa tiết siêu nhân, dành cho trẻ em', CAST(120000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), N'https://target.scene7.com/is/image/Target/GUEST_1079d260-d8e2-4d6e-b757-7dd7254ddda5?wid=800&hei=800&qlt=80&fmt=webp', N'active', 1, N'2', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (6, N'Quần short cotton', 56, N'Quần short cotton mềm mại, thoáng mát', CAST(120000.00 AS Decimal(10, 2)), CAST(100000.00 AS Decimal(10, 2)), N'https://dosi-in.com/file/detailed/187/dosiin-routine-quan-shortstraight-form-fpsh-187855187855.jpg?w=1000&h=1000&fit=fill&fm=webp', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (6, N'Quần short cotton', 56, N'Quần short cotton mềm mại, thoáng mát', CAST(100000.00 AS Decimal(10, 2)), CAST(120000.00 AS Decimal(10, 2)), N'https://dosi-in.com/file/detailed/187/dosiin-routine-quan-shortstraight-form-fpsh-187855187855.jpg?w=1000&h=1000&fit=fill&fm=webp', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (7, N'Thắt lưng da', 61, N'Thắt lưng da cao cấp, bền đẹp theo thời gian', CAST(200000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://authenticvietnam.vn/wp-content/uploads/that-lung-da-gucci-nam-406831DJ20T_2145_001_100_0000_Light-Leather-belt-with-Double-G-buckle.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (7, N'Thắt lưng da', 61, N'Thắt lưng da cao cấp, bền đẹp theo thời gian', CAST(180000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), N'https://authenticvietnam.vn/wp-content/uploads/that-lung-da-gucci-nam-406831DJ20T_2145_001_100_0000_Light-Leather-belt-with-Double-G-buckle.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (9, N'Giày thể thao', 29, N'Giày thể thao nhẹ nhàng, phù hợp cho cả nam và nữ', CAST(500000.00 AS Decimal(10, 2)), CAST(450000.00 AS Decimal(10, 2)), N'giay_the_thao.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (9, N'Giày thể thao', 29, N'Giày thể thao nhẹ nhàng, phù hợp cho cả nam và nữ', CAST(450000.00 AS Decimal(10, 2)), CAST(500000.00 AS Decimal(10, 2)), N'giay_the_thao.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (10, N'Giày sneaker', 30, N'Giày sneaker thời trang, phù hợp cho đi chơi', CAST(400000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'giay_sneaker.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (10, N'Giày sneaker', 30, N'Giày sneaker thời trang, phù hợp cho đi chơi', CAST(350000.00 AS Decimal(10, 2)), CAST(400000.00 AS Decimal(10, 2)), N'giay_sneaker.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (11, N'Quần short siêu nhân', 56, N'Quần short với họa tiết siêu nhân, dành cho trẻ em', CAST(550000.00 AS Decimal(10, 2)), CAST(480000.00 AS Decimal(10, 2)), N'combo_quan_ao_mua_he.jpg', N'active', 0, N'2', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (11, N'Quần short siêu nhân', 56, N'Quần short với họa tiết siêu nhân, dành cho trẻ em', CAST(480000.00 AS Decimal(10, 2)), CAST(550000.00 AS Decimal(10, 2)), N'combo_quan_ao_mua_he.jpg', N'active', 0, N'2', CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (12, N'Áo so mi xanh', 12, N'Áo sơ mi xanh phong cách, phù hợp với mọi dịp', CAST(200000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://bizweb.dktcdn.net/100/455/439/products/bla-9254.jpg?v=1653388487927', N'active', 0, N'1', CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2), CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (12, N'Áo so mi xanh', 12, N'Áo sơ mi xanh phong cách, phù hợp với mọi dịp', CAST(180000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), N'https://bizweb.dktcdn.net/100/455/439/products/bla-9254.jpg?v=1653388487927', N'active', 0, N'1', CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2), CAST(N'2025-02-10T08:08:36.0633333' AS DateTime2))
 GO
 SET IDENTITY_INSERT [dbo].[products] OFF
 GO
@@ -672,4 +672,415 @@ GO
 INSERT [dbo].[cart_items] ([id], [cart_id], [product_id], [variant_id], [quantity]) VALUES (8, 2, 3, 2, 3)
 GO
 SET IDENTITY_INSERT [dbo].[cart_items] OFF
+GO
+
+
+-- Thêm 10 sản phẩm mới
+SET IDENTITY_INSERT [dbo].[products] ON 
+GO
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES 
+(13, N'Áo khoác bomber nam', 25, N'Áo khoác bomber phong cách thể thao, chống gió tốt', CAST(399000.00 AS Decimal(10, 2)), CAST(450000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/sg-11134201-22120-xvrnqiw8jzkvf2', N'active', 0, NULL, CAST(N'2025-02-24T10:15:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:15:00.0000000' AS DateTime2)),
+(14, N'Quần jogger thể thao', 27, N'Quần jogger co giãn, thoải mái khi vận động', CAST(199000.00 AS Decimal(10, 2)), CAST(250000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-livwvvkgnt6o01', N'active', 0, NULL, CAST(N'2025-02-24T10:20:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:20:00.0000000' AS DateTime2)),
+(15, N'Đầm maxi hoa nhí', 17, N'Đầm maxi dài họa tiết hoa nhí, phong cách boho', CAST(375000.00 AS Decimal(10, 2)), CAST(420000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lij2q6zy1e9v10', N'active', 0, NULL, CAST(N'2025-02-24T10:25:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:25:00.0000000' AS DateTime2)),
+(16, N'Áo thun unisex', 16, N'Áo thun form rộng, unisex, phong cách đường phố', CAST(150000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/bc3e9c11622c2932fe4f2f8a9a6d0f17', N'active', 0, NULL, CAST(N'2025-02-24T10:30:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:30:00.0000000' AS DateTime2)),
+(17, N'Váy công chúa cho bé gái', 58, N'Váy công chúa lấp lánh cho bé gái, phù hợp dự tiệc', CAST(289000.00 AS Decimal(10, 2)), CAST(320000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134201-23020-2s9cfgvr22nv8c', N'active', 0, NULL, CAST(N'2025-02-24T10:35:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:35:00.0000000' AS DateTime2)),
+(18, N'Balo nam thời trang', 60, N'Balo nam chống nước, nhiều ngăn, phù hợp đi học, đi làm', CAST(299000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/sg-11134201-22120-qz5c8pq2mlkv95', N'active', 0, NULL, CAST(N'2025-02-24T10:40:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:40:00.0000000' AS DateTime2)),
+(19, N'Dây chuyền bạc nữ', 67, N'Dây chuyền bạc 925 thiết kế tinh tế, sang trọng', CAST(225000.00 AS Decimal(10, 2)), CAST(250000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfvlj4fzzknf2d', N'active', 0, NULL, CAST(N'2025-02-24T10:45:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:45:00.0000000' AS DateTime2)),
+(20, N'Giày cao gót nữ', 32, N'Giày cao gót 7cm, mũi nhọn, phù hợp công sở', CAST(330000.00 AS Decimal(10, 2)), CAST(380000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lgz7vylsnfjs70', N'active', 0, NULL, CAST(N'2025-02-24T10:50:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:50:00.0000000' AS DateTime2)),
+(21, N'Kính mát thời trang', 65, N'Kính mát chống tia UV, gọng kim loại sành điệu', CAST(175000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lj1a0v3a1mjn01', N'active', 0, NULL, CAST(N'2025-02-24T10:55:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:55:00.0000000' AS DateTime2)),
+(22, N'Áo sơ mi nam kẻ sọc', 12, N'Áo sơ mi nam kẻ sọc, chất vải cotton thoáng mát', CAST(245000.00 AS Decimal(10, 2)), CAST(280000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lgjq0u51ifzw12', N'active', 0, NULL, CAST(N'2025-02-24T11:00:00.0000000' AS DateTime2), CAST(N'2025-02-24T11:00:00.0000000' AS DateTime2)),
+(23, N'Quần jean skinny nữ', 28, N'Quần jean skinny co giãn cao, ôm sát tôn dáng', CAST(279000.00 AS Decimal(10, 2)), CAST(320000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lj1vbifz3vn72f', N'active', 0, NULL, CAST(N'2025-02-25T10:00:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:00:00.0000000' AS DateTime2)),
+(24, N'Áo len oversize unisex', 13, N'Áo len dệt kim dày dặn, kiểu dáng rộng rãi phong cách Hàn Quốc', CAST(299000.00 AS Decimal(10, 2)), CAST(360000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/89ad6db8c5c03674d32481d05089294f', N'active', 0, NULL, CAST(N'2025-02-25T10:05:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:05:00.0000000' AS DateTime2)),
+(25, N'Túi đeo chéo nữ mini', 59, N'Túi đeo chéo nữ kiểu dáng nhỏ gọn, nhiều ngăn tiện lợi', CAST(210000.00 AS Decimal(10, 2)), CAST(250000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/2eaed89d84a8687973c77c12dca9c437', N'active', 0, NULL, CAST(N'2025-02-25T10:10:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:10:00.0000000' AS DateTime2)),
+(26, N'Bông tai bạc hình giọt nước', 68, N'Bông tai nữ bạc 925 thiết kế tinh tế hình giọt nước', CAST(129000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljpnnxnegk2xab', N'active', 0, NULL, CAST(N'2025-02-25T10:15:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:15:00.0000000' AS DateTime2)),
+(27, N'Áo khoác nữ cardigan', 26, N'Áo khoác cardigan dệt kim mỏng nhẹ, kiểu dáng basic', CAST(265000.00 AS Decimal(10, 2)), CAST(300000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lhnrwk0zfgzv43', N'active', 0, NULL, CAST(N'2025-02-25T10:20:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:20:00.0000000' AS DateTime2)),
+(28, N'Dép lào nam cao cấp', 70, N'Dép lào nam chất liệu cao su bền bỉ, đế chống trượt', CAST(155000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://product.hstatic.net/1000306633/product/05__18__3c36ca9e22124cfcb03a94be6ff34c5c_1024x1024.jpg', N'active', 0, NULL, CAST(N'2025-02-25T10:25:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:25:00.0000000' AS DateTime2)),
+(29, N'Áo thun trẻ em hoạt hình', 53, N'Áo thun cotton in họa tiết hoạt hình dễ thương cho bé', CAST(120000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lje0s29p95d8d2', N'active', 0, NULL, CAST(N'2025-02-25T10:30:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:30:00.0000000' AS DateTime2)),
+(30, N'Nhẫn bạc đính đá zircon', 69, N'Nhẫn bạc 925 đính đá zircon sang trọng', CAST(199000.00 AS Decimal(10, 2)), CAST(230000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljxk7oa9kxoz7e', N'active', 0, NULL, CAST(N'2025-02-25T10:35:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:35:00.0000000' AS DateTime2)),
+(31, N'Chân váy xếp ly dáng ngắn', 50, N'Chân váy xếp ly dáng tennis, phong cách Hàn Quốc', CAST(245000.00 AS Decimal(10, 2)), CAST(280000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lkhunb8lfqlc03', N'active', 0, NULL, CAST(N'2025-02-25T10:40:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:40:00.0000000' AS DateTime2)),
+(32, N'Quần kaki nam dáng suông', 11, N'Quần kaki nam dáng suông basic, chất vải cao cấp', CAST(299000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/03341df4624a5884c1af2265c251f5b6', N'active', 0, NULL, CAST(N'2025-02-25T10:45:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:45:00.0000000' AS DateTime2));
+GO
+SET IDENTITY_INSERT [dbo].[products] OFF
+GO
+
+-- Thêm màu sắc cho các sản phẩm mới
+SET IDENTITY_INSERT [dbo].[product_colors] ON
+GO
+INSERT [dbo].[product_colors] ([id], [product_id], [color]) VALUES 
+(26, 13, N'Đen'),
+(27, 13, N'Navy'),
+(28, 13, N'Xanh olive'),
+(29, 14, N'Đen'),
+(30, 14, N'Xám'),
+(31, 14, N'Xanh đậm'),
+(32, 15, N'Trắng họa tiết hoa xanh'),
+(33, 15, N'Hồng họa tiết hoa trắng'),
+(34, 16, N'Trắng'),
+(35, 16, N'Đen'),
+(36, 16, N'Xám'),
+(37, 17, N'Hồng pastel'),
+(38, 17, N'Tím lavender'),
+(39, 18, N'Đen'),
+(40, 18, N'Xám'),
+(41, 18, N'Xanh navy'),
+(42, 19, N'Bạc'),
+(43, 19, N'Vàng hồng'),
+(44, 20, N'Đen'),
+(45, 20, N'Kem'),
+(46, 20, N'Đỏ đô'),
+(47, 21, N'Đen'),
+(48, 21, N'Nâu'),
+(49, 21, N'Vàng gold'),
+(50, 22, N'Trắng sọc xanh'),
+(51, 22, N'Trắng sọc đen'),
+(52, 22, N'Xanh nhạt sọc trắng'),
+(53, 23, N'Xanh đậm'),
+(54, 23, N'Đen'),
+(55, 23, N'Xanh nhạt'),
+(56, 24, N'Kem'),
+(57, 24, N'Xám'),
+(58, 24, N'Nâu'),
+(59, 25, N'Đen'),
+(60, 25, N'Hồng'),
+(61, 25, N'Kem'),
+(62, 26, N'Bạc'),
+(63, 26, N'Vàng hồng'),
+(64, 27, N'Kem'),
+(65, 27, N'Xanh mint'),
+(66, 27, N'Hồng nhạt'),
+(67, 28, N'Đen'),
+(68, 28, N'Nâu'),
+(69, 29, N'Trắng họa tiết'),
+(70, 29, N'Xanh da trời họa tiết'),
+(71, 29, N'Vàng họa tiết'),
+(72, 30, N'Bạc'),
+(73, 30, N'Vàng hồng'),
+(74, 31, N'Đen'),
+(75, 31, N'Xám'),
+(76, 31, N'Kẻ caro'),
+(77, 32, N'Be'),
+(78, 32, N'Xanh navy'),
+(79, 32, N'Đen');
+GO
+SET IDENTITY_INSERT [dbo].[product_colors] OFF
+GO
+
+-- Thêm kích thước cho các sản phẩm mới
+SET IDENTITY_INSERT [dbo].[product_sizes] ON
+GO
+-- Áo khoác bomber nam
+INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES 
+(42, 13, N'S'),
+(43, 13, N'M'),
+(44, 13, N'L'),
+(45, 13, N'XL'),
+-- Quần jogger thể thao
+(46, 14, N'S'),
+(47, 14, N'M'),
+(48, 14, N'L'),
+(49, 14, N'XL'),
+-- Đầm maxi hoa nhí
+(50, 15, N'S'),
+(51, 15, N'M'),
+(52, 15, N'L'),
+-- Áo thun unisex
+(53, 16, N'S'),
+(54, 16, N'M'),
+(55, 16, N'L'),
+(56, 16, N'XL'),
+-- Váy công chúa cho bé gái
+(57, 17, N'2-4'),
+(58, 17, N'4-6'),
+(59, 17, N'6-8'),
+-- Balo nam thời trang
+(60, 18, N'Onesize'),
+-- Dây chuyền bạc nữ
+(61, 19, N'40cm'),
+(62, 19, N'45cm'),
+(63, 19, N'50cm'),
+-- Giày cao gót nữ
+(64, 20, N'35'),
+(65, 20, N'36'),
+(66, 20, N'37'),
+(67, 20, N'38'),
+(68, 20, N'39'),
+-- Kính mát thời trang
+(69, 21, N'Onesize'),
+-- Áo sơ mi nam kẻ sọc
+(70, 22, N'S'),
+(71, 22, N'M'),
+(72, 22, N'L'),
+(73, 22, N'XL'),
+-- Quần jean skinny nữ
+(74, 23, N'S'),
+(75, 23, N'M'),
+(76, 23, N'L'),
+(77, 23, N'XL'),
+-- Áo len oversize unisex
+(78, 24, N'S'),
+(79, 24, N'M'),
+(80, 24, N'L'),
+(81, 24, N'XL'),
+-- Túi đeo chéo nữ mini
+(82, 25, N'Onesize'),
+-- Bông tai bạc hình giọt nước
+(83, 26, N'Onesize'),
+-- Áo khoác nữ cardigan
+(84, 27, N'S'),
+(85, 27, N'M'),
+(86, 27, N'L'),
+-- Dép lào nam cao cấp
+(87, 28, N'39'),
+(88, 28, N'40'),
+(89, 28, N'41'),
+(90, 28, N'42'),
+(91, 28, N'43'),
+-- Áo thun trẻ em hoạt hình
+(92, 29, N'2-4'),
+(93, 29, N'4-6'),
+(94, 29, N'6-8'),
+(95, 29, N'8-10'),
+-- Nhẫn bạc đính đá zircon
+(96, 30, N'5'),
+(97, 30, N'6'),
+(98, 30, N'7'),
+(99, 30, N'8'),
+-- Chân váy xếp ly dáng ngắn
+(100, 31, N'S'),
+(101, 31, N'M'),
+(102, 31, N'L'),
+-- Quần kaki nam dáng suông
+(103, 32, N'28'),
+(104, 32, N'30'),
+(105, 32, N'32'),
+(106, 32, N'34'),
+(107, 32, N'36');
+GO
+SET IDENTITY_INSERT [dbo].[product_sizes] OFF
+GO
+
+-- Thêm biến thể sản phẩm (variants) với số lượng tồn kho
+SET IDENTITY_INSERT [dbo].[product_variants] ON
+GO
+-- Áo khoác bomber nam
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES 
+(88, 13, 42, 26, 40, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(89, 13, 43, 26, 60, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(90, 13, 44, 26, 50, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(91, 13, 45, 26, 30, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(92, 13, 42, 27, 35, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(93, 13, 43, 27, 55, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(94, 13, 44, 27, 45, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(95, 13, 45, 27, 25, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(96, 13, 42, 28, 30, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(97, 13, 43, 28, 50, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(98, 13, 44, 28, 40, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+(99, 13, 45, 28, 20, CAST(N'2025-02-20T00:00:00.0000000' AS DateTime2)),
+
+-- Quần jogger thể thao
+(100, 14, 46, 29, 45, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(101, 14, 47, 29, 65, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(102, 14, 48, 29, 55, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(103, 14, 49, 29, 35, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(104, 14, 46, 30, 40, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(105, 14, 47, 30, 60, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(106, 14, 48, 30, 50, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(107, 14, 49, 30, 30, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(108, 14, 46, 31, 35, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(109, 14, 47, 31, 55, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(110, 14, 48, 31, 45, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+(111, 14, 49, 31, 25, CAST(N'2025-02-22T00:00:00.0000000' AS DateTime2)),
+
+-- Đầm maxi hoa nhí
+(112, 15, 50, 32, 30, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(113, 15, 51, 32, 45, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(114, 15, 52, 32, 25, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(115, 15, 50, 33, 35, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(116, 15, 51, 33, 50, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(117, 15, 52, 33, 30, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+
+-- Áo thun unisex
+(118, 16, 53, 34, 50, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(119, 16, 54, 34, 70, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(120, 16, 55, 34, 60, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(121, 16, 56, 34, 40, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(122, 16, 53, 35, 55, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(123, 16, 54, 35, 75, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(124, 16, 55, 35, 65, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(125, 16, 56, 35, 45, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(126, 16, 53, 36, 45, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(127, 16, 54, 36, 65, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(128, 16, 55, 36, 55, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+(129, 16, 56, 36, 35, CAST(N'2025-02-23T00:00:00.0000000' AS DateTime2)),
+
+-- Váy công chúa cho bé gái
+(130, 17, 57, 37, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(131, 17, 58, 37, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(132, 17, 59, 37, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(133, 17, 57, 38, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(134, 17, 58, 38, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(135, 17, 59, 38, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Balo nam thời trang
+(136, 18, 60, 39, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(137, 18, 60, 40, 65, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(138, 18, 60, 41, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Dây chuyền bạc nữ
+(139, 19, 61, 42, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(140, 19, 62, 42, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(141, 19, 63, 42, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(142, 19, 61, 43, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(143, 19, 62, 43, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(144, 19, 63, 43, 15, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Giày cao gót nữ
+(145, 20, 64, 44, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(146, 20, 65, 44, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(147, 20, 66, 44, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(148, 20, 67, 44, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(149, 20, 68, 44, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(150, 20, 64, 45, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(151, 20, 65, 45, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(152, 20, 66, 45, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(153, 20, 67, 45, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(154, 20, 68, 45, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(155, 20, 64, 46, 15, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(156, 20, 65, 46, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(157, 20, 66, 46, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(158, 20, 67, 46, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(159, 20, 68, 46, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Kính mát thời trang
+(160, 21, 69, 47, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(161, 21, 69, 48, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(162, 21, 69, 49, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Áo sơ mi nam kẻ sọc
+(163, 22, 70, 50, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(164, 22, 71, 50, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(165, 22, 72, 50, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(166, 22, 73, 50, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(167, 22, 70, 51, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(168, 22, 71, 51, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(169, 22, 72, 51, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(170, 22, 73, 51, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(171, 22, 70, 52, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(172, 22, 71, 52, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(173, 22, 72, 52, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(174, 22, 73, 52, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Quần jean skinny nữ
+(175, 23, 74, 53, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(176, 23, 75, 53, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(177, 23, 76, 53, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(178, 23, 77, 53, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(179, 23, 74, 54, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(180, 23, 75, 54, 65, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(181, 23, 76, 54, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(182, 23, 77, 54, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(183, 23, 74, 55, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(184, 23, 75, 55, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(185, 23, 76, 55, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(186, 23, 77, 55, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Áo len oversize unisex
+(187, 24, 78, 56, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(188, 24, 79, 56, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(189, 24, 80, 56, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(190, 24, 81, 56, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(191, 24, 78, 57, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(192, 24, 79, 57, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(193, 24, 80, 57, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(194, 24, 81, 57, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(195, 24, 78, 58, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(196, 24, 79, 58, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(197, 24, 80, 58, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(198, 24, 81, 58, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Túi đeo chéo nữ mini
+(199, 25, 82, 59, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(200, 25, 82, 60, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(201, 25, 82, 61, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Bông tai bạc hình giọt nước
+(202, 26, 83, 62, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(203, 26, 83, 63, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Áo khoác nữ cardigan
+(204, 27, 84, 64, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(205, 27, 85, 64, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(206, 27, 86, 64, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(207, 27, 84, 65, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(208, 27, 85, 65, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(209, 27, 86, 65, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(210, 27, 84, 66, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(211, 27, 85, 66, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(212, 27, 86, 66, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Dép lào nam cao cấp
+(213, 28, 87, 67, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(214, 28, 88, 67, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(215, 28, 89, 67, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(216, 28, 90, 67, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(217, 28, 91, 67, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(218, 28, 87, 68, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(219, 28, 88, 68, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(220, 28, 89, 68, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(221, 28, 90, 68, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(222, 28, 91, 68, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Áo thun trẻ em hoạt hình
+(223, 29, 92, 69, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(224, 29, 93, 69, 65, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(225, 29, 94, 69, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(226, 29, 95, 69, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(227, 29, 92, 70, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(228, 29, 93, 70, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(229, 29, 94, 70, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(230, 29, 95, 70, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(231, 29, 92, 71, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(232, 29, 93, 71, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(233, 29, 94, 71, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(234, 29, 95, 71, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Nhẫn bạc đính đá zircon
+(235, 30, 96, 72, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(236, 30, 97, 72, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(237, 30, 98, 72, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(238, 30, 99, 72, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(239, 30, 96, 73, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(240, 30, 97, 73, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(241, 30, 98, 73, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(242, 30, 99, 73, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Chân váy xếp ly dáng ngắn
+(243, 31, 100, 74, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(244, 31, 101, 74, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(245, 31, 102, 74, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(246, 31, 100, 75, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(247, 31, 101, 75, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(248, 31, 102, 75, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(249, 31, 100, 76, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(250, 31, 101, 76, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(251, 31, 102, 76, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+
+-- Quần kaki nam dáng suông
+(252, 32, 103, 77, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(253, 32, 104, 77, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(254, 32, 105, 77, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(255, 32, 106, 77, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(256, 32, 107, 77, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(257, 32, 103, 78, 40, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(258, 32, 104, 78, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(259, 32, 105, 78, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(260, 32, 106, 78, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(261, 32, 107, 78, 25, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(262, 32, 103, 79, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(263, 32, 104, 79, 50, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(264, 32, 105, 79, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(265, 32, 106, 79, 30, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
+(266, 32, 107, 79, 20, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2));
+GO
+SET IDENTITY_INSERT [dbo].[product_variants] OFF
 GO

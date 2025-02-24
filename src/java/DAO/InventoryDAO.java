@@ -40,6 +40,7 @@ public class InventoryDAO extends DBContext {
             params.add(categoryId);
         }
 
+        // Thêm sắp xếp, phân trang
         query += " GROUP BY p.id, p.title, c.name "
                 + " ORDER BY " + (sortField.equals("category") ? "c.name" : sortField.equals("totalQuantity") ? "total_stock_quantity" : "p.title") + " " + (sortOrder.equalsIgnoreCase("asc") ? "ASC" : "DESC")
                 + " OFFSET ? ROWS "
