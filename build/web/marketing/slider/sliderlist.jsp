@@ -197,7 +197,7 @@
                                                 <tr>
                                                     <td class="text-center">${(currentPage - 1) * pageSize + status.index + 1}</td>                                                  
                                                     <td class="text-center">
-                                                        <img src="${slider.image_url}" alt="${slider.title}" class="slider-image">
+                                                        <img src="${slider.image_url.startsWith('https')? slider.image_url : pageContext.request.contextPath.concat('/').concat(slider.image_url)}" alt="${slider.title}" class="slider-image">
                                                     </td>
                                                     <td>${slider.title}</td>
                                                     <td>${slider.link}</td>

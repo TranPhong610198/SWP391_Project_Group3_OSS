@@ -129,8 +129,8 @@
                                 <i class="fas fa-eye me-2"></i>Xem trước thanh trượt
                             </div>
                             <div class="card-body">
-                                <img src="${pageContext.request.contextPath}/${slider.getImage_url()}" 
-                                     alt="${slider.getTitle()}" class="slider-image">
+                                <img src="${slider.image_url.startsWith('https')? slider.image_url : pageContext.request.contextPath.concat('/').concat(slider.image_url)}" alt="${slider.title}" class="slider-image">
+                                
                                 <h3 class="mb-3">${slider.getTitle()}</h3>
                                 <div class="mb-3">
                                     <p><strong>Liên kết:</strong> <a href="${slider.getLink()}" target="_blank">${slider.getLink()}</a></p>
