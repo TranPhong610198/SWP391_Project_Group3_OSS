@@ -322,7 +322,7 @@
         <!-- Include header -->
         <jsp:include page="header.jsp" />
         <!-- Thanh trượt (Carousel) -->
-        <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="2000">
+        <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <c:forEach items="${sliders}" var="slider" varStatus="loop">
                     <button type="button" data-bs-target="#mainCarousel" 
@@ -353,6 +353,31 @@
                 <span class="carousel-control-next-icon"></span>
             </button>
         </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo carousel với tùy chọn tương tự như Swiper
+            const carousel = document.getElementById('mainCarousel');
+            const carouselInstance = new bootstrap.Carousel(carousel, {
+                interval: 3000,    // Thời gian chuyển slide - 3 giây
+                pause: 'hover',    // Tạm dừng khi di chuột qua
+                wrap: true,        // Quay vòng khi đến slide cuối cùng
+                keyboard: true,    // Cho phép điều khiển bằng bàn phím
+                touch: true        // Cho phép điều khiển bằng cảm ứng
+            });
+    
+            // Lấy chỉ số slide đã lưu (nếu có)
+            const savedSlideIndex = localStorage.getItem('mainCarouselIndex');
+            if (savedSlideIndex !== null) {
+                carouselInstance.to(parseInt(savedSlideIndex));
+            }
+    
+            // Lưu chỉ số slide khi người dùng chuyển slide
+            carousel.addEventListener('slide.bs.carousel', function(event) {
+                localStorage.setItem('mainCarouselIndex', event.to);
+            });
+        });
+        </script>
 
         <div class="container">           
 
