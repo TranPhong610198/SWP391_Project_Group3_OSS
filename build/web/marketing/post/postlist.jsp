@@ -253,7 +253,7 @@
                                                 <tr>
                                                     <td class="text-center">${(currentPage - 1) * 10 + status.index + 1}</td>
                                                     <td class="text-center">
-                                                        <img src="${post.getThumbnail()}" alt="${post.getTitle()}" class="post-image">
+                                                        <img src="${post.getThumbnail().contains('https')? post.getThumbnail() : pageContext.request.contextPath.concat('/').concat(post.getThumbnail())}" alt="${post.getTitle()}" class="post-image">
                                                     </td>
                                                     <td>${post.getTitle()}</td>
                                                     <td>${post.getUser().getFullName()}</td>
