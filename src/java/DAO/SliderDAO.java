@@ -174,6 +174,23 @@ public class SliderDAO extends DBContext {
         }
         return false;
     }
+    
+    public boolean isDisplayOrderExists(int displayOrder, int excludeId) {
+    String sql = "SELECT COUNT(*) FROM sliders WHERE display_order = ? AND id != ?";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setInt(1, displayOrder);
+        st.setInt(2, excludeId);
+        try (ResultSet rs = st.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error checking display order: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return false;
+}
 
     public static void main(String[] args) {
         SliderDAO sliderDAO = new SliderDAO();

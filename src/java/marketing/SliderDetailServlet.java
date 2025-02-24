@@ -102,6 +102,18 @@ public class SliderDetailServlet extends HttpServlet {
         String status = request.getParameter("status");
         String notes = request.getParameter("notes");
         
+        SliderDAO sliderDAO = new SliderDAO();
+        
+        if (sliderDAO.isDisplayOrderExists(display_order, id)) {
+        request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
+        
+        // Get current slider data to redisplay the form
+        Slider currentSlider = sliderDAO.getSliderById(id);
+        request.setAttribute("slider", currentSlider);
+        request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+        return;
+    }
+        
         String image_url = oldImage; // Default to keeping old image
         
         try {
@@ -137,7 +149,7 @@ public class SliderDetailServlet extends HttpServlet {
 
         Slider slider = new Slider(id, title, image_url,link, status, display_order, notes);
 
-        SliderDAO sliderDAO = new SliderDAO();
+       
         boolean isUpdated = sliderDAO.updateSlider(slider);
 
         if (isUpdated) {
