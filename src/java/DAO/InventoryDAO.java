@@ -15,16 +15,22 @@ public class InventoryDAO extends DBContext {
     public List<Inventory> searchInventory(String keyword, Integer categoryId, String sortField, String sortOrder, int limit, int offset) {
         Map<Integer, Inventory> inventoryMap = new LinkedHashMap<>();
 
-        String query = "WITH ProductPagination AS ("
-                + " SELECT p.id AS product_id, p.title AS product_name, c.name AS category, "
-                + " COALESCE(SUM(pv.stock_quantity), 0) AS total_stock_quantity "
-                + " FROM products p "
-                + " JOIN categories c ON p.category_id = c.id "
-                + " LEFT JOIN product_variants pv ON p.id = pv.product_id "
-                + " WHERE 1=1 ";
+        String query = """
+                       WITH ProductPagination AS (
+                           SELECT 
+                               p.id AS product_id, 
+                               p.title AS product_name, 
+                               c.name AS category, 
+                               COALESCE(SUM(pv.stock_quantity), 0) AS total_stock_quantity
+                           FROM products p
+                           JOIN categories c ON p.category_id = c.id
+                           LEFT JOIN product_variants pv ON p.id = pv.product_id
+                           WHERE 1=1
+                       """;
 
         List<Object> params = new ArrayList<>();
 
+        // Thêm điều kiện tìm kiếm và lọc
         if (keyword != null && !keyword.trim().isEmpty()) {
             query += "AND p.title LIKE ? ";
             params.add("%" + keyword + "%");
@@ -36,12 +42,23 @@ public class InventoryDAO extends DBContext {
 
         query += " GROUP BY p.id, p.title, c.name "
                 + " ORDER BY " + (sortField.equals("category") ? "c.name" : sortField.equals("totalQuantity") ? "total_stock_quantity" : "p.title") + " " + (sortOrder.equalsIgnoreCase("asc") ? "ASC" : "DESC")
-                + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY) "
-                + "SELECT pp.product_id, pp.product_name, pp.category, pp.total_stock_quantity, "
-                + " pc.id AS color_id, pc.color AS color_name, ps.id AS size_id, ps.size AS size_name "
-                + "FROM ProductPagination pp "
-                + "LEFT JOIN product_colors pc ON pp.product_id = pc.product_id "
-                + "LEFT JOIN product_sizes ps ON pp.product_id = ps.product_id";
+                + " OFFSET ? ROWS "
+                + " FETCH NEXT ? ROWS ONLY) ";
+        
+        query += """
+                 SELECT 
+                     pp.product_id, 
+                     pp.product_name, 
+                     pp.category, 
+                     pp.total_stock_quantity, 
+                     pc.id AS color_id, 
+                     pc.color AS color_name, 
+                     ps.id AS size_id, 
+                     ps.size AS size_name
+                 FROM ProductPagination pp
+                 LEFT JOIN product_colors pc ON pp.product_id = pc.product_id
+                 LEFT JOIN product_sizes ps ON pp.product_id = ps.product_id
+                 """;
 
         params.add(offset);
         params.add(limit);
@@ -112,10 +129,15 @@ public class InventoryDAO extends DBContext {
 
     public Inventory getInventoryDetail(int productId) {
         String sql = """
-                SELECT p.id, p.title, c.name as category_name,
-                       pc.id as color_id, pc.color as color_name,
-                       ps.id as size_id, ps.size as size_name,
-                       SUM(pv.stock_quantity) as total_quantity
+                SELECT 
+                    p.id, 
+                    p.title, 
+                    c.name as category_name,
+                    pc.id as color_id, 
+                    pc.color as color_name,
+                    ps.id as size_id, 
+                    ps.size as size_name,
+                    SUM(pv.stock_quantity) as total_quantity
                 FROM products p
                 JOIN categories c ON p.category_id = c.id
                 LEFT JOIN product_variants pv ON p.id = pv.product_id
@@ -160,10 +182,15 @@ public class InventoryDAO extends DBContext {
 
     public List<Variant> getProductVariants(int productId) {
         String sql = """
-                    SELECT pv.id, pv.product_id, 
-                    pc.id as color_id, pc.color as color_name,
-                    ps.id as size_id, ps.size as size_name,
-                    pv.stock_quantity, pv.last_restock_date
+                    SELECT 
+                        pv.id, 
+                        pv.product_id, 
+                        pc.id as color_id, 
+                        pc.color as color_name,
+                        ps.id as size_id, 
+                        ps.size as size_name,
+                        pv.stock_quantity, 
+                        pv.last_restock_date
                     FROM product_variants pv
                     JOIN product_colors pc ON pv.color_id = pc.id
                     JOIN product_sizes ps ON pv.size_id = ps.id
@@ -231,10 +258,12 @@ public class InventoryDAO extends DBContext {
 
     public Variant getVariant(int variantId) {
         String sql = """
-                    SELECT pv.id, pv.product_id,
-                           pc.id as color_id, pc.color as color_name,
-                           ps.id as size_id, ps.size as size_name,
-                           pv.stock_quantity, pv.last_restock_date
+                    SELECT 
+                        pv.id, 
+                        pv.product_id,
+                        pc.id as color_id, pc.color as color_name,
+                        ps.id as size_id, ps.size as size_name,
+                        pv.stock_quantity, pv.last_restock_date
                     FROM product_variants pv
                     JOIN product_colors pc ON pv.color_id = pc.id
                     JOIN product_sizes ps ON pv.size_id = ps.id
