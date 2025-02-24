@@ -16,7 +16,7 @@ public class Product {
 
     private int id;
     private String title;
-    private int categoryId;  // Sử dụng categoryId thay vì category name
+    private int categoryId; 
     private BigDecimal originalPrice;
     private BigDecimal salePrice;
     private String thumbnail;

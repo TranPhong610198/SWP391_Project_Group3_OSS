@@ -9,7 +9,9 @@ package DAO;
  * @author tphon
  */
 import Context.DBContext;
+import entity.Color;
 import entity.Product;
+import entity.Size;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +35,64 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public int getTotalStockByProductSize(int productId, int sizeId) {
+        int totalStock = 0;
+        String sql = "SELECT SUM(stock_quantity) AS total_stock FROM product_variants WHERE product_id = ? AND size_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, sizeId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalStock = rs.getInt("total_stock");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return totalStock;
+    }
+
+    public int getTotalStockByProductColor(int productId, int colorId) {
+        int totalStock = 0;
+        String sql = "SELECT SUM(stock_quantity) AS total_stock FROM product_variants WHERE product_id = ? AND color_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, colorId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalStock = rs.getInt("total_stock");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return totalStock;
+    }
+
+    public int getTotalStockByProductId(int productId, int sizeId, int colorId) {
+        int totalStock = 0;
+        String sql = "SELECT SUM(stock_quantity) AS total_stock FROM product_variants WHERE product_id = ? AND size_id = ? AND color_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, sizeId);
+            stmt.setInt(3, colorId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalStock = rs.getInt("total_stock");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return totalStock;
     }
 
     //Lấy danh sách sản phẩm thông qua lọc
@@ -124,9 +184,74 @@ public class ProductDAO extends DBContext {
         params.add(RECORDS_PER_PAGE);
         return getProductsByFilter(paginatedQuery, params);
     }
-//_______________________________________Hết Phần DAO Cho Việc List______________________________________________________________ 
 
-//_________________________________________Phần DAO Cho Việc Add____________________________________________________________    
+    public List<Size> getSizesByProductId(int productId) {
+        List<Size> sizes = new ArrayList<>();
+        String sql = "SELECT id, size FROM product_sizes WHERE product_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Size size = new Size(rs.getInt("id"), rs.getString("size"));
+                sizes.add(size);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sizes;
+    }
+
+    public List<Color> getColorsByProductId(int productId) {
+        List<Color> colors = new ArrayList<>();
+        String sql = "SELECT id, color FROM product_colors WHERE product_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Color color = new Color(rs.getInt("id"), rs.getString("color"));
+                colors.add(color);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return colors;
+    }
+
+    public List<Product> getRelatedProducts(int productId, int categoryId) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT id, title, sale_price, thumbnail FROM products WHERE category_id = ? AND id != ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            stmt.setInt(2, productId);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
+                product.setThumbnail(rs.getString("thumbnail"));
+
+                products.add(product);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+    //_______________________________________Hết Phần DAO Cho Việc List______________________________________________________________ 
+
+    //_________________________________________Phần DAO Cho Việc Add____________________________________________________________    
     // Lấy danh sách các sản phẩm chính của 1 combo
     public List<Product> getComboProducts() {
         List<Product> comboProducts = new ArrayList<>();
@@ -603,6 +728,7 @@ public class ProductDAO extends DBContext {
         }
         return products;
     }
+
     public List<Product> getWomanClothingProducts(int limit) {
         List<Product> products = new ArrayList<>();
         String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "

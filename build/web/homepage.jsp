@@ -397,7 +397,7 @@
                         <div class="swiper-wrapper">
                             <c:forEach items="${featuredProducts}" var="product">
                                 <div class="swiper-slide">
-                                    <a href="product-detail?id=${product.id}" class="text-decoration-none">
+                                    <a href="productdetail?id=${product.id}" class="text-decoration-none">
                                         <div class="card product-card">
                                             <div class="position-relative">
                                                 <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
