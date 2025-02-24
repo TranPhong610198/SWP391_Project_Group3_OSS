@@ -76,6 +76,8 @@ public class CartDetail extends HttpServlet {
         User user = (User) session.getAttribute("acc");
 
         if (user == null) {
+            String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+            session.setAttribute("redirectAfterLogin", currentURL);
             response.sendRedirect("login");
             return;
         }

@@ -60,7 +60,15 @@ public class LoginControl extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("acc", existingUser);
                     session.setAttribute("userID", existingUser.getId());
-                    response.sendRedirect(request.getContextPath() + "/home");
+                    // Kiểm tra có lưu URL trước đó không
+                    String redirectURL = (String) session.getAttribute("redirectAfterLogin");
+                    if (redirectURL != null) {
+                        session.removeAttribute("redirectAfterLogin"); // Xóa session lưu URL
+                        response.sendRedirect(redirectURL); // Quay lại trang trước đó
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/home"); // Nếu không có, về trang chủ
+                    }
+//                    response.sendRedirect(request.getContextPath() + "/home");
                     return;
                 } else {
                     userDao.insertGoogleUser(googleId, email, fullName, picture);
@@ -71,7 +79,15 @@ public class LoginControl extends HttpServlet {
                 session.setAttribute("acc", existingUser);
                 session.setAttribute("userID", existingUser.getId());
 
-                response.sendRedirect(request.getContextPath() + "/home");
+                // Kiểm tra có lưu URL trước đó không
+                String redirectURL = (String) session.getAttribute("redirectAfterLogin");
+                if (redirectURL != null) {
+                    session.removeAttribute("redirectAfterLogin"); // Xóa session lưu URL
+                    response.sendRedirect(redirectURL); // Quay lại trang trước đó
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/home"); // Nếu không có, về trang chủ
+                }
+//                response.sendRedirect(request.getContextPath() + "/home");
 
                 return;
 
@@ -113,41 +129,50 @@ public class LoginControl extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             } else if ("pending".equals(account.getStatus())) {
-            // check token hiện tại của user
-            Token currentToken = tokenDao.getTokenByUserId(account.getId());
-            
-            // token còn hạn
-            if (currentToken != null && LocalDateTime.now().isBefore(currentToken.getExpiryTime())) {
-                request.setAttribute("mess", "Email xác thực đã được gửi. Vui lòng kiểm tra email của bạn.");
+                // check token hiện tại của user
+                Token currentToken = tokenDao.getTokenByUserId(account.getId());
+
+                // token còn hạn
+                if (currentToken != null && LocalDateTime.now().isBefore(currentToken.getExpiryTime())) {
+                    request.setAttribute("mess", "Email xác thực đã được gửi. Vui lòng kiểm tra email của bạn.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    return;
+                }
+
+                // Nếu không có token hoặc token đã hết hạn, tạo token mới
+                Email emailUtil = new Email();
+                String token = emailUtil.generateToken();
+                LocalDateTime expiryTime = emailUtil.expireDateTime();
+
+                Token verificationToken = new Token(account.getId(), false, token, expiryTime);
+                tokenDao.insertTokenForget(verificationToken);
+
+                boolean emailSent = emailUtil.sendEmail(account, token);
+
+                if (!emailSent) {
+                    request.setAttribute("error", "Không thể gửi email xác minh. Vui lòng thử lại sau.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    return;
+                }
+
+                request.setAttribute("error", "Email của bạn chưa được xác thực. Một email xác thực mới đã được gửi đến bạn.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
 
-            // Nếu không có token hoặc token đã hết hạn, tạo token mới
-            Email emailUtil = new Email();
-            String token = emailUtil.generateToken();
-            LocalDateTime expiryTime = emailUtil.expireDateTime();
-
-            Token verificationToken = new Token(account.getId(), false, token, expiryTime);
-            tokenDao.insertTokenForget(verificationToken); 
-
-            boolean emailSent = emailUtil.sendEmail(account, token);
-
-            if (!emailSent) {
-                request.setAttribute("error", "Không thể gửi email xác minh. Vui lòng thử lại sau.");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-                return;
-            }
-
-            request.setAttribute("error", "Email của bạn chưa được xác thực. Một email xác thực mới đã được gửi đến bạn.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-            
             HttpSession session = request.getSession();
             session.setAttribute("acc", account);
             session.setAttribute("userID", account.getId());
-            response.sendRedirect(request.getContextPath() + "/home");
+            // Kiểm tra có lưu URL trước đó không
+            String redirectURL = (String) session.getAttribute("redirectAfterLogin");
+            if (redirectURL != null) {
+                session.removeAttribute("redirectAfterLogin"); // Xóa session lưu URL
+                response.sendRedirect(redirectURL); // Quay lại trang trước đó
+            } else {
+                response.sendRedirect(request.getContextPath() + "/home"); // Nếu không có, về trang chủ
+            }
+            
+//            response.sendRedirect(request.getContextPath() + "/home");
 
         }
     }
