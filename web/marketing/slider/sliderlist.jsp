@@ -317,6 +317,5 @@
                 document.querySelector('.menu-item a[href*="slider"]')?.closest('.menu-item').classList.add('active');
             });
         </script>
-        <jsp:include page="/footer.jsp" />
     </body>
 </html>

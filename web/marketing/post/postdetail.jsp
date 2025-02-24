@@ -275,6 +275,5 @@
                 height: 400
             });
         </script>
-        <jsp:include page="/footer.jsp" />
     </body>
 </html>

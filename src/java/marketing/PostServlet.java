@@ -69,8 +69,7 @@ public class PostServlet extends HttpServlet {
         String search = request.getParameter("search");
         String authorIdStr = request.getParameter("authorId");
         String status = request.getParameter("status");
-        String sortField = request.getParameter("sortField"); // Thêm dòng này
-        String sortDir = request.getParameter("sortDir");
+      
 
         Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
                 ? Integer.parseInt(authorIdStr)
@@ -94,8 +93,7 @@ public class PostServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalItems", totalItems);
-        request.setAttribute("sortField", sortField); // Thêm dòng này
-        request.setAttribute("sortDir", sortDir);
+        
 
         request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
     }
