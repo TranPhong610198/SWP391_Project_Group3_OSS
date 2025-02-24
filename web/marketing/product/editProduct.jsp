@@ -184,17 +184,19 @@
                                     <option value="EOStock" ${product.status.equals('EOStock') ? 'selected' : ''}>Hết hàng</option>
                                 </select>
                             </div>
-                            <div class="col-12">
-                                <label for="description" class="form-label">Mô tả sản phẩm</label>
-                                <textarea class="form-control" id="description" name="description">${product.description}</textarea>
-                            </div>
+
+                            <!-- Tạm ẩn chức năng mô tả sản phẩm tại vì đang bi lỗi ckeditor                            
+                                                            <div class="col-12">
+                                                            <label for="description" class="form-label">Mô tả sản phẩm</label>
+                                                            <textarea class="form-control" id="description" name="description">${product.description}</textarea>
+                                                        </div>-->
 
 
                             <!-- Phần ảnh chính -->
                             <div class="col-md-6 mt-3">
                                 <label for="thumbnail" class="form-label">Ảnh chính</label>
                                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewThumbnail(this)" />
-                                <img src="${pageContext.request.contextPath}/${product.thumbnail}" class="preview-image" alt="Current Thumbnail">
+                                <img src="${product.thumbnail.contains('https')? product.thumbnail : pageContext.request.contextPath.concat('/').concat(product.thumbnail)}" class="preview-image" alt="Current Thumbnail">
                             </div>
 
                             <div class="col-12 mt-4">
@@ -304,55 +306,9 @@
                                             }
                                         }
 
-
-                                        function previewSubImageUpload(input) {
-                                            if (input.files && input.files[0]) {
-                                                const file = input.files[0];
-                                                if (!isValidImage(file)) {
-                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
-                                                    input.value = '';
-                                                    return;
-                                                }
-                                                const reader = new FileReader();
-
-                                                reader.onload = function (e) {
-                                                    const img = input.closest('.sub-image-card').querySelector('.sub-image-preview');
-                                                    img.src = e.target.result;
-                                                }
-
-                                                reader.readAsDataURL(file);
-                                            }
-                                        }
-
-
-                                        function previewNewSubImage(input) {
-                                            if (input.files && input.files[0]) {
-                                                const file = input.files[0];
-                                                if (!isValidImage(file)) {
-                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
-                                                    input.value = '';
-                                                    return;
-                                                }
-                                                const reader = new FileReader();
-
-                                                reader.onload = function (e) {
-                                                    const newImg = document.createElement('img');
-                                                    newImg.src = e.target.result;
-                                                    newImg.className = 'sub-image-preview';
-                                                    const subImagesContainer = document.querySelector('.sub-images-container');
-                                                    subImagesContainer.appendChild(newImg);
-                                                }
-
-                                                reader.readAsDataURL(file);
-                                            }
-                                        }
-
-
                                         function previewSubImage(imageUrl) {
                                             window.open(imageUrl, '_blank');
                                         }
-
-
 
                                         $(document).ready(function () {
                                             // Xử lý khi checkbox isCombo thay đổi

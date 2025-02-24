@@ -200,11 +200,11 @@
                             </div>
 
 
-                            <!-- Mô tả -->
-                            <div class="col-12">
+                            <!-- Mô tả //// tạm thời ẩn vì chức năng ckeditor upload ảnh lên đang bị lỗi--> 
+<!--                            <div class="col-12">
                                 <label for="description" class="form-label">Mô tả sản phẩm</label>
                                 <textarea class="form-control" id="description" name="description" rows="5" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
-                            </div>
+                            </div>-->
 
                             <!-- Ảnh chính -->
                             <div class="col-md-6">

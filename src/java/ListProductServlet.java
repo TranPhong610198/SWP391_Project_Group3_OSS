@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @WebServlet(urlPatterns = {"/listproduct"})
 public class ListProductServlet extends HttpServlet {
 
-    private static final int RECORDS_PER_PAGE = 10;
+    private static final int RECORDS_PER_PAGE = 12;
     private ProductDAO productDAO = new ProductDAO();
 
     /**

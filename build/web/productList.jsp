@@ -98,6 +98,46 @@
                 margin-bottom: 15px;
             }
 
+            .product-buttons {
+                display: flex;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .btn-buy-now {
+                flex: 1;
+                padding: 8px;
+                background: #e44d26;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .btn-add-cart {
+                flex: 1;
+                padding: 8px;
+                background: #333;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .btn-buy-now:hover {
+                background: #c53d1d;
+                transform: translateY(-2px);
+            }
+
+            .btn-add-cart:hover {
+                background: #000;
+                transform: translateY(-2px);
+            }
+
             .sale-price {
                 font-size: 1.2rem;
                 font-weight: 600;
@@ -232,26 +272,30 @@
             <!-- Filters Section -->
             <div class="filters">
                 <form action="listproduct" method="GET" id="filterForm">
-                    <div class="row">
+                    <div class="row align-items-end">
                         <div class="col-md-4">
                             <div class="filter-title">Khoảng Giá</div>
-                            <div class="price-range">
-                                <input type="number" name="minPrice" class="form-control price-input" 
-                                       placeholder="Thấp Nhất" value="${minPrice}">
-                                <span>-</span>
-                                <input type="number" name="maxPrice" class="form-control price-input" 
-                                       placeholder="Cao Nhất" value="${maxPrice}">
+                            <div class="d-flex">
+                                <input type="number" id="minPrice" name="minPrice" step="1000" min="0" class="form-control me-2" placeholder="Thấp Nhất" value="${minPrice}">
+                                <span class="align-self-center">-</span>
+                                <input type="number" id="maxPrice" name="maxPrice" step="1000" min="0" class="form-control ms-2" placeholder="Cao Nhất" value="${maxPrice}">
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="filter-title">Sắp xếp</div>
-                            <select name="sortBy" class="form-select sort-select" onchange="this.form.submit()">
+                            <select name="sortBy" class="form-select">
                                 <option value="">Mặc Định</option>
                                 <option value="price_asc" ${sortBy == 'price_asc' ? 'selected' : ''}>Giá: Thấp đến Cao</option>
                                 <option value="price_desc" ${sortBy == 'price_desc' ? 'selected' : ''}>Giá: Cao xuống Thấp</option>
-                                <option value="newest" ${sortBy == 'newest' ? 'selected' : ''}>Mới nhất </option>
+                                <option value="newest" ${sortBy == 'newest' ? 'selected' : ''}>Mới nhất</option>
                             </select>
+                        </div>
+
+                            <div class="col-md-1">
+                            <button class="btn btn-outline-secondary w-50" type="submit">
+                                <i class="fa-solid fa-filter"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -262,66 +306,86 @@
                 <c:when test="${not empty products}">
                     <div class="product-grid">
                         <c:forEach items="${products}" var="product">
-                            <a href="productdetail?id=${product.id}" style="text-decoration:none;">
-                                <div class="product-card">
+                            <div class="product-card">
+                                <!-- MODIFIED: Restructured product card layout -->
+                                <a href="productdetail?id=${product.id}" style="text-decoration:none;">
                                     <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
                                     <div class="product-info">
                                         <h5 class="product-title">${product.title}</h5>
                                         <div class="product-price">
                                             <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
                                         </div>
-                                    </div>
+                                </a>
+                                <div class="product-buttons">
+                                    <button onclick="window.location.href = 'cart?action=buyNow&productId=${product.id}'" class="btn-buy-now">
+                                        <i class="fas fa-bolt"></i> Mua ngay
+                                    </button>
+                                    <button onclick="window.location.href = 'cart?action=add&productId=${product.id}'" class="btn-add-cart">
+                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                    </button>
                                 </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="no-products">
+                    <i class="fas fa-box-open"></i>
+                    <h3>No Products Found</h3>
+                    <p>Try adjusting your search criteria or browse our categories</p>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
+        <!-- Pagination -->
+        <c:if test="${totalPages > 1}">
+            <nav aria-label="Product pagination">
+                <ul class="pagination">
+                    <!-- Previous page -->
+                    <c:if test="${currentPage > 1}">
+
+                        <li class="page-item">
+                            <a class="page-link" href="listproduct?page=${currentPage - 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
+                                <i class="fas fa-chevron-left"></i>
                             </a>
-                        </c:forEach>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="no-products">
-                        <i class="fas fa-box-open"></i>
-                        <h3>No Products Found</h3>
-                        <p>Try adjusting your search criteria or browse our categories</p>
-                    </div>
-                </c:otherwise>
-            </c:choose>
+                        </li>
+                    </c:if>
 
-            <!-- Pagination -->
-            <c:if test="${totalPages > 1}">
-                <nav aria-label="Product pagination">
-                    <ul class="pagination">
-                        <!-- Previous page -->
-                        <c:if test="${currentPage > 1}">
+                    <!-- Page numbers -->
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" href="listproduct?page=${i}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
+                                ${i}
+                            </a>
+                        </li>
+                    </c:forEach>
 
-                            <li class="page-item">
-                                <a class="page-link" href="listproduct?page=${currentPage - 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
-                            </li>
-                        </c:if>
+                    <!-- Next page -->
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="listproduct?page=${currentPage + 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </c:if>
+                </ul>
+            </nav>
+        </c:if>
+    </div>
 
-                        <!-- Page numbers -->
-                        <c:forEach begin="1" end="${totalPages}" var="i">
-                            <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                <a class="page-link" href="listproduct?page=${i}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
-                                    ${i}
-                                </a>
-                            </li>
-                        </c:forEach>
+    <jsp:include page="footer.jsp" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+                                        $('#maxPrice').on('change', function () {
+                                            const maxPrice = parseFloat($('#maxPrice').val()) || 0;
+                                            const minPrice = parseFloat($('#minPrice').val()) || 0;
 
-                        <!-- Next page -->
-                        <c:if test="${currentPage < totalPages}">
-                            <li class="page-item">
-                                <a class="page-link" href="listproduct?page=${currentPage + 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                            </li>
-                        </c:if>
-                    </ul>
-                </nav>
-            </c:if>
-        </div>
-
-        <jsp:include page="footer.jsp" />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+                                            if (maxPrice < minPrice) {
+                                                alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
+                                                $('#maxPrice').val(minPrice);
+                                            }
+                                        });
+    </script>
+</body>
 </html>
