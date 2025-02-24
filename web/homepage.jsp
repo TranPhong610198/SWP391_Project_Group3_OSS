@@ -361,7 +361,7 @@
                 <div class="row g-4">
                     <c:forEach items="${featuredPosts}" var="post">
                         <div class="col-md-4">
-                            <a href="post-detail?id=${post.id}" class="text-decoration-none text-dark">
+                            <a href="post?id=${post.id}" class="text-decoration-none text-dark">
                                 <div class="card post-card">
                                     <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
                                     <div class="card-body">
