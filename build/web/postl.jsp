@@ -118,12 +118,25 @@
                                                 <img src="${post.getThumbnail()}" 
                                                      class="card-img-top post-image" alt="${post.getTitle()}">
                                                 <div class="card-body">
-                                                    <h5 class="card-title text-dark">${post.getTitle()}</h5>
+                                                    <h5 class="card-title text-dark">
+                                                        ${post.getTitle()}
+                                                        <c:if test="${post.isIsFeatured()}">
+                                                            <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                                        </c:if>
+                                                    </h5>
                                                     <p class="post-summary">${post.getSummary()}</p>
                                                     <div class="post-meta mt-3">
                                                         <i class="fas fa-user-edit me-2"></i>${post.getUser().getFullName()}
                                                         <br>
-                                                        <i class="far fa-clock me-2"></i>${post.getUpdatedAt()}
+                                                        <i class="far fa-clock me-2"></i>
+                                                        <c:choose>
+                                                            <c:when test="${post.getUpdatedAt() != null}">
+                                                                Cập nhật: ${post.getUpdatedAt()}
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Ngày đăng: ${post.getCreatedAt()}
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                 </div>
                                             </a>
@@ -183,9 +196,21 @@
                                             <img src="${post.getThumbnail()}" 
                                                  class="latest-post-image rounded" alt="${post.getTitle()}">
                                             <div class="ms-3">
-                                                <h6 class="text-dark mb-1">${post.getTitle()}</h6>
+                                                <h6 class="text-dark mb-1">
+                                                    ${post.getTitle()}
+                                                    <c:if test="${post.isIsFeatured()}">
+                                                        <i class="fas fa-star text-warning ms-1" title="Nổi bật"></i>
+                                                    </c:if>
+                                                </h6>
                                                 <small class="text-muted">
-                                                    <i class="far fa-clock me-1"></i>${post.getUpdatedAt()}
+                                                    <c:choose>
+                                                        <c:when test="${post.getUpdatedAt() != null}">
+                                                            <i class="far fa-edit me-1"></i>${post.getUpdatedAt()}
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="far fa-calendar me-1"></i>${post.getCreatedAt()}
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </small>
                                             </div>
                                         </div>

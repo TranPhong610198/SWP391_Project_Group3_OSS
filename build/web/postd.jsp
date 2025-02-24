@@ -38,10 +38,22 @@
                 </c:when>
                 <c:when test="${not empty post}">
                     <article class="bg-white p-4 rounded shadow-sm">
-                        <h1 class="mb-3">${post.title}</h1>
+                        <h1 class="mb-3">
+                            ${post.title}
+                            <c:if test="${post.isIsFeatured()}">
+                                <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                            </c:if>
+                        </h1>
                         <div class="text-muted mb-3">
                             <i class="fas fa-user me-2"></i><strong>Tác giả:</strong> ${post.user.fullName} &nbsp; | &nbsp;
-                            <i class="fas fa-calendar me-2"></i><strong>Ngày cập nhật:</strong> ${post.updatedAt}
+                                <c:choose>
+                                    <c:when test="${post.updatedAt != null}">
+                                    <i class="fas fa-edit me-2"></i><strong>Cập nhật:</strong> ${post.updatedAt}
+                                    </c:when>
+                                    <c:otherwise>
+                                    <i class="fas fa-calendar me-2"></i><strong>Ngày đăng:</strong> ${post.createdAt}
+                                    </c:otherwise>
+                                </c:choose>
                         </div>
                         <hr>
                         <div class="text-center">
