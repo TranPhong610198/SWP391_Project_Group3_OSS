@@ -186,10 +186,15 @@
                                     <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Inactive</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-filter me-2"></i>Lọc
-                                </button>
+                            <div class="col-md-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-filter me-1"></i>Lọc
+                                    </button>
+                                    <a href="${pageContext.request.contextPath}/admin/footer-settings" class="btn btn-secondary">
+                                        <i class="fas fa-undo me-1"></i>Xóa bộ lọc
+                                    </a>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -331,35 +336,35 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
+                                                                    $(document).ready(function () {
+                                                                        // Toggle sidebar
+                                                                        $('.sidebar-toggle').on('click', function () {
+                                                                            $('.sidebar').toggleClass('active');
+                                                                            $('.main-content').toggleClass('active');
+                                                                            $(this).hide();
+                                                                        });
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
+                                                                        // Close sidebar when clicking outside on mobile
+                                                                        $(document).on('click', function (e) {
+                                                                            if ($(window).width() <= 768) {
+                                                                                if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                                    $('.sidebar').removeClass('active');
+                                                                                    $('.main-content').removeClass('active');
+                                                                                    $('.sidebar-toggle').show();
+                                                                                }
+                                                                            }
+                                                                        });
 
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
+                                                                        // Highlight active menu item
+                                                                        $('.menu-item').removeClass('active');
+                                                                        $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
 
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                });
-            });
+                                                                        // Initialize tooltips
+                                                                        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                                                        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                                                            return new bootstrap.Tooltip(tooltipTriggerEl)
+                                                                        });
+                                                                    });
         </script>
     </body>
 </html>
