@@ -136,6 +136,7 @@
                 }
             }
         </style>
+        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <!-- Include the sidebar -->
@@ -207,10 +208,10 @@
                             <div class="col-12 mt-4">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="javascript:history.back()" class="btn btn-secondary btn-cancel">
-                                        <i class="fas fa-times me-2"></i>Hủy
+                                        <i class="fas fa-times me-2"></i>Quay lại
                                     </a>
                                     <button type="submit" class="btn btn-primary btn-submit">
-                                        <i class="fas fa-save me-2"></i>Lưu bài viết
+                                        <i class="fas fa-save me-2"></i>Lưu bài đăng
                                     </button>
                                 </div>
                             </div>
@@ -265,6 +266,12 @@
                     preview.style.display = 'none';
                 }
             }
+            // Initialize CKEditor
+            CKEDITOR.replace('content', {
+                filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+                filebrowserUploadMethod: 'form',
+                height: 400
+            });
         </script>
     </body>
 </html>

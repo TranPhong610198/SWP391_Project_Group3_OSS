@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý Slider</title>
+        <title>Slider Management</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
@@ -132,7 +132,7 @@
         <div class="main-content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
-                    <i class="fas fa-images me-2"></i>Quản lý Slider
+                    <i class="fas fa-images me-2"></i>Quản lý thanh trượt
                 </h2>
                 
                 <!-- Filter Section -->
@@ -147,7 +147,7 @@
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
-                                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo tiêu đề..." value="${param.search}">
+                                    <input type="text" name="search" class="form-control" placeholder="Nhập tiêu đề..." value="${param.search}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -170,10 +170,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
-                            <i class="fas fa-list me-2"></i>Danh sách Slider
+                            <i class="fas fa-list me-2"></i>Danh sách thanh trượt
                         </div>
                         <a href="${pageContext.request.contextPath}/marketing/addSlider" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Thêm Slider mới
+                            <i class="fas fa-plus me-2"></i>Thêm thanh trượt mới
                         </a>
                     </div>
                     <div class="card-body p-0">
@@ -241,7 +241,7 @@
                 <!-- Pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-muted small">
-                        Hiển thị ${sliders.size()} / ${totalItems} slider
+                        Hiển thị ${sliders.size()} / ${totalItems} thanh trượt
                     </div>
                     
                     <nav>

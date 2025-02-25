@@ -55,7 +55,7 @@
                                     </c:otherwise>
                                 </c:choose>
                         </div>
-                        <hr>
+                        <hr>                      
                         <div class="text-center">
                             <img src="${post.getThumbnail()}" alt="${post.title}" class="img-fluid rounded mb-4">
                         </div>

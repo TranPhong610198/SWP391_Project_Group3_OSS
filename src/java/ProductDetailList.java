@@ -101,11 +101,8 @@ public class ProductDetailList extends HttpServlet {
 
             //Lấy màu
             List<Color> colors = productDAO.getColorsByProductId(productId);
-
-            //Lấy số lượng
-            int stock = productDAO.getTotalStockByProductId(productId);
-
-//            String sizeId = request.getParameter("sizeId");
+            
+            //            String sizeId = request.getParameter("sizeId");
 //            String colorId = request.getParameter("colorId");
 //
 //            if (sizeId != null && !sizeId.isEmpty() && colorId != null && !colorId.isEmpty()) {
@@ -120,6 +117,9 @@ public class ProductDetailList extends HttpServlet {
 //                request.setAttribute("colorId", Integer.parseInt(colorId));
 //            } else {
 //            }
+
+            //Lấy số lượng
+            int stock = productDAO.getTotalStockByProductId(productId);
 
             product.setStock(stock);
             request.setAttribute("product", product);
@@ -156,38 +156,88 @@ public class ProductDetailList extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action");
         if ("addToCart".equals(action)) {
-            int productId = Integer.parseInt(request.getParameter("id"));
-            ProductDAO productDAO = new ProductDAO();
-            InventoryDAO inventoryDAO = new InventoryDAO();
-            CartDAO cartDAO = new CartDAO();
+            try {
+                int productId = Integer.parseInt(request.getParameter("id"));
+                ProductDAO productDAO = new ProductDAO();
+                InventoryDAO inventoryDAO = new InventoryDAO();
+                CartDAO cartDAO = new CartDAO();
 
-            HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("acc");
+                HttpSession session = request.getSession();
+                User user = (User) session.getAttribute("acc");
 
-            if (user == null) {
-                String currentURL = request.getRequestURI() + "?id=" +productId;
-                System.out.println(currentURL);
-                session.setAttribute("redirectAfterLogin", currentURL);
-                response.sendRedirect("login");
-                return;
-            }
+                // Không còn yêu cầu đăng nhập
+                int sizeId = Integer.parseInt(request.getParameter("sizeId"));
+                int colorId = Integer.parseInt(request.getParameter("colorId"));
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-            //Lấy thông tin 
-            Cart cart = getOrCreateCart(user.getId());
+                // Lấy variant ID
+                int variantId = inventoryDAO.getVariantId(productId, colorId, sizeId);
 
-            int sizeId = Integer.parseInt(request.getParameter("sizeId"));
-            int colorId = Integer.parseInt(request.getParameter("colorId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
+                // Lấy thông tin sản phẩm để hiển thị trong giỏ hàng
+                Product product = productDAO.getProductById(productId);
 
-            // Lấyy variant
-            int variantId = inventoryDAO.getVariantId(productId, colorId, sizeId);
+                // Lấy thông tin size và màu
+                String sizeName = "";
+                String colorName = "";
 
-            //Thêm vào cart
-            CartItem item = new CartItem(cart.getId(), productId, variantId, quantity);
-            if (cartDAO.addCartItem(item)) {
-                response.sendRedirect("listproduct?SS");
-            } else {
-                response.sendRedirect("listproduct?ErrorAddToCart");
+                List<Size> sizes = productDAO.getSizesByProductId(productId);
+                for (Size s : sizes) {
+                    if (s.getId() == sizeId) {
+                        sizeName = s.getName(); // Sử dụng getName() thay vì getSize()
+                        break;
+                    }
+                }
+
+                List<Color> colors = productDAO.getColorsByProductId(productId);
+                for (Color c : colors) {
+                    if (c.getId() == colorId) {
+                        colorName = c.getName(); // Sử dụng getName() thay vì getColor()
+                        break;
+                    }
+                }
+
+                if (user != null) {
+                    // Người dùng đã đăng nhập, lưu vào database
+                    Cart cart = getOrCreateCart(user.getId());
+                    CartItem item = new CartItem(cart.getId(), productId, variantId, quantity);
+
+                    // Cập nhật thông tin hiển thị cho CartItem
+                    item.setProductTitle(product.getTitle());
+                    item.setProductThumbnail(product.getThumbnail());
+                    item.setProductPrice(product.getSalePrice().doubleValue());
+                    item.setSize(sizeName);
+                    item.setColor(colorName);
+
+                    if (cartDAO.addCartItem(item)) {
+                        response.sendRedirect("listproduct?SS");
+                    } else {
+                        response.sendRedirect("listproduct?ErrorAddToCart");
+                    }
+
+                } else {
+                    // Người dùng chưa đăng nhập, lưu vào cookie
+                    CartItem item = new CartItem();
+                    item.setProductId(productId);
+                    item.setVariantId(variantId);
+                    item.setQuantity(quantity);
+
+                    // Cập nhật thông tin hiển thị cho CartItem
+                    item.setProductTitle(product.getTitle());
+                    item.setProductThumbnail(product.getThumbnail());
+                    item.setProductPrice(product.getSalePrice().doubleValue());
+                    item.setSize(sizeName);
+                    item.setColor(colorName);
+
+                    // Thêm vào giỏ hàng cookie
+                    cartDAO.addItemToCookieCart(request, response, item);
+                    response.sendRedirect("listproduct?SS");
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                response.sendRedirect("listproduct?ErrNumber");
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("listproduct?ErrGeneral");
             }
 
         } else {

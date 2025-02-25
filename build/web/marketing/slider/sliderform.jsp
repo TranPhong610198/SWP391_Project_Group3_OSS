@@ -130,6 +130,7 @@
                 }
             }
         </style>
+        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <!-- Include the sidebar -->
@@ -187,8 +188,8 @@
                             <div class="col-md-6">
                                 <label for="status" class="form-label">Trạng thái</label>
                                 <select class="form-select" id="status" name="status" required>
-                                    <option value="active">Đang hoạt động</option>
-                                    <option value="inactive">Không hoạt động</option>
+                                    <option value="active">Hiển thị</option>
+                                    <option value="inactive">Ẩn</option>
                                 </select>
                             </div>
 
@@ -200,7 +201,7 @@
                             <div class="col-12 mt-4">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="javascript:history.back()" class="btn btn-secondary btn-cancel">
-                                        <i class="fas fa-times me-2"></i>Hủy
+                                        <i class="fas fa-times me-2"></i>Quay lại
                                     </a>
                                     <button type="submit" class="btn btn-primary btn-submit">
                                         <i class="fas fa-save me-2"></i>Lưu thanh trượt
@@ -256,6 +257,12 @@
                     preview.style.display = 'none';
                 }
             }
+            // Initialize CKEditor
+            CKEDITOR.replace('notes', {
+    filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+    filebrowserUploadMethod: 'form',
+    height: 400
+});
         </script>
     </body>
 </html>

@@ -45,6 +45,13 @@ public class AddSliderServlet extends HttpServlet {
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
                 return;
             }
+            
+            SliderDAO sliderDAO = new SliderDAO();
+            if (sliderDAO.isDisplayOrderExists(display_order, -1)) { // Pass -1 as id since this is a new slider
+                request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
+                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
+                return;
+            }
 
             // Handle image upload
             String image_url = "";
@@ -83,7 +90,7 @@ public class AddSliderServlet extends HttpServlet {
             slider.setStatus(status);
             slider.setNotes(notes);
 
-            SliderDAO sliderDAO = new SliderDAO();
+            
             boolean isAdded = sliderDAO.addSlider(slider);
 
             if (isAdded) {

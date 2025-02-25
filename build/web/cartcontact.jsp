@@ -265,10 +265,13 @@
                             <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ giao hàng
                         </h5>
 
+
                         <div class="address-list mb-3">
                             <c:choose>
                                 <c:when test="${empty addresses}">
-                                    <p class="text-muted">Bạn chưa có địa chỉ giao hàng nào.</p>
+                                    <div class="alert alert-info">
+                                        <p>Bạn chưa có địa chỉ giao hàng nào. Vui lòng thêm địa chỉ mới.</p>
+                                    </div>
                                 </c:when>
                                 <c:otherwise>
                                     <c:forEach items="${addresses}" var="address">

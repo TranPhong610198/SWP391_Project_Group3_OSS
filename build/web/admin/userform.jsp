@@ -73,7 +73,7 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title mb-0">Create New User</h3>
+                        <h3 class="card-title mb-0">Tạo người dùng mới</h3>
                     </div>
                     <div class="card-body">
                         <c:if test="${not empty error}">
@@ -90,13 +90,13 @@
                         <form action="${pageContext.request.contextPath}/admin/addUser" method="post">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Full Name</label>
+                                    <label class="form-label required">Họ và tên</label>
                                     <input type="text" class="form-control" name="fullname" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Username</label>
+                                    <label class="form-label required">Tên đăng nhập</label>
                                     <input type="text" class="form-control" name="username" 
-                                           placeholder="Tên đăng nhập" required 
+                                           placeholder="" required 
                                            minlength="4" maxlength="20" 
                                            pattern="[A-Za-z0-9]+" 
                                            title="Tên người dùng phải dài từ 4-20 ký tự và không được chứa ký tự đặc biệt."
@@ -106,14 +106,13 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Password</label>
+                                    <label class="form-label required">Mật khẩu</label>
                                     <input type="password" class="form-control" name="password" 
-                                           placeholder="Mật khẩu" required>
+                                           placeholder="" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Re-Password</label>
-                                    <input type="password" class="form-control" name="repassword" 
-                                           placeholder="Nhập lại mật khẩu" required>
+                                    <label class="form-label required">Nhập lại mật khẩu</label>
+                                    <input type="password" class="form-control" name="repassword" required>
                                 </div>
                             </div>
 
@@ -123,7 +122,7 @@
                                     <input type="email" class="form-control" name="email" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Mobile</label>
+                                    <label class="form-label required">Số điện thoại</label>
                                     <input type="tel" class="form-control" name="phone" 
                                            required pattern="[0-9]{10}"
                                            title="Số điện thoại phải có 10 chữ số">
@@ -132,7 +131,7 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Gender</label>
+                                    <label class="form-label required">Giới tính</label>
                                     <select class="form-select" name="gender" required>
                                         <option value="Male">Nam</option>
                                         <option value="Female">Nữ</option>
@@ -140,9 +139,9 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Role</label>
+                                    <label class="form-label required">Vai trò</label>
                                     <select class="form-select" name="role" required>
-                                        <option value="">Select Role</option>
+                                        <option value="">Chọn vai trò</option>
                                         <option value="customer">Customer</option>
                                         <option value="admin">Admin</option>
                                         <option value="sale">Sale</option>
@@ -153,8 +152,8 @@
 
                             <div class="d-flex justify-content-end mt-4">
                                 <a href="${pageContext.request.contextPath}/admin/userlists" 
-                                   class="btn btn-secondary me-2">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Create User</button>
+                                   class="btn btn-secondary me-2">Quay lại</a>
+                                <button type="submit" class="btn btn-primary">Tạo</button>
                             </div>
                         </form>
                     </div>

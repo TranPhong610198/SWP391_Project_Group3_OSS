@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Cart;
 
 import DAO.CartDAO;
@@ -18,36 +14,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author thanh
- */
 @WebServlet(name = "CartDetail", urlPatterns = {"/cartdetail"})
 public class CartDetail extends HttpServlet {
 
     private CartDAO cartDAO = new CartDAO();
     private CouponDAO couponDAO = new CouponDAO();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -60,44 +40,23 @@ public class CartDetail extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
-        if (user == null) {
-            String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
-            session.setAttribute("redirectAfterLogin", currentURL);
-            response.sendRedirect("login");
-            return;
-        }
+        // Get cart (works for both logged in and non-logged in users)
+        Cart cart = user != null
+                ? cartDAO.getCart(request, user.getId())
+                : cartDAO.getCart(request, null);
 
-        Cart cart = getOrCreateCart(user.getId());
-
-        // Lấy danh sách mã giảm giá có thể sử dụng 
+        // Get available coupons
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
 
         setupCartAttributes(request, cart);
         request.getRequestDispatcher("cartdetail.jsp").forward(request, response);
-    }
-
-    private Cart getOrCreateCart(int userId) {
-        Cart cart = cartDAO.getCartByUserId(userId);
-        if (cart == null) {
-            cart = cartDAO.createCart(userId);
-        }
-        return cart;
     }
 
     private void setupCartAttributes(HttpServletRequest request, Cart cart) {
@@ -135,28 +94,33 @@ public class CartDetail extends HttpServlet {
         return 0.0;
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy loại hành động từ request
+        // Get action type from request
         String action = request.getParameter("action");
 
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acc");
+
         if ("update".equals(action)) {
-            handleUpdateQuantity(request);
+            handleUpdateQuantity(request, response, user);
         } else if ("delete".equals(action)) {
-            handleDeleteItem(request);
+            handleDeleteItem(request, response);
         } else if ("applyCoupon".equals(action)) {
             handleApplyCoupon(request, response);
             return;
         } else if ("checkout".equals(action)) {
+//            if (user == null) {
+//                // Save current URL to redirect back after login
+//                String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+//                session.setAttribute("redirectAfterLogin", currentURL);
+//
+//                // Redirect to login for checkout
+//                response.sendRedirect("login");
+//                return;
+//            }
+
             handleCheckout(request, response);
             return;
         }
@@ -196,7 +160,11 @@ public class CartDetail extends HttpServlet {
         String currentCoupon = request.getParameter("couponCode");
         if (currentCoupon != null && !currentCoupon.isEmpty()) {
             // Tính lại giảm giá dựa trên tổng tiền của các sản phẩm được chọn
-            Cart cart = cartDAO.getCartByUserId(((User) session.getAttribute("acc")).getId());
+            User user = (User) session.getAttribute("acc");
+            Cart cart = user != null
+                    ? cartDAO.getCartByUserId(user.getId())
+                    : cartDAO.getCartFromCookies(request);
+
             double totalSelected = 0;
             for (int i = 0; i < selectedIds.length; i++) {
                 for (CartItem item : cart.getItems()) {
@@ -218,35 +186,48 @@ public class CartDetail extends HttpServlet {
             }
         }
 
-        // Chuyển hướng sang trang contact
+        // Chuyển hướng sang trang contact mà không kiểm tra đăng nhập
         response.sendRedirect("cartcontact");
     }
 
-    private void handleUpdateQuantity(HttpServletRequest request) {
+    private void handleUpdateQuantity(HttpServletRequest request, HttpServletResponse response, User user) {
         try {
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-            // Thêm logging
             System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
 
-            boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
-
-            if (!success) {
-                System.out.println("Failed to update cart item quantity");
+            if (user != null) {
+                // User is logged in, update in database
+                boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
+                if (!success) {
+                    System.out.println("Failed to update cart item quantity in database");
+                }
+            } else {
+                // User is not logged in, update in cookies
+                cartDAO.updateCartItemQuantityInCookie(request, response, cartItemId, quantity);
             }
         } catch (NumberFormatException e) {
             System.out.println("Error parsing quantity: " + e.getMessage());
-            // Log the parameters for debugging
             System.out.println("cartItemId: " + request.getParameter("cartItemId"));
             System.out.println("quantity: " + request.getParameter("quantity"));
         }
     }
 
-    private void handleDeleteItem(HttpServletRequest request) {
+    // Trong CartDetail.java
+    private void handleDeleteItem(HttpServletRequest request, HttpServletResponse response) {
         try {
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
-            cartDAO.deleteCartItem(cartItemId);
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("acc");
+
+            if (user != null) {
+                // Người dùng đã đăng nhập, xóa từ database
+                cartDAO.deleteCartItem(request, response, cartItemId, cartItemId);
+            } else {
+                // Người dùng chưa đăng nhập, xóa từ cookie
+                cartDAO.deleteCartItemFromCookie(request, response, cartItemId);
+            }
         } catch (NumberFormatException e) {
             System.out.println("Lỗi khi parse ID sản phẩm: " + e.getMessage());
         }
@@ -258,7 +239,7 @@ public class CartDetail extends HttpServlet {
         String couponCode = request.getParameter("couponCode");
 
         User user = (User) session.getAttribute("acc");
-        Cart cart = cartDAO.getCartByUserId(user.getId());
+        Cart cart = cartDAO.getCart(request, user != null ? user.getId() : null);
 
         if (couponCode == null || couponCode.trim().isEmpty()) {
             session.removeAttribute("appliedCoupon");
@@ -327,15 +308,8 @@ public class CartDetail extends HttpServlet {
         return discount;
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-
         return "Short description";
-    }// </editor-fold>
-
+    }
 }
