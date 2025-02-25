@@ -23,7 +23,7 @@ public class CartDAO extends DBContext {
 
     private static final String CART_COOKIE_NAME = "user_cart";
     private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days in seconds
-    private static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     // Method to get cart from cookies
     public void saveCartToCookies(HttpServletResponse response, Cart cart) {
@@ -349,4 +349,11 @@ public class CartDAO extends DBContext {
         emptyCart.setItems(new ArrayList<>());
         saveCartToCookies(response, emptyCart);
     }
+    public String encodeCookieValue(String value) throws Exception {
+    return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+}
+
+public String decodeCookieValue(String value) throws Exception {
+    return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
+}
 }

@@ -224,6 +224,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
+                                // Sửa lại hàm submitCheckout() trong cartdetail.jsp
                                 function submitCheckout() {
                                     const form = document.getElementById('checkoutForm');
                                     const checkboxes = document.getElementsByClassName('product-select');
@@ -261,6 +262,7 @@
                                         form.appendChild(couponInput);
                                     }
 
+                                    // Gửi form không cần kiểm tra đăng nhập
                                     form.submit();
                                 }
 

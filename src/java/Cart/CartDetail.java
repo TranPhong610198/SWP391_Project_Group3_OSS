@@ -111,15 +111,15 @@ public class CartDetail extends HttpServlet {
             handleApplyCoupon(request, response);
             return;
         } else if ("checkout".equals(action)) {
-            if (user == null) {
-                // Save current URL to redirect back after login
-                String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
-                session.setAttribute("redirectAfterLogin", currentURL);
-
-                // Redirect to login for checkout
-                response.sendRedirect("login");
-                return;
-            }
+//            if (user == null) {
+//                // Save current URL to redirect back after login
+//                String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+//                session.setAttribute("redirectAfterLogin", currentURL);
+//
+//                // Redirect to login for checkout
+//                response.sendRedirect("login");
+//                return;
+//            }
 
             handleCheckout(request, response);
             return;
@@ -132,7 +132,7 @@ public class CartDetail extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        // Get list of selected products
+        // Lấy danh sách sản phẩm được chọn
         String[] selectedIds = request.getParameterValues("selectedItems");
 
         if (selectedIds == null || selectedIds.length == 0) {
@@ -141,27 +141,30 @@ public class CartDetail extends HttpServlet {
             return;
         }
 
-        // Create lists to store IDs and quantities
+        // Tạo danh sách lưu ID và số lượng
         List<String> selectedItemIds = new ArrayList<>();
         List<String> selectedQuantities = new ArrayList<>();
 
-        // Get corresponding quantities for each selected product
+        // Lấy số lượng tương ứng cho từng sản phẩm được chọn
         for (String itemId : selectedIds) {
             String quantity = request.getParameter("quantity_" + itemId);
             selectedItemIds.add(itemId);
             selectedQuantities.add(quantity);
         }
 
-        // Save selected products to session
+        // Lưu vào session các sản phẩm được chọn
         session.setAttribute("selectedItemIds", selectedItemIds);
         session.setAttribute("selectedQuantities", selectedQuantities);
 
-        // Save current discount information to session
+        // Lưu thông tin giảm giá hiện tại vào session
         String currentCoupon = request.getParameter("couponCode");
         if (currentCoupon != null && !currentCoupon.isEmpty()) {
-            // Recalculate discount based on total of selected products
+            // Tính lại giảm giá dựa trên tổng tiền của các sản phẩm được chọn
             User user = (User) session.getAttribute("acc");
-            Cart cart = cartDAO.getCart(request, user.getId());
+            Cart cart = user != null
+                    ? cartDAO.getCartByUserId(user.getId())
+                    : cartDAO.getCartFromCookies(request);
+
             double totalSelected = 0;
             for (int i = 0; i < selectedIds.length; i++) {
                 for (CartItem item : cart.getItems()) {
@@ -183,7 +186,7 @@ public class CartDetail extends HttpServlet {
             }
         }
 
-        // Redirect to contact page
+        // Chuyển hướng sang trang contact mà không kiểm tra đăng nhập
         response.sendRedirect("cartcontact");
     }
 
@@ -213,22 +216,22 @@ public class CartDetail extends HttpServlet {
 
     // Trong CartDetail.java
     private void handleDeleteItem(HttpServletRequest request, HttpServletResponse response) {
-    try {
-        int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-        
-        if (user != null) {
-            // Người dùng đã đăng nhập, xóa từ database
-            cartDAO.deleteCartItem(request, response, cartItemId, cartItemId);
-        } else {
-            // Người dùng chưa đăng nhập, xóa từ cookie
-            cartDAO.deleteCartItemFromCookie(request, response, cartItemId);
+        try {
+            int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("acc");
+
+            if (user != null) {
+                // Người dùng đã đăng nhập, xóa từ database
+                cartDAO.deleteCartItem(request, response, cartItemId, cartItemId);
+            } else {
+                // Người dùng chưa đăng nhập, xóa từ cookie
+                cartDAO.deleteCartItemFromCookie(request, response, cartItemId);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi khi parse ID sản phẩm: " + e.getMessage());
         }
-    } catch (NumberFormatException e) {
-        System.out.println("Lỗi khi parse ID sản phẩm: " + e.getMessage());
     }
-}
 
     private void handleApplyCoupon(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
