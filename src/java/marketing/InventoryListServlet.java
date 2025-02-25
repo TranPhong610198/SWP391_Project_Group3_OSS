@@ -71,10 +71,10 @@ public class InventoryListServlet extends HttpServlet {
             String sortOrder = request.getParameter("sortOrder");
 
             if (sortField == null || sortField.isEmpty()) {
-                sortField = "product_name";
+                sortField = "created_at";
             }
             if (sortOrder == null || sortOrder.isEmpty()) {
-                sortOrder = "asc";
+                sortOrder = "desc";
             }
 
             CategoryDAO categoryDAO = new CategoryDAO();

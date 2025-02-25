@@ -37,7 +37,7 @@ public class CouponDAO extends DBContext {
         if (sortField != null && !sortField.isEmpty()) {
             sql += " ORDER BY " + sortField + (sortOrder.equals("desc") ? " DESC" : " ASC");
         } else {
-            sql += " ORDER BY id"; // Sắp xếp mặc định
+            sql += " ORDER BY created_at desc"; // Sắp xếp mặc định
         }
 
         // Thêm phân trang

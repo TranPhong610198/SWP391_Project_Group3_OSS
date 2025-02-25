@@ -15,60 +15,63 @@ public class InventoryDAO extends DBContext {
     public List<Inventory> searchInventory(String keyword, Integer categoryId, String sortField, String sortOrder, int limit, int offset) {
         Map<Integer, Inventory> inventoryMap = new LinkedHashMap<>();
 
-        String query = """
-                       WITH ProductPagination AS (
-                           SELECT 
-                               p.id AS product_id, 
-                               p.title AS product_name, 
-                               c.name AS category, 
-                               COALESCE(SUM(pv.stock_quantity), 0) AS total_stock_quantity
-                           FROM products p
-                           JOIN categories c ON p.category_id = c.id
-                           LEFT JOIN product_variants pv ON p.id = pv.product_id
-                           WHERE 1=1
-                       """;
+        StringBuilder query = new StringBuilder("""
+        WITH ProductPagination AS (
+            SELECT 
+                p.id AS product_id, 
+                p.title AS product_name, 
+                c.name AS category, 
+                COALESCE(SUM(pv.stock_quantity), 0) AS total_stock_quantity
+            FROM products p
+            JOIN categories c ON p.category_id = c.id
+            LEFT JOIN product_variants pv ON p.id = pv.product_id
+            WHERE 1=1
+        """);
 
         List<Object> params = new ArrayList<>();
 
-        // Thêm điều kiện tìm kiếm và lọc
+        // Tìm kiếm, lọc
         if (keyword != null && !keyword.trim().isEmpty()) {
-            query += "AND p.title LIKE ? ";
+            query.append(" AND p.title LIKE ?");
             params.add("%" + keyword + "%");
         }
         if (categoryId != null) {
-            query += "AND p.category_id = ? ";
+            query.append(" AND p.category_id = ?");
             params.add(categoryId);
         }
 
-        // Thêm sắp xếp, phân trang
-        query += " GROUP BY p.id, p.title, c.name "
-                + " ORDER BY " + (sortField.equals("category") ? "c.name" : sortField.equals("totalQuantity") ? "total_stock_quantity" : "p.title") + " " + (sortOrder.equalsIgnoreCase("asc") ? "ASC" : "DESC")
-                + " OFFSET ? ROWS "
-                + " FETCH NEXT ? ROWS ONLY) ";
+        query.append(" GROUP BY p.id, p.title, c.name, p.created_at")
+                .append(" ORDER BY ")
+                .append(sortField.equals("category") ? "c.name"
+                        : sortField.equals("totalQuantity") ? "total_stock_quantity"
+                        : sortField.equals("created_at") ? "p.created_at" : "p.title")
+                .append(" ").append(sortOrder.equalsIgnoreCase("asc") ? "ASC" : "DESC")
+                .append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY)");
 
-        query += """
-                 SELECT 
-                     pp.product_id, 
-                     pp.product_name, 
-                     pp.category, 
-                     pp.total_stock_quantity, 
-                     pc.id AS color_id, 
-                     pc.color AS color_name, 
-                     ps.id AS size_id, 
-                     ps.size AS size_name
-                 FROM ProductPagination pp
-                 LEFT JOIN product_colors pc ON pp.product_id = pc.product_id
-                 LEFT JOIN product_sizes ps ON pp.product_id = ps.product_id
-                 """;
+        query.append("""
+        SELECT 
+            pp.product_id, 
+            pp.product_name, 
+            pp.category, 
+            pp.total_stock_quantity, 
+            pc.id AS color_id, 
+            pc.color AS color_name, 
+            ps.id AS size_id, 
+            ps.size AS size_name
+        FROM ProductPagination pp
+        LEFT JOIN product_colors pc ON pp.product_id = pc.product_id
+        LEFT JOIN product_sizes ps ON pp.product_id = ps.product_id
+        """);
 
+        // Add pagination para
         params.add(offset);
         params.add(limit);
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            // Set para
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int productId = rs.getInt("product_id");
@@ -92,6 +95,7 @@ public class InventoryDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return new ArrayList<>(inventoryMap.values());
