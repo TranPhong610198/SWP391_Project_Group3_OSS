@@ -353,14 +353,7 @@ body {
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
-    .container-header {
-        flex-direction: column; /* Chuyển sang dọc trên mobile */
-        align-items: flex-start;
-    }
 
-    .navbar-collapse {
-        width: 100%; /* Đảm bảo navbar-collapse chiếm toàn bộ chiều rộng */
-    }
 
     .user-actions {
         margin-top: 10px; /* Thêm khoảng cách trên mobile */

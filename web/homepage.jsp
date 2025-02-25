@@ -180,7 +180,7 @@
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
             .carousel-item img {
-                height: 700px; /* Tăng từ 500px lên 700px */
+                height: 500px; /* Tăng từ 500px lên 700px */
                 object-fit: cover;
                 width: 100%;
             }
@@ -355,28 +355,28 @@
         </div>
 
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Khởi tạo carousel với tùy chọn tương tự như Swiper
-            const carousel = document.getElementById('mainCarousel');
-            const carouselInstance = new bootstrap.Carousel(carousel, {
-                interval: 3000,    // Thời gian chuyển slide - 3 giây
-                pause: 'hover',    // Tạm dừng khi di chuột qua
-                wrap: true,        // Quay vòng khi đến slide cuối cùng
-                keyboard: true,    // Cho phép điều khiển bằng bàn phím
-                touch: true        // Cho phép điều khiển bằng cảm ứng
+            document.addEventListener('DOMContentLoaded', function () {
+                // Khởi tạo carousel với tùy chọn tương tự như Swiper
+                const carousel = document.getElementById('mainCarousel');
+                const carouselInstance = new bootstrap.Carousel(carousel, {
+                    interval: 3000, // Thời gian chuyển slide - 3 giây
+                    pause: 'hover', // Tạm dừng khi di chuột qua
+                    wrap: true, // Quay vòng khi đến slide cuối cùng
+                    keyboard: true, // Cho phép điều khiển bằng bàn phím
+                    touch: true        // Cho phép điều khiển bằng cảm ứng
+                });
+
+                // Lấy chỉ số slide đã lưu (nếu có)
+                const savedSlideIndex = localStorage.getItem('mainCarouselIndex');
+                if (savedSlideIndex !== null) {
+                    carouselInstance.to(parseInt(savedSlideIndex));
+                }
+
+                // Lưu chỉ số slide khi người dùng chuyển slide
+                carousel.addEventListener('slide.bs.carousel', function (event) {
+                    localStorage.setItem('mainCarouselIndex', event.to);
+                });
             });
-    
-            // Lấy chỉ số slide đã lưu (nếu có)
-            const savedSlideIndex = localStorage.getItem('mainCarouselIndex');
-            if (savedSlideIndex !== null) {
-                carouselInstance.to(parseInt(savedSlideIndex));
-            }
-    
-            // Lưu chỉ số slide khi người dùng chuyển slide
-            carousel.addEventListener('slide.bs.carousel', function(event) {
-                localStorage.setItem('mainCarouselIndex', event.to);
-            });
-        });
         </script>
 
         <div class="container">           
@@ -416,7 +416,7 @@
                                                     </c:choose>
                                                 </p>
                                                 <div class="product-price">
-                                                    <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ"/></span>
+                                                    <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -452,7 +452,7 @@
                                         <div class="card-body">
                                             <h5 class="product-title">${product.title}</h5>
                                             <div class="product-price">
-                                                <span>${product.salePrice}đ</span>
+                                                <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                             </div>
                                         </div>
                                     </div>
@@ -484,7 +484,7 @@
                                         <div class="card-body">
                                             <h5 class="product-title">${product.title}</h5>
                                             <div class="product-price">
-                                                <span>${product.salePrice}đ</span>
+                                                <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                             </div>
                                         </div>
                                     </div>
@@ -494,7 +494,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Bài đăng mới nhất -->
             <section class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
