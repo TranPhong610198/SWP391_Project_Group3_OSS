@@ -56,6 +56,10 @@
                                 </c:choose>
                         </div>
                         <hr>
+                        <div class="post-summary">
+                            <h5><i class="fas fa-info-circle me-2"></i>Tóm tắt</h5>
+                            <p>${post.summary}</p>
+                        </div>
                         <div class="text-center">
                             <img src="${post.getThumbnail()}" alt="${post.title}" class="img-fluid rounded mb-4">
                         </div>

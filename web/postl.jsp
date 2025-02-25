@@ -93,11 +93,11 @@
                                 <i class="fas fa-search text-muted"></i>
                             </span>
                             <input type="text" name="search" class="form-control" 
-                                   placeholder="Search posts..." value="${search}">
+                                   placeholder="Nhập tiêu đề..." value="${search}">
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                        <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
                     </div>
                 </form>
             </div>
@@ -105,7 +105,7 @@
             <div class="row">
                 <!-- Main Content -->
                 <div class="col-lg-8">
-                    <h2 class="mb-4">Blog Posts</h2>
+                    <h2 class="mb-4">Các bài đăng</h2>
                     
                     <div class="row g-4">
                         <c:choose>
@@ -147,7 +147,7 @@
                             <c:otherwise>
                                 <div class="col-12 text-center py-5">
                                     <i class="fas fa-search fa-3x mb-3 text-muted"></i>
-                                    <p class="text-muted">No posts found. Try different search terms.</p>
+                                    <p class="text-muted">Không tìm thấy bài đăng nào. Hãy thử các tiêu đề tìm kiếm khác.</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>
@@ -185,7 +185,7 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header bg-white">
-                            <h5 class="mb-0"><i class="fas fa-newspaper me-2"></i>Latest Posts</h5>
+                            <h5 class="mb-0"><i class="fas fa-newspaper me-2"></i>Bài đăng mới nhất</h5>
                         </div>
                         <div class="card-body p-0">
                             <c:forEach var="post" items="${latestPosts}">

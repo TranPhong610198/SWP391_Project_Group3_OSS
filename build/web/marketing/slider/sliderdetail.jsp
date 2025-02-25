@@ -99,6 +99,7 @@
                 display: inline-block;
             }
         </style>
+        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <!-- Include the sidebar -->
@@ -137,7 +138,7 @@
                                     <p><strong>Thứ tự hiển thị:</strong> ${slider.getDisplay_order()}</p>
                                     <p><strong>Trạng thái:</strong> 
                                         <span class="badge ${slider.getStatus() == 'active' ? 'bg-success' : 'bg-secondary'}">
-                                            ${slider.getStatus() == 'active' ? 'Đang hoạt động' : 'Không hoạt động'}
+                                            ${slider.getStatus() == 'active' ? 'Hiển thị' : 'Ẩn'}
                                         </span>
                                     </p>
                                 </div>
@@ -195,10 +196,10 @@
                                         <label for="status" class="form-label fw-bold">Trạng thái</label>
                                         <select class="form-select" id="status" name="status" required>
                                             <option value="active" ${slider.getStatus() == 'active' ? 'selected' : ''}>
-                                                Đang hoạt động
+                                                Hiển thị
                                             </option>
                                             <option value="inactive" ${slider.getStatus() == 'inactive' ? 'selected' : ''}>
-                                                Không hoạt động
+                                                Ẩn
                                             </option>
                                         </select>
                                     </div>
@@ -263,6 +264,12 @@
                         })
                 })()
             });
+            // Initialize CKEditor
+            CKEDITOR.replace('notes', {
+    filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+    filebrowserUploadMethod: 'form',
+    height: 400
+});
         </script>
     </body>
 </html>

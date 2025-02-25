@@ -193,7 +193,7 @@
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
-                                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bài đăng..." value="${param.search}">
+                                    <input type="text" name="search" class="form-control" placeholder="Nhập tiêu đề..." value="${param.search}">
                                 </div>
                             </div>
                             <div class="col-md-3">
