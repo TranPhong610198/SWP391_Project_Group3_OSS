@@ -258,7 +258,7 @@ public class UserDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);
             st.setString(2, email);
-            st.setString(3, BCrypt.hashpw(googleId, BCrypt.gensalt()));
+            st.setString(3, "accGoogle"+BCrypt.hashpw(googleId, BCrypt.gensalt()));
             st.setString(4, fullName);
             st.setString(5, "other");
             st.setString(6, picture);

@@ -155,6 +155,22 @@ public class ListProductServlet extends HttpServlet {
             // Execute query
             List<Product> products = productDAO.getProductsByFilter(sql.toString(), params);
 
+            // Lấy thông tin về combo products - phần này sẽ dùng khi in ra sản phẩm combo liền nhau
+            if ((sortBy == null || sortBy.isEmpty())
+                    && (keyword == null || keyword.trim().isEmpty())
+                    && (categoryId == null || categoryId.isEmpty())) {
+                for (Product tempProduct : products) {
+                    if (tempProduct.getComboGroupId() > 0) { // Chỉ lấy combo cho sản phẩm có combo_group_id
+                        List<Product> comboProducts = productDAO.getComboProduct(tempProduct.getComboGroupId());
+                        if (!comboProducts.isEmpty()) {
+                            tempProduct.setComboProducts(comboProducts);
+                        }
+                    }
+//                    System.out.println("Dòng 169 test combo: "+tempProduct.getComboProducts().toString());
+                }
+            }
+            
+            //________________________________________________________________________________
             // Get category name if category filter is applied
             String categoryName = null;
             if (categoryId != null && !categoryId.trim().isEmpty()) {

@@ -120,6 +120,7 @@ public class ProductDetailList extends HttpServlet {
 //                request.setAttribute("colorId", Integer.parseInt(colorId));
 //            } else {
 //            }
+
             product.setStock(stock);
             request.setAttribute("product", product);
             request.setAttribute("categoryName", categoryName);

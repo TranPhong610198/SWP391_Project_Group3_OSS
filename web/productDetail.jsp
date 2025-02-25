@@ -4,12 +4,6 @@
     Author     : tphon
 --%>
 
-<%-- 
-    Document   : productDetail
-    Created on : Feb 25, 2025, 10:15:30 AM
-    Author     : tphon
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>

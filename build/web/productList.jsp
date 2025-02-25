@@ -292,7 +292,7 @@
                             </select>
                         </div>
 
-                            <div class="col-md-1">
+                        <div class="col-md-1">
                             <button class="btn btn-outline-secondary w-50" type="submit">
                                 <i class="fa-solid fa-filter"></i>
                             </button>
@@ -305,87 +305,97 @@
             <c:choose>
                 <c:when test="${not empty products}">
                     <div class="product-grid">
-                        <c:forEach items="${products}" var="product">
-                            <div class="product-card">
-                                <!-- MODIFIED: Restructured product card layout -->
-                                <a href="productdetail?id=${product.id}" style="text-decoration:none;">
-                                    <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
-                                    <div class="product-info">
-                                        <h5 class="product-title">${product.title}</h5>
-                                        <div class="product-price">
-                                            <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
+                        <c:if test="${not empty product.comboProducts}">
+                            <c:if test="${product.id == product.comboProducts.get(comboProducts.size()).id}">
+                                <c:forEach items="${products}" var="product">
+                                    <div class="product-card">
+                                        <a href="productdetail?id=${product.id}" style="text-decoration:none;">
+                                            <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                            <div class="product-info">
+                                                <h5 class="product-title"> <i class="fas fa-box-open me-1"></i>Combo ${product.title}</h5>
+                                                <div class="product-price">
+                                                    <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
+                        </c:if>
+                        <c:if test="${empty product.comboProducts}">
+                            <c:forEach items="${products}" var="product">
+                                <div class="product-card">
+                                    <a href="productdetail?id=${product.id}" style="text-decoration:none;">
+                                        <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                        <div class="product-info">
+                                            <h5 class="product-title">${product.title}</h5>
+                                            <div class="product-price">
+                                                <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
+                                            </div>
                                         </div>
+                                    </a>
+                                </div>
+                            </c:forEach>
+                        </c:if>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="no-products">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No Products Found</h3>
+                        <p>Try adjusting your search criteria or browse our categories</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+            <!-- Pagination -->
+            <c:if test="${totalPages > 1}">
+                <nav aria-label="Product pagination">
+                    <ul class="pagination">
+                        <!-- Previous page -->
+                        <c:if test="${currentPage > 1}">
+
+                            <li class="page-item">
+                                <a class="page-link" href="listproduct?page=${currentPage - 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
+                                    <i class="fas fa-chevron-left"></i>
                                 </a>
-<!--                                <div class="product-buttons">
-                                    <button onclick="window.location.href = 'cart?action=buyNow&productId=${product.id}'" class="btn-buy-now">
-                                        <i class="fas fa-bolt"></i> Mua ngay
-                                    </button>
-                                    <button onclick="window.location.href = 'cart?action=add&productId=${product.id}'" class="btn-add-cart">
-                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
-                                    </button>
-                                </div>-->
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="no-products">
-                    <i class="fas fa-box-open"></i>
-                    <h3>No Products Found</h3>
-                    <p>Try adjusting your search criteria or browse our categories</p>
-                </div>
-            </c:otherwise>
-        </c:choose>
+                            </li>
+                        </c:if>
 
-        <!-- Pagination -->
-        <c:if test="${totalPages > 1}">
-            <nav aria-label="Product pagination">
-                <ul class="pagination">
-                    <!-- Previous page -->
-                    <c:if test="${currentPage > 1}">
+                        <!-- Page numbers -->
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                <a class="page-link" href="listproduct?page=${i}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
+                                    ${i}
+                                </a>
+                            </li>
+                        </c:forEach>
 
-                        <li class="page-item">
-                            <a class="page-link" href="listproduct?page=${currentPage - 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        </li>
-                    </c:if>
+                        <!-- Next page -->
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="listproduct?page=${currentPage + 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </c:if>
+        </div>
 
-                    <!-- Page numbers -->
-                    <c:forEach begin="1" end="${totalPages}" var="i">
-                        <li class="page-item ${currentPage == i ? 'active' : ''}">
-                            <a class="page-link" href="listproduct?page=${i}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
-                                ${i}
-                            </a>
-                        </li>
-                    </c:forEach>
+        <jsp:include page="footer.jsp" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            $('#maxPrice').on('change', function () {
+                const maxPrice = parseFloat($('#maxPrice').val()) || 0;
+                const minPrice = parseFloat($('#minPrice').val()) || 0;
 
-                    <!-- Next page -->
-                    <c:if test="${currentPage < totalPages}">
-                        <li class="page-item">
-                            <a class="page-link" href="listproduct?page=${currentPage + 1}&keyword=${keyword}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortBy=${sortBy}">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                    </c:if>
-                </ul>
-            </nav>
-        </c:if>
-    </div>
-
-    <jsp:include page="footer.jsp" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-                                        $('#maxPrice').on('change', function () {
-                                            const maxPrice = parseFloat($('#maxPrice').val()) || 0;
-                                            const minPrice = parseFloat($('#minPrice').val()) || 0;
-
-                                            if (maxPrice < minPrice) {
-                                                alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
-                                                $('#maxPrice').val(minPrice);
-                                            }
-                                        });
-    </script>
-</body>
+                if (maxPrice < minPrice) {
+                    alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
+                    $('#maxPrice').val(minPrice);
+                }
+            });
+        </script>
+    </body>
 </html>
