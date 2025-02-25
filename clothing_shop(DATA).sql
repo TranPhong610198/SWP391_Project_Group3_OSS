@@ -694,11 +694,11 @@ INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_
 (25, N'Túi đeo chéo nữ mini', 59, N'Túi đeo chéo nữ kiểu dáng nhỏ gọn, nhiều ngăn tiện lợi', CAST(210000.00 AS Decimal(10, 2)), CAST(250000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/2eaed89d84a8687973c77c12dca9c437', N'active', 0, NULL, CAST(N'2025-02-25T10:10:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:10:00.0000000' AS DateTime2)),
 (26, N'Bông tai bạc hình giọt nước', 68, N'Bông tai nữ bạc 925 thiết kế tinh tế hình giọt nước', CAST(129000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljpnnxnegk2xab', N'active', 0, NULL, CAST(N'2025-02-25T10:15:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:15:00.0000000' AS DateTime2)),
 (27, N'Áo khoác nữ cardigan', 26, N'Áo khoác cardigan dệt kim mỏng nhẹ, kiểu dáng basic', CAST(265000.00 AS Decimal(10, 2)), CAST(300000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lhnrwk0zfgzv43', N'active', 0, NULL, CAST(N'2025-02-25T10:20:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:20:00.0000000' AS DateTime2)),
-(28, N'Dép lào nam cao cấp', 70, N'Dép lào nam chất liệu cao su bền bỉ, đế chống trượt', CAST(155000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://product.hstatic.net/1000306633/product/05__18__3c36ca9e22124cfcb03a94be6ff34c5c_1024x1024.jpg', N'active', 0, NULL, CAST(N'2025-02-25T10:25:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:25:00.0000000' AS DateTime2)),
-(29, N'Áo thun trẻ em hoạt hình', 53, N'Áo thun cotton in họa tiết hoạt hình dễ thương cho bé', CAST(120000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lje0s29p95d8d2', N'active', 0, NULL, CAST(N'2025-02-25T10:30:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:30:00.0000000' AS DateTime2)),
-(30, N'Nhẫn bạc đính đá zircon', 69, N'Nhẫn bạc 925 đính đá zircon sang trọng', CAST(199000.00 AS Decimal(10, 2)), CAST(230000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljxk7oa9kxoz7e', N'active', 0, NULL, CAST(N'2025-02-25T10:35:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:35:00.0000000' AS DateTime2)),
-(31, N'Chân váy xếp ly dáng ngắn', 50, N'Chân váy xếp ly dáng tennis, phong cách Hàn Quốc', CAST(245000.00 AS Decimal(10, 2)), CAST(280000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lkhunb8lfqlc03', N'active', 0, NULL, CAST(N'2025-02-25T10:40:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:40:00.0000000' AS DateTime2)),
-(32, N'Quần kaki nam dáng suông', 11, N'Quần kaki nam dáng suông basic, chất vải cao cấp', CAST(299000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/03341df4624a5884c1af2265c251f5b6', N'active', 0, NULL, CAST(N'2025-02-25T10:45:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:45:00.0000000' AS DateTime2));
+(28, N'Dép lào nam cao cấp', 70, N'Dép lào nam chất liệu cao su bền bỉ, đế chống trượt', CAST(155000.00 AS Decimal(10, 2)), CAST(180000.00 AS Decimal(10, 2)), N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'active', 0, NULL, CAST(N'2025-02-25T10:25:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:25:00.0000000' AS DateTime2)),
+(29, N'Áo thun trẻ em hoạt hình', 53, N'Áo thun cotton in họa tiết hoạt hình dễ thương cho bé', CAST(120000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'active', 0, NULL, CAST(N'2025-02-25T10:30:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:30:00.0000000' AS DateTime2)),
+(30, N'Nhẫn bạc đính đá zircon', 69, N'Nhẫn bạc 925 đính đá zircon sang trọng', CAST(199000.00 AS Decimal(10, 2)), CAST(230000.00 AS Decimal(10, 2)), N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'active', 0, NULL, CAST(N'2025-02-25T10:35:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:35:00.0000000' AS DateTime2)),
+(31, N'Chân váy xếp ly dáng ngắn', 50, N'Chân váy xếp ly dáng tennis, phong cách Hàn Quốc', CAST(245000.00 AS Decimal(10, 2)), CAST(280000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'active', 0, NULL, CAST(N'2025-02-25T10:40:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:40:00.0000000' AS DateTime2)),
+(32, N'Quần kaki nam', 11, N'Quần kaki nam dáng suông basic, chất vải cao cấp', CAST(299000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'active', 0, NULL, CAST(N'2025-02-25T10:45:00.0000000' AS DateTime2), CAST(N'2025-02-25T10:45:00.0000000' AS DateTime2));
 GO
 SET IDENTITY_INSERT [dbo].[products] OFF
 GO
@@ -849,7 +849,7 @@ INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES
 (100, 31, N'S'),
 (101, 31, N'M'),
 (102, 31, N'L'),
--- Quần kaki nam dáng suông
+-- Quần kaki nam
 (103, 32, N'28'),
 (104, 32, N'30'),
 (105, 32, N'32'),
@@ -1065,7 +1065,7 @@ INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [sto
 (250, 31, 101, 76, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
 (251, 31, 102, 76, 35, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
 
--- Quần kaki nam dáng suông
+-- Quần kaki nam
 (252, 32, 103, 77, 45, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
 (253, 32, 104, 77, 60, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
 (254, 32, 105, 77, 55, CAST(N'2025-02-24T00:00:00.0000000' AS DateTime2)),
