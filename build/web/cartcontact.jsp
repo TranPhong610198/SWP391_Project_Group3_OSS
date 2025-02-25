@@ -299,14 +299,6 @@
                             </c:choose>
                         </div>
 
-                        <%-- Thêm thông báo đăng nhập cho khách --%>
-                        <c:if test="${isGuest}">
-                            <div class="alert alert-info mb-3">
-                                <p><i class="fas fa-info-circle me-2"></i>Bạn đang mua hàng dưới dạng khách. Khi hoàn tất đơn hàng, bạn sẽ cần đăng nhập hoặc đăng ký tài khoản.</p>
-                                <p>Nếu bạn đã có tài khoản, <a href="login" class="alert-link">đăng nhập ngay</a> để sử dụng địa chỉ đã lưu và theo dõi đơn hàng dễ dàng hơn.</p>
-                            </div>
-                        </c:if>
-
                         <button type="button" class="btn btn-outline-primary" 
                                 data-bs-toggle="modal" data-bs-target="#addAddressModal">
                             <i class="fas fa-plus me-2"></i>Thêm địa chỉ mới

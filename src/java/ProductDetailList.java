@@ -101,6 +101,22 @@ public class ProductDetailList extends HttpServlet {
 
             //Lấy màu
             List<Color> colors = productDAO.getColorsByProductId(productId);
+            
+            //            String sizeId = request.getParameter("sizeId");
+//            String colorId = request.getParameter("colorId");
+//
+//            if (sizeId != null && !sizeId.isEmpty() && colorId != null && !colorId.isEmpty()) {
+//                stock = productDAO.getTotalStockByProductId(productId, Integer.parseInt(sizeId), Integer.parseInt(colorId));
+//                request.setAttribute("sizeId", Integer.valueOf(sizeId));
+//                request.setAttribute("colorId", Integer.valueOf(colorId));
+//            } else if (sizeId != null && !sizeId.isEmpty()) {
+//                stock = productDAO.getTotalStockByProductSize(productId, Integer.parseInt(sizeId));
+//                request.setAttribute("sizeId", Integer.parseInt(sizeId));
+//            } else if (colorId != null && !colorId.isEmpty()) {
+//                stock = productDAO.getTotalStockByProductColor(productId, Integer.parseInt(colorId));
+//                request.setAttribute("colorId", Integer.parseInt(colorId));
+//            } else {
+//            }
 
             //Lấy số lượng
             int stock = productDAO.getTotalStockByProductId(productId);
