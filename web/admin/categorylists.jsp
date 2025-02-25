@@ -172,12 +172,12 @@
                                     <option value="level" ${sortBy == 'level' ? 'selected' : ''}>Cấp độ</option>
                                 </select>
                             </div>
-                            <div class="col-md-2 d-flex">
-                                <button type="submit" class="btn btn-primary me-2">
-                                    <i class="fas fa-filter me-2"></i>Lọc
-                                </button>
-                                <a href="categorylists" class="btn btn-secondary">Xóa bộ lọc</a>
-                            </div>
+                            <div class="d-flex">
+                                        <button type="submit" class="btn btn-primary me-2">
+                                            <i class="fas fa-filter me-1"></i>Lọc
+                                        </button>
+                                        <a href="categorylists" class="btn btn-secondary">Xóa bộ lọc</a>
+                                    </div>
                         </form>
                     </div>
                 </div>
@@ -199,9 +199,7 @@
                                     <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
                                     <h5 class="text-muted">Không tìm thấy danh mục nào</h5>
                                     <p class="text-muted">Vui lòng thử lại với điều kiện tìm kiếm khác hoặc thêm danh mục mới</p>
-                                    <a href="categoryadd" class="btn btn-primary">
-                                        <i class="fas fa-plus me-2"></i>Thêm danh mục mới
-                                    </a>
+                                    
                                 </div>
                             </c:when>
                             <c:otherwise>
