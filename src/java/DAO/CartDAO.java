@@ -70,7 +70,6 @@ public class CartDAO extends DBContext {
     }
 
     // Method to add item to cookie cart
-    
     public void addItemToCookieCart(HttpServletRequest request, HttpServletResponse response, CartItem item) {
         Cart cart = getCartFromCookies(request);
 
@@ -168,7 +167,7 @@ public class CartDAO extends DBContext {
 
     public Cart createCart(int userId) {
         Cart cart = new Cart();
-        String sql = "INSERT INTO cart (user_id, created_at) VALUES (?, NOW())";
+        String sql = "INSERT INTO cart (user_id, created_at) VALUES (?, GETDATE());";
         try {
             PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             st.setInt(1, userId);
@@ -214,7 +213,10 @@ public class CartDAO extends DBContext {
                 cart.setUserId(rs.getInt("user_id"));
                 cart.setCreatedAt(rs.getTimestamp("created_at"));
                 // Get cart items and set to cart
-                cart.setItems(getCartItems(rs.getInt("id")));
+                cart.setItems(getCartItems(cart.getId()));
+            } else {
+                // If no cart exists, create a new one
+                cart = createCart(userId);
             }
         } catch (SQLException e) {
             System.out.println("Error getting cart: " + e.getMessage());
@@ -296,6 +298,13 @@ public class CartDAO extends DBContext {
     public boolean addCartItem(CartItem item) {
         String sql = "INSERT INTO cart_items (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)";
         try {
+            // First, ensure the cart exists
+            Cart cart = getCartByUserId(item.getCartId());
+            if (cart == null) {
+                // Create cart if it doesn't exist
+                cart = createCart(item.getCartId());
+            }
+
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, item.getCartId());
             st.setInt(2, item.getProductId());
@@ -349,11 +358,12 @@ public class CartDAO extends DBContext {
         emptyCart.setItems(new ArrayList<>());
         saveCartToCookies(response, emptyCart);
     }
-    public String encodeCookieValue(String value) throws Exception {
-    return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
-}
 
-public String decodeCookieValue(String value) throws Exception {
-    return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
-}
+    public String encodeCookieValue(String value) throws Exception {
+        return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String decodeCookieValue(String value) throws Exception {
+        return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
+    }
 }

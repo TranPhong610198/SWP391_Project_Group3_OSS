@@ -149,7 +149,6 @@ public class ProductDetailList extends HttpServlet {
                 User user = (User) session.getAttribute("acc");
 
                 // Không còn yêu cầu đăng nhập
-
                 int sizeId = Integer.parseInt(request.getParameter("sizeId"));
                 int colorId = Integer.parseInt(request.getParameter("colorId"));
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
@@ -159,11 +158,11 @@ public class ProductDetailList extends HttpServlet {
 
                 // Lấy thông tin sản phẩm để hiển thị trong giỏ hàng
                 Product product = productDAO.getProductById(productId);
-                
+
                 // Lấy thông tin size và màu
                 String sizeName = "";
                 String colorName = "";
-                
+
                 List<Size> sizes = productDAO.getSizesByProductId(productId);
                 for (Size s : sizes) {
                     if (s.getId() == sizeId) {
@@ -171,7 +170,7 @@ public class ProductDetailList extends HttpServlet {
                         break;
                     }
                 }
-                
+
                 List<Color> colors = productDAO.getColorsByProductId(productId);
                 for (Color c : colors) {
                     if (c.getId() == colorId) {
@@ -179,38 +178,39 @@ public class ProductDetailList extends HttpServlet {
                         break;
                     }
                 }
-                
+
                 if (user != null) {
                     // Người dùng đã đăng nhập, lưu vào database
                     Cart cart = getOrCreateCart(user.getId());
                     CartItem item = new CartItem(cart.getId(), productId, variantId, quantity);
-                    
+
                     // Cập nhật thông tin hiển thị cho CartItem
                     item.setProductTitle(product.getTitle());
                     item.setProductThumbnail(product.getThumbnail());
                     item.setProductPrice(product.getSalePrice().doubleValue());
                     item.setSize(sizeName);
                     item.setColor(colorName);
-                    
+
                     if (cartDAO.addCartItem(item)) {
                         response.sendRedirect("listproduct?SS");
                     } else {
                         response.sendRedirect("listproduct?ErrorAddToCart");
                     }
+
                 } else {
                     // Người dùng chưa đăng nhập, lưu vào cookie
                     CartItem item = new CartItem();
                     item.setProductId(productId);
                     item.setVariantId(variantId);
                     item.setQuantity(quantity);
-                    
+
                     // Cập nhật thông tin hiển thị cho CartItem
                     item.setProductTitle(product.getTitle());
                     item.setProductThumbnail(product.getThumbnail());
                     item.setProductPrice(product.getSalePrice().doubleValue());
                     item.setSize(sizeName);
                     item.setColor(colorName);
-                    
+
                     // Thêm vào giỏ hàng cookie
                     cartDAO.addItemToCookieCart(request, response, item);
                     response.sendRedirect("listproduct?SS");
