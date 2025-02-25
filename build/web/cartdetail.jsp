@@ -74,7 +74,7 @@
                                         <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
                                         <h5>Giỏ hàng trống</h5>
                                         <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
-                                        <a href="products" class="btn btn-primary">
+                                        <a href="listproduct" class="btn btn-primary">
                                             <i class="fas fa-shopping-bag me-2"></i>Chọn sản phẩm
                                         </a>
                                     </div>
@@ -399,6 +399,32 @@
                                                 console.error('Error updating quantity:', error);
                                                 // Có thể thêm thông báo lỗi cho người dùng ở đây
                                             });
+                                }
+                                function deleteItem(itemId) {
+                                    if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                                        const formData = new URLSearchParams();
+                                        formData.append('action', 'delete');
+                                        formData.append('cartItemId', itemId);
+
+                                        fetch('cartdetail', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                            },
+                                            body: formData.toString()
+                                        })
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error('Network response was not ok');
+                                                    }
+                                                    // Nếu xóa thành công, cập nhật UI
+                                                    location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error deleting item:', error);
+                                                    alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
+                                                });
+                                    }
                                 }
         </script>
     </body>
