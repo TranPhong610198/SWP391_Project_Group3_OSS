@@ -75,7 +75,7 @@ public class HomeServlet extends HttpServlet {
         List<Post> latestPosts = postDAO.getPostToHome(1, 4, "", null, "published", null, "created_at", "DESC");
 
         // Get featured products
-        List<Product> featuredProducts = productDAO.getFeaturedProducts(8); // Get top 8 featured products
+        List<Product> featuredProducts = productDAO.getFeaturedProducts(8); // Lấy 8 thằng sản phẩm mới nhất
 
         List<Product> menClothingProducts = productDAO.getMenClothingProducts(4); // Get 4 men's clothing products
         List<Product> womanClothingProducts = productDAO.getWomanClothingProducts(4);

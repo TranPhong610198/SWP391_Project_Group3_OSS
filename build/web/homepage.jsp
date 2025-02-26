@@ -110,7 +110,7 @@
                 position: absolute;
                 top: 1rem;
                 right: 1rem;
-                background: #00b894;
+                background: red;
                 color: white;
                 padding: 0.5rem 1rem;
                 border-radius: 20px;
@@ -401,7 +401,7 @@
                                         <div class="card product-card">
                                             <div class="position-relative">
                                                 <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
-                                                <span class="product-badge">Hot</span>
+                                                <span class="product-badge">Mới</span>
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="product-title">${product.title}</h5>
