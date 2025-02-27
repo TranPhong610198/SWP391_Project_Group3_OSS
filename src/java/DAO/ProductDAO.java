@@ -762,4 +762,106 @@ public class ProductDAO extends DBContext {
         }
         return products;
     }
+    
+    public List<Product> getBabyClothingProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "
+                + "FROM products p "
+                + "INNER JOIN categories c ON p.category_id = c.id "
+                + "WHERE (c.parent_id = 3 "
+                + "   OR c.id IN ( "
+                + "      SELECT id FROM categories "
+                + "      WHERE parent_id IN ( "
+                + "         SELECT id FROM categories WHERE parent_id = 3 "
+                + "      ) "
+                + "   )) AND p.status = 'active' "
+                + "ORDER BY p.created_at DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setDescription(rs.getString("description"));
+                product.setOriginalPrice(rs.getBigDecimal("original_price"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
+                product.setThumbnail(rs.getString("thumbnail"));
+                product.setStock(getTotalStockByProductId(rs.getInt("id")));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+    
+    public List<Product> getAccessoryProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "
+                + "FROM products p "
+                + "INNER JOIN categories c ON p.category_id = c.id "
+                + "WHERE (c.parent_id = 4 "
+                + "   OR c.id IN ( "
+                + "      SELECT id FROM categories "
+                + "      WHERE parent_id IN ( "
+                + "         SELECT id FROM categories WHERE parent_id = 4 "
+                + "      ) "
+                + "   )) AND p.status = 'active' "
+                + "ORDER BY p.created_at DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setDescription(rs.getString("description"));
+                product.setOriginalPrice(rs.getBigDecimal("original_price"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
+                product.setThumbnail(rs.getString("thumbnail"));
+                product.setStock(getTotalStockByProductId(rs.getInt("id")));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+    
+    public List<Product> getShoesProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "
+                + "FROM products p "
+                + "INNER JOIN categories c ON p.category_id = c.id "
+                + "WHERE (c.parent_id = 5 "
+                + "   OR c.id IN ( "
+                + "      SELECT id FROM categories "
+                + "      WHERE parent_id IN ( "
+                + "         SELECT id FROM categories WHERE parent_id = 5 "
+                + "      ) "
+                + "   )) AND p.status = 'active' "
+                + "ORDER BY p.created_at DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                product.setDescription(rs.getString("description"));
+                product.setOriginalPrice(rs.getBigDecimal("original_price"));
+                product.setSalePrice(rs.getBigDecimal("sale_price"));
+                product.setThumbnail(rs.getString("thumbnail"));
+                product.setStock(getTotalStockByProductId(rs.getInt("id")));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 }
