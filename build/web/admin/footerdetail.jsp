@@ -182,8 +182,8 @@
                                                 <i class="fas fa-toggle-on text-muted"></i>
                                             </span>
                                             <select class="form-select" id="status" name="status" required>
-                                                <option value="active" ${footer.status == 'active' ? 'selected' : ''}>Active</option>
-                                                <option value="inactive" ${footer.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                                <option value="active" ${footer.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                                                <option value="inactive" ${footer.status == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                                             </select>
                                         </div>
                                         <div class="invalid-feedback">

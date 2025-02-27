@@ -64,7 +64,7 @@
                 color: #2c3e50;
             }
 
-            .form-control:disabled, 
+            .form-control:disabled,
             .form-control[readonly] {
                 background-color: #f8f9fa;
                 border-color: #e9ecef;
@@ -161,8 +161,8 @@
                                     <div class="row">
                                         <div class="col-md-4 avatar-container">
                                             <img src="${(user.avatar.contains('https')) ? user.avatar : pageContext.request.contextPath.concat('/').concat(user.avatar)}" 
-     alt="avatar" id="avatar-preview"
-     onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
+                                                 alt="avatar" id="avatar-preview"
+                                                 onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
                                         </div>
 
                                         <div class="col-md-8">
@@ -209,46 +209,50 @@
                                                     <input type="radio" class="status-radio" name="status" id="status-active" 
                                                            value="active" ${user.status == 'active' ? 'checked' : ''}>
                                                     <label for="status-active" class="status-label status-label-active">
-                                                        <i class="fas fa-check-circle me-1"></i>Active
+                                                        <i class="fas fa-check-circle me-1"></i>Hoạt động
                                                     </label>
-
                                                     <input type="radio" class="status-radio" name="status" id="status-inactive" 
                                                            value="inactive" ${user.status == 'inactive' ? 'checked' : ''}>
                                                     <label for="status-inactive" class="status-label status-label-inactive">
-                                                        <i class="fas fa-times-circle me-1"></i>Inactive
+                                                        <i class="fas fa-times-circle me-1"></i>Không hoạt động
+                                                    </label>
+                                                    <input type="radio" class="status-radio" name="status" id="status-pending" 
+                                                           value="pending" ${user.status == 'pending' ? 'checked' : ''} 
+                                                           onclick="return false;" style="pointer-events: none;">
+                                                    <label for="status-pending" class="status-label status-label-pending" style="pointer-events: none;">
+                                                        <i class="fas fa-clock me-1"></i>Đang chờ
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="timestamp-info">
-                                        <p><i class="fas fa-clock me-2"></i><strong>Ngày tạo:</strong> 
-                                            <c:choose>
-                                                <c:when test="${not empty user.createdAt}">
-                                                    ${fn:substringBefore(user.createdAt, '.')}
-                                                </c:when>
-                                                <c:otherwise>Không có dữ liệu</c:otherwise>
-                                            </c:choose>
-                                        </p>
-                                        <p><i class="fas fa-history me-2"></i><strong>Cập nhật lần cuối:</strong> 
-                                            <c:choose>
-                                                <c:when test="${not empty user.updatedAt}">
-                                                    ${fn:substringBefore(user.updatedAt, '.')}
-                                                </c:when>
-                                                <c:otherwise>Không có dữ liệu</c:otherwise>
-                                            </c:choose>
-                                        </p>
-                                    </div>
+                                        <div class="timestamp-info">
+                                            <p><i class="fas fa-clock me-2"></i><strong>Ngày tạo:</strong> 
+                                                    <c:choose>
+                                                        <c:when test="${not empty user.createdAt}">
+                                                            ${fn:substringBefore(user.createdAt, '.')}
+                                                        </c:when>
+                                                        <c:otherwise>Không có dữ liệu</c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                            <p><i class="fas fa-history me-2"></i><strong>Cập nhật lần cuối:</strong> 
+                                                    <c:choose>
+                                                        <c:when test="${not empty user.updatedAt}">
+                                                            ${fn:substringBefore(user.updatedAt, '.')}
+                                                        </c:when>
+                                                        <c:otherwise>Không có dữ liệu</c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                        </div>
 
-                                    <div class="text-center mt-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save me-2"></i>Lưu thay đổi
-                                        </button>
-                                        <a href="../userlists" class="btn btn-secondary ms-2">
-                                            <i class="fas fa-times me-2"></i>Hủy
-                                        </a>
-                                    </div>
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save me-2"></i>Lưu thay đổi
+                                            </button>
+                                            <a href="../userlists" class="btn btn-secondary ms-2">
+                                                <i class="fas fa-times me-2"></i>Hủy
+                                            </a>
+                                        </div>
                                 </form>
                             </div>
                         </div>
