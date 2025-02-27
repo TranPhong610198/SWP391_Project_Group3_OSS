@@ -9,6 +9,7 @@
         <title>Product Management</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
         <style>
             :root {
                 --primary-color: #2c3e50;
@@ -205,6 +206,77 @@
             .pagination .page-item .page-link:hover {
                 background-color: var(--hover-color);
             }
+
+            
+            /* Ô input chính */
+            .select2-container--default .select2-selection--single {
+                height: 38px;
+                padding: 5px 15px;
+            }
+
+            /* Mũi tên dropdown */
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 38px;
+                right: 10px;
+            }
+
+            /* Placeholder */
+            .select2-container--default .select2-selection--single .select2-selection__placeholder {
+                color: #6c757d;
+            }
+
+            /* Khi focus */
+            .select2-container--default.select2-container--focus .select2-selection--single {
+                border-color: var(--accent-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+
+            /* Dropdown kết quả */
+            .select2-container--default .select2-dropdown {
+                border: 1px solid var(--border-color);
+                border-radius: 0px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                background-color: #fff;
+                margin-top: 5px;
+            }
+
+            /* Option trong dropdown */
+            .select2-container--default .select2-results__option {
+                padding: 8px 15px;
+                color: var(--primary-color);
+            }
+
+            /* Option khi hover */
+            .select2-container--default .select2-results__option--highlighted[aria-selected] {
+                background-color: var(--hover-color);
+                color: var(--primary-color);
+            }
+
+
+            /* Ô tìm kiếm trong dropdown */
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                padding: 5px 15px;
+            }
+
+            /* Xóa lựa chọn (nút x) */
+            .select2-container--default .select2-selection--single .select2-selection__clear {
+                color: var(--accent-color);
+                font-weight: bold;
+                margin-right: 10px;
+            }
+            
+            /* Tăng chiều cao tối đa của dropdown */
+            .select2-container--default .select2-results > .select2-results__options {
+                max-height: 400px; 
+                overflow-y: auto; 
+            }
+
+            /* Đảm bảo dropdown không bị cắt */
+            .select2-container--default .select2-dropdown {
+                max-height: none; /* Loại bỏ giới hạn chiều cao của container dropdown */
+            }
         </style>
     </head>
     <body>
@@ -289,20 +361,20 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <select name="categoryId" class="form-select">
+                                <select name="categoryId" class="form-select select2">
                                     <option value="">📑 Tất cả danh mục</option>
                                     <c:forEach items="${categories}" var="category">
                                         <c:choose>
                                             <%-- Level 1 categories (parent categories) --%>
                                             <c:when test="${category.level == 1}">
                                                 <option value="${category.id}" ${categoryId == category.id ? 'selected' : ''}>
-                                                    📁 ${category.name}
+                                                    🛍 ${category.name}
                                                 </option>
                                                 <%-- Display child categories --%>
                                                 <c:forEach items="${categories}" var="childCat">
                                                     <c:if test="${childCat.parentId == category.id}">
                                                         <option value="${childCat.id}" ${categoryId == childCat.id ? 'selected' : ''}>
-                                                            &nbsp;&nbsp;&nbsp;&nbsp;📎 ${childCat.name}
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;🧷 ${childCat.name}
                                                         </option>
                                                         <%-- Display grandchild categories if any --%>
                                                         <c:forEach items="${categories}" var="grandChildCat">
@@ -502,10 +574,28 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
                                                             $(document).ready(function () {
+                                                                $('.select2').select2({
+                                                                    placeholder: "📑 Chọn danh mục",
+                                                                    allowClear: true,
+                                                                    width: '100%',
+                                                                    matcher: function (params, data) {
+                                                                        if (!params.term || params.term.trim() === '') {
+                                                                            return data;
+                                                                        }
+                                                                        var term = params.term.toLowerCase();
+                                                                        var text = data.text.toLowerCase();
+                                                                        if (text.indexOf(term) > -1) {
+                                                                            return data;
+                                                                        }
+                                                                        return null;
+                                                                    }
+                                                                });
+
                                                                 $('.sidebar-toggle').on('click', function () {
                                                                     $('.sidebar').toggleClass('active');
                                                                     $('.main-content').toggleClass('active');

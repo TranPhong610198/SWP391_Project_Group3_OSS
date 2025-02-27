@@ -264,7 +264,7 @@
                     </div>
                     <div class="card-body">
                         <form action="couponlist" method="GET" class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group">
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
