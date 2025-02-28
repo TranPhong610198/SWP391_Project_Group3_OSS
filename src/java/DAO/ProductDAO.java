@@ -634,6 +634,7 @@ public class ProductDAO extends DBContext {
         return false;
     }
 
+//_______________________________________________________Huy____________________________________________    
     // set status khi thêm số lượng cho sp mới
     public void updateProductStatusIfNeeded(int productId) {
         int totalStock = getTotalStockByProductId(productId);
@@ -665,6 +666,20 @@ public class ProductDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getProductNameById(int productId) {
+        String sql = "SELECT title FROM products WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString("title");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
     }
 
     //VTĐ lấy sản phẩm nổi bật hiển lên home
