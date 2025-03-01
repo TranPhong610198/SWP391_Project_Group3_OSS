@@ -24,11 +24,42 @@ public class UserDAO extends DBContext {
     /**
      * *****************************************************
      */
-    public User checkAccount(String username, String password) {
+    public User loginByUsername(String username, String password) {
         String sql = "SELECT * FROM users WHERE username = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String storedHash = rs.getString("password_hash");
+                if (BCrypt.checkpw(password, storedHash)) {
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            storedHash,
+                            rs.getString("full_name"),
+                            rs.getString("gender"),
+                            rs.getString("mobile"),
+                            rs.getString("avatar"),
+                            rs.getString("role"),
+                            rs.getString("status"),
+                            rs.getString("created_at"),
+                            rs.getString("updated_at")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User loginByEmail(String email, String password) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, email);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 String storedHash = rs.getString("password_hash");
@@ -258,7 +289,7 @@ public class UserDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);
             st.setString(2, email);
-            st.setString(3, "accGoogle"+BCrypt.hashpw(googleId, BCrypt.gensalt()));
+            st.setString(3, "accGoogle" + BCrypt.hashpw(googleId, BCrypt.gensalt()));
             st.setString(4, fullName);
             st.setString(5, "other");
             st.setString(6, picture);
@@ -339,44 +370,44 @@ public class UserDAO extends DBContext {
         return addresses;
     }
 
- public boolean addUserAddress(UserAddress address) {
-    // Kiểm tra xem người dùng đã có địa chỉ nào chưa
-    String checkExistingAddresses = "SELECT COUNT(*) FROM user_addresses WHERE user_id = ?";
-    String sql = "INSERT INTO user_addresses (user_id, recipient_name, phone, address, is_default) VALUES (?, ?, ?, ?, ?)";
+    public boolean addUserAddress(UserAddress address) {
+        // Kiểm tra xem người dùng đã có địa chỉ nào chưa
+        String checkExistingAddresses = "SELECT COUNT(*) FROM user_addresses WHERE user_id = ?";
+        String sql = "INSERT INTO user_addresses (user_id, recipient_name, phone, address, is_default) VALUES (?, ?, ?, ?, ?)";
 
-    try {
-        // Kiểm tra số lượng địa chỉ hiện có
-        PreparedStatement checkStmt = connection.prepareStatement(checkExistingAddresses);
-        checkStmt.setInt(1, address.getUserId());
-        ResultSet rs = checkStmt.executeQuery();
-        rs.next();
-        int addressCount = rs.getInt(1);
+        try {
+            // Kiểm tra số lượng địa chỉ hiện có
+            PreparedStatement checkStmt = connection.prepareStatement(checkExistingAddresses);
+            checkStmt.setInt(1, address.getUserId());
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            int addressCount = rs.getInt(1);
 
-        // Nếu là địa chỉ đầu tiên hoặc đã chọn là địa chỉ mặc định
-        boolean shouldBeDefault = addressCount == 0 || address.isDefault();
-        
-        // Nếu sẽ set làm mặc định, clear các địa chỉ mặc định khác
-        if (shouldBeDefault) {
-            String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
-            PreparedStatement clearStmt = connection.prepareStatement(clearDefaults);
-            clearStmt.setInt(1, address.getUserId());
-            clearStmt.executeUpdate();
+            // Nếu là địa chỉ đầu tiên hoặc đã chọn là địa chỉ mặc định
+            boolean shouldBeDefault = addressCount == 0 || address.isDefault();
+
+            // Nếu sẽ set làm mặc định, clear các địa chỉ mặc định khác
+            if (shouldBeDefault) {
+                String clearDefaults = "UPDATE user_addresses SET is_default = 0 WHERE user_id = ?";
+                PreparedStatement clearStmt = connection.prepareStatement(clearDefaults);
+                clearStmt.setInt(1, address.getUserId());
+                clearStmt.executeUpdate();
+            }
+
+            // Thêm địa chỉ mới
+            PreparedStatement insertStmt = connection.prepareStatement(sql);
+            insertStmt.setInt(1, address.getUserId());
+            insertStmt.setString(2, address.getRecipientName());
+            insertStmt.setString(3, address.getPhone());
+            insertStmt.setString(4, address.getAddress());
+            insertStmt.setBoolean(5, shouldBeDefault);  // Sử dụng shouldBeDefault thay vì address.isDefault()
+
+            return insertStmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-
-        // Thêm địa chỉ mới
-        PreparedStatement insertStmt = connection.prepareStatement(sql);
-        insertStmt.setInt(1, address.getUserId());
-        insertStmt.setString(2, address.getRecipientName());
-        insertStmt.setString(3, address.getPhone());
-        insertStmt.setString(4, address.getAddress());
-        insertStmt.setBoolean(5, shouldBeDefault);  // Sử dụng shouldBeDefault thay vì address.isDefault()
-
-        return insertStmt.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
     }
-}
 
     public boolean deleteUserAddress(int addressId, int userId) {
         String sql = "DELETE FROM user_addresses WHERE id = ? AND user_id = ?";

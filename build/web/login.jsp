@@ -56,7 +56,7 @@
                         </div>
                     </c:if>
 
-                    <input type="text" name="username" placeholder="Tên đăng nhập" required="">
+                    <input type="text" name="loginId" placeholder="Tên đăng nhập hoặc Email" required="">
                     <div class="form-input">
                         <input type="password" name="password" placeholder="Mật khẩu" required>
                         <i class="password-toggle fas fa-eye-slash"></i>
