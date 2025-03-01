@@ -46,12 +46,12 @@ public class CartDetail extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
-        // Get cart (works for both logged in and non-logged in users)
+        
         Cart cart = user != null
                 ? cartDAO.getCart(request, user.getId())
                 : cartDAO.getCart(request, null);
 
-        // Get available coupons
+       
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
 

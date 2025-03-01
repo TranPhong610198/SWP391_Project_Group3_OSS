@@ -63,13 +63,13 @@ public class CartDAO extends DBContext {
                 }
             }
         }
-        // Return new empty cart if no cookie found
+        // Quay lại cart nếu k có cookie
         Cart cart = new Cart();
         cart.setItems(new ArrayList<>());
         return cart;
     }
 
-    // Method to add item to cookie cart
+    // add vào cookie
     public void addItemToCookieCart(HttpServletRequest request, HttpServletResponse response, CartItem item) {
         Cart cart = getCartFromCookies(request);
 
@@ -97,7 +97,7 @@ public class CartDAO extends DBContext {
         saveCartToCookies(response, cart);
     }
 
-    // Method to update item quantity in cookie cart
+    // cập nhật cart cookie
     public void updateCartItemQuantityInCookie(HttpServletRequest request, HttpServletResponse response,
             int cartItemId, int quantity) {
         Cart cart = getCartFromCookies(request);
@@ -110,7 +110,7 @@ public class CartDAO extends DBContext {
         saveCartToCookies(response, cart);
     }
 
-    // Method to delete item from cookie cart
+   
     // Phương thức xóa item từ cookie
     public void deleteCartItemFromCookie(HttpServletRequest request, HttpServletResponse response, int cartItemId) {
         Cart cart = getCartFromCookies(request);
@@ -138,22 +138,22 @@ public class CartDAO extends DBContext {
         System.out.println("Attempted to delete item ID: " + cartItemId + " - Success: " + itemRemoved);
     }
 
-    // Method to get cart (works for both logged in and non-logged in users)
+   
     public Cart getCart(HttpServletRequest request, Integer userId) {
         if (userId != null) {
-            // User is logged in, get cart from database
+            
             Cart cart = getCartByUserId(userId);
             if (cart == null) {
                 cart = createCart(userId);
             }
             return cart;
         } else {
-            // User is not logged in, get cart from cookies
+            
             return getCartFromCookies(request);
         }
     }
 
-    // Original methods from CartDAO
+    
     public boolean deleteProductFromCart(int productId) {
         String query = "DELETE FROM cart_items WHERE product_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -188,7 +188,7 @@ public class CartDAO extends DBContext {
         return cart;
     }
 
-    // Calculate total amount
+   
     public double calculateTotalAmount(Cart cart) {
         double total = 0;
         if (cart != null && cart.getItems() != null) {
@@ -199,7 +199,7 @@ public class CartDAO extends DBContext {
         return total;
     }
 
-    // Get cart from database
+    
     public Cart getCartByUserId(int userId) {
         Cart cart = null;
         String sql = "SELECT * FROM cart WHERE user_id = ?";
@@ -212,10 +212,10 @@ public class CartDAO extends DBContext {
                 cart.setId(rs.getInt("id"));
                 cart.setUserId(rs.getInt("user_id"));
                 cart.setCreatedAt(rs.getTimestamp("created_at"));
-                // Get cart items and set to cart
+               
                 cart.setItems(getCartItems(cart.getId()));
             } else {
-                // If no cart exists, create a new one
+               
                 cart = createCart(userId);
             }
         } catch (SQLException e) {
@@ -224,7 +224,7 @@ public class CartDAO extends DBContext {
         return cart;
     }
 
-    // Get cart items from database
+    
     private List<CartItem> getCartItems(int cartId) {
         List<CartItem> items = new ArrayList<>();
         String sql = "SELECT ci.*, pv.size_id, pv.color_id, "
@@ -247,7 +247,7 @@ public class CartDAO extends DBContext {
                 item.setVariantId(rs.getInt("variant_id"));
                 item.setQuantity(rs.getInt("quantity"));
 
-                // Set product information
+                
                 item.setProductTitle(rs.getString("title"));
                 item.setProductThumbnail(rs.getString("thumbnail"));
                 item.setProductPrice(rs.getDouble("sale_price"));
@@ -262,7 +262,7 @@ public class CartDAO extends DBContext {
         return items;
     }
 
-    // Update quantity in database
+    
     public boolean updateCartItemQuantity(int cartItemId, int quantity) {
         String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
         try {
@@ -276,10 +276,10 @@ public class CartDAO extends DBContext {
         }
     }
 
-    // Delete item from database
+    
     public void deleteCartItem(HttpServletRequest request, HttpServletResponse response, int cartItemId, Integer userId) {
         if (userId != null) {
-            // User is logged in, delete from database
+            
             String sql = "DELETE FROM cart_items WHERE id = ?";
             try {
                 PreparedStatement st = connection.prepareStatement(sql);
@@ -289,19 +289,19 @@ public class CartDAO extends DBContext {
                 System.out.println("Error deleting cart item: " + e.getMessage());
             }
         } else {
-            // User is not logged in, delete from cookie
+            
             deleteCartItemFromCookie(request, response, cartItemId);
         }
     }
 
-    // Add item to database
+    
     public boolean addCartItem(CartItem item) {
         String sql = "INSERT INTO cart_items (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)";
         try {
-            // First, ensure the cart exists
+            
             Cart cart = getCartByUserId(item.getCartId());
             if (cart == null) {
-                // Create cart if it doesn't exist
+              
                 cart = createCart(item.getCartId());
             }
 
@@ -317,43 +317,43 @@ public class CartDAO extends DBContext {
         }
     }
 
-    // Method to merge cookie cart with database cart when user logs in
+   
     public void mergeCarts(HttpServletRequest request, HttpServletResponse response, int userId) {
-        // Get cart from cookies
+        
         Cart cookieCart = getCartFromCookies(request);
 
         if (cookieCart == null || cookieCart.getItems() == null || cookieCart.getItems().isEmpty()) {
             return; // No items in cookie cart to merge
         }
 
-        // Get user's database cart or create one if it doesn't exist
+        
         Cart dbCart = getCartByUserId(userId);
         if (dbCart == null) {
             dbCart = createCart(userId);
         }
 
-        // Add items from cookie cart to database cart
+        
         for (CartItem cookieItem : cookieCart.getItems()) {
-            // Check if item already exists in database cart
+            
             boolean itemExists = false;
             for (CartItem dbItem : dbCart.getItems()) {
                 if (dbItem.getProductId() == cookieItem.getProductId()
                         && dbItem.getVariantId() == cookieItem.getVariantId()) {
-                    // Update quantity in database
+                   
                     updateCartItemQuantity(dbItem.getId(), dbItem.getQuantity() + cookieItem.getQuantity());
                     itemExists = true;
                     break;
                 }
             }
 
-            // If item doesn't exist in database cart, add it
+            
             if (!itemExists) {
                 cookieItem.setCartId(dbCart.getId());
                 addCartItem(cookieItem);
             }
         }
 
-        // Clear cookie cart
+      
         Cart emptyCart = new Cart();
         emptyCart.setItems(new ArrayList<>());
         saveCartToCookies(response, emptyCart);
