@@ -18,23 +18,23 @@
                 --border-radius: 10px;
                 --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             }
-            
+
             body {
                 background-color: var(--light-bg);
                 font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             }
-            
+
             .container {
                 max-width: 1200px;
             }
-            
+
             .card {
                 border: none;
                 border-radius: var(--border-radius);
                 box-shadow: var(--box-shadow);
                 transition: transform 0.3s;
             }
-            
+
             .product-image {
                 width: 80px;
                 height: 80px;
@@ -42,11 +42,11 @@
                 border-radius: 8px;
                 transition: transform 0.3s;
             }
-            
+
             .product-image:hover {
                 transform: scale(1.05);
             }
-            
+
             .table th {
                 font-weight: 600;
                 color: var(--secondary-color);
@@ -54,28 +54,28 @@
                 border-bottom: 2px solid #e2e8f0;
                 padding: 16px 12px;
             }
-            
+
             .table td {
                 padding: 16px 12px;
                 vertical-align: middle;
                 border-bottom: 1px solid #f1f5f9;
             }
-            
+
             .table tr:last-child td {
                 border-bottom: none;
             }
-            
+
             .quantity-control {
                 max-width: 130px;
             }
-            
+
             .quantity-control .form-control {
                 border-color: #e2e8f0;
                 text-align: center;
                 font-weight: 500;
                 height: 38px;
             }
-            
+
             .quantity-control .btn {
                 width: 38px;
                 height: 38px;
@@ -87,11 +87,11 @@
                 border-color: #e2e8f0;
                 color: var(--secondary-color);
             }
-            
+
             .quantity-control .btn:hover {
                 background-color: #e2e8f0;
             }
-            
+
             .btn-primary {
                 background-color: var(--primary-color);
                 border-color: var(--primary-color);
@@ -99,60 +99,60 @@
                 padding: 10px 24px;
                 transition: all 0.3s;
             }
-            
+
             .btn-primary:hover {
                 background-color: #2563eb;
                 border-color: #2563eb;
                 transform: translateY(-2px);
             }
-            
+
             .btn-outline-primary {
                 color: var(--primary-color);
                 border-color: var(--primary-color);
                 font-weight: 500;
                 padding: 10px 24px;
             }
-            
+
             .btn-outline-primary:hover {
                 background-color: var(--primary-color);
                 border-color: var(--primary-color);
             }
-            
+
             .form-check-input:checked {
                 background-color: var(--primary-color);
                 border-color: var(--primary-color);
             }
-            
+
             .form-select {
                 border-color: #e2e8f0;
                 padding: 10px 12px;
                 cursor: pointer;
             }
-            
+
             .text-danger {
                 color: var(--accent-color) !important;
             }
-            
+
             .empty-cart-container {
                 padding: 40px 0;
             }
-            
+
             .empty-cart-icon {
                 color: #cbd5e1;
                 font-size: 64px;
                 margin-bottom: 16px;
             }
-            
+
             .page-header {
                 margin-bottom: 24px;
                 position: relative;
             }
-            
+
             .page-header h1 {
                 font-weight: 700;
                 color: var(--secondary-color);
             }
-            
+
             .page-header:after {
                 content: '';
                 display: block;
@@ -162,20 +162,20 @@
                 margin-top: 8px;
                 border-radius: 2px;
             }
-            
+
             .cart-summary {
                 background-color: white;
                 border-radius: var(--border-radius);
                 padding: 24px;
             }
-            
+
             .summary-item {
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 16px;
                 color: #64748b;
             }
-            
+
             .summary-total {
                 display: flex;
                 justify-content: space-between;
@@ -186,18 +186,18 @@
                 padding-top: 16px;
                 border-top: 2px solid #f1f5f9;
             }
-            
+
             .summary-total .price {
                 color: var(--primary-color);
             }
-            
+
             .checkout-btn {
                 padding: 14px;
                 font-weight: 600;
                 font-size: 16px;
                 margin-top: 16px;
             }
-            
+
             .discount-badge {
                 display: inline-block;
                 background-color: #f0fdf4;
@@ -207,64 +207,64 @@
                 padding: 4px 12px;
                 border-radius: 16px;
             }
-            
+
             .links-card {
                 transition: all 0.3s ease;
             }
-            
+
             .links-card a {
                 color: #64748b;
                 transition: all 0.3s ease;
                 font-weight: 500;
             }
-            
+
             .links-card a:hover {
                 color: var(--primary-color);
                 transform: translateY(-2px);
             }
-            
+
             .links-card a i {
                 margin-right: 8px;
                 color: var(--primary-color);
             }
-            
+
             .product-title {
                 font-weight: 600;
                 color: var(--secondary-color);
                 margin-bottom: 4px;
             }
-            
+
             .product-meta {
                 font-size: 13px;
                 color: #64748b;
             }
-            
+
             .price {
                 font-weight: 600;
                 color: var(--secondary-color);
             }
-            
+
             .coupon-section {
                 border-bottom: 1px solid #f1f5f9;
                 padding-bottom: 20px;
                 margin-bottom: 20px;
             }
-            
+
             .btn-delete {
                 color: #94a3b8;
                 transition: all 0.2s;
             }
-            
+
             .btn-delete:hover {
                 color: var(--accent-color);
                 transform: scale(1.1);
             }
-            
+
             @media (max-width: 768px) {
                 .quantity-control {
                     max-width: 100px;
                 }
-                
+
                 .table-responsive {
                     border: none;
                 }
@@ -338,59 +338,65 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <c:forEach items="${cart.items}" var="item">
-                                                        <tr data-id="${item.id}">
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" class="form-check-input product-select" 
-                                                                           name="selectedItems" value="${item.id}"
-                                                                           onchange="updateTotalAmount()">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex align-items-center">
-                                                                    <img src="${item.productThumbnail}" alt="${item.productTitle}" 
-                                                                         class="product-image me-3">
-                                                                    <div>
-                                                                        <h6 class="product-title">${item.productTitle}</h6>
-                                                                        <div class="product-meta">
-                                                                            Size: <span class="fw-semibold">${item.size}</span> | Màu: <span class="fw-semibold">${item.color}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="price">
-                                                                    <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="quantity-control">
-                                                                    <div class="input-group">
-                                                                        <button type="button" class="btn btn-outline-secondary" 
-                                                                                onclick="updateQuantity(this, -1)">
-                                                                            <i class="fas fa-minus"></i>
-                                                                        </button>
-                                                                        <input type="number" value="${item.quantity}" min="1" 
-                                                                               class="form-control text-center quantity-input"
-                                                                               data-item-id="${item.id}"
-                                                                               onchange="handleQuantityChange(this)">
-                                                                        <button type="button" class="btn btn-outline-secondary" 
-                                                                                onclick="updateQuantity(this, 1)">
-                                                                            <i class="fas fa-plus"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-delete" 
-                                                                        onclick="deleteItem(${item.id})">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </c:forEach>
-                                                </tbody>
+    <c:forEach items="${cart.items}" var="item">
+        <tr data-id="${item.id}">
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input product-select" 
+                           name="selectedItems" value="${item.id}"
+                           onchange="updateTotalAmount()">
+                </div>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <a href="productdetail?id=${item.productId}" class="product-link">
+                        <img src="${item.productThumbnail}" alt="${item.productTitle}" 
+                             class="product-image me-3">
+                    </a>
+                    <div>
+                        <h6 class="product-title">
+                            <a href="productdetail?id=${item.productId}" class="product-link text-decoration-none">
+                                ${item.productTitle}
+                            </a>
+                        </h6>
+                        <div class="product-meta">
+                            Size: <span class="fw-semibold">${item.size}</span> | Màu: <span class="fw-semibold">${item.color}</span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="price">
+                    <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                </div>
+            </td>
+            <td>
+                <div class="quantity-control">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-secondary" 
+                                onclick="updateQuantity(this, -1)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" value="${item.quantity}" min="1" 
+                               class="form-control text-center quantity-input"
+                               data-item-id="${item.id}"
+                               onchange="handleQuantityChange(this)">
+                        <button type="button" class="btn btn-outline-secondary" 
+                                onclick="updateQuantity(this, 1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <button type="button" class="btn btn-delete" 
+                        onclick="deleteItem(${item.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    </c:forEach>
+</tbody>
                                             </table>
                                         </div>
                                     </form>
@@ -437,22 +443,22 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title fw-bold mb-4">Tổng đơn hàng</h5>
-                            
+
                             <div class="summary-item">
                                 <span>Số sản phẩm đã chọn:</span>
                                 <span id="selectedCount" class="fw-semibold">0</span>
                             </div>
-                            
+
                             <div class="summary-item">
                                 <span>Tổng tiền hàng:</span>
                                 <span id="selectedTotal" class="fw-semibold">₫0</span>
                             </div>
-                            
+
                             <div class="summary-item text-success" id="discountRow" style="display: none;">
                                 <span>Giảm giá:</span>
                                 <span id="discountAmount" class="fw-semibold">-₫0</span>
                             </div>
-                            
+
                             <div class="summary-total">
                                 <span>Tổng thanh toán:</span>
                                 <span id="finalTotal" class="price">₫0</span>
@@ -471,227 +477,227 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            // Sửa lại hàm submitCheckout() trong cartdetail.jsp
-            function submitCheckout() {
-                const form = document.getElementById('checkoutForm');
-                const checkboxes = document.getElementsByClassName('product-select');
-                let hasSelectedItems = false;
+                                // Sửa lại hàm submitCheckout() trong cartdetail.jsp
+                                function submitCheckout() {
+                                    const form = document.getElementById('checkoutForm');
+                                    const checkboxes = document.getElementsByClassName('product-select');
+                                    let hasSelectedItems = false;
 
-                // Thêm input hidden cho số lượng của từng sản phẩm được chọn
-                for (let checkbox of checkboxes) {
-                    if (checkbox.checked) {
-                        hasSelectedItems = true;
-                        const row = checkbox.closest('tr');
-                        const itemId = checkbox.value;
-                        const quantity = row.querySelector('.quantity-input').value;
+                                    // Thêm input hidden cho số lượng của từng sản phẩm được chọn
+                                    for (let checkbox of checkboxes) {
+                                        if (checkbox.checked) {
+                                            hasSelectedItems = true;
+                                            const row = checkbox.closest('tr');
+                                            const itemId = checkbox.value;
+                                            const quantity = row.querySelector('.quantity-input').value;
 
-                        // Thêm input hidden cho số lượng
-                        const quantityInput = document.createElement('input');
-                        quantityInput.type = 'hidden';
-                        quantityInput.name = 'quantity_' + itemId;
-                        quantityInput.value = quantity;
-                        form.appendChild(quantityInput);
-                    }
-                }
+                                            // Thêm input hidden cho số lượng
+                                            const quantityInput = document.createElement('input');
+                                            quantityInput.type = 'hidden';
+                                            quantityInput.name = 'quantity_' + itemId;
+                                            quantityInput.value = quantity;
+                                            form.appendChild(quantityInput);
+                                        }
+                                    }
 
-                if (!hasSelectedItems) {
-                    alert('Vui lòng chọn ít nhất một sản phẩm');
-                    return;
-                }
+                                    if (!hasSelectedItems) {
+                                        alert('Vui lòng chọn ít nhất một sản phẩm');
+                                        return;
+                                    }
 
-                // Thêm thông tin mã giảm giá vào form
-                const couponSelect = document.querySelector('select[name="couponCode"]');
-                if (couponSelect.value) {
-                    const couponInput = document.createElement('input');
-                    couponInput.type = 'hidden';
-                    couponInput.name = 'couponCode';
-                    couponInput.value = couponSelect.value;
-                    form.appendChild(couponInput);
-                }
+                                    // Thêm thông tin mã giảm giá vào form
+                                    const couponSelect = document.querySelector('select[name="couponCode"]');
+                                    if (couponSelect.value) {
+                                        const couponInput = document.createElement('input');
+                                        couponInput.type = 'hidden';
+                                        couponInput.name = 'couponCode';
+                                        couponInput.value = couponSelect.value;
+                                        form.appendChild(couponInput);
+                                    }
 
-                // Gửi form không cần kiểm tra đăng nhập
-                form.submit();
-            }
+                                    // Gửi form không cần kiểm tra đăng nhập
+                                    form.submit();
+                                }
 
-            function updateTotalAmount() {
-                const checkboxes = document.getElementsByClassName('product-select');
-                let totalAmount = 0;
-                let selectedCount = 0;
+                                function updateTotalAmount() {
+                                    const checkboxes = document.getElementsByClassName('product-select');
+                                    let totalAmount = 0;
+                                    let selectedCount = 0;
 
-                for (let checkbox of checkboxes) {
-                    if (checkbox.checked) {
-                        const row = checkbox.closest('tr');
-                        const priceText = row.querySelector('td:nth-child(3)').textContent;
-                        const price = parseFloat(priceText.replace(/[^\d]/g, ''));
-                        const quantity = parseInt(row.querySelector('.quantity-input').value);
-                        totalAmount += price * quantity;
-                        selectedCount++;
-                    }
-                }
+                                    for (let checkbox of checkboxes) {
+                                        if (checkbox.checked) {
+                                            const row = checkbox.closest('tr');
+                                            const priceText = row.querySelector('td:nth-child(3)').textContent;
+                                            const price = parseFloat(priceText.replace(/[^\d]/g, ''));
+                                            const quantity = parseInt(row.querySelector('.quantity-input').value);
+                                            totalAmount += price * quantity;
+                                            selectedCount++;
+                                        }
+                                    }
 
-                document.getElementById('selectedCount').textContent = selectedCount;
-                document.getElementById('selectedTotal').textContent = formatCurrency(totalAmount);
+                                    document.getElementById('selectedCount').textContent = selectedCount;
+                                    document.getElementById('selectedTotal').textContent = formatCurrency(totalAmount);
 
-                let discount = calculateDiscount(totalAmount);
-                updateDiscountDisplay(discount);
+                                    let discount = calculateDiscount(totalAmount);
+                                    updateDiscountDisplay(discount);
 
-                const finalTotal = Math.max(0, totalAmount - discount);
-                document.getElementById('finalTotal').textContent = formatCurrency(finalTotal);
+                                    const finalTotal = Math.max(0, totalAmount - discount);
+                                    document.getElementById('finalTotal').textContent = formatCurrency(finalTotal);
 
-                document.getElementById('checkoutBtn').disabled = selectedCount === 0;
-                
-                // Update selectAll checkbox status
-                const selectAll = document.getElementById('selectAll');
-                if (checkboxes.length > 0) {
-                    selectAll.checked = selectedCount === checkboxes.length;
-                    selectAll.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
-                }
-            }
+                                    document.getElementById('checkoutBtn').disabled = selectedCount === 0;
 
-            function calculateDiscount(totalAmount) {
-                let discount = 0;
-                const select = document.querySelector('select[name="couponCode"]');
-                if (select.value && totalAmount > 0) {
-                    const option = select.options[select.selectedIndex];
-                    const type = option.dataset.type;
-                    const value = parseFloat(option.dataset.value);
-                    const minAmount = parseFloat(option.dataset.min || 0);
-                    const maxDiscount = parseFloat(option.dataset.max || 0);
+                                    // Update selectAll checkbox status
+                                    const selectAll = document.getElementById('selectAll');
+                                    if (checkboxes.length > 0) {
+                                        selectAll.checked = selectedCount === checkboxes.length;
+                                        selectAll.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
+                                    }
+                                }
 
-                    if (totalAmount >= minAmount) {
-                        if (type === 'percentage') {
-                            discount = (totalAmount * value) / 100;
-                            if (maxDiscount > 0 && discount > maxDiscount) {
-                                discount = maxDiscount;
-                            }
-                        } else {
-                            discount = value;
-                        }
-                    }
-                }
-                return discount;
-            }
+                                function calculateDiscount(totalAmount) {
+                                    let discount = 0;
+                                    const select = document.querySelector('select[name="couponCode"]');
+                                    if (select.value && totalAmount > 0) {
+                                        const option = select.options[select.selectedIndex];
+                                        const type = option.dataset.type;
+                                        const value = parseFloat(option.dataset.value);
+                                        const minAmount = parseFloat(option.dataset.min || 0);
+                                        const maxDiscount = parseFloat(option.dataset.max || 0);
 
-            function updateDiscountDisplay(discount) {
-                const discountRow = document.getElementById('discountRow');
-                if (discount > 0) {
-                    document.getElementById('discountAmount').textContent = '-' + formatCurrency(discount);
-                    discountRow.style.display = 'flex';
-                } else {
-                    discountRow.style.display = 'none';
-                }
-            }
+                                        if (totalAmount >= minAmount) {
+                                            if (type === 'percentage') {
+                                                discount = (totalAmount * value) / 100;
+                                                if (maxDiscount > 0 && discount > maxDiscount) {
+                                                    discount = maxDiscount;
+                                                }
+                                            } else {
+                                                discount = value;
+                                            }
+                                        }
+                                    }
+                                    return discount;
+                                }
 
-            function formatCurrency(amount) {
-                return '₫' + amount.toLocaleString('vi-VN');
-            }
+                                function updateDiscountDisplay(discount) {
+                                    const discountRow = document.getElementById('discountRow');
+                                    if (discount > 0) {
+                                        document.getElementById('discountAmount').textContent = '-' + formatCurrency(discount);
+                                        discountRow.style.display = 'flex';
+                                    } else {
+                                        discountRow.style.display = 'none';
+                                    }
+                                }
 
-            function toggleAllProducts() {
-                const selectAll = document.getElementById('selectAll');
-                const checkboxes = document.getElementsByClassName('product-select');
-                for (let checkbox of checkboxes) {
-                    checkbox.checked = selectAll.checked;
-                }
-                updateTotalAmount();
-            }
+                                function formatCurrency(amount) {
+                                    return '₫' + amount.toLocaleString('vi-VN');
+                                }
 
-            function updateQuantity(button, change) {
-                const input = button.parentElement.querySelector('input');
-                const currentValue = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
-                const newValue = currentValue + change;
+                                function toggleAllProducts() {
+                                    const selectAll = document.getElementById('selectAll');
+                                    const checkboxes = document.getElementsByClassName('product-select');
+                                    for (let checkbox of checkboxes) {
+                                        checkbox.checked = selectAll.checked;
+                                    }
+                                    updateTotalAmount();
+                                }
 
-                if (newValue >= 1) {
-                    input.value = newValue;
-                    const itemId = input.dataset.itemId;
-                    if (itemId) {
-                        updateQuantityOnServer(itemId, newValue);
-                        updateTotalAmount();
-                    }
-                }
-            }
+                                function updateQuantity(button, change) {
+                                    const input = button.parentElement.querySelector('input');
+                                    const currentValue = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
+                                    const newValue = currentValue + change;
 
-            function handleQuantityChange(input) {
-                let value = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
+                                    if (newValue >= 1) {
+                                        input.value = newValue;
+                                        const itemId = input.dataset.itemId;
+                                        if (itemId) {
+                                            updateQuantityOnServer(itemId, newValue);
+                                            updateTotalAmount();
+                                        }
+                                    }
+                                }
 
-                // Đảm bảo giá trị tối thiểu là 1
-                if (value < 1) {
-                    value = 1;
-                }
+                                function handleQuantityChange(input) {
+                                    let value = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
 
-                input.value = value; // Cập nhật giá trị input
+                                    // Đảm bảo giá trị tối thiểu là 1
+                                    if (value < 1) {
+                                        value = 1;
+                                    }
 
-                const itemId = input.dataset.itemId;
-                if (itemId) {
-                    updateQuantityOnServer(itemId, value);
-                    updateTotalAmount();
-                }
-            }
+                                    input.value = value; // Cập nhật giá trị input
 
-            function updateQuantityOnServer(itemId, quantity) {
-                // Kiểm tra tính hợp lệ của dữ liệu
-                if (!itemId || !quantity || quantity < 1) {
-                    console.error('Invalid itemId or quantity');
-                    return;
-                }
+                                    const itemId = input.dataset.itemId;
+                                    if (itemId) {
+                                        updateQuantityOnServer(itemId, value);
+                                        updateTotalAmount();
+                                    }
+                                }
 
-                const formData = new URLSearchParams();
-                formData.append('action', 'update');
-                formData.append('cartItemId', itemId);
-                formData.append('quantity', quantity);
+                                function updateQuantityOnServer(itemId, quantity) {
+                                    // Kiểm tra tính hợp lệ của dữ liệu
+                                    if (!itemId || !quantity || quantity < 1) {
+                                        console.error('Invalid itemId or quantity');
+                                        return;
+                                    }
 
-                fetch('cartdetail', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData.toString()
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error updating quantity:', error);
-                        // Có thể thêm thông báo lỗi cho người dùng ở đây
-                    });
-            }
-            
-            function deleteItem(itemId) {
-                if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                    const formData = new URLSearchParams();
-                    formData.append('action', 'delete');
-                    formData.append('cartItemId', itemId);
+                                    const formData = new URLSearchParams();
+                                    formData.append('action', 'update');
+                                    formData.append('cartItemId', itemId);
+                                    formData.append('quantity', quantity);
 
-                    fetch('cartdetail', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: formData.toString()
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            // Nếu xóa thành công, cập nhật UI
-                            location.reload(); // Tải lại trang để cập nhật giỏ hàng
-                        })
-                        .catch(error => {
-                            console.error('Error deleting item:', error);
-                            alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
-                        });
-                }
-            }
-            
-            // Initialize the page
-            document.addEventListener('DOMContentLoaded', function() {
-                // Check if there are any items in the cart
-                const checkboxes = document.getElementsByClassName('product-select');
-                if (checkboxes.length > 0) {
-                    updateTotalAmount();
-                }
-            });
+                                    fetch('cartdetail', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                        body: formData.toString()
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error updating quantity:', error);
+                                                // Có thể thêm thông báo lỗi cho người dùng ở đây
+                                            });
+                                }
+
+                                function deleteItem(itemId) {
+                                    if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                                        const formData = new URLSearchParams();
+                                        formData.append('action', 'delete');
+                                        formData.append('cartItemId', itemId);
+
+                                        fetch('cartdetail', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                            },
+                                            body: formData.toString()
+                                        })
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error('Network response was not ok');
+                                                    }
+                                                    // Nếu xóa thành công, cập nhật UI
+                                                    location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error deleting item:', error);
+                                                    alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
+                                                });
+                                    }
+                                }
+
+                                // Initialize the page
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    // Check if there are any items in the cart
+                                    const checkboxes = document.getElementsByClassName('product-select');
+                                    if (checkboxes.length > 0) {
+                                        updateTotalAmount();
+                                    }
+                                });
         </script>
     </body>
 </html>
