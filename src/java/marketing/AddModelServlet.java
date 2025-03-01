@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.regex.Pattern;
 
 /**
@@ -26,6 +27,41 @@ public class AddModelServlet extends HttpServlet {
 
     private static final Pattern COLOR_PATTERN = Pattern.compile("^([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+([ ]([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+)*$");
     private static final int MAX_QUANTITY = 1000000;
+
+    public static String generateSKU(String productName, int productId, String colorName, String sizeName) {
+        // chuẩn hóa 
+        String normalizedProduct = Normalizer.normalize(productName, Normalizer.Form.NFD).replaceAll("\\p{M}", "").replace("Đ", "D").replace("đ", "d");
+
+        String[] productWords = normalizedProduct.trim().split("\\s+");
+        StringBuilder productSKU = new StringBuilder();
+        for (String word : productWords) {
+            if (!word.isEmpty()) {
+                productSKU.append(word.charAt(0));
+            }
+        }
+
+        String normalizedColor = Normalizer.normalize(colorName, Normalizer.Form.NFD).replaceAll("\\p{M}", "").replace("Đ", "D").replace("đ", "d").trim();
+        String colorPart;
+        String[] colorWords = normalizedColor.split("\\s+");
+        
+        if (normalizedColor.length() <= 5) {
+            colorPart = normalizedColor.replaceAll("\\s+", ""); // Giữ nguyên nếu ≤ 5 ký tự
+        } else {
+            StringBuilder colorStr = new StringBuilder();
+            colorStr.append(colorWords[0]); // Giữ nguyên từ đầu tiên
+            for (int i = 1; i < colorWords.length; i++) {
+                if (!colorWords[i].isEmpty()) {
+                    colorStr.append(colorWords[i].charAt(0)); // Lấy chữ cái đầu của từ còn lại
+                }
+            }
+            colorPart = colorStr.toString();
+        }
+
+        String sizePart = sizeName.trim();
+
+        return (productSKU.toString() + productId + "-" + colorPart + "-" + sizePart).toUpperCase();
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,16 +86,16 @@ public class AddModelServlet extends HttpServlet {
 
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
-            String source = request.getParameter("source"); // Lấy source trang
+            String source = request.getParameter("source");
             String colorName = request.getParameter("color").trim();
             String sizeName = request.getParameter("size").trim();
             String quantityStr = request.getParameter("quantity");
 
-            // Validation như hiện tại
+            // Validation
             if (!COLOR_PATTERN.matcher(colorName).matches()) {
                 request.setAttribute("errorMessage", "Màu sắc chỉ được phép chứa chữ cái và khoảng trắng");
                 request.setAttribute("productId", productId);
-                request.setAttribute("source", source); 
+                request.setAttribute("source", source);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
@@ -78,17 +114,26 @@ public class AddModelServlet extends HttpServlet {
                 if (quantity < 0 || quantity > MAX_QUANTITY) {
                     request.setAttribute("errorMessage", "Số lượng phải từ 0 đến 1,000,000");
                     request.setAttribute("productId", productId);
-                    request.setAttribute("source", source); 
+                    request.setAttribute("source", source);
                     request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                     return;
                 }
             } catch (NumberFormatException e) {
                 request.setAttribute("errorMessage", "Số lượng không hợp lệ");
                 request.setAttribute("productId", productId);
-                request.setAttribute("source", source); 
+                request.setAttribute("source", source);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
+
+            // Lấy thông tin sản phẩm để tạo SKU
+            String productName = productDao.getProductNameById(productId); 
+            if (productName == null) {
+                throw new SQLException("Không tìm thấy sản phẩm với ID: " + productId);
+            }
+
+            // Tạo SKU
+            String sku = generateSKU(productName, productId, colorName, sizeName);
 
             Color color = inventoryDao.getColorByName(productId, colorName);
             Size size = inventoryDao.getSizeByName(productId, sizeName);
@@ -116,13 +161,13 @@ public class AddModelServlet extends HttpServlet {
             if (inventoryDao.isVariantExists(productId, colorId, sizeId)) {
                 request.setAttribute("errorMessage", "Mẫu này đã tồn tại");
                 request.setAttribute("productId", productId);
-                request.setAttribute("source", source); 
+                request.setAttribute("source", source);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
 
-            // Thêm variant mới
-            inventoryDao.addNewVariant(productId, colorId, sizeId, quantity);
+            // Thêm variant mới với SKU
+            inventoryDao.addNewVariant(productId, colorId, sizeId, quantity, sku);
 
             // Cập nhật trạng thái sản phẩm nếu cần
             productDao.updateProductStatusIfNeeded(productId);
@@ -130,15 +175,14 @@ public class AddModelServlet extends HttpServlet {
             // Tạo URL chuyển hướng với source
             String redirectUrl = "inventoryDetail?id=" + productId + "&success=add";
             if (source != null && !source.trim().isEmpty()) {
-                redirectUrl += "&source=" + source; 
+                redirectUrl += "&source=" + source;
             }
-            System.out.println("Source in doPost: " + source);
             response.sendRedirect(redirectUrl);
 
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             request.setAttribute("productId", request.getParameter("productId"));
-            request.setAttribute("source", request.getParameter("source")); 
+            request.setAttribute("source", request.getParameter("source"));
             request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
         }
     }

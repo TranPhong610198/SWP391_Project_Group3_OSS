@@ -264,7 +264,7 @@
                     </div>
                     <div class="card-body">
                         <form action="couponlist" method="GET" class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group">
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
@@ -272,14 +272,14 @@
                                     <input type="text" name="searchCode" value="${searchCode}" class="form-control search-box" placeholder="Tìm kiếm mã giảm giá...">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select class="form-select" id="filterType" name="filterType">
                                     <option value="">Tất cả loại giảm giá</option>
                                     <option value="percentage" ${filterType == 'percentage' ? 'selected' : ''}>Phần trăm</option>
                                     <option value="fixed" ${filterType == 'fixed' ? 'selected' : ''}>Cố định</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select class="form-select" id="filterStatus" name="filterStatus">
                                     <option value="">Tất cả trạng thái</option>
                                     <option value="active" ${filterStatus == 'active' ? 'selected' : ''}>Hoạt động</option>
@@ -287,7 +287,7 @@
                                     <option value="expired" ${filterStatus == 'expired' ? 'selected' : ''}>Hết hạn</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="d-grid gap-2 d-md-flex">
                                     <button type="submit" class="btn btn-primary me-md-2">
                                         <i class="fas fa-filter me-2"></i>Lọc

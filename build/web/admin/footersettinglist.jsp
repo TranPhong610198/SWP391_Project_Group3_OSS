@@ -266,7 +266,7 @@
                                             <td>${footer.type}</td>
                                             <td>
                                                 <span class="badge bg-${footer.status == 'active' ? 'success' : 'danger'}">
-                                                    ${footer.status}
+                                                    ${footer.status == 'active' ? 'Hoạt động' : 'Không hoạt động'}
                                                 </span>
                                             </td>
                                             <td class="text-center">

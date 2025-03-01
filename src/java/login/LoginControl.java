@@ -112,16 +112,22 @@ public class LoginControl extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String username = request.getParameter("username");
+        String loginId = request.getParameter("loginId"); // Thay vì "username", dùng "loginId" để đại diện cho cả username và email
         String password = request.getParameter("password");
 
         UserDAO userDao = new UserDAO();
         TokenDAO tokenDao = new TokenDAO();
+        User account = null;
 
-        User account = userDao.checkAccount(username, password);
+        // Kiểm tra xem loginId là email hay username dựa trên ký tự "@"
+        if (loginId.contains("@")) {
+            account = userDao.loginByEmail(loginId, password);
+        } else {
+            account = userDao.loginByUsername(loginId, password);
+        }
 
         if (account == null) {
-            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
+            request.setAttribute("error", "Tên đăng nhập/Email hoặc mật khẩu không đúng.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             if ("inactive".equals(account.getStatus())) {
@@ -171,9 +177,6 @@ public class LoginControl extends HttpServlet {
             } else {
                 response.sendRedirect(request.getContextPath() + "/home"); // Nếu không có, về trang chủ
             }
-            
-//            response.sendRedirect(request.getContextPath() + "/home");
-
         }
     }
 }

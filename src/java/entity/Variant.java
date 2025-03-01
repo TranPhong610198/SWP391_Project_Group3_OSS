@@ -13,14 +13,24 @@ public class Variant {
     private Size size;
     private int quantity;
     private Date lastRestockDate;
+    private String sku; 
 
-    public Variant(int id, int productId, Color color, Size size, int quantity, Date lastRestockDate) {
+    public Variant(int id, int productId, Color color, Size size, int quantity, Date lastRestockDate, String sku) {
         this.id = id;
         this.productId = productId;
         this.color = color;
         this.size = size;
         this.quantity = quantity;
         this.lastRestockDate = lastRestockDate;
+        this.sku = sku;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public int getId() {
@@ -73,8 +83,6 @@ public class Variant {
 
     @Override
     public String toString() {
-        return "Variant{" + "id=" + id + ", productId=" + productId + ", color=" + color + ", size=" + size + ", quantity=" + quantity + ", lastRestockDate=" + lastRestockDate + '}';
+        return "Variant{" + "id=" + id + ", productId=" + productId + ", color=" + color + ", size=" + size + ", quantity=" + quantity + ", lastRestockDate=" + lastRestockDate + ", sku=" + sku + '}';
     }
-    
-    
 }

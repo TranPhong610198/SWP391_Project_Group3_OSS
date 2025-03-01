@@ -110,7 +110,7 @@
                 position: absolute;
                 top: 1rem;
                 right: 1rem;
-                background: #00b894;
+                background: red;
                 color: white;
                 padding: 0.5rem 1rem;
                 border-radius: 20px;
@@ -401,20 +401,11 @@
                                         <div class="card product-card">
                                             <div class="position-relative">
                                                 <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
-                                                <span class="product-badge">Hot</span>
+                                                <span class="product-badge">Mới</span>
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="product-title">${product.title}</h5>
-                                                <p class="product-description">
-                                                    <c:choose>
-                                                        <c:when test="${fn:length(product.description) > 100}">
-                                                            ${fn:substring(product.description, 0, 100)}...
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            ${product.description}
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </p>
+                                                
                                                 <div class="product-price">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
@@ -495,6 +486,102 @@
                 </div>
             </section>
 
+            <!-- Quần áo trẻ em -->
+            <section class="mb-5">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0">Quần áo trẻ em</h2>
+                        <a href="listproduct?category=3" class="btn btn-outline-primary">
+                            Xem tất cả
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="row g-4">
+                        <c:forEach items="${babyClothingProducts}" var="product">
+                            <div class="col-md-3 col-6">
+                                <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <div class="card product-card h-100">
+                                        <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
+                                        <div class="card-body">
+                                            <h5 class="product-title">${product.title}</h5>
+                                            <div class="product-price">
+                                                <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Phụ kiện -->
+            <section class="mb-5">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0">Phụ kiện</h2>
+                        <a href="listproduct?category=4" class="btn btn-outline-primary">
+                            Xem tất cả
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="row g-4">
+                        <c:forEach items="${accessoryProducts}" var="product">
+                            <div class="col-md-3 col-6">
+                                <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <div class="card product-card h-100">
+                                        <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
+                                        <div class="card-body">
+                                            <h5 class="product-title">${product.title}</h5>
+                                            <div class="product-price">
+                                                <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Giày dép -->
+            <section class="mb-5">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0">Giày dép</h2>
+                        <a href="listproduct?category=5" class="btn btn-outline-primary">
+                            Xem tất cả
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="row g-4">
+                        <c:forEach items="${shoesProducts}" var="product">
+                            <div class="col-md-3 col-6">
+                                <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <div class="card product-card h-100">
+                                        <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
+                                        <div class="card-body">
+                                            <h5 class="product-title">${product.title}</h5>
+                                            <div class="product-price">
+                                                <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </section>
+            
             <!-- Bài đăng mới nhất -->
             <section class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -516,8 +603,8 @@
                                         <h5 class="card-title">${post.title}</h5>
                                         <p class="card-text">
                                             <c:choose>
-                                                <c:when test="${fn:length(post.summary) > 200}">
-                                                    ${fn:substring(post.summary, 0, 200)}...
+                                                <c:when test="${fn:length(post.summary) > 78}">
+                                                    ${fn:substring(post.summary, 0, 78)}...
                                                 </c:when>
                                                 <c:otherwise>
                                                     ${post.summary}

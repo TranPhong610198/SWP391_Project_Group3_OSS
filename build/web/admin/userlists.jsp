@@ -326,7 +326,7 @@
                                                    class="sort-link">
                                                     Giới tính
                                                     <span class="sort-icons">
-                                                        ${sortField == 'username' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        ${sortField == 'gender' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                     </span>
                                                 </a>
                                             </th>
@@ -335,7 +335,7 @@
                                                    class="sort-link">
                                                     Email
                                                     <span class="sort-icons">
-                                                        ${sortField == 'username' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        ${sortField == 'email' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                     </span>
                                                 </a>
                                             </th>
@@ -344,7 +344,7 @@
                                                    class="sort-link">
                                                     SĐT
                                                     <span class="sort-icons">
-                                                        ${sortField == 'username' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        ${sortField == 'mobile' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                     </span>
                                                 </a>
                                             </th>
@@ -353,7 +353,7 @@
                                                    class="sort-link">
                                                     Vai trò
                                                     <span class="sort-icons">
-                                                        ${sortField == 'username' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        ${sortField == 'role' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                     </span>
                                                 </a>
                                             </th>
@@ -362,8 +362,9 @@
                                                    class="sort-link">
                                                     Trạng thái
                                                     <span class="sort-icons">
-                                                        ${sortField == 'username' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        ${sortField == 'status' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                     </span>
+
                                                 </a>
                                             </th>
                                             <th class="text-center" style="width: 80px;">Thao tác</th>
@@ -389,7 +390,7 @@
                                                         <td><span class="badge bg-secondary rounded-pill">${user.role}</span></td>
                                                         <td>
                                                             <span class="badge bg-${user.status == 'active' ? 'success' : (user.status == 'inactive' ? 'danger' : 'warning')}">
-                                                                ${user.status}
+                                                                ${user.status == 'active' ? 'Hoạt động' : (user.status == 'inactive' ? 'Không hoạt động' : 'Đang chờ')}
                                                             </span>
                                                         </td>
                                                         <td class="text-center">

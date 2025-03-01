@@ -75,11 +75,17 @@ public class HomeServlet extends HttpServlet {
         List<Post> latestPosts = postDAO.getPostToHome(1, 4, "", null, "published", null, "created_at", "DESC");
 
         // Get featured products
-        List<Product> featuredProducts = productDAO.getFeaturedProducts(8); // Get top 8 featured products
+        List<Product> featuredProducts = productDAO.getFeaturedProducts(8); // Lấy 8 thằng sản phẩm mới nhất
 
-        List<Product> menClothingProducts = productDAO.getMenClothingProducts(4); // Get 4 men's clothing products
+        List<Product> menClothingProducts = productDAO.getMenClothingProducts(4); // Lấy 4 sản phẩm quần áo nam
         List<Product> womanClothingProducts = productDAO.getWomanClothingProducts(4);
+        List<Product> babyClothingProducts = productDAO.getBabyClothingProducts(4);
+        List<Product> shoesProducts = productDAO.getShoesProducts(4);
+        List<Product> accessoryProducts = productDAO.getAccessoryProducts(4);
 
+        request.setAttribute("accessoryProducts", accessoryProducts);
+        request.setAttribute("shoesProducts", shoesProducts);
+        request.setAttribute("babyClothingProducts", babyClothingProducts);
         request.setAttribute("womanClothingProducts", womanClothingProducts);
         request.setAttribute("menClothingProducts", menClothingProducts);
         request.setAttribute("sliders", activeSliders);

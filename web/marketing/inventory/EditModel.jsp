@@ -95,21 +95,28 @@
                         <input type="hidden" name="source" value="${param.source}"> 
 
                         <div class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="sku" name="sku" 
+                                           value="${variant.sku}" readonly>
+                                    <label for="sku">SKU</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="color" name="color" 
                                            value="${variant.color.name}" required>
                                     <label for="color">Màu sắc</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="size" name="size" 
                                            value="${variant.size.name}" required>
                                     <label for="size">Kích thước</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantity" name="quantity" 
                                            value="${variant.quantity}" required min="0">

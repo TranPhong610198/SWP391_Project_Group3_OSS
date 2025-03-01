@@ -15,6 +15,7 @@
         <title>Inventory Management</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
         <style>
             :root {
                 --primary-color: #2c3e50;
@@ -24,11 +25,11 @@
                 --border-color: #dee2e6;
                 --hover-color: #f8f9fa;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .sort-link {
                 text-decoration: none;
                 color: var(--primary-color);
@@ -37,15 +38,15 @@
                 align-items: center;
                 justify-content: space-between;
             }
-            
+
             .sort-link:hover {
                 color: var(--accent-color);
             }
-            
+
             .sort-icons {
                 margin-left: 5px;
             }
-            
+
             /* Main content styles */
             .main-content {
                 margin-left: 250px;
@@ -53,78 +54,78 @@
                 padding: 20px;
                 min-height: 100vh;
             }
-            
+
             .card {
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
             }
-            
+
             .card-header {
                 background-color: #fff;
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
             }
-            
+
             .table {
                 margin-bottom: 0;
             }
-            
+
             .table th {
                 font-weight: 600;
                 border-top: none;
                 background-color: rgba(52, 152, 219, 0.05);
                 vertical-align: middle;
             }
-            
+
             .table td {
                 vertical-align: middle;
             }
-            
+
             .table tbody tr:hover {
                 background-color: var(--hover-color);
             }
-            
+
             .action-btn {
                 padding: 5px 15px;
                 border-radius: 4px;
                 transition: all 0.3s;
             }
-            
+
             .action-btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
-            
+
             .btn-view {
                 background-color: var(--accent-color);
                 color: white;
             }
-            
+
             .btn-view:hover {
                 background-color: #2980b9;
                 color: white;
             }
-            
+
             .search-box {
                 border-radius: 50px;
                 padding-left: 15px;
                 border: 1px solid var(--border-color);
             }
-            
+
             .search-btn {
                 border-radius: 50px;
                 padding: 8px 20px;
             }
-            
+
             .filter-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
-            
+
             .page-title {
                 color: var(--primary-color);
                 margin-bottom: 20px;
@@ -132,13 +133,13 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
-            
+
             .empty-state {
                 padding: 40px;
                 text-align: center;
                 color: #6c757d;
             }
-            
+
             .badge-quantity {
                 background-color: var(--accent-color);
                 color: white;
@@ -146,7 +147,7 @@
                 padding: 5px 10px;
                 border-radius: 50px;
             }
-            
+
             /* Responsive */
             @media (max-width: 768px) {
                 .main-content {
@@ -172,7 +173,7 @@
                 height: 42px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
-            
+
             @media (max-width: 768px) {
                 .sidebar-toggle {
                     display: flex;
@@ -180,7 +181,7 @@
                     justify-content: center;
                 }
             }
-            
+
             /* Pagination styling */
             .pagination .page-item .page-link {
                 color: var(--primary-color);
@@ -188,17 +189,88 @@
                 min-width: 40px;
                 text-align: center;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: var(--accent-color);
                 border-color: var(--accent-color);
                 color: white;
             }
-            
+
             .pagination .page-item .page-link:hover {
                 background-color: var(--hover-color);
             }
+
+
+            /* Ô input chính */
+            .select2-container--default .select2-selection--single {
+                height: 38px;
+                padding: 5px 15px;
+            }
+
+            /* Mũi tên dropdown */
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 38px;
+                right: 10px;
+            }
+
+            /* Placeholder */
+            .select2-container--default .select2-selection--single .select2-selection__placeholder {
+                color: #6c757d;
+            }
+
+            /* Khi focus */
+            .select2-container--default.select2-container--focus .select2-selection--single {
+                border-color: var(--accent-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+
+            /* Dropdown kết quả */
+            .select2-container--default .select2-dropdown {
+                border: 1px solid var(--border-color);
+                border-radius: 0px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                background-color: #fff;
+                margin-top: 5px;
+            }
+
+            /* Option trong dropdown */
+            .select2-container--default .select2-results__option {
+                padding: 8px 15px;
+                color: var(--primary-color);
+            }
+
+            /* Option khi hover */
+            .select2-container--default .select2-results__option--highlighted[aria-selected] {
+                background-color: var(--hover-color);
+                color: var(--primary-color);
+            }
+
+
+            /* Ô tìm kiếm trong dropdown */
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                padding: 5px 15px;
+            }
+
+            /* Xóa lựa chọn (nút x) */
+            .select2-container--default .select2-selection--single .select2-selection__clear {
+                color: var(--accent-color);
+                font-weight: bold;
+                margin-right: 10px;
+            }
             
+            /* Tăng chiều cao tối đa của dropdown */
+            .select2-container--default .select2-results > .select2-results__options {
+                max-height: 400px; 
+                overflow-y: auto; 
+            }
+
+            /* Đảm bảo dropdown không bị cắt */
+            .select2-container--default .select2-dropdown {
+                max-height: none; /* Loại bỏ giới hạn chiều cao của container dropdown */
+            }
+
             /* Table responsiveness */
             @media (max-width: 768px) {
                 .table-responsive {
@@ -212,7 +284,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        
+
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -222,7 +294,7 @@
                 <h2 class="page-title">
                     <i class="fas fa-warehouse me-2"></i>Quản lý kho hàng
                 </h2>
-                
+
                 <!-- Filter Section -->
                 <div class="card filter-card">
                     <div class="card-header">
@@ -238,29 +310,29 @@
                                     <input type="text" name="search" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm sản phẩm...">
                                 </div>
                             </div>
-<!--                            <div class="col-md-3">
-                                <select name="category" class="form-select">
-                                    <option value="">Tất cả danh mục</option>
-                                    <c:forEach items="${categoryList}" var="cat">
-                                        <option value="${cat.id}" ${cat.id == selectedCategory ? 'selected' : ''}>${cat.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>-->
+                            <!--                            <div class="col-md-3">
+                                                            <select name="category" class="form-select">
+                                                                <option value="">Tất cả danh mục</option>
+                            <c:forEach items="${categoryList}" var="cat">
+                                <option value="${cat.id}" ${cat.id == selectedCategory ? 'selected' : ''}>${cat.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>-->
                             <div class="col-md-3">
-                                <select name="category" class="form-select">
+                                <select name="category" class="form-select select2">
                                     <option value="">📑 Tất cả danh mục</option>
                                     <c:forEach items="${categoryList}" var="cat">
                                         <c:choose>
                                             <%-- Level 1 categories (parent categories) --%>
                                             <c:when test="${cat.level == 1}">
                                                 <option value="${cat.id}" ${selectedCategory == cat.id ? 'selected' : ''}>
-                                                    📁 ${cat.name}
+                                                    🛍️ ${cat.name}
                                                 </option>
                                                 <%-- Display child categories --%>
                                                 <c:forEach items="${categoryList}" var="childCat">
                                                     <c:if test="${childCat.parentId == cat.id}">
                                                         <option value="${childCat.id}" ${selectedCategory == childCat.id ? 'selected' : ''}>
-                                                            &nbsp;&nbsp;&nbsp;&nbsp;📎 ${childCat.name}
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;🧷 ${childCat.name}
                                                         </option>
                                                         <%-- Display grandchild categories if any --%>
                                                         <c:forEach items="${categoryList}" var="grandChildCat">
@@ -421,19 +493,36 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- Add JavaScript for sidebar functionality -->
         <script>
             $(document).ready(function () {
-                // Toggle sidebar
+                $('.select2').select2({
+                    placeholder: "📑 Chọn danh mục",
+                    allowClear: true,
+                    width: '100%',
+                    matcher: function (params, data) {
+                        // Nếu không có search term, hiển thị tất cả
+                        if (!params.term || params.term.trim() === '') {
+                            return data;
+                        }
+                        var term = params.term.toLowerCase();
+                        var text = data.text.toLowerCase();
+                        if (text.indexOf(term) > -1) {
+                            return data;
+                        }
+                        return null;
+                    }
+                });
+
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
                     $('.main-content').toggleClass('active');
                     $(this).hide();
                 });
 
-                // Close sidebar when clicking outside on mobile
                 $(document).on('click', function (e) {
                     if ($(window).width() <= 768) {
                         if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
@@ -443,18 +532,14 @@
                         }
                     }
                 });
-                
-                // Since inventory management is part of product management, highlight that menu item
+
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
-                
-                // Open product submenu by default
                 $('#productSubmenu').addClass('show');
-                
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                  return new bootstrap.Tooltip(tooltipTriggerEl)
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
             });
         </script>

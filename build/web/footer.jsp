@@ -188,7 +188,7 @@
 
                 <!-- Liên kết nhanh và mạng xã hội -->
                 <div class="footer-section">
-                    <h3>Liên kết nhanh</h3>
+                    <h3>Mạng xã hội</h3>
                     <div class="social-icons">
                         <c:forEach items="${socialLinks}" var="social">
                             <c:choose>
