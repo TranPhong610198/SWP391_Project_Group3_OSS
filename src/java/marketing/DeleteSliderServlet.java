@@ -62,15 +62,15 @@ public class DeleteSliderServlet extends HttpServlet {
                 SliderDAO sliderDAO = new SliderDAO();
                 boolean isDeleted = sliderDAO.deleteSlider(sliderId);
                 if (isDeleted) {
-                    request.setAttribute("message", "Xóa slider thành công!");
+                    request.getSession().setAttribute("success", "Xóa slider thành công!");
                 } else {
-                    request.setAttribute("error", "Không tìm thấy slider để xóa!");
+                    request.getSession().setAttribute("error", "Không tìm thấy slider để xóa!");
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("error", "ID không hợp lệ!");
+                request.getSession().setAttribute("error", "ID không hợp lệ!");
             }
         } else {
-            request.setAttribute("error", "Thiếu ID slider!");
+            request.getSession().setAttribute("error", "Thiếu ID slider!");
         }
         response.sendRedirect("sliderList");
     }

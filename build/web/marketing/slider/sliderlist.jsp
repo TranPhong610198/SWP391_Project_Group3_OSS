@@ -134,7 +134,19 @@
                 <h2 class="page-title">
                     <i class="fas fa-images me-2"></i>Quản lý thanh trượt
                 </h2>
-                
+                <c:if test="${not empty sessionScope.success}">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>${sessionScope.success}
+                    </div>
+                    <% session.removeAttribute("success"); %>
+                </c:if>
+
+                <c:if test="${not empty sessionScope.error}">
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>${sessionScope.error}
+                    </div>
+                    <% session.removeAttribute("error"); %>
+                </c:if>
                 <!-- Filter Section -->
                 <div class="card filter-card">
                     <div class="card-header">

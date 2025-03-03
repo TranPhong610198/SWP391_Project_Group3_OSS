@@ -116,9 +116,17 @@
                     <i class="fas fa-images me-2"></i>Chi tiết thanh trượt
                 </h2>
 
+
                 <c:if test="${error != null}">
                     <div class="alert alert-danger" role="alert">
-                        ${error}
+                        <i class="fas fa-exclamation-circle me-2"></i>${error}
+                    </div>
+                </c:if>
+
+                <!-- Add this success message alert -->
+                <c:if test="${success != null}">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>${success}
                     </div>
                 </c:if>
 
@@ -164,7 +172,8 @@
                                     <div class="mb-3">
                                         <label for="title" class="form-label fw-bold">Tiêu đề</label>
                                         <input type="text" class="form-control" id="title" name="title" 
-                                               value="${slider.getTitle()}" required>
+                                               value="${slider.getTitle()}" required maxlength="50">
+                                        <small class="text-muted"><span id="title-char-count">0</span>/50 ký tự</small>
                                     </div>
 
                                     <div class="mb-3">
@@ -222,7 +231,20 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        
+        <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const titleInput = document.getElementById("title");
+        const titleCharCount = document.getElementById("title-char-count");
+
+        // Hiển thị số ký tự ban đầu
+        titleCharCount.textContent = titleInput.value.length;
+
+        // Cập nhật khi nhập dữ liệu
+        titleInput.addEventListener("input", function () {
+            titleCharCount.textContent = titleInput.value.length;
+        });
+    });
+</script>
         <script>
             $(document).ready(function () {
                 // Toggle sidebar

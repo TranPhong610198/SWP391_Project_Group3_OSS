@@ -146,6 +146,12 @@
                     <i class="fas fa-images me-2"></i>Thêm thanh trượt mới
                 </h2>
                 
+                <c:if test="${success != null}">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>${success}
+                    </div>
+                </c:if>
+                
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-pen me-2"></i>Thông tin thanh trượt
@@ -163,7 +169,8 @@
 
                             <div class="col-md-12">
                                 <label for="title" class="form-label">Tiêu đề</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
+                                <input type="text" class="form-control" id="title" name="title" required maxlength="50">
+                                <small class="text-muted"><span id="title-char-count">0</span>/50 ký tự</small>
                             </div>
 
                             <div class="col-md-12">
@@ -199,8 +206,8 @@
                             </div>
 
                             <div class="col-12 mt-4">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="javascript:history.back()" class="btn btn-secondary btn-cancel">
+                                <div class="d-flex justify-content-end gap-2">                                   
+                                    <a href="${pageContext.request.contextPath}/marketing/sliderList" class="btn btn-secondary btn-cancel">
                                         <i class="fas fa-times me-2"></i>Quay lại
                                     </a>
                                     <button type="submit" class="btn btn-primary btn-submit">
@@ -216,7 +223,20 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+        <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const titleInput = document.getElementById("title");
+        const titleCharCount = document.getElementById("title-char-count");
+
+        // Hiển thị số ký tự ban đầu
+        titleCharCount.textContent = titleInput.value.length;
+
+        // Cập nhật khi nhập dữ liệu
+        titleInput.addEventListener("input", function () {
+            titleCharCount.textContent = titleInput.value.length;
+        });
+    });
+</script>
         <script>
             $(document).ready(function () {
                 // Toggle sidebar

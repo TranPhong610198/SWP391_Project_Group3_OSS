@@ -163,13 +163,22 @@
                             </div>
                         </c:if>
 
+                        <!-- Thêm dòng code thông báo thành công dưới đây -->
+                        <c:if test="${success != null}">
+                            <div class="alert alert-success" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>${success}
+                            </div>
+                        </c:if>
+
                         <form method="post" action="${pageContext.request.contextPath}/marketing/addPost" enctype="multipart/form-data" class="row g-3">
                             <input type="hidden" name="action" value="create">
 
                             <div class="col-md-12">
-                                <label for="title" class="form-label">Tiêu đề</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
+                                <label for="title" class="form-label">Tiêu đề <span class="text-muted"></span></label>
+                                <input type="text" class="form-control" id="title" name="title" required maxlength="50">
+                                <small class="text-muted"><span id="title-char-count">0</span>/50 ký tự</small>
                             </div>
+
 
                             <div class="col-md-12">
                                 <label for="thumbnail" class="form-label">Ảnh đại diện</label>
@@ -179,8 +188,9 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label for="summary" class="form-label">Tóm tắt nội dung</label>
-                                <textarea class="form-control" id="summary" name="summary" rows="3" required></textarea>
+                                <label for="summary" class="form-label">Tóm tắt nội dung <span class="text-muted"></span></label>
+                                <textarea class="form-control" id="summary" name="summary" rows="3" required maxlength="100"></textarea>
+                                <small class="text-muted"><span id="summary-char-count">0</span>/100 ký tự</small>
                             </div>
 
                             <div class="col-md-12">
@@ -205,9 +215,10 @@
                                 </div>
                             </div>
 
+                            <!-- Trong trang postform.jsp -->
                             <div class="col-12 mt-4">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="javascript:history.back()" class="btn btn-secondary btn-cancel">
+                                    <a href="${pageContext.request.contextPath}/marketing/postList" class="btn btn-secondary btn-cancel">
                                         <i class="fas fa-times me-2"></i>Quay lại
                                     </a>
                                     <button type="submit" class="btn btn-primary btn-submit">
@@ -223,7 +234,24 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+       
+        <script>
+    $(document).ready(function() {
+        // Initial count on page load (especially important for edit form)
+        $('#title-char-count').text($('#title').val().length);
+        $('#summary-char-count').text($('#summary').val().length);
         
+        // Update count when typing
+        $('#title').on('input', function() {
+            $('#title-char-count').text($(this).val().length);
+        });
+        
+        $('#summary').on('input', function() {
+            $('#summary-char-count').text($(this).val().length);
+        });
+    });
+</script>
+
         <script>
             $(document).ready(function () {
                 // Toggle sidebar

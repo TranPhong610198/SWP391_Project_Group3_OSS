@@ -129,7 +129,15 @@
 
                 <c:if test="${error != null}">
                     <div class="alert alert-danger" role="alert">
-                        ${error}
+                        <i class="fas fa-exclamation-circle me-2"></i>${error}
+                    </div>
+                </c:if>
+
+
+                <!-- Thêm đoạn mã này để hiển thị thông báo thành công -->
+                <c:if test="${success != null}">
+                    <div class="alert alert-success" role="alert">
+                        ${success}
                     </div>
                 </c:if>
 
@@ -176,9 +184,10 @@
                                     <input type="hidden" name="id" value="${post.getId()}">
 
                                     <div class="mb-3">
-                                        <label for="title" class="form-label fw-bold">Tiêu đề</label>
+                                        <label for="title" class="form-label fw-bold">Tiêu đề <span class="text-muted"></span></label>
                                         <input type="text" class="form-control" id="title" name="title" 
-                                               value="${post.getTitle()}" required>
+                                               value="${post.getTitle()}" required maxlength="50">
+                                        <small class="text-muted"><span id="title-char-count">0</span>/50 ký tự</small>
                                     </div>
 
                                     <div class="mb-3">
@@ -188,11 +197,12 @@
                                         <input type="hidden" name="old_thumbnail" value="${post.getThumbnail()}">
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="summary" class="form-label fw-bold">Thông tin tóm tắt</label>
-                                        <textarea class="form-control" id="summary" name="summary" 
-                                                  rows="3" required>${post.getSummary()}</textarea>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="summary" class="form-label fw-bold">Thông tin tóm tắt <span class="text-muted"></span></label>
+                                            <textarea class="form-control" id="summary" name="summary" 
+                                                      rows="3" required maxlength="100">${post.getSummary()}</textarea>
+                                            <small class="text-muted"><span id="summary-char-count">0</span>/100 ký tự</small>
+                                        </div>
 
                                     <div class="mb-3">
                                         <label for="content" class="form-label fw-bold">Nội dung</label>
@@ -224,7 +234,7 @@
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save me-2"></i>Lưu thay đổi
                                         </button>
-                                        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                                        <a href="${pageContext.request.contextPath}/marketing/postList" class="btn btn-outline-secondary">
                                             <i class="fas fa-arrow-left me-2"></i>Quay lại
                                         </a>
                                     </div>
@@ -238,7 +248,22 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+    $(document).ready(function() {
+        // Initial count on page load (especially important for edit form)
+        $('#title-char-count').text($('#title').val().length);
+        $('#summary-char-count').text($('#summary').val().length);
         
+        // Update count when typing
+        $('#title').on('input', function() {
+            $('#title-char-count').text($(this).val().length);
+        });
+        
+        $('#summary').on('input', function() {
+            $('#summary-char-count').text($(this).val().length);
+        });
+    });
+</script>
         <script>
             $(document).ready(function () {
                 // Toggle sidebar

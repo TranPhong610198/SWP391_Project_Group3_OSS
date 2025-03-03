@@ -107,6 +107,13 @@ public class PostDetailServlet extends HttpServlet {
         String status = request.getParameter("status");
         Date updatedAt = new Date(System.currentTimeMillis());
         
+        // Nếu bất kỳ trường nào bị để trống, báo lỗi
+        if (title.isEmpty() || summary.isEmpty() || content.isEmpty() || status.isEmpty()) {
+            request.setAttribute("error", "Tất cả các trường không được để trống.");
+            request.setAttribute("post", new Post(id, title, oldThumbnail, summary, content, status, updatedAt));
+            request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
+            return;
+        }
         Part thumbnailPart = request.getPart("thumbnail");
         String thumbnail = oldThumbnail; // Giữ ảnh cũ mặc định
         boolean isFeatured = request.getParameter("isFeatured") != null;
@@ -129,19 +136,35 @@ public class PostDetailServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        PostDAO postDAO = new PostDAO();
+    Post oldPost = postDAO.getPostById(id);
+
+    // Kiểm tra nếu không có thay đổi gì
+    if (oldPost.getTitle().equals(title) && 
+        oldPost.getSummary().equals(summary) && 
+        oldPost.getContent().equals(content) && 
+        oldPost.getStatus().equals(status) && 
+        oldPost.getThumbnail().equals(thumbnail) && 
+        oldPost.isIsFeatured() == isFeatured) {
+        response.sendRedirect("postList");
+        return;
+    }
+    
         Post post = new Post(id, title, thumbnail, summary, content, status, updatedAt);
         post.setIsFeatured(isFeatured);
-        PostDAO postDAO = new PostDAO();
+        
         boolean isUpdated = postDAO.updatePost(post);
 
-        Post p = postDAO.getPostById(id);
+        //Post p = postDAO.getPostById(id);
 
 
         if (isUpdated) {
-            response.sendRedirect("postList");
+            request.setAttribute("post", postDAO.getPostById(id));
+    request.setAttribute("success", "Đã chỉnh sửa thành công");
+    request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
         } else {
 
-            request.setAttribute("post", p);
+            request.setAttribute("post", oldPost);
             request.setAttribute("error", "Cập nhật bài viết thất bại.");
             request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
         }

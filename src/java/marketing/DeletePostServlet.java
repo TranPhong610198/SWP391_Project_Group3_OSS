@@ -66,9 +66,9 @@ public class DeletePostServlet extends HttpServlet {
                 boolean isDeleted = postDAO.deletePost(postId);
 
                 if (isDeleted) {
-                    request.setAttribute("message", "Xóa bài viết thành công!");
+                     request.getSession().setAttribute("success", "Xóa bài viết thành công!");
                 } else {
-                    request.setAttribute("error", "Không tìm thấy bài viết để xóa!");
+                     request.getSession().setAttribute("error", "Không tìm thấy bài viết để xóa!");
                 }
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "ID không hợp lệ!");

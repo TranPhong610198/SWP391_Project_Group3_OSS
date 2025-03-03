@@ -38,6 +38,15 @@ public class AddSliderServlet extends HttpServlet {
             String status = request.getParameter("status");
             String notes = request.getParameter("notes");
             int display_order = 0;
+            
+            if (title == null || title.isEmpty() || link == null || link.isEmpty()
+                    || status == null || status.isEmpty()
+                    || notes == null || notes.isEmpty()) {
+                request.setAttribute("error", "Tất cả các trường không được để trống.");
+                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
+                return;
+            }
+            
             try {
                 display_order = Integer.parseInt(request.getParameter("display_order"));
             } catch (NumberFormatException e) {
@@ -93,10 +102,13 @@ public class AddSliderServlet extends HttpServlet {
             
             boolean isAdded = sliderDAO.addSlider(slider);
 
-            if (isAdded) {
-                response.sendRedirect("sliderList");
+             if (isAdded) {
+                request.setAttribute("success", "Đã thêm thanh trượt thành công!");
+                // Reset form by creating a new Slider object
+                request.setAttribute("slider", new Slider());
+                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
             } else {
-                request.setAttribute("error", "Thêm slider thất bại!");
+                request.setAttribute("error", "Thêm thanh trượt thất bại!");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
             }
             

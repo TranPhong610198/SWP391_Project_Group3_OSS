@@ -98,6 +98,11 @@ public class AddPostServlet extends HttpServlet {
         Date createdAt = new Date(System.currentTimeMillis());
         boolean isFeatured = request.getParameter("isFeatured") != null;
         
+        if (title.isEmpty() || summary.isEmpty() || content.isEmpty() || status.isEmpty()) {
+            request.setAttribute("error", "Tất cả các trường không được để trống.");
+            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+            return;
+        }        
         
         // Xử lý file ảnh
         String thumbnail = "";
@@ -146,7 +151,17 @@ public class AddPostServlet extends HttpServlet {
         boolean isAdded = postDAO.addPost(post);
 
         if (isAdded) {
-            response.sendRedirect("postList");
+            request.setAttribute("success", "Đã thêm bài đăng thành công!");
+    
+    // Reset form
+    request.setAttribute("post", new Post());
+    
+    // Lấy lại danh sách users nếu cần
+    List<User> users = postDAO.getAuthorsByRole();
+    request.setAttribute("users", users);
+    
+    // Chuyển về trang form thay vì redirect
+    request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
         } else {
             request.setAttribute("error", "Thêm bài viết thất bại!");
             request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);

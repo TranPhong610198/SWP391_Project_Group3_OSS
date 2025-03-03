@@ -104,6 +104,17 @@ public class SliderDetailServlet extends HttpServlet {
         
         SliderDAO sliderDAO = new SliderDAO();
         
+        if (title.isEmpty() || link.isEmpty() || notes == null || notes.isEmpty()) {
+        request.setAttribute("error", "Tất cả các trường không được để trống.");
+        Slider currentSlider = sliderDAO.getSliderById(id);
+        request.setAttribute("slider", currentSlider);
+        request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+        return;
+    }
+        
+        // Get the original slider to check for changes later
+        Slider originalSlider = sliderDAO.getSliderById(id);
+    
         if (sliderDAO.isDisplayOrderExists(display_order, id)) {
         request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
         
@@ -149,12 +160,28 @@ public class SliderDetailServlet extends HttpServlet {
 
         Slider slider = new Slider(id, title, image_url,link, status, display_order, notes);
 
+        // Check if there are any changes to the slider
+        boolean hasChanges = !originalSlider.getTitle().equals(title)
+                || !originalSlider.getImage_url().equals(image_url)
+                || !originalSlider.getLink().equals(link)
+                || originalSlider.getDisplay_order() != display_order
+                || !originalSlider.getStatus().equals(status)
+                || !originalSlider.getNotes().equals(notes);
+
+        // If no changes, redirect back to slider list
+        if (!hasChanges) {
+            response.sendRedirect("sliderList");
+            return;
+        }
        
         boolean isUpdated = sliderDAO.updateSlider(slider);
 
         if (isUpdated) {
-            request.getSession().setAttribute("successMessage","Cập nhật thanh trượt thành công.");
-            response.sendRedirect("sliderList");
+            // Show success message on the same page instead of redirecting
+            Slider updatedSlider = sliderDAO.getSliderById(id);
+            request.setAttribute("slider", updatedSlider);
+            request.setAttribute("success", "Cập nhật thanh trượt thành công.");
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
         } else {
             Slider s = sliderDAO.getSliderById(id);
             request.setAttribute("slider", s);
