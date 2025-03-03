@@ -48,6 +48,96 @@
         .author-info i {
             color: #0d6efd;
         }
+        
+        .post-card {
+        height: 100%;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    
+    .card-img-wrapper {
+        overflow: hidden;
+    }
+    
+    .post-image {
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.5s;
+    }
+    
+    .post-card:hover .post-image {
+        transform: scale(1.05);
+    }
+    
+    .post-summary {
+        font-size: 0.95rem;
+        color: #495057;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .post-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    /* Continuous slider */
+    .continuous-slider-container {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding: 15px 0;
+    }
+    
+    .continuous-slider {
+        display: flex;
+        animation: slideMove 60s linear infinite; /* Di chuyển rất chậm trong 60 giây */
+    }
+    
+    .continuous-slider:hover {
+        animation-play-state: paused; /* Tạm dừng khi hover */
+    }
+    
+    .slider-item {
+        flex: 0 0 300px; /* Chiều rộng cố định cho mỗi item */
+        margin-right: 20px;
+        opacity: 0.85;
+        transition: opacity 0.3s;
+    }
+    
+    .slider-item:hover {
+        opacity: 1;
+    }
+    
+    @keyframes slideMove {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-320px * (var(--total-items) / 2))); /* Di chuyển một nửa tổng số items */
+        }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .slider-item {
+            flex: 0 0 260px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .slider-item {
+            flex: 0 0 220px;
+        }
+    }
     </style>
 </head>
 <body>
@@ -89,16 +179,86 @@
                             <img src="${post.getThumbnail()}" alt="${post.title}" class="img-fluid post-thumbnail">
                         </div>
                         <div class="post-content">${post.content}</div>
-                        
-                        <!-- Social sharing buttons -->
-                        <div class="mt-4 pt-3 border-top">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-share-alt me-2"></i>Chia sẻ</button>
-                                <button class="btn btn-sm btn-outline-danger"><i class="far fa-heart me-2"></i>Lưu</button>
-                                <button class="btn btn-sm btn-outline-success"><i class="fas fa-print me-2"></i>In</button>
-                            </div>
-                        </div>
                     </article>
+                         <c:if test="${post.isIsFeatured() && not empty featuredPosts && featuredPosts.size() > 0}">
+    <div class="featured-posts-section mt-5">
+        <h3 class="section-title mb-4">Các bài viết nổi bật khác</h3>
+        
+        <div class="continuous-slider-container">
+            <div class="continuous-slider">
+                <!-- Lặp qua mỗi bài viết nổi bật -->
+                <c:forEach var="featuredPost" items="${featuredPosts}">
+                    <div class="slider-item">
+                        <div class="card post-card h-100">
+                            <a href="${pageContext.request.contextPath}/post?id=${featuredPost.getId()}" 
+                               class="text-decoration-none">
+                                <div class="card-img-wrapper">
+                                    <img src="${featuredPost.getThumbnail()}" 
+                                         class="card-img-top post-image" alt="${featuredPost.getTitle()}">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">
+                                        ${featuredPost.getTitle()}
+                                        <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                    </h5>
+                                    <p class="post-summary">${featuredPost.getSummary()}</p>
+                                    <div class="post-meta mt-3">
+                                        <i class="fas fa-user-edit me-2"></i>${featuredPost.getUser().getFullName()}
+                                        <br>
+                                        <i class="far fa-clock me-2"></i>
+                                        <c:choose>
+                                            <c:when test="${featuredPost.getUpdatedAt() != null}">
+                                                Cập nhật: ${featuredPost.getUpdatedAt()}
+                                            </c:when>
+                                            <c:otherwise>
+                                                Ngày đăng: ${featuredPost.getCreatedAt()}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </c:forEach>
+                
+                <!-- Thêm các bài viết đầu tiên một lần nữa để tạo hiệu ứng liên tục -->
+                <c:forEach var="featuredPost" items="${featuredPosts}" begin="0" end="2">
+                    <div class="slider-item">
+                        <div class="card post-card h-100">
+                            <a href="${pageContext.request.contextPath}/post?id=${featuredPost.getId()}" 
+                               class="text-decoration-none">
+                                <div class="card-img-wrapper">
+                                    <img src="${featuredPost.getThumbnail()}" 
+                                         class="card-img-top post-image" alt="${featuredPost.getTitle()}">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">
+                                        ${featuredPost.getTitle()}
+                                        <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                    </h5>
+                                    <p class="post-summary">${featuredPost.getSummary()}</p>
+                                    <div class="post-meta mt-3">
+                                        <i class="fas fa-user-edit me-2"></i>${featuredPost.getUser().getFullName()}
+                                        <br>
+                                        <i class="far fa-clock me-2"></i>
+                                        <c:choose>
+                                            <c:when test="${featuredPost.getUpdatedAt() != null}">
+                                                Cập nhật: ${featuredPost.getUpdatedAt()}
+                                            </c:when>
+                                            <c:otherwise>
+                                                Ngày đăng: ${featuredPost.getCreatedAt()}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
+</c:if>
                 </c:when>
                 <c:otherwise>
                     <div class="alert alert-warning">Không có dữ liệu để hiển thị.</div>
@@ -110,5 +270,31 @@
     <jsp:include page="footer.jsp" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const slider = document.querySelector('.continuous-slider');
+        if (slider) {
+            // Đếm số lượng bài viết thực (không tính phần clone)
+            const items = document.querySelectorAll('.featured-posts-section .slider-item');
+            const featuredPostCount = items.length / 2; // Chia 2 vì một nửa là clone
+            
+            // Thiết lập biến CSS để sử dụng trong animation
+            slider.style.setProperty('--total-items', featuredPostCount);
+            
+            // Điều chỉnh tốc độ dựa trên số lượng bài viết
+            const duration = Math.max(30, featuredPostCount * 5); // Tối thiểu 30s, sau đó mỗi bài thêm 10s
+            slider.style.animationDuration = duration + 's';
+            
+            // Thêm sự kiện tương tác
+            slider.addEventListener('mouseenter', function() {
+                this.style.animationPlayState = 'paused';
+            });
+            
+            slider.addEventListener('mouseleave', function() {
+                this.style.animationPlayState = 'running';
+            });
+        }
+    });
+</script>
 </body>
 </html>

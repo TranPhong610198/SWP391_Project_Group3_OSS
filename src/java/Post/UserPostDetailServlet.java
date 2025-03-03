@@ -41,12 +41,20 @@ public class UserPostDetailServlet extends HttpServlet {
                 request.getRequestDispatcher("/postd.jsp").forward(request, response);
                 return;
             }
+            
+             List<Post> featuredPosts = null;
+            if (post.isIsFeatured()) {
+                // Get all featured posts except the current one
+                featuredPosts = postDAO.getPostToHome(1, 10, null, null, "published", true, "updated_at", "DESC");
+                featuredPosts.removeIf(p -> p.getId() == postId);
+            }
 
             List<Post> latestPosts = postDAO.getLatestPublishedPosts(5);
             latestPosts.removeIf(p -> p.getId() == postId);
 
             request.setAttribute("post", post);
             request.setAttribute("latestPosts", latestPosts);
+            request.setAttribute("featuredPosts", featuredPosts);
             request.getRequestDispatcher("/postd.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("error", "ID bài viết không hợp lệ.");
