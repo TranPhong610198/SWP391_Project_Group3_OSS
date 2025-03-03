@@ -91,6 +91,17 @@
             .quantity-control .btn:hover {
                 background-color: #e2e8f0;
             }
+            
+            .quantity-error {
+                border-color: var(--accent-color) !important;
+                background-color: rgba(255, 107, 107, 0.05);
+            }
+            
+            .stock-message {
+                font-size: 12px;
+                margin-top: 5px;
+                font-weight: 500;
+            }
 
             .btn-primary {
                 background-color: var(--primary-color);
@@ -339,7 +350,7 @@
                                                 </thead>
                                                 <tbody>
     <c:forEach items="${cart.items}" var="item">
-        <tr data-id="${item.id}">
+        <tr data-id="${item.id}" data-product-id="${item.productId}" data-variant-id="${item.variantId}">
             <td>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input product-select" 
@@ -377,15 +388,18 @@
                                 onclick="updateQuantity(this, -1)">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <input type="number" value="${item.quantity}" min="1" 
+                        <input type="number" value="${item.quantity}" min="1" max="${stockMap[item.id]}"
                                class="form-control text-center quantity-input"
                                data-item-id="${item.id}"
+                               data-variant-id="${item.variantId}"
+                               data-max-stock="${stockMap[item.id]}"
                                onchange="handleQuantityChange(this)">
                         <button type="button" class="btn btn-outline-secondary" 
                                 onclick="updateQuantity(this, 1)">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
+                    <div class="stock-message text-danger mt-1" style="display: none; font-size: 12px;"></div>
                 </div>
             </td>
             <td>
@@ -477,6 +491,31 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
+                                // Hiển thị thông báo lỗi tồn kho
+                                function showStockMessage(input, message, isError) {
+                                    const row = input.closest('tr');
+                                    const messageEl = row.querySelector('.stock-message');
+                                    
+                                    if (messageEl) {
+                                        if (message) {
+                                            messageEl.textContent = message;
+                                            messageEl.style.display = 'block';
+                                            messageEl.className = isError ? 
+                                                'stock-message text-danger mt-1' : 
+                                                'stock-message text-success mt-1';
+                                            
+                                            if (isError) {
+                                                input.classList.add('quantity-error');
+                                            } else {
+                                                input.classList.remove('quantity-error');
+                                            }
+                                        } else {
+                                            messageEl.style.display = 'none';
+                                            input.classList.remove('quantity-error');
+                                        }
+                                    }
+                                }
+                                
                                 // Sửa lại hàm submitCheckout() trong cartdetail.jsp
                                 function submitCheckout() {
                                     const form = document.getElementById('checkoutForm');
@@ -603,10 +642,25 @@
 
                                 function updateQuantity(button, change) {
                                     const input = button.parentElement.querySelector('input');
-                                    const currentValue = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
+                                    const currentValue = parseInt(input.value) || 1;
+                                    const maxStock = parseInt(input.dataset.maxStock) || 0;
                                     const newValue = currentValue + change;
 
                                     if (newValue >= 1) {
+                                        // Kiểm tra số lượng tồn kho
+                                        if (maxStock > 0 && newValue > maxStock) {
+                                            // Hiển thị thông báo lỗi
+                                            showStockMessage(
+                                                input, 
+                                                `Vượt quá số lượng trong kho. Chỉ còn ${maxStock} sản phẩm.`,
+                                                true
+                                            );
+                                            return;
+                                        }
+
+                                        // Xóa thông báo lỗi nếu có
+                                        showStockMessage(input, null);
+                                        
                                         input.value = newValue;
                                         const itemId = input.dataset.itemId;
                                         if (itemId) {
@@ -617,11 +671,26 @@
                                 }
 
                                 function handleQuantityChange(input) {
-                                    let value = parseInt(input.value) || 1; // Đảm bảo giá trị luôn là số
+                                    let value = parseInt(input.value) || 1;
+                                    const maxStock = parseInt(input.dataset.maxStock) || 0;
 
                                     // Đảm bảo giá trị tối thiểu là 1
                                     if (value < 1) {
                                         value = 1;
+                                    }
+
+                                    // Kiểm tra số lượng tồn kho
+                                    if (maxStock > 0 && value > maxStock) {
+                                        value = maxStock;
+                                        // Hiển thị thông báo lỗi
+                                        showStockMessage(
+                                            input, 
+                                            `Vượt quá số lượng trong kho.`,
+                                            true
+                                        );
+                                    } else {
+                                        // Xóa thông báo lỗi nếu có
+                                        showStockMessage(input, null);
                                     }
 
                                     input.value = value; // Cập nhật giá trị input
@@ -652,15 +721,31 @@
                                         },
                                         body: formData.toString()
                                     })
-                                            .then(response => {
-                                                if (!response.ok) {
-                                                    throw new Error('Network response was not ok');
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Error updating quantity:', error);
-                                                // Có thể thêm thông báo lỗi cho người dùng ở đây
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        if (data.success && data.updatedQuantity < quantity) {
+                                            // Nếu server trả về số lượng nhỏ hơn số lượng yêu cầu
+                                            // (do kiểm tra tồn kho), cập nhật giá trị input
+                                            const inputs = document.querySelectorAll(`.quantity-input[data-item-id="${itemId}"]`);
+                                            inputs.forEach(input => {
+                                                input.value = data.updatedQuantity;
+                                                showStockMessage(
+                                                    input, 
+                                                    `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${data.updatedQuantity} sản phẩm.`,
+                                                    true
+                                                );
                                             });
+                                            updateTotalAmount();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error updating quantity:', error);
+                                    });
                                 }
 
                                 function deleteItem(itemId) {
@@ -676,18 +761,47 @@
                                             },
                                             body: formData.toString()
                                         })
-                                                .then(response => {
-                                                    if (!response.ok) {
-                                                        throw new Error('Network response was not ok');
-                                                    }
-                                                    // Nếu xóa thành công, cập nhật UI
-                                                    location.reload(); // Tải lại trang để cập nhật giỏ hàng
-                                                })
-                                                .catch(error => {
-                                                    console.error('Error deleting item:', error);
-                                                    alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
-                                                });
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            // Nếu xóa thành công, cập nhật UI
+                                            location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                                        })
+                                        .catch(error => {
+                                            console.error('Error deleting item:', error);
+                                            alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
+                                        });
                                     }
+                                }
+                                
+                                // Kiểm tra tất cả số lượng khi trang được tải
+                                function validateAllQuantities() {
+                                    const inputs = document.querySelectorAll('.quantity-input');
+                                    
+                                    for (const input of inputs) {
+                                        const maxStock = parseInt(input.dataset.maxStock) || 0;
+                                        const currentValue = parseInt(input.value) || 1;
+                                        
+                                        if (maxStock > 0 && currentValue > maxStock) {
+                                            // Hiển thị thông báo lỗi
+                                            input.value = maxStock;
+                                            showStockMessage(
+                                                input, 
+                                                `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${maxStock} sản phẩm.`,
+                                                true
+                                            );
+                                            
+                                            // Cập nhật số lượng trên server
+                                            const itemId = input.dataset.itemId;
+                                            if (itemId) {
+                                                updateQuantityOnServer(itemId, maxStock);
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Cập nhật tổng tiền
+                                    updateTotalAmount();
                                 }
 
                                 // Initialize the page
@@ -695,6 +809,10 @@
                                     // Check if there are any items in the cart
                                     const checkboxes = document.getElementsByClassName('product-select');
                                     if (checkboxes.length > 0) {
+                                        // Validate all quantities first
+                                        validateAllQuantities();
+                                        
+                                        // Update total amount
                                         updateTotalAmount();
                                     }
                                 });

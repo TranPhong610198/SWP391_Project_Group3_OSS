@@ -2,10 +2,12 @@ package Cart;
 
 import DAO.CartDAO;
 import DAO.CouponDAO;
+import DAO.InventoryDAO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Coupon;
 import entity.User;
+import entity.Variant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,14 +18,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "CartDetail", urlPatterns = {"/cartdetail"})
 public class CartDetail extends HttpServlet {
 
     private CartDAO cartDAO = new CartDAO();
     private CouponDAO couponDAO = new CouponDAO();
-
+     private InventoryDAO inventoryDAO = new InventoryDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -43,15 +47,25 @@ public class CartDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
-        
         Cart cart = user != null
                 ? cartDAO.getCart(request, user.getId())
                 : cartDAO.getCart(request, null);
+        
+        // Lấy thông tin tồn kho cho mỗi sản phẩm trong giỏ hàng
+        Map<Integer, Integer> stockMap = new HashMap<>();
+        if (cart != null && cart.getItems() != null) {
+            for (CartItem item : cart.getItems()) {
+                Variant variant = inventoryDAO.getVariant(item.getVariantId());
+                if (variant != null) {
+                    stockMap.put(item.getId(), variant.getQuantity());
+                }
+            }
+        }
+        request.setAttribute("stockMap", stockMap);
 
-       
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
 
@@ -98,6 +112,7 @@ public class CartDetail extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Get action type from request
+        // Get action type from request
         String action = request.getParameter("action");
 
         HttpSession session = request.getSession();
@@ -111,21 +126,33 @@ public class CartDetail extends HttpServlet {
             handleApplyCoupon(request, response);
             return;
         } else if ("checkout".equals(action)) {
-//            if (user == null) {
-//                // Save current URL to redirect back after login
-//                String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
-//                session.setAttribute("redirectAfterLogin", currentURL);
-//
-//                // Redirect to login for checkout
-//                response.sendRedirect("login");
-//                return;
-//            }
-
             handleCheckout(request, response);
+            return;
+        } else if ("checkStock".equals(action)) {
+            handleCheckStock(request, response);
             return;
         }
 
         response.sendRedirect("cartdetail");
+    }
+    
+    private void handleCheckStock(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        
+        try {
+            int variantId = Integer.parseInt(request.getParameter("variantId"));
+            
+            Variant variant = inventoryDAO.getVariant(variantId);
+            if (variant != null) {
+                out.print("{\"success\": true, \"stockQuantity\": " + variant.getQuantity() + "}");
+            } else {
+                out.print("{\"success\": false, \"message\": \"Không tìm thấy sản phẩm\"}");
+            }
+        } catch (Exception e) {
+            out.print("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     private void handleCheckout(HttpServletRequest request, HttpServletResponse response)
@@ -195,6 +222,26 @@ public class CartDetail extends HttpServlet {
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+            // Kiểm tra số lượng tồn kho
+            int variantId = -1;
+            Cart cart = user != null
+                ? cartDAO.getCartByUserId(user.getId())
+                : cartDAO.getCartFromCookies(request);
+            
+            for (CartItem item : cart.getItems()) {
+                if (item.getId() == cartItemId) {
+                    variantId = item.getVariantId();
+                    break;
+                }
+            }
+            
+            if (variantId != -1) {
+                Variant variant = inventoryDAO.getVariant(variantId);
+                if (variant != null && variant.getQuantity() < quantity) {
+                    quantity = variant.getQuantity(); // Giới hạn số lượng ở mức tồn kho
+                }
+            }
+
             System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
 
             if (user != null) {
@@ -207,14 +254,29 @@ public class CartDetail extends HttpServlet {
                 // User is not logged in, update in cookies
                 cartDAO.updateCartItemQuantityInCookie(request, response, cartItemId, quantity);
             }
-        } catch (NumberFormatException e) {
+            
+            // Trả về phản hồi JSON với số lượng đã cập nhật
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\": true, \"updatedQuantity\": " + quantity + "}");
+            out.flush();
+            
+        } catch (NumberFormatException | IOException e) {
             System.out.println("Error parsing quantity: " + e.getMessage());
             System.out.println("cartItemId: " + request.getParameter("cartItemId"));
             System.out.println("quantity: " + request.getParameter("quantity"));
+            
+            try {
+                response.setContentType("application/json");
+                PrintWriter out = response.getWriter();
+                out.print("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+                out.flush();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
-    // Trong CartDetail.java
     private void handleDeleteItem(HttpServletRequest request, HttpServletResponse response) {
         try {
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
@@ -307,6 +369,7 @@ public class CartDetail extends HttpServlet {
 
         return discount;
     }
+    
 
     @Override
     public String getServletInfo() {
