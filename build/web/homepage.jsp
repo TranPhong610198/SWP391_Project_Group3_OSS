@@ -594,26 +594,37 @@
                     </a>
                 </div>
                 <div class="row g-4">
-                    <c:forEach items="${latestPosts}" var="post">
+                    <c:forEach var="post" items="${latestPosts}">
                         <div class="col-md-6">
-                            <a href="post?id=${post.id}" class="text-decoration-none text-dark">
-                                <div class="card post-card">
-                                    <img src="${post.thumbnail}" class="card-img-top thumbnail-img" alt="${post.title}">
+                            <div class="card post-card h-100">
+                                <a href="${pageContext.request.contextPath}/post?id=${post.getId()}" 
+                                   class="text-decoration-none text-dark">
+                                    <img src="${post.getThumbnail()}" 
+                                         class="card-img-top post-image" alt="${post.getTitle()}">
                                     <div class="card-body">
-                                        <h5 class="card-title">${post.title}</h5>
-                                        <p class="card-text">
+                                        <h5 class="card-title text-dark">
+                                            ${post.getTitle()}
+                                            <c:if test="${post.isIsFeatured()}">
+                                                <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                            </c:if>
+                                        </h5>
+                                        <p class="post-summary text-dark">${post.getSummary()}</p>
+                                        <div class="post-meta mt-3 text-secondary">
+                                            <i class="fas fa-user-edit me-2"></i>${post.getUser().getFullName()}
+                                            <br>
+                                            <i class="far fa-clock me-2"></i>
                                             <c:choose>
-                                                <c:when test="${fn:length(post.summary) > 78}">
-                                                    ${fn:substring(post.summary, 0, 78)}...
+                                                <c:when test="${post.getUpdatedAt() != null}">
+                                                    Cập nhật: ${post.getUpdatedAt()}
                                                 </c:when>
                                                 <c:otherwise>
-                                                    ${post.summary}
+                                                    Ngày đăng: ${post.getCreatedAt()}
                                                 </c:otherwise>
                                             </c:choose>
-                                        </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
                         </div>
                     </c:forEach>
                 </div>
