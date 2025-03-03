@@ -132,7 +132,7 @@ public class ProductDAO extends DBContext {
     //Lấy danh sách những sản phẩm thuộc 1 combo
     public List<Product> getComboProduct(int comboGroupId) {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products WHERE combo_group_id = ? ORDER BY id DESC";
+        String query = "SELECT * FROM products WHERE combo_group_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, comboGroupId);
             ResultSet rs = ps.executeQuery();

@@ -80,7 +80,7 @@
             .sale-price {
                 font-size: 1.8rem;
                 font-weight: 600;
-                color: #e44d26;
+                color: #0984e3; /* Changed to blue color */
             }
 
             .original-price {
@@ -231,6 +231,81 @@
                 margin-top: 5px;
             }
 
+            /* Similar Products Section - Matching productList.jsp */
+            .similar-products-section {
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+
+            .similar-products-title {
+                font-size: 1.4rem;
+                font-weight: 600;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+            /* Product grid styles copied from productList.jsp */
+            .product-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 25px;
+                margin-top: 20px;
+            }
+
+            /* Card sản phẩm - đồng bộ với productList.jsp */
+            .product-card {
+                border: none;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                transition: all 0.3s ease;
+                height: 100%;
+                background: white;
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .product-image {
+                height: 250px;
+                object-fit: cover;
+                width: 100%;
+                transition: all 0.5s ease;
+            }
+
+            .product-card:hover .product-image {
+                transform: scale(1.05);
+            }
+
+            .product-info {
+                padding: 1.5rem;
+                background: white;
+            }
+
+            .product-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #2d3436;
+                height: auto;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .product-price {
+                font-size: 1.2rem;
+                color: #0984e3;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
             /* Các style mới được thêm vào */
             .options-row {
                 display: flex;
@@ -276,6 +351,11 @@
                 .options-col {
                     width: 100%;
                 }
+
+                .product-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: 15px;
+                }
             }
         </style>
     </head>
@@ -313,9 +393,9 @@
                             <%--</c:if>--%>
                         </div>
                         <!--Tạm thời ẩn phần mô tả đã do lỗi ckeditor-->
-<!--                        <div class="product-description">
-                            ${product.description}
-                        </div>-->
+                        <!--                        <div class="product-description">
+                        ${product.description}
+                    </div>-->
 
                         <form action="productdetail" method="POST">
                             <input type="hidden" name="id" value="${product.id}">
@@ -362,9 +442,10 @@
                                     <div class="stock-status ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
                                         <i class="fas ${product.stock > 0 ? 'fa-check-circle' : 'fa-times-circle'}"></i>
                                         <span class="ms-2">
-                                            ${product.stock > 0 ? 'Còn Hàng (' : 'Hết Hàng'} 
-                                            ${product.stock > 0 ? product.stock : ''}
-                                            ${product.stock > 0 ? ')' : ''}
+                                            <!--${product.stock > 0 ? 'Còn Hàng (' : 'Hết Hàng'}--> 
+                                            <!--${product.stock > 0 ? product.stock : ''}-->
+                                            <!--${product.stock > 0 ? ')' : ''}-->
+                                            ${product.stock > 0 ? 'Còn Hàng' : 'Hết Hàng'} 
                                         </span>
                                     </div>
                                 </div>
@@ -429,6 +510,31 @@
                     </c:otherwise>
                 </c:choose>
                 <!---------------------------------------------------------------------------------------------------------------------->
+            </div>
+
+            <!-- Similar Products Section - Displays up to 4 similar products from the same category -->
+            <div class="similar-products-section">
+                <h2 class="similar-products-title">Sản Phẩm Tương Tự</h2>
+
+                <div class="product-grid">
+                    <c:forEach items="${similarProducts}" var="similarProduct" varStatus="status">
+                        <c:if test="${status.index < 4}">
+                            <div class="card product-card">
+                                <a href="productdetail?id=${similarProduct.id}" style="text-decoration:none;">
+                                    <div class="position-relative">
+                                        <img src="${similarProduct.thumbnail}" class="product-image" alt="${similarProduct.title}">
+                                    </div>
+                                    <div class="product-info">
+                                        <h5 class="product-title">${similarProduct.title}</h5>
+                                        <div class="product-price">
+                                            <span><fmt:formatNumber value="${similarProduct.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:if>
+                    </c:forEach>
+                </div>
             </div>
         </div>
 

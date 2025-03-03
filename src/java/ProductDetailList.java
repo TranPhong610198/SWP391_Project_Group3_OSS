@@ -127,7 +127,7 @@ public class ProductDetailList extends HttpServlet {
             request.setAttribute("images", allImages);
             request.setAttribute("colors", colors);
             request.setAttribute("sizes", sizes);
-            request.setAttribute("relatedProducts", relatedProducts);
+            request.setAttribute("similarProducts", relatedProducts);
 //            request.setAttribute("comboProducts", comboProducts);
 
             // Forward to the JSP

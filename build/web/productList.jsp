@@ -4,6 +4,12 @@
     Author     : tphon
 --%>
 
+<%-- 
+    Document   : productList
+    Created on : Feb 24, 2025, 1:40:02 AM
+    Author     : tphon
+--%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -57,34 +63,44 @@
                 margin-top: 30px;
             }
 
+            /* Card sản phẩm - đồng bộ với homepage */
             .product-card {
-                background: white;
-                border-radius: 8px;
+                border: none;
+                border-radius: 12px;
                 overflow: hidden;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                transition: transform 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                transition: all 0.3s ease;
+                height: 100%;
+                background: white;
             }
 
             .product-card:hover {
                 transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             }
 
             .product-image {
-                width: 100%;
                 height: 250px;
                 object-fit: cover;
+                width: 100%;
+                transition: all 0.5s ease;
+            }
+
+            .product-card:hover .product-image {
+                transform: scale(1.05);
             }
 
             .product-info {
-                padding: 15px;
+                padding: 1.5rem;
+                background: white;
             }
 
             .product-title {
-                font-size: 1rem;
-                font-weight: 500;
-                margin-bottom: 10px;
-                color: #333;
-                height: 40px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #2d3436;
+                height: auto;
                 overflow: hidden;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -92,79 +108,24 @@
             }
 
             .product-price {
-                display: flex;
-                align-items: baseline;
-                gap: 10px;
-                margin-bottom: 15px;
-            }
-
-            .product-buttons {
-                display: flex;
-                gap: 8px;
-                margin-top: 10px;
-            }
-
-            .btn-buy-now {
-                flex: 1;
-                padding: 8px;
-                background: #e44d26;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-size: 0.9rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .btn-add-cart {
-                flex: 1;
-                padding: 8px;
-                background: #333;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-size: 0.9rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .btn-buy-now:hover {
-                background: #c53d1d;
-                transform: translateY(-2px);
-            }
-
-            .btn-add-cart:hover {
-                background: #000;
-                transform: translateY(-2px);
-            }
-
-            .sale-price {
                 font-size: 1.2rem;
-                font-weight: 600;
-                color: #e44d26;
+                color: #0984e3;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
             }
 
-            .original-price {
-                font-size: 0.9rem;
-                color: #999;
-                text-decoration: line-through;
-            }
-
-            .view-button {
-                display: block;
-                width: 100%;
-                padding: 8px;
-                background: #333;
+            .product-badge {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: red;
                 color: white;
-                text-align: center;
-                text-decoration: none;
-                border-radius: 4px;
-                transition: background 0.3s ease;
-            }
-
-            .view-button:hover {
-                background: #000;
-                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 500;
             }
 
             .pagination {
@@ -272,6 +233,7 @@
             <!-- Filters Section -->
             <div class="filters">
                 <form action="listproduct" method="GET" id="filterForm">
+                    <input type="hidden" name="category" value="${category}">
                     <div class="row align-items-end">
                         <div class="col-md-4">
                             <div class="filter-title">Khoảng Giá</div>
@@ -308,13 +270,16 @@
                         <c:if test="${not empty product.comboProducts}">
                             <c:if test="${product.id == product.comboProducts.get(comboProducts.size()).id}">
                                 <c:forEach items="${products}" var="product">
-                                    <div class="product-card">
+                                    <div class="card product-card">
                                         <a href="productdetail?id=${product.id}" style="text-decoration:none;">
-                                            <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                            <div class="position-relative">
+                                                <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                                <span class="product-badge">Combo</span>
+                                            </div>
                                             <div class="product-info">
-                                                <h5 class="product-title"> <i class="fas fa-box-open me-1"></i>Combo ${product.title}</h5>
+                                                <h5 class="product-title">${product.title}</h5>
                                                 <div class="product-price">
-                                                    <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
+                                                    <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
                                             </div>
                                         </a>
@@ -324,13 +289,15 @@
                         </c:if>
                         <c:if test="${empty product.comboProducts}">
                             <c:forEach items="${products}" var="product">
-                                <div class="product-card">
+                                <div class="card product-card">
                                     <a href="productdetail?id=${product.id}" style="text-decoration:none;">
-                                        <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                        <div class="position-relative">
+                                            <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                        </div>
                                         <div class="product-info">
                                             <h5 class="product-title">${product.title}</h5>
                                             <div class="product-price">
-                                                <fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>                                                                                        
+                                                <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                             </div>
                                         </div>
                                     </a>
@@ -342,8 +309,8 @@
                 <c:otherwise>
                     <div class="no-products">
                         <i class="fas fa-box-open"></i>
-                        <h3>No Products Found</h3>
-                        <p>Try adjusting your search criteria or browse our categories</p>
+                        <h3>Không tìm thấy sản phẩm</h3>
+                        <p>Hãy thử điều chỉnh tiêu chí tìm kiếm hoặc duyệt danh mục của chúng tôi</p>
                     </div>
                 </c:otherwise>
             </c:choose>

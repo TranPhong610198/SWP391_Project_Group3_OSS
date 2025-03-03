@@ -190,7 +190,7 @@ public class ListProductServlet extends HttpServlet {
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("keyword", keyword);
-            request.setAttribute("selectedCategory", categoryId);
+            request.setAttribute("category", categoryId);
             request.setAttribute("minPrice", minPrice);
             request.setAttribute("maxPrice", maxPrice);
             request.setAttribute("sortBy", sortBy);
