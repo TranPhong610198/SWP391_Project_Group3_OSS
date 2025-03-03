@@ -171,13 +171,13 @@
                             <!-- Giá gốc -->
                             <div class="col-md-6">
                                 <label for="originalPrice" class="form-label">Giá gốc (₫)</label>
-                                <input type="number" class="form-control" id="originalPrice" name="originalPrice" step="1000" min="0" required />
+                                <input type="number" class="form-control" id="originalPrice" name="originalPrice" step="1000" min="0" max="99999999" required />
                             </div>
 
                             <!-- Giá khuyến mãi -->
                             <div class="col-md-6">
                                 <label for="salePrice" class="form-label">Giá bán (₫)</label>
-                                <input type="number" class="form-control" id="salePrice" name="salePrice" step="1000" min="0" required />
+                                <input type="number" class="form-control" id="salePrice" name="salePrice" step="1000" min="0" max="99999999" required />
                                 <div class="form-text">Giá bán phải lớn hơn hoặc bằng giá gốc</div>
                             </div>
 

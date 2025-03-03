@@ -156,11 +156,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="originalPrice" class="form-label">Giá gốc (₫)</label>
-                                <input type="number" class="form-control" id="originalPrice" name="originalPrice" value="${product.originalPrice.intValue()}" step="1000" min="0" required />
+                                <input type="number" class="form-control" id="originalPrice" name="originalPrice" value="${product.originalPrice.intValue()}" step="1000" min="0" max="99999999" required />
                             </div>
                             <div class="col-md-6">
                                 <label for="salePrice" class="form-label">Giá bán (₫)</label>
-                                <input type="number" class="form-control" id="salePrice" name="salePrice" value="${product.salePrice.intValue()}" step="1000" min="0" required />
+                                <input type="number" class="form-control" id="salePrice" name="salePrice" value="${product.salePrice.intValue()}" step="1000" min="0" max="99999999" required />
                             </div>
                             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                                 <label for="comboGroupId" class="form-label mb-2">

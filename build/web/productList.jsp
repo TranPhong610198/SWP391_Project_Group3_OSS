@@ -238,9 +238,9 @@
                         <div class="col-md-4">
                             <div class="filter-title">Khoảng Giá</div>
                             <div class="d-flex">
-                                <input type="number" id="minPrice" name="minPrice" step="1000" min="0" class="form-control me-2" placeholder="Thấp Nhất" value="${minPrice}">
+                                <input type="number" id="minPrice" name="minPrice" step="1000" min="0" max="3000000" class="form-control me-2" placeholder="Thấp Nhất" value="${minPrice}">
                                 <span class="align-self-center">-</span>
-                                <input type="number" id="maxPrice" name="maxPrice" step="1000" min="0" class="form-control ms-2" placeholder="Cao Nhất" value="${maxPrice}">
+                                <input type="number" id="maxPrice" name="maxPrice" step="1000" min="0" max="3000000" class="form-control ms-2" placeholder="Cao Nhất" value="${maxPrice}">
                             </div>
                         </div>
 
@@ -268,7 +268,7 @@
                 <c:when test="${not empty products}">
                     <div class="product-grid">
                         <c:if test="${not empty product.comboProducts}">
-                            <c:if test="${product.id == product.comboProducts.get(comboProducts.size()).id}">
+                            <c:if test="${product.id == product.comboProducts.get(comboProducts.get(0)).id}">
                                 <c:forEach items="${products}" var="product">
                                     <div class="card product-card">
                                         <a href="productdetail?id=${product.id}" style="text-decoration:none;">

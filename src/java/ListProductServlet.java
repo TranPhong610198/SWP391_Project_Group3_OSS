@@ -165,11 +165,11 @@ public class ListProductServlet extends HttpServlet {
                         if (!comboProducts.isEmpty()) {
                             tempProduct.setComboProducts(comboProducts);
                         }
+                        System.out.println("Dòng 169 test combo: " + tempProduct.getComboProducts().toString());
                     }
-//                    System.out.println("Dòng 169 test combo: "+tempProduct.getComboProducts().toString());
                 }
             }
-            
+
             //________________________________________________________________________________
             // Get category name if category filter is applied
             String categoryName = null;
