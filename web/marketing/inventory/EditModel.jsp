@@ -88,7 +88,7 @@
                     </div>
                 </c:if>
                 <div class="info-section">
-                    <h5>Chỉnh Sửa Mẫu</h5>
+                    <h5>Chỉnh Sửa Biến Thể</h5>
                     <form action="editModel" method="POST">
                         <input type="hidden" name="productId" value="${variant.productId}">
                         <input type="hidden" name="variantId" value="${variant.id}">
@@ -99,7 +99,7 @@
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="sku" name="sku" 
                                            value="${variant.sku}" readonly>
-                                    <label for="sku">SKU</label>
+                                    <label for="sku">Mã sản phẩm lưu kho</label>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -126,18 +126,9 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
-                            <c:choose>
-                                <c:when test="${param.source == 'productlist'}">
-                                    <a href="productlist" class="btn btn-secondary">
-                                        <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                    </a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="inventorylist" class="btn btn-secondary">
-                                        <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                    </a>
-                                </c:otherwise>
-                            </c:choose>
+                            <a onclick="history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-2"></i>Cập nhật
                             </button>

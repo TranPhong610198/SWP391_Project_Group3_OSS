@@ -89,7 +89,7 @@
                 </c:if>
 
                 <div class="info-section">
-                    <h5>Thêm Mẫu Mới</h5>
+                    <h5>Thêm Biến Thể</h5>
                     <form action="addModel" method="POST">
                         <input type="hidden" name="productId" value="${productId}">
                         <input type="hidden" name="source" value="${param.source}">
@@ -116,18 +116,9 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
-                            <c:choose>
-                                <c:when test="${param.source == 'productlist'}">
-                                    <a href="productlist" class="btn btn-secondary">
-                                        <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                    </a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="inventorylist" class="btn btn-secondary">
-                                        <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                    </a>
-                                </c:otherwise>
-                            </c:choose>
+                            <a onclick="history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-plus me-2"></i>Thêm mới
                             </button>
