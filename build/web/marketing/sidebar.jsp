@@ -29,10 +29,10 @@
             </a>
             <ul class="submenu collapse show list-unstyled ms-3 mt-1" id="productSubmenu">
                 <li class="submenu-item py-1">
-                    <a href="productlist" class="text-decoration-none text-light">Danh sách sản phẩm</a>
+                    <a href="${pageContext.request.contextPath}/marketing/productlist" class="text-decoration-none text-light">Danh sách sản phẩm</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="inventorylist" class="text-decoration-none text-light">Quản lý kho hàng</a>
+                    <a href="${pageContext.request.contextPath}/marketing/inventorylist" class="text-decoration-none text-light">Quản lý kho hàng</a>
                 </li>
             </ul>
         </li>
@@ -48,7 +48,7 @@
         </li>-->
 
         <li class="menu-item p-2">
-            <a href="couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+            <a href="${pageContext.request.contextPath}/marketing/couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-tags me-2"></i>
                     Mã giảm giá
@@ -74,10 +74,10 @@
             </a>
             <ul class="submenu collapse list-unstyled ms-3 mt-1" id="contentSubmenu">
                 <li class="submenu-item py-1">
-                    <a href="postList" class="text-decoration-none text-light">Bài đăng</a>
+                    <a href="${pageContext.request.contextPath}/marketing/postList" class="text-decoration-none text-light">Bài đăng</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="sliderList" class="text-decoration-none text-light">Thanh Trượt</a>
+                    <a href="${pageContext.request.contextPath}/marketing/sliderList" class="text-decoration-none text-light">Thanh Trượt</a>
                 </li>
             </ul>
         </li>
@@ -104,7 +104,7 @@
         </li>
         
         <li class="menu-item p-2">
-            <a href="../home" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/home" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-home me-2 "></i>
                 Trang chủ
             </a>

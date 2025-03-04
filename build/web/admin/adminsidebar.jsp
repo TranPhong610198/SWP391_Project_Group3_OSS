@@ -29,13 +29,13 @@
             </a>
             <ul class="submenu collapse show list-unstyled ms-3 mt-1" id="productSubmenu">
                 <li class="submenu-item py-1">
-                    <a href="userlists" class="text-decoration-none text-light">Danh sách người dùng</a>
+                    <a href="${pageContext.request.contextPath}/admin/userlists" class="text-decoration-none text-light">Danh sách người dùng</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="categorylists" class="text-decoration-none text-light">Danh sách danh mục</a>
+                    <a href="${pageContext.request.contextPath}/admin/categorylists" class="text-decoration-none text-light">Danh sách danh mục</a>
                 </li>
                 <li class="submenu-item py-1">
-                    <a href="footer-settings" class="text-decoration-none text-light">Những dấu ấn cuối trang</a>
+                    <a href="${pageContext.request.contextPath}/admin/footer-settings" class="text-decoration-none text-light">Những dấu ấn cuối trang</a>
                 </li>
             </ul>
         </li>
@@ -50,7 +50,7 @@
         </li>-->
 
         <li class="menu-item p-2">
-            <a href="../marketing/couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
+            <a href="${pageContext.request.contextPath}/marketing/couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
                 <div>
                     <i class="fas fa-tags me-2"></i>
                     Mã giảm giá
@@ -88,7 +88,7 @@
         </li>
         
         <li class="menu-item p-2">
-            <a href="../home" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/home" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-home me-2 "></i>
                 Trang chủ
             </a>
