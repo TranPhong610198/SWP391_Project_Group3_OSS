@@ -139,6 +139,22 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${alert != null && !alert.trim().isEmpty()}">
+                    <c:choose>
+                        <c:when test="${alert.equals('ER1_IVImg')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP, SVG).
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ERR')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Lỗi không xác định.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                    </c:choose>
+                </c:if>
                 <h2 class="page-title">
                     <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
                 </h2>
@@ -201,10 +217,10 @@
 
 
                             <!-- Mô tả //// tạm thời ẩn vì chức năng ckeditor upload ảnh lên đang bị lỗi--> 
-<!--                            <div class="col-12">
-                                <label for="description" class="form-label">Mô tả sản phẩm</label>
-                                <textarea class="form-control" id="description" name="description" rows="5" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
-                            </div>-->
+                            <!--                            <div class="col-12">
+                                                            <label for="description" class="form-label">Mô tả sản phẩm</label>
+                                                            <textarea class="form-control" id="description" name="description" rows="5" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
+                                                        </div>-->
 
                             <!-- Ảnh chính -->
                             <div class="col-md-6">
@@ -277,7 +293,7 @@
 
                                     // Hàm kiểm tra đuôi file
                                     function isValidImage(file) {
-                                        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
                                         return allowedTypes.includes(file.type);
                                     }
 
@@ -289,7 +305,7 @@
                                         if (input.files && input.files[0]) {
                                             const file = input.files[0];
                                             if (!isValidImage(file)) {
-                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP, SVG).');
                                                 input.value = ''; //xóa nội dung ko phải ảnh
                                                 return;
                                             }
@@ -318,7 +334,7 @@
                                             for (let i = 0; i < Math.min(filesAmount, maxFiles); i++) {
                                                 const file = input.files[i];
                                                 if (!isValidImage(file)) {
-                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP, SVG).');
                                                     input.value = ''; //xóa nội dung ko phải ảnh
                                                     return;
                                                 }

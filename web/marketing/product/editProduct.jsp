@@ -135,6 +135,34 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${alert != null && !alert.trim().isEmpty()}">
+                    <c:choose>
+                        <c:when test="${alert.equals('ER1_OP')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Sản phẩm đang có trong đơn hàng chưa hoàn thành.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ER1_IVImg')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ERR')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Lỗi không xác định.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ER1_FULL')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Không thể thêm ảnh mới vì đã đạt tối đa 5 ảnh phụ.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                    </c:choose>
+                </c:if>
                 <h2 class="page-title"><i class="fas fa-edit me-2"></i>Chỉnh sửa sản phẩm</h2>
                 <div class="card">
                     <div class="card-header"><i class="fas fa-info-circle me-2"></i>Thông tin sản phẩm</div>
@@ -279,7 +307,7 @@
                                         });
 
                                         function isValidImage(file) {
-                                            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
                                             return allowedTypes.includes(file.type);
                                         }
 
@@ -290,7 +318,7 @@
                                                 const file = input.files[0];
 
                                                 // Kiểm tra xem có phải file ảnh hợp lệ không
-                                                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
                                                 if (!allowedTypes.includes(file.type)) {
                                                     alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
                                                     input.value = ''; // Xóa file nếu không hợp lệ

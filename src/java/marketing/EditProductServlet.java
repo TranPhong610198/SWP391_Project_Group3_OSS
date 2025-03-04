@@ -87,6 +87,7 @@ public class EditProductServlet extends HttpServlet {
         request.setAttribute("categories", categoryDAO.getThirdLevelCategories()); // Giả sử có CategoryDAO
 //        System.out.println(categoryDAO.getThirdLevelCategories().toString());
         request.setAttribute("comboProducts", productDAO.getComboProducts());
+        request.setAttribute("alert", request.getParameter("alert"));
         request.getRequestDispatcher("/marketing/product/editProduct.jsp").forward(request, response);
     }
 
@@ -106,7 +107,7 @@ public class EditProductServlet extends HttpServlet {
             Product product = productDAO.getProductById(productId);
 
             if (productDAO.hasProcessOrders(productId)) {
-                response.sendRedirect("productlist?alert=ER1_OP");
+                response.sendRedirect("editproduct?id="+productId+"&alert=ER1_OP");
                 return;
             }
 
@@ -121,7 +122,7 @@ public class EditProductServlet extends HttpServlet {
             for (Part part : request.getParts()) {
                 if ((part.getName().equals("thumbnail") || part.getName().equals("subImage") || part.getName().equals("newSubImage")) && part.getSize() > 0) {
                     if (!isValidImage(part)) {
-                        response.sendRedirect("productlist?alert=ER1_IVImg");
+                        response.sendRedirect("editproduct?id="+productId+"&alert=ER1_IVImg");
                         return;
                     }
                 }
@@ -217,7 +218,7 @@ public class EditProductServlet extends HttpServlet {
                         productDAO.replaceProductImage(imageId, newImageUrl, uploadPath);
                         response.sendRedirect("editproduct?id=" + productId);
                     } else {
-                        response.sendRedirect("productlist?alert=ERR");
+                        response.sendRedirect("editproduct?id="+productId+"&alert=ERR");
                         return;
                     }
                 }
@@ -228,7 +229,7 @@ public class EditProductServlet extends HttpServlet {
                 if (productDAO.deleteProductImage(imageId, uploadPath)) {
                     response.sendRedirect("editproduct?id=" + productId);
                 } else {
-                    response.sendRedirect("productlist?alert=ERR");
+                    response.sendRedirect("editproduct?id="+productId+"&alert=ERR");
                     return;
                 }
             } else if ("addNewSubImage".equals(action)) {
@@ -238,7 +239,7 @@ public class EditProductServlet extends HttpServlet {
                     currentImages = new ArrayList<>(); // Khởi tạo danh sách rỗng nếu null
                 }
                 if (currentImages.size() >= 5) {
-                    response.sendRedirect("productlist?alert=ER1_FULL");
+                    response.sendRedirect("editproduct?id="+productId+"&alert=ER1_FULL");
                     return;
                 }
                 // Xử lý từng ảnh trong danh sách
@@ -252,7 +253,7 @@ public class EditProductServlet extends HttpServlet {
                             productDAO.addSingleProductImage(productId, newImageUrl);
                             currentImages.add(newImageUrl); // Cập nhật danh sách ảnh
                         } else {
-                            response.sendRedirect("productlist?alert=ERR");
+                            response.sendRedirect("editproduct?id="+productId+"&alert=ERR");
                             return;
                         }
                     }
@@ -295,6 +296,7 @@ public class EditProductServlet extends HttpServlet {
         return contentType != null && (contentType.equals("image/jpeg")
                 || contentType.equals("image/png")
                 || contentType.equals("image/gif")
+                || contentType.equals("image/svg+xml")
                 || contentType.equals("image/webp"));
     }
 

@@ -82,6 +82,7 @@ public class AddProductServlet extends HttpServlet {
         ProductDAO productDao = new ProductDAO();
         List<Product> comboProducts = productDao.getComboProducts();
         request.setAttribute("comboProducts", comboProducts);
+        request.setAttribute("alert", request.getParameter("alert"));
 
         request.getRequestDispatcher("/marketing/product/addProduct.jsp").forward(request, response);
 
@@ -125,7 +126,7 @@ public class AddProductServlet extends HttpServlet {
             for (Part part : request.getParts()) {
                 if ((part.getName().equals("subImages") || part.getName().equals("thumbnail")) && part.getSize() > 0) {
                     if (!isValidImage(part)) {
-                        response.sendRedirect("productlist?alert=ER1_IVImg");
+                        response.sendRedirect("addproduct?alert=ER1_IVImg");
                         return;
                     }
                 }
@@ -165,11 +166,11 @@ public class AddProductServlet extends HttpServlet {
             if (productDAO.addProduct(product, subImages)) {
                 response.sendRedirect("productlist?alert=SSA");
             } else {
-                response.sendRedirect("productlist?alert=ERR");
+                response.sendRedirect("addproduct?alert=ERR");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("addProduct?alert=ERR");
+            response.sendRedirect("addproduct?alert=ERR");
         }
 
     }
@@ -202,6 +203,7 @@ public class AddProductServlet extends HttpServlet {
         return contentType.equals("image/jpeg")
                 || contentType.equals("image/png")
                 || contentType.equals("image/gif")
+                || contentType.equals("image/svg+xml")
                 || contentType.equals("image/webp");
     }
 
