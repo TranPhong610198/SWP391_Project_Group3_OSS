@@ -109,6 +109,30 @@
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
             }
+            
+            /* Status badge styles */
+            .status-badge {
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                font-weight: 500;
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+            .status-published {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .status-draft {
+                background-color: #6c757d;
+                color: white;
+            }
+
+            .featured-badge {
+                background-color: #ffc107;
+                color: #212529;
+            }
         </style>
         <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
@@ -168,6 +192,19 @@
                                     <h5>Nội dung:</h5>
                                     <div class="content">${post.getContent()}</div>
                                 </div>
+                                    <!-- Status and Featured badges -->
+                                    <div class="mb-3">
+                                        <span class="status-badge ${post.getStatus() == 'published' ? 'status-published' : 'status-draft'}">
+                                            <i class="fas ${post.getStatus() == 'published' ? 'fa-check-circle' : 'fa-clock'} me-2"></i>
+                                            ${post.getStatus() == 'published' ? 'Đã xuất bản' : 'Bản thảo'}
+                                        </span>
+
+                                        <c:if test="${post.isIsFeatured()}">
+                                            <span class="status-badge featured-badge">
+                                                <i class="fas fa-star me-2"></i>Bài viết nổi bật
+                                            </span>
+                                        </c:if>
+                                    </div>
                             </div>
                         </div>
                     </div>

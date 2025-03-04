@@ -180,38 +180,41 @@
                         </div>
                         <div class="post-content">${post.content}</div>
                     </article>
-                         <c:if test="${post.isIsFeatured() && not empty featuredPosts && featuredPosts.size() > 0}">
-    <div class="featured-posts-section mt-5">
-        <h3 class="section-title mb-4">Các bài viết nổi bật khác</h3>
+                         <%-- Replace the existing featured posts section with this unified related posts section --%>
+<c:if test="${not empty relatedPosts && relatedPosts.size() > 0}">
+    <div class="related-posts-section mt-5">
+        <h3 class="section-title mb-4">${relatedTitle}</h3>
         
         <div class="continuous-slider-container">
             <div class="continuous-slider">
-                <!-- Lặp qua mỗi bài viết nổi bật -->
-                <c:forEach var="featuredPost" items="${featuredPosts}">
+                <!-- Loop through each related post -->
+                <c:forEach var="relatedPost" items="${relatedPosts}">
                     <div class="slider-item">
                         <div class="card post-card h-100">
-                            <a href="${pageContext.request.contextPath}/post?id=${featuredPost.getId()}" 
+                            <a href="${pageContext.request.contextPath}/post?id=${relatedPost.getId()}" 
                                class="text-decoration-none">
                                 <div class="card-img-wrapper">
-                                    <img src="${featuredPost.getThumbnail()}" 
-                                         class="card-img-top post-image" alt="${featuredPost.getTitle()}">
+                                    <img src="${relatedPost.getThumbnail()}" 
+                                         class="card-img-top post-image" alt="${relatedPost.getTitle()}">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title text-dark">
-                                        ${featuredPost.getTitle()}
-                                        <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                        ${relatedPost.getTitle()}
+                                        <c:if test="${relatedPost.isIsFeatured()}">
+                                            <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                        </c:if>
                                     </h5>
-                                    <p class="post-summary">${featuredPost.getSummary()}</p>
+                                    <p class="post-summary">${relatedPost.getSummary()}</p>
                                     <div class="post-meta mt-3">
-                                        <i class="fas fa-user-edit me-2"></i>${featuredPost.getUser().getFullName()}
+                                        <i class="fas fa-user-edit me-2"></i>${relatedPost.getUser().getFullName()}
                                         <br>
                                         <i class="far fa-clock me-2"></i>
                                         <c:choose>
-                                            <c:when test="${featuredPost.getUpdatedAt() != null}">
-                                                Cập nhật: ${featuredPost.getUpdatedAt()}
+                                            <c:when test="${relatedPost.getUpdatedAt() != null}">
+                                                Cập nhật: ${relatedPost.getUpdatedAt()}
                                             </c:when>
                                             <c:otherwise>
-                                                Ngày đăng: ${featuredPost.getCreatedAt()}
+                                                Ngày đăng: ${relatedPost.getCreatedAt()}
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -221,32 +224,34 @@
                     </div>
                 </c:forEach>
                 
-                <!-- Thêm các bài viết đầu tiên một lần nữa để tạo hiệu ứng liên tục -->
-                <c:forEach var="featuredPost" items="${featuredPosts}" begin="0" end="2">
+                <!-- Add the first few posts again to create continuous effect -->
+                <c:forEach var="relatedPost" items="${relatedPosts}" begin="0" end="2">
                     <div class="slider-item">
                         <div class="card post-card h-100">
-                            <a href="${pageContext.request.contextPath}/post?id=${featuredPost.getId()}" 
+                            <a href="${pageContext.request.contextPath}/post?id=${relatedPost.getId()}" 
                                class="text-decoration-none">
                                 <div class="card-img-wrapper">
-                                    <img src="${featuredPost.getThumbnail()}" 
-                                         class="card-img-top post-image" alt="${featuredPost.getTitle()}">
+                                    <img src="${relatedPost.getThumbnail()}" 
+                                         class="card-img-top post-image" alt="${relatedPost.getTitle()}">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title text-dark">
-                                        ${featuredPost.getTitle()}
-                                        <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                        ${relatedPost.getTitle()}
+                                        <c:if test="${relatedPost.isIsFeatured()}">
+                                            <span class="badge bg-warning ms-2"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                                        </c:if>
                                     </h5>
-                                    <p class="post-summary">${featuredPost.getSummary()}</p>
+                                    <p class="post-summary">${relatedPost.getSummary()}</p>
                                     <div class="post-meta mt-3">
-                                        <i class="fas fa-user-edit me-2"></i>${featuredPost.getUser().getFullName()}
+                                        <i class="fas fa-user-edit me-2"></i>${relatedPost.getUser().getFullName()}
                                         <br>
                                         <i class="far fa-clock me-2"></i>
                                         <c:choose>
-                                            <c:when test="${featuredPost.getUpdatedAt() != null}">
-                                                Cập nhật: ${featuredPost.getUpdatedAt()}
+                                            <c:when test="${relatedPost.getUpdatedAt() != null}">
+                                                Cập nhật: ${relatedPost.getUpdatedAt()}
                                             </c:when>
                                             <c:otherwise>
-                                                Ngày đăng: ${featuredPost.getCreatedAt()}
+                                                Ngày đăng: ${relatedPost.getCreatedAt()}
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -272,29 +277,29 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const slider = document.querySelector('.continuous-slider');
-        if (slider) {
-            // Đếm số lượng bài viết thực (không tính phần clone)
-            const items = document.querySelectorAll('.featured-posts-section .slider-item');
-            const featuredPostCount = items.length / 2; // Chia 2 vì một nửa là clone
-            
-            // Thiết lập biến CSS để sử dụng trong animation
-            slider.style.setProperty('--total-items', featuredPostCount);
-            
-            // Điều chỉnh tốc độ dựa trên số lượng bài viết
-            const duration = Math.max(30, featuredPostCount * 5); // Tối thiểu 30s, sau đó mỗi bài thêm 10s
-            slider.style.animationDuration = duration + 's';
-            
-            // Thêm sự kiện tương tác
-            slider.addEventListener('mouseenter', function() {
-                this.style.animationPlayState = 'paused';
-            });
-            
-            slider.addEventListener('mouseleave', function() {
-                this.style.animationPlayState = 'running';
-            });
-        }
-    });
+    const slider = document.querySelector('.continuous-slider');
+    if (slider) {
+        // Count the number of actual posts (not including clones)
+        const items = document.querySelectorAll('.related-posts-section .slider-item');
+        const postCount = items.length / 2; // Divide by 2 because half are clones
+        
+        // Set CSS variable for use in animation
+        slider.style.setProperty('--total-items', postCount);
+        
+        // Adjust speed based on number of posts
+        const duration = Math.max(30, postCount * 5); // Minimum 30s, then add 5s per post
+        slider.style.animationDuration = duration + 's';
+        
+        // Add interaction events
+        slider.addEventListener('mouseenter', function() {
+            this.style.animationPlayState = 'paused';
+        });
+        
+        slider.addEventListener('mouseleave', function() {
+            this.style.animationPlayState = 'running';
+        });
+    }
+});
 </script>
 </body>
 </html>
