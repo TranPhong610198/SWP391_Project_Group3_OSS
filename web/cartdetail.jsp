@@ -91,12 +91,12 @@
             .quantity-control .btn:hover {
                 background-color: #e2e8f0;
             }
-            
+
             .quantity-error {
                 border-color: var(--accent-color) !important;
                 background-color: rgba(255, 107, 107, 0.05);
             }
-            
+
             .stock-message {
                 font-size: 12px;
                 margin-top: 5px;
@@ -349,68 +349,68 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-    <c:forEach items="${cart.items}" var="item">
-        <tr data-id="${item.id}" data-product-id="${item.productId}" data-variant-id="${item.variantId}">
-            <td>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input product-select" 
-                           name="selectedItems" value="${item.id}"
-                           onchange="updateTotalAmount()">
-                </div>
-            </td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <a href="productdetail?id=${item.productId}" class="product-link">
-                        <img src="${item.productThumbnail}" alt="${item.productTitle}" 
-                             class="product-image me-3">
-                    </a>
-                    <div>
-                        <h6 class="product-title">
-                            <a href="productdetail?id=${item.productId}" class="product-link text-decoration-none">
-                                ${item.productTitle}
-                            </a>
-                        </h6>
-                        <div class="product-meta">
-                            Size: <span class="fw-semibold">${item.size}</span> | Màu: <span class="fw-semibold">${item.color}</span>
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="price">
-                    <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                </div>
-            </td>
-            <td>
-                <div class="quantity-control">
-                    <div class="input-group">
-                        <button type="button" class="btn btn-outline-secondary" 
-                                onclick="updateQuantity(this, -1)">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="number" value="${item.quantity}" min="1" max="${stockMap[item.id]}"
-                               class="form-control text-center quantity-input"
-                               data-item-id="${item.id}"
-                               data-variant-id="${item.variantId}"
-                               data-max-stock="${stockMap[item.id]}"
-                               onchange="handleQuantityChange(this)">
-                        <button type="button" class="btn btn-outline-secondary" 
-                                onclick="updateQuantity(this, 1)">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <div class="stock-message text-danger mt-1" style="display: none; font-size: 12px;"></div>
-                </div>
-            </td>
-            <td>
-                <button type="button" class="btn btn-delete" 
-                        onclick="deleteItem(${item.id})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    </c:forEach>
-</tbody>
+                                                    <c:forEach items="${cart.items}" var="item">
+                                                        <tr data-id="${item.id}" data-product-id="${item.productId}" data-variant-id="${item.variantId}">
+                                                            <td>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input product-select" 
+                                                                           name="selectedItems" value="${item.id}"
+                                                                           onchange="updateTotalAmount()">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex align-items-center">
+                                                                    <a href="productdetail?id=${item.productId}" class="product-link">
+                                                                        <img src="${item.productThumbnail}" alt="${item.productTitle}" 
+                                                                             class="product-image me-3">
+                                                                    </a>
+                                                                    <div>
+                                                                        <h6 class="product-title">
+                                                                            <a href="productdetail?id=${item.productId}" class="product-link text-decoration-none">
+                                                                                ${item.productTitle}
+                                                                            </a>
+                                                                        </h6>
+                                                                        <div class="product-meta">
+                                                                            Size: <span class="fw-semibold">${item.size}</span> | Màu: <span class="fw-semibold">${item.color}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="price">
+                                                                    <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="quantity-control">
+                                                                    <div class="input-group">
+                                                                        <button type="button" class="btn btn-outline-secondary" 
+                                                                                onclick="updateQuantity(this, -1)">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                        <input type="number" value="${item.quantity}" min="1" max="${stockMap[item.id]}"
+                                                                               class="form-control text-center quantity-input"
+                                                                               data-item-id="${item.id}"
+                                                                               data-variant-id="${item.variantId}"
+                                                                               data-max-stock="${stockMap[item.id]}"
+                                                                               onchange="handleQuantityChange(this)">
+                                                                        <button type="button" class="btn btn-outline-secondary" 
+                                                                                onclick="updateQuantity(this, 1)">
+                                                                            <i class="fas fa-plus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="stock-message text-danger mt-1" style="display: none; font-size: 12px;"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-delete" 
+                                                                        onclick="deleteItem(${item.id})">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
                                             </table>
                                         </div>
                                     </form>
@@ -428,10 +428,11 @@
 
                 <!-- Cart Summary -->
                 <div class="col-lg-4">
+
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title fw-bold mb-3">Mã giảm giá</h5>
-                            <select class="form-select" name="couponCode" onchange="updateTotalAmount()">
+                            <select class="form-select mb-2" name="couponCode" onchange="updateTotalAmount()">
                                 <option value="">Chọn mã giảm giá</option>
                                 <c:forEach items="${availableCoupons}" var="coupon">
                                     <option value="${coupon.code}" 
@@ -451,8 +452,12 @@
                                     </option>
                                 </c:forEach>
                             </select>
+                            <div id="couponMinAmount" class="small text-muted">
+                                Giá trị đơn hàng tối thiểu: ₫<span id="minOrderAmount">0</span>
+                            </div>
                         </div>
                     </div>
+
 
                     <div class="card">
                         <div class="card-body">
@@ -495,15 +500,15 @@
                                 function showStockMessage(input, message, isError) {
                                     const row = input.closest('tr');
                                     const messageEl = row.querySelector('.stock-message');
-                                    
+
                                     if (messageEl) {
                                         if (message) {
                                             messageEl.textContent = message;
                                             messageEl.style.display = 'block';
-                                            messageEl.className = isError ? 
-                                                'stock-message text-danger mt-1' : 
-                                                'stock-message text-success mt-1';
-                                            
+                                            messageEl.className = isError ?
+                                                    'stock-message text-danger mt-1' :
+                                                    'stock-message text-success mt-1';
+
                                             if (isError) {
                                                 input.classList.add('quantity-error');
                                             } else {
@@ -515,7 +520,7 @@
                                         }
                                     }
                                 }
-                                
+
                                 // Sửa lại hàm submitCheckout() trong cartdetail.jsp
                                 function submitCheckout() {
                                     const form = document.getElementById('checkoutForm');
@@ -651,16 +656,16 @@
                                         if (maxStock > 0 && newValue > maxStock) {
                                             // Hiển thị thông báo lỗi
                                             showStockMessage(
-                                                input, 
-                                                `Vượt quá số lượng trong kho. Chỉ còn ${maxStock} sản phẩm.`,
-                                                true
-                                            );
+                                                    input,
+                                                    `Vượt quá số lượng trong kho. Chỉ còn ${maxStock} sản phẩm.`,
+                                                    true
+                                                    );
                                             return;
                                         }
 
                                         // Xóa thông báo lỗi nếu có
                                         showStockMessage(input, null);
-                                        
+
                                         input.value = newValue;
                                         const itemId = input.dataset.itemId;
                                         if (itemId) {
@@ -684,10 +689,10 @@
                                         value = maxStock;
                                         // Hiển thị thông báo lỗi
                                         showStockMessage(
-                                            input, 
-                                            `Vượt quá số lượng trong kho.`,
-                                            true
-                                        );
+                                                input,
+                                                `Vượt quá số lượng trong kho.`,
+                                                true
+                                                );
                                     } else {
                                         // Xóa thông báo lỗi nếu có
                                         showStockMessage(input, null);
@@ -721,31 +726,31 @@
                                         },
                                         body: formData.toString()
                                     })
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error('Network response was not ok');
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => {
-                                        if (data.success && data.updatedQuantity < quantity) {
-                                            // Nếu server trả về số lượng nhỏ hơn số lượng yêu cầu
-                                            // (do kiểm tra tồn kho), cập nhật giá trị input
-                                            const inputs = document.querySelectorAll(`.quantity-input[data-item-id="${itemId}"]`);
-                                            inputs.forEach(input => {
-                                                input.value = data.updatedQuantity;
-                                                showStockMessage(
-                                                    input, 
-                                                    `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${data.updatedQuantity} sản phẩm.`,
-                                                    true
-                                                );
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(data => {
+                                                if (data.success && data.updatedQuantity < quantity) {
+                                                    // Nếu server trả về số lượng nhỏ hơn số lượng yêu cầu
+                                                    // (do kiểm tra tồn kho), cập nhật giá trị input
+                                                    const inputs = document.querySelectorAll(`.quantity-input[data-item-id="${itemId}"]`);
+                                                    inputs.forEach(input => {
+                                                        input.value = data.updatedQuantity;
+                                                        showStockMessage(
+                                                                input,
+                                                                `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${data.updatedQuantity} sản phẩm.`,
+                                                                true
+                                                                );
+                                                    });
+                                                    updateTotalAmount();
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error updating quantity:', error);
                                             });
-                                            updateTotalAmount();
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('Error updating quantity:', error);
-                                    });
                                 }
 
                                 function deleteItem(itemId) {
@@ -761,37 +766,37 @@
                                             },
                                             body: formData.toString()
                                         })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Network response was not ok');
-                                            }
-                                            // Nếu xóa thành công, cập nhật UI
-                                            location.reload(); // Tải lại trang để cập nhật giỏ hàng
-                                        })
-                                        .catch(error => {
-                                            console.error('Error deleting item:', error);
-                                            alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
-                                        });
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error('Network response was not ok');
+                                                    }
+                                                    // Nếu xóa thành công, cập nhật UI
+                                                    location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error deleting item:', error);
+                                                    alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại sau.');
+                                                });
                                     }
                                 }
-                                
+
                                 // Kiểm tra tất cả số lượng khi trang được tải
                                 function validateAllQuantities() {
                                     const inputs = document.querySelectorAll('.quantity-input');
-                                    
+
                                     for (const input of inputs) {
                                         const maxStock = parseInt(input.dataset.maxStock) || 0;
                                         const currentValue = parseInt(input.value) || 1;
-                                        
+
                                         if (maxStock > 0 && currentValue > maxStock) {
                                             // Hiển thị thông báo lỗi
                                             input.value = maxStock;
                                             showStockMessage(
-                                                input, 
-                                                `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${maxStock} sản phẩm.`,
-                                                true
-                                            );
-                                            
+                                                    input,
+                                                    `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${maxStock} sản phẩm.`,
+                                                    true
+                                                    );
+
                                             // Cập nhật số lượng trên server
                                             const itemId = input.dataset.itemId;
                                             if (itemId) {
@@ -799,7 +804,7 @@
                                             }
                                         }
                                     }
-                                    
+
                                     // Cập nhật tổng tiền
                                     updateTotalAmount();
                                 }
@@ -811,11 +816,56 @@
                                     if (checkboxes.length > 0) {
                                         // Validate all quantities first
                                         validateAllQuantities();
-                                        
+
                                         // Update total amount
                                         updateTotalAmount();
                                     }
                                 });
+                                function updateTotalAmount() {
+                                    const checkboxes = document.getElementsByClassName('product-select');
+                                    let totalAmount = 0;
+                                    let selectedCount = 0;
+
+                                    for (let checkbox of checkboxes) {
+                                        if (checkbox.checked) {
+                                            const row = checkbox.closest('tr');
+                                            const priceText = row.querySelector('td:nth-child(3)').textContent;
+                                            const price = parseFloat(priceText.replace(/[^\d]/g, ''));
+                                            const quantity = parseInt(row.querySelector('.quantity-input').value);
+                                            totalAmount += price * quantity;
+                                            selectedCount++;
+                                        }
+                                    }
+
+                                    document.getElementById('selectedCount').textContent = selectedCount;
+                                    document.getElementById('selectedTotal').textContent = formatCurrency(totalAmount);
+
+                                    // Cập nhật giá trị đơn hàng tối thiểu cho coupon
+                                    const select = document.querySelector('select[name="couponCode"]');
+                                    if (select.value) {
+                                        const option = select.options[select.selectedIndex];
+                                        const minAmount = parseFloat(option.dataset.min || 0);
+                                        document.getElementById('minOrderAmount').textContent =
+                                                new Intl.NumberFormat('vi-VN').format(minAmount);
+                                    } else {
+                                        document.getElementById('minOrderAmount').textContent = '0';
+                                    }
+
+                                    let discount = calculateDiscount(totalAmount);
+                                    updateDiscountDisplay(discount);
+
+                                    const finalTotal = Math.max(0, totalAmount - discount);
+                                    document.getElementById('finalTotal').textContent = formatCurrency(finalTotal);
+
+                                    document.getElementById('checkoutBtn').disabled = selectedCount === 0;
+
+                                    // Update selectAll checkbox status
+                                    const selectAll = document.getElementById('selectAll');
+                                    if (checkboxes.length > 0) {
+                                        selectAll.checked = selectedCount === checkboxes.length;
+                                        selectAll.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
+                                    }
+                                }
         </script>
     </body>
 </html>
