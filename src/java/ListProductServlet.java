@@ -114,11 +114,11 @@ public class ListProductServlet extends HttpServlet {
             // Add price range filter
             if (minPrice != null && !minPrice.isEmpty()) {
                 sql.append(" AND p.sale_price >= ?");
-                params.add(new BigDecimal(minPrice));
+                params.add(new BigDecimal(minPrice.replace(".", "")));
             }
             if (maxPrice != null && !maxPrice.isEmpty()) {
                 sql.append(" AND p.sale_price <= ?");
-                params.add(new BigDecimal(maxPrice));
+                params.add(new BigDecimal(maxPrice.replace(".", "")));
             }
 
             // Get total records for pagination
@@ -131,13 +131,13 @@ public class ListProductServlet extends HttpServlet {
             if (sortBy != null && !sortBy.isEmpty()) {
                 switch (sortBy) {
                     case "price_asc":
-                        sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.sale_price ASC");
+                        sql.append(" ORDER BY p.sale_price ASC");
                         break;
                     case "price_desc":
-                        sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.sale_price DESC");
+                        sql.append(" ORDER BY p.sale_price DESC");
                         break;
                     case "newest":
-                        sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.created_at DESC");
+                        sql.append(" ORDER BY p.created_at DESC");
                         break;
                     default:
                         sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.id DESC");

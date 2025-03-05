@@ -134,8 +134,8 @@ public class EditProductServlet extends HttpServlet {
                 String title = request.getParameter("title");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 String description = request.getParameter("description");
-                BigDecimal originalPrice = new BigDecimal(request.getParameter("originalPrice"));
-                BigDecimal salePrice = new BigDecimal(request.getParameter("salePrice"));
+                BigDecimal originalPrice = new BigDecimal(request.getParameter("originalPrice").replace(".", ""));
+                BigDecimal salePrice = new BigDecimal(request.getParameter("salePrice").replace(".", ""));
 
                 // xử lý phần combo
                 boolean isCombo = request.getParameter("isCombo") != null;

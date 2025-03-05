@@ -184,11 +184,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="originalPrice" class="form-label">Giá gốc (₫)</label>
-                                <input type="number" class="form-control" id="originalPrice" name="originalPrice" value="${product.originalPrice.intValue()}" step="1000" min="0" max="99999999" required />
+                                <input type="text" class="form-control" id="originalPrice" name="originalPrice" value="${product.originalPrice.intValue()}" required />
                             </div>
                             <div class="col-md-6">
                                 <label for="salePrice" class="form-label">Giá bán (₫)</label>
-                                <input type="number" class="form-control" id="salePrice" name="salePrice" value="${product.salePrice.intValue()}" step="1000" min="0" max="99999999" required />
+                                <input type="text" class="form-control" id="salePrice" name="salePrice" value="${product.salePrice.intValue()}" required />
                             </div>
                             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                                 <label for="comboGroupId" class="form-label mb-2">
@@ -273,6 +273,43 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
+                                        function formatNumberInput(input) {
+                                            let value = input.value.replace(/\D/g, '');
+                                            console.log(value);
+                                            if (value) {
+                                                value = parseInt(value, 10).toLocaleString('vi-VN');
+                                                input.value = value;
+                                            } else {
+                                                input.value = '';
+                                            }
+                                        }
+
+                                        // Chạy sau khi trang đã tải
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const originalPriceInput = document.getElementById('originalPrice');
+                                            const salePriceInput = document.getElementById('salePrice');
+
+                                            formatNumberInput(originalPriceInput);
+                                            formatNumberInput(salePriceInput);
+
+                                            originalPriceInput.addEventListener('input', function () {
+                                                formatNumberInput(this);
+                                                if (originalPriceInput.value.replace(/\./g, '') > 99999999) {
+                                                    alert('Giới hạn nhập vào là 99.999.999 đ');
+                                                    $('#originalPrice').val('99.999.999');
+                                                }
+                                            });
+
+
+                                            salePriceInput.addEventListener('input', function () {
+                                                formatNumberInput(this);
+                                                if (salePriceInput.value.replace(/\./g, '') > 99999999) {
+                                                    alert('Giới hạn nhập vào là 99.999.999 đ');
+                                                    $('#salePrice').val('99.999.999');
+                                                }
+                                            });
+                                        });
+
                                         // In đậm vị trí trang trên sidebar
                                         $('.menu-item').removeClass('active');
                                         $('.menu-item a[href="addproduct"]').closest('.menu-item').addClass('active');
@@ -294,14 +331,14 @@
                                                 }
                                             });
 
-
+                                            // Kiểm tra tính hợp lệ của giá
                                             $('#salePrice').on('change', function () {
-                                                const originalPrice = parseInt($('#originalPrice').val()) || 0;
-                                                const salePrice = parseInt($('#salePrice').val()) || 0;
+                                                const originalPrice = parseInt($('#originalPrice').val().replace(/\./g, '')) || 0;
+                                                const salePrice = parseInt($('#salePrice').val().replace(/\./g, '')) || 0;
 
                                                 if (salePrice < originalPrice) {
-                                                    alert('Giá bán không được nhỏ hơn giá gốc!');
-                                                    $('#salePrice').val(originalPrice);
+                                                    alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
+                                                    $('#salePrice').val(parseInt(originalPrice, 10).toLocaleString('vi-VN'));
                                                 }
                                             });
                                         });
