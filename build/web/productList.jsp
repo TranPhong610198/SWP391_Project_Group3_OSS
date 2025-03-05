@@ -263,10 +263,10 @@
                                 <div class="filter-title">Khoảng Giá</div>
                                 <div class="d-flex flex-column">
                                     <div class="price-range">
-                                        <input type="number" id="minPrice" name="minPrice" step="1000" min="0" max="3000000" 
+                                        <input type="number" id="minPrice" name="minPrice" step="1000" min="0" max="99999000" 
                                                class="form-control me-2 price-input" placeholder="Thấp Nhất" value="${minPrice}">
                                         <span class="align-self-center">-</span>
-                                        <input type="number" id="maxPrice" name="maxPrice" step="1000" min="0" max="3000000" 
+                                        <input type="number" id="maxPrice" name="maxPrice" step="1000" min="0" max="99999000" 
                                                class="form-control ms-2 price-input" placeholder="Cao Nhất" value="${maxPrice}">
                                     </div>
 
@@ -330,43 +330,24 @@
                     <c:choose>
                         <c:when test="${not empty products}">
                             <div class="product-grid">
-                                <c:if test="${not empty product.comboProducts}">
-                                    <c:if test="${product.id == product.comboProducts.get(comboProducts.get(0)).id}">
-                                        <c:forEach items="${products}" var="product">
-                                            <div class="card product-card">
-                                                <a href="productdetail?id=${product.id}" style="text-decoration:none;">
-                                                    <div class="position-relative">
-                                                        <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
-                                                        <span class="product-badge">Combo</span>
-                                                    </div>
-                                                    <div class="product-info">
-                                                        <h5 class="product-title">${product.title}</h5>
-                                                        <div class="product-price">
-                                                            <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
-                                                        </div>
-                                                    </div>
-                                                </a>
+                                <c:forEach items="${products}" var="product">
+                                    <div class="card product-card">
+                                        <a href="productdetail?id=${product.id}" style="text-decoration:none;">
+                                            <div class="position-relative">
+                                                <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                                <c:if test="${product.isCombo}">
+                                                    <span class="product-badge">Combo</span>
+                                                </c:if>
                                             </div>
-                                        </c:forEach>
-                                    </c:if>
-                                </c:if>
-                                <c:if test="${empty product.comboProducts}">
-                                    <c:forEach items="${products}" var="product">
-                                        <div class="card product-card">
-                                            <a href="productdetail?id=${product.id}" style="text-decoration:none;">
-                                                <div class="position-relative">
-                                                    <img src="${product.thumbnail}" class="product-image" alt="${product.title}">
+                                            <div class="product-info">
+                                                <h5 class="product-title">${product.title}</h5>
+                                                <div class="product-price">
+                                                    <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
-                                                <div class="product-info">
-                                                    <h5 class="product-title">${product.title}</h5>
-                                                    <div class="product-price">
-                                                        <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </c:forEach>
-                                </c:if>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </c:forEach>
                             </div>
                         </c:when>
                         <c:otherwise>
