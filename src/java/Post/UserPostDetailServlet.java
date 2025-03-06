@@ -46,14 +46,14 @@ public class UserPostDetailServlet extends HttpServlet {
             if (post.isIsFeatured()) {
                 featuredPosts = postDAO.getPostToHome(1, 10, null, null, "published", true, "updated_at", "DESC");
                 featuredPosts.removeIf(p -> p.getId() == postId);
-                request.setAttribute("relatedTitle", "Các bài viết nổi bật khác");
+                request.setAttribute("relatedTitle", "Các bài đăng nổi bật khác");
                 request.setAttribute("relatedPosts", featuredPosts);
             } 
             // For non-featured posts, get other non-featured posts
             else {
                 List<Post> regularPosts = postDAO.getPostToHome(1, 10, null, null, "published", false, "updated_at", "DESC");
                 regularPosts.removeIf(p -> p.getId() == postId);
-                request.setAttribute("relatedTitle", "Các bài viết tương tự");
+                request.setAttribute("relatedTitle", "Các bài đăng tương tự");
                 request.setAttribute("relatedPosts", regularPosts);
             }
 
