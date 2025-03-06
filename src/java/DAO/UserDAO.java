@@ -31,6 +31,9 @@ public class UserDAO extends DBContext {
             st.setString(1, username);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
+                if (rs.getString("password_hash").contains("accGoogle")){
+                    return null;
+                }
                 String storedHash = rs.getString("password_hash");
                 if (BCrypt.checkpw(password, storedHash)) {
                     return new User(
