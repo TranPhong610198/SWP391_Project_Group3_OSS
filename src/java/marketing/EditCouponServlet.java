@@ -24,6 +24,7 @@ public class EditCouponServlet extends HttpServlet {
 
     private static final BigDecimal MIN_AMOUNT = new BigDecimal("1000"); // 1.000 VNĐ
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("10000000"); // 10 triệu VNĐ
+    private static final BigDecimal MAX_AMOUNTORDER = new BigDecimal("100000000"); // 100 triệu VNĐ
     private static final int MAX_USAGE_LIMIT = 1_000_000; // 1 triệu lần
     private static final BigDecimal MAX_PERCENTAGE = new BigDecimal("50"); // 50%
 
@@ -184,8 +185,8 @@ public class EditCouponServlet extends HttpServlet {
                 }
             }
 
-            if (minOrderAmount.compareTo(MIN_AMOUNT) < 0 || minOrderAmount.compareTo(MAX_AMOUNT) > 0) {
-                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 10 triệu VNĐ.<br>");
+            if (minOrderAmount.compareTo(MIN_AMOUNT) < 0 || minOrderAmount.compareTo(MAX_AMOUNTORDER) > 0) {
+                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 99.999.999 VNĐ.<br>");
                 isValid = false;
             }
 

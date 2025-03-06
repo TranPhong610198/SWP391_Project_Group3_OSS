@@ -130,8 +130,8 @@ public class AddCouponServlet extends HttpServlet {
 
             // Kiểm tra giá trị đơn hàng tối thiểu
             double minOrderAmount = Double.parseDouble(minOrderAmountStr);
-            if (minOrderAmount < 1000 || minOrderAmount > MAX_AMOUNT) {
-                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 10 triệu VNĐ.<br>");
+            if (minOrderAmount < 1000 || minOrderAmount > 10000000) {
+                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 99.999.999 triệu VNĐ.<br>");
                 isValid = false;
             }
 
