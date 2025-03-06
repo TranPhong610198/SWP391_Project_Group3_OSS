@@ -272,7 +272,7 @@
                                     <input type="text" name="searchCode" value="${searchCode}" class="form-control search-box" placeholder="Tìm kiếm mã giảm giá...">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <select class="form-select" id="filterType" name="filterType">
                                     <option value="">Tất cả loại giảm giá</option>
                                     <option value="percentage" ${filterType == 'percentage' ? 'selected' : ''}>Phần trăm</option>
