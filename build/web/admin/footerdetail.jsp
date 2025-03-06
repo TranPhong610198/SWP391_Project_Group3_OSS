@@ -150,8 +150,9 @@
                                             <span class="input-group-text bg-light">
                                                 <i class="fas fa-keyboard text-muted"></i>
                                             </span>
-                                            <input type="text" class="form-control" id="value" 
-                                                   name="value" value="${footer.value}" required>
+                                            <input type="tel" class="form-control" id="value" name="value"
+                                                   value="${footer.value}" required pattern="\d{10,11}" 
+                                                   title="Số điện thoại phải có 10 hoặc 11 chữ số">
                                         </div>
                                         <div class="invalid-feedback">
                                             Vui lòng nhập giá trị
