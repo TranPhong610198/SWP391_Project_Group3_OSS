@@ -114,11 +114,11 @@ public class ListProductServlet extends HttpServlet {
             // Add price range filter
             if (minPrice != null && !minPrice.isEmpty()) {
                 sql.append(" AND p.sale_price >= ?");
-                params.add(new BigDecimal(minPrice));
+                params.add(new BigDecimal(minPrice.replace(".", "")));
             }
             if (maxPrice != null && !maxPrice.isEmpty()) {
                 sql.append(" AND p.sale_price <= ?");
-                params.add(new BigDecimal(maxPrice));
+                params.add(new BigDecimal(maxPrice.replace(".", "")));
             }
 
             // Get total records for pagination
@@ -128,7 +128,7 @@ public class ListProductServlet extends HttpServlet {
 //            System.out.println(page);
 
             // Add sorting
-            if (sortBy != null) {
+            if (sortBy != null && !sortBy.isEmpty()) {
                 switch (sortBy) {
                     case "price_asc":
                         sql.append(" ORDER BY p.sale_price ASC");
@@ -140,10 +140,11 @@ public class ListProductServlet extends HttpServlet {
                         sql.append(" ORDER BY p.created_at DESC");
                         break;
                     default:
-                        sql.append(" ORDER BY p.id DESC");
+                        sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.id DESC");
+                        break;
                 }
             } else {
-                sql.append(" ORDER BY p.id DESC");
+                sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.id DESC");
             }
 
             // Add pagination
@@ -154,23 +155,6 @@ public class ListProductServlet extends HttpServlet {
 
             // Execute query
             List<Product> products = productDAO.getProductsByFilter(sql.toString(), params);
-
-            // Lấy thông tin về combo products - phần này sẽ dùng khi in ra sản phẩm combo liền nhau
-            if ((sortBy == null || sortBy.isEmpty())
-                    && (keyword == null || keyword.trim().isEmpty())
-                    && (categoryId == null || categoryId.isEmpty())) {
-                for (Product tempProduct : products) {
-                    if (tempProduct.getComboGroupId() > 0) { // Chỉ lấy combo cho sản phẩm có combo_group_id
-                        List<Product> comboProducts = productDAO.getComboProduct(tempProduct.getComboGroupId());
-                        if (!comboProducts.isEmpty()) {
-                            tempProduct.setComboProducts(comboProducts);
-                        }
-                        System.out.println("Dòng 169 test combo: " + tempProduct.getComboProducts().toString());
-                    }
-                }
-            }
-
-            //________________________________________________________________________________
             // Get category name if category filter is applied
             String categoryName = null;
             if (categoryId != null && !categoryId.trim().isEmpty()) {

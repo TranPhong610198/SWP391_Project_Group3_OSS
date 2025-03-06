@@ -184,7 +184,7 @@
                         <i class="fas fa-plus-circle me-2"></i>Thông tin mã giảm giá
                     </div>
                     <div class="card-body">
-                        <form action="addCoupon" method="POST" id="couponForm">
+                        <form action="addCoupon" method="POST" id="couponForm" onsubmit="return prepareFormSubmission()">
                             <!-- Thêm phần hiển thị lỗi chung -->
                             <c:if test="${not empty error}">
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -213,7 +213,8 @@
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="discountValue" name="discount_value" value="${param.discount_value}" required>
+                                    <input type="text" class="form-control currency-input" id="discountValue" name="discount_value" 
+                                           value="${param.discount_value}" required oninput="formatCurrency(this)">
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
                                 <span id="discountValueText" class="form-text">text thay đổi theo loại giảm giá</span>
@@ -223,7 +224,8 @@
                             <div class="mb-3">
                                 <label for="minOrderAmount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="minOrderAmount" name="min_order_amount" value="${param.min_order_amount}" min="0">
+                                    <input type="text" class="form-control currency-input" id="minOrderAmount" name="min_order_amount" 
+                                           value="${param.min_order_amount}" min="0" oninput="formatCurrency(this)">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -232,7 +234,8 @@
                             <div class="mb-3" id="maxDiscountContainer" style="display:none;">
                                 <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control"  id="maxDiscount" name="max_discount" value="${param.max_discount}" min="0">
+                                    <input type="text" class="form-control currency-input" id="maxDiscount" name="max_discount" 
+                                           value="${param.max_discount}" min="0" oninput="formatCurrency(this)">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -299,6 +302,11 @@
                 // Highlight current menu item
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
+                
+                // Định dạng đầu vào tiền tệ khi load trang
+                $('.currency-input').each(function () {
+                    formatCurrency(this);
+                });
             });
         </script>
 
@@ -340,6 +348,33 @@
                 const today = new Date().toISOString().split('T')[0];
                 $('#expiryDate').attr('min', today);
             });
+
+            // Hàm định dạng tiền tệ
+            function formatCurrency(input) {
+                if (!input.value) return;
+                // Xóa các dấu chấm hiện có và các ký tự không phải số
+                let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
+
+                // Định dạng với dấu chấm làm dấu phân cách hàng nghìn
+                if (value.length > 0) {
+                    value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
+                }
+
+                // Hiển thị giá trị đã định dạng
+                input.value = value;
+
+                // Lưu giá trị thô để gửi biểu mẫu
+                input.dataset.rawValue = value.replace(/\./g, '');
+            }
+
+            // Chuẩn bị dữ liệu trước khi gửi biểu mẫu
+            function prepareFormSubmission() {
+                const formattedInputs = document.querySelectorAll('.currency-input');
+                formattedInputs.forEach(input => {
+                    input.value = input.dataset.rawValue || input.value.replace(/\./g, '');
+                });
+                return true;
+            }
         </script>
     </body>
 </html>

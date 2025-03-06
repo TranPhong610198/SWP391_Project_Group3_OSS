@@ -139,6 +139,22 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <c:if test="${alert != null && !alert.trim().isEmpty()}">
+                    <c:choose>
+                        <c:when test="${alert.equals('ER1_IVImg')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP, SVG).
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ERR')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Lỗi không xác định.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                    </c:choose>
+                </c:if>
                 <h2 class="page-title">
                     <i class="fas fa-plus-circle me-2"></i>Thêm sản phẩm mới
                 </h2>
@@ -171,13 +187,13 @@
                             <!-- Giá gốc -->
                             <div class="col-md-6">
                                 <label for="originalPrice" class="form-label">Giá gốc (₫)</label>
-                                <input type="number" class="form-control" id="originalPrice" name="originalPrice" step="1000" min="0" max="99999999" required />
+                                <input type="text" class="form-control" id="originalPrice" name="originalPrice"required />
                             </div>
 
                             <!-- Giá khuyến mãi -->
                             <div class="col-md-6">
                                 <label for="salePrice" class="form-label">Giá bán (₫)</label>
-                                <input type="number" class="form-control" id="salePrice" name="salePrice" step="1000" min="0" max="99999999" required />
+                                <input type="text" class="form-control" id="salePrice" name="salePrice" required />
                                 <div class="form-text">Giá bán phải lớn hơn hoặc bằng giá gốc</div>
                             </div>
 
@@ -201,10 +217,10 @@
 
 
                             <!-- Mô tả //// tạm thời ẩn vì chức năng ckeditor upload ảnh lên đang bị lỗi--> 
-<!--                            <div class="col-12">
-                                <label for="description" class="form-label">Mô tả sản phẩm</label>
-                                <textarea class="form-control" id="description" name="description" rows="5" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
-                            </div>-->
+                            <!--                            <div class="col-12">
+                                                            <label for="description" class="form-label">Mô tả sản phẩm</label>
+                                                            <textarea class="form-control" id="description" name="description" rows="5" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
+                                                        </div>-->
 
                             <!-- Ảnh chính -->
                             <div class="col-md-6">
@@ -241,6 +257,40 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
+                                    function formatNumberInput(input) {
+                                        let value = input.value.replace(/\D/g, '');
+                                        console.log(value);
+                                        if (value) {
+                                            value = parseInt(value, 10).toLocaleString('vi-VN');
+                                            input.value = value;
+                                        } else {
+                                            input.value = '';
+                                        }
+                                    }
+
+                                    // Chạy sau khi trang đã tải
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const originalPriceInput = document.getElementById('originalPrice');
+                                        const salePriceInput = document.getElementById('salePrice');
+
+                                        originalPriceInput.addEventListener('input', function () {
+                                            formatNumberInput(this);
+                                            if (originalPriceInput.value.replace(/\./g, '') > 99999999) {
+                                                alert('Giới hạn nhập vào là 99.999.999 đ');
+                                                $('#originalPrice').val('99.999.999');
+                                            }
+                                        });
+
+
+                                        salePriceInput.addEventListener('input', function () {
+                                            formatNumberInput(this);
+                                            if (salePriceInput.value.replace(/\./g, '') > 99999999) {
+                                                alert('Giới hạn nhập vào là 99.999.999 đ');
+                                                $('#salePrice').val('99.999.999');
+                                            }
+                                        });
+                                    });
+
                                     $(document).ready(function () {
                                         $('.sidebar-toggle').on('click', function () {
                                             $('.sidebar').toggleClass('active');
@@ -265,19 +315,19 @@
 
                                         // Kiểm tra tính hợp lệ của giá
                                         $('#salePrice').on('change', function () {
-                                            const originalPrice = parseFloat($('#originalPrice').val()) || 0;
-                                            const salePrice = parseFloat($('#salePrice').val()) || 0;
+                                            const originalPrice = parseInt($('#originalPrice').val().replace(/\./g, '')) || 0;
+                                            const salePrice = parseInt($('#salePrice').val().replace(/\./g, '')) || 0;
 
                                             if (salePrice < originalPrice) {
                                                 alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
-                                                $('#salePrice').val(originalPrice);
+                                                $('#salePrice').val(parseInt(originalPrice, 10).toLocaleString('vi-VN'));
                                             }
                                         });
                                     });
 
                                     // Hàm kiểm tra đuôi file
                                     function isValidImage(file) {
-                                        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
                                         return allowedTypes.includes(file.type);
                                     }
 
@@ -289,7 +339,7 @@
                                         if (input.files && input.files[0]) {
                                             const file = input.files[0];
                                             if (!isValidImage(file)) {
-                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP, SVG).');
                                                 input.value = ''; //xóa nội dung ko phải ảnh
                                                 return;
                                             }
@@ -318,7 +368,7 @@
                                             for (let i = 0; i < Math.min(filesAmount, maxFiles); i++) {
                                                 const file = input.files[i];
                                                 if (!isValidImage(file)) {
-                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
+                                                    alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP, SVG).');
                                                     input.value = ''; //xóa nội dung ko phải ảnh
                                                     return;
                                                 }

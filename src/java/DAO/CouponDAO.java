@@ -19,10 +19,12 @@ import java.util.List;
 public class CouponDAO extends DBContext {
 
     public List<Coupon> getCoupons(String searchCode, String filterType, String filterStatus, String sortField, String sortOrder, int page, int recordsPerPage) {
+        updateExpiredCoupons();
+
         List<Coupon> list = new ArrayList<>();
         String sql = "SELECT * FROM coupons WHERE 1=1";
 
-        // Thêm điều kiện tìm kiếm và lọc
+        // tìm kiếm vs lọc
         if (searchCode != null && !searchCode.isEmpty()) {
             sql += " AND code LIKE ?";
         }
@@ -33,14 +35,14 @@ public class CouponDAO extends DBContext {
             sql += " AND status = ?";
         }
 
-        // Thêm sắp xếp
+        // sắp xếp
         if (sortField != null && !sortField.isEmpty()) {
             sql += " ORDER BY " + sortField + (sortOrder.equals("desc") ? " DESC" : " ASC");
         } else {
-            sql += " ORDER BY created_at desc"; // Sắp xếp mặc định
+            sql += " ORDER BY created_at desc"; // Sắp xếp default 
         }
 
-        // Thêm phân trang
+        // phân trang
         sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try {
@@ -86,7 +88,7 @@ public class CouponDAO extends DBContext {
     public int getTotalCoupons(String searchCode, String filterType, String filterStatus) {
         String sql = "SELECT COUNT(*) FROM coupons WHERE 1=1";
 
-        // Thêm điều kiện tìm kiếm và lọc
+        // tìm kiếm vs lọc
         if (searchCode != null && !searchCode.isEmpty()) {
             sql += " AND code LIKE ?";
         }
@@ -120,6 +122,18 @@ public class CouponDAO extends DBContext {
         }
 
         return 0;
+    }
+
+    public void updateExpiredCoupons() {
+        String sql = "UPDATE coupons SET status = 'expired' "
+                + "WHERE expiry_date IS NOT NULL "
+                + "AND expiry_date <= GETDATE() "
+                + "AND status != 'expired'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean addCoupon(Coupon coupon) {
@@ -245,6 +259,8 @@ public class CouponDAO extends DBContext {
     }
 
     public List<Coupon> getAvailableCoupons() {
+        updateExpiredCoupons();
+        
         List<Coupon> coupons = new ArrayList<>();
         String sql = "SELECT * FROM coupons "
                 + "WHERE status = 'active' "
