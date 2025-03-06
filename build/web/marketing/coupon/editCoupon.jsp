@@ -171,7 +171,7 @@
                         <i class="fas fa-pen-square me-2"></i>Thông tin mã giảm giá
                     </div>
                     <div class="card-body">
-                        <form action="editCoupon" method="POST" id="couponForm">
+                        <form action="editCoupon" method="POST" id="couponForm" onsubmit="return prepareFormSubmission()">
                             <input type="hidden" name="id" value="${coupon.id}">
                             <c:if test="${not empty error}">
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -200,7 +200,10 @@
                             <div class="mb-3">
                                 <label for="discount_value" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="discount_value" name="discount_value" value="${param.discount_value != null ? param.discount_value : coupon.discount_value}" required step="1" maxFractionDigits="0">
+                                    <fmt:formatNumber var="formattedDiscountValue" value="${coupon.discount_value}" pattern="#,##0" />
+                                    <input type="text" class="form-control currency-input" id="discount_value" name="discount_value" 
+                                           value="${param.discount_value != null ? param.discount_value : formattedDiscountValue}" 
+                                           required oninput="formatCurrency(this)">
                                     <span class="input-group-text" id="discountSymbol">₫</span>
                                 </div>
                                 <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
@@ -210,7 +213,10 @@
                             <div class="mb-3">
                                 <label for="min_order_amount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="min_order_amount" name="min_order_amount" value="${param.min_order_amount != null ? param.min_order_amount : coupon.min_order_amount}" min="0">
+                                    <fmt:formatNumber var="formattedMinOrderAmount" value="${coupon.min_order_amount}" pattern="#,##0" />
+                                    <input type="text" class="form-control currency-input" id="min_order_amount" name="min_order_amount" 
+                                           value="${param.min_order_amount != null ? param.min_order_amount : formattedMinOrderAmount}" 
+                                           min="0" oninput="formatCurrency(this)">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -219,7 +225,10 @@
                             <div class="mb-3" id="maxDiscountContainer">
                                 <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="max_discount" name="max_discount" value="${param.max_discount != null ? param.max_discount : coupon.max_discount}" min="0">
+                                    <fmt:formatNumber var="formattedMaxDiscount" value="${coupon.max_discount}" pattern="#,##0" />
+                                    <input type="text" class="form-control currency-input" id="max_discount" name="max_discount" 
+                                           value="${param.max_discount != null ? param.max_discount : formattedMaxDiscount}" 
+                                           min="0" oninput="formatCurrency(this)">
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
@@ -263,51 +272,88 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            $(document).ready(function () {
-                // Set minimum date for expiry date as today
-                const today = new Date();
-                const formattedDate = today.toISOString().split('T')[0];
-                $('#expiry_date').attr('min', formattedDate);
+               $(document).ready(function () {
+                   // Đặt ngày tối thiểu cho ngày hết hạn là hôm nay
+                   const today = new Date();
+                   const formattedDate = today.toISOString().split('T')[0];
+                   $('#expiry_date').attr('min', formattedDate);
 
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
+                   // Toggle sidebar
+                   $('.sidebar-toggle').on('click', function () {
+                       $('.sidebar').toggleClass('active');
+                       $('.main-content').toggleClass('active');
+                       $(this).hide();
+                   });
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
+                   // Close sidebar when clicking outside on mobile
+                   $(document).on('click', function (e) {
+                       if ($(window).width() <= 768) {
+                           if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                               $('.sidebar').removeClass('active');
+                               $('.main-content').removeClass('active');
+                               $('.sidebar-toggle').show();
+                           }
+                       }
+                   });
 
-                // Highlight current menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
+                   // Highlight current menu item
+                   $('.menu-item').removeClass('active');
+                   $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
 
-                // Handle discount type change
-                function updateDiscountType() {
-                    const selectedType = $('#discount_type').val();
-                    if (selectedType === 'percentage') {
-                        $('#discountSymbol').text('%');
-                        $('#maxDiscountContainer').show();
-                        $('#discountValueText').text('Nhập phần trăm giảm giá (1-50%).');
-                    } else {
-                        $('#discountSymbol').text('₫');
-                        $('#maxDiscountContainer').hide();
-                        $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
-                    }
-                }
+                   //Định dạng đầu vào tiền tệ khi load trang
+                   $('.currency-input').each(function () {
+                       formatCurrency(this);
+                   });
 
-                $('#discount_type').on('change', updateDiscountType);
-                updateDiscountType(); // Run on page load
-            });
+                   // discount type change
+                   function updateDiscountType() {
+                       const selectedType = $('#discount_type').val();
+                       if (selectedType === 'percentage') {
+                           $('#discountSymbol').text('%');
+                           $('#maxDiscountContainer').show();
+                           $('#discountValueText').text('Nhập phần trăm giảm giá (1-50%).');
+                       } else {
+                           $('#discountSymbol').text('₫');
+                           $('#maxDiscountContainer').hide();
+                           $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
+                       }
+                   }
+
+                   $('#discount_type').on('change', updateDiscountType);
+                   updateDiscountType(); // Run on page load
+               });
+
+               // vnd format
+               function formatCurrency(input) {
+                   if (!input.value)
+                       return;
+                   // Xóa các dấu chấm hiện có và các ký tự không phải số 
+                   let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
+
+                   // Định dạng với dấu chấm làm dấu phân cách hàng nghìn
+                   if (value.length > 0) {
+                       value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
+                   }
+
+                   // display 
+                   input.value = value;
+
+                   // Lưu lại giá trị số thô trong thuộc tính dữ liệu để gửi biểu mẫu
+                   input.dataset.rawValue = value.replace(/\./g, '');
+               }
+
+               // gửi biểu mẫu để update
+               function prepareFormSubmission() {
+                   // lấy tất cả các đầu vào được định dạng
+                   const formattedInputs = document.querySelectorAll('.currency-input');
+
+                   // Thay thế các giá trị đã định dạng bằng các giá trị thô để gửi
+                   formattedInputs.forEach(input => {
+                       input.value = input.dataset.rawValue || input.value.replace(/\./g, '');
+                   });
+
+                   return true;
+               }
         </script>
     </body>
 </html>
