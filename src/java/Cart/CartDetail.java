@@ -55,16 +55,16 @@ public class CartDetail extends HttpServlet {
                 : cartDAO.getCart(request, null);
         
         // Lấy thông tin tồn kho cho mỗi sản phẩm trong giỏ hàng
-        Map<Integer, Integer> stockMap = new HashMap<>();
+        Map<Integer, Integer> stock = new HashMap<>();
         if (cart != null && cart.getItems() != null) {
             for (CartItem item : cart.getItems()) {
                 Variant variant = inventoryDAO.getVariant(item.getVariantId());
                 if (variant != null) {
-                    stockMap.put(item.getId(), variant.getQuantity());
+                    stock.put(item.getId(), variant.getQuantity());
                 }
             }
         }
-        request.setAttribute("stockMap", stockMap);
+        request.setAttribute("stockMap", stock);
 
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
@@ -111,8 +111,8 @@ public class CartDetail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Get action type from request
-        // Get action type from request
+        
+        
         String action = request.getParameter("action");
 
         HttpSession session = request.getSession();
@@ -245,17 +245,17 @@ public class CartDetail extends HttpServlet {
             System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
 
             if (user != null) {
-                // User is logged in, update in database
+                
                 boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
                 if (!success) {
                     System.out.println("Failed to update cart item quantity in database");
                 }
             } else {
-                // User is not logged in, update in cookies
+                
                 cartDAO.updateCartItemQuantityInCookie(request, response, cartItemId, quantity);
             }
             
-            // Trả về phản hồi JSON với số lượng đã cập nhật
+            
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
             out.print("{\"success\": true, \"updatedQuantity\": " + quantity + "}");
