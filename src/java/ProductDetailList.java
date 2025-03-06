@@ -128,6 +128,7 @@ public class ProductDetailList extends HttpServlet {
             request.setAttribute("colors", colors);
             request.setAttribute("sizes", sizes);
             request.setAttribute("similarProducts", relatedProducts);
+            request.setAttribute("alert", request.getParameter("alert"));
 //            request.setAttribute("comboProducts", comboProducts);
 
             // Forward to the JSP
@@ -175,6 +176,10 @@ public class ProductDetailList extends HttpServlet {
 
                 // Lấy thông tin sản phẩm để hiển thị trong giỏ hàng
                 Product product = productDAO.getProductById(productId);
+                if(product.getStatus().equals("inactive") || product.getStatus().equals("EOStock")){
+                    response.sendRedirect("productdetail?id="+product.getId()+"&alert=EOS");
+                    return;
+                }
 
                 // Lấy thông tin size và màu
                 String sizeName = "";
@@ -209,9 +214,9 @@ public class ProductDetailList extends HttpServlet {
                     item.setColor(colorName);
 
                     if (cartDAO.addCartItem(item)) {
-                        response.sendRedirect("listproduct?SS");
+                        response.sendRedirect("productdetail?id="+product.getId()+"&alert=SS");
                     } else {
-                        response.sendRedirect("listproduct?ErrorAddToCart");
+                        response.sendRedirect("productdetail?id="+product.getId()+"&alert=ERR");
                     }
 
                 } else {
@@ -230,7 +235,7 @@ public class ProductDetailList extends HttpServlet {
 
                     // Thêm vào giỏ hàng cookie
                     cartDAO.addItemToCookieCart(request, response, item);
-                    response.sendRedirect("listproduct?SS");
+                    response.sendRedirect("productdetail?id="+product.getId()+"&alert=SS");
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();

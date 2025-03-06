@@ -144,7 +144,7 @@ public class ListProductServlet extends HttpServlet {
                         break;
                 }
             } else {
-                sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.id DESC");
+                sql.append(" ORDER BY p.combo_group_id DESC, p.is_combo DESC, p.id DESC");
             }
 
             // Add pagination

@@ -298,7 +298,7 @@
                                             <label for="price_500k_1000k" class="form-check-label">500.000đ - 1.000.000đ</label>
                                         </div>
                                         <div class="radio-option">
-                                            <input type="radio" id="price_over_1000k" name="priceRange" value="1000000-3000000" class="form-check-input"
+                                            <input type="radio" id="price_over_1000k" name="priceRange" value="1000000-99999000" class="form-check-input"
                                                    ${minPrice == '1000000' && maxPrice == '3000000' ? 'checked' : ''}>
                                             <label for="price_over_1000k" class="form-check-label">Trên 1.000.000đ</label>
                                         </div>

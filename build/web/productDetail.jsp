@@ -364,6 +364,28 @@
 
         <div class="container">
             <div class="product-container">
+                <c:if test="${alert != null && !alert.trim().isEmpty()}">
+                    <c:choose>
+                        <c:when test="${alert.equals('EOS')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Sản phẩm đã hết hàng hoặc ngừng kinh doanh.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('SS')}">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Thêm vào giỏ hàng thành công.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('ERR')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Lỗi không xác định.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                    </c:choose>
+                </c:if>
                 <div class="row">
                     <!-- Product Images Column -->
                     <div class="col-md-6">
@@ -439,13 +461,13 @@
                                 </div>
 
                                 <div class="options-col">
-                                    <div class="stock-status ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                                    <div class="stock-status ${product.stock>0 && product.status.equals('active') ? 'in-stock' : 'out-of-stock'}">
                                         <i class="fas ${product.stock > 0 ? 'fa-check-circle' : 'fa-times-circle'}"></i>
                                         <span class="ms-2">
                                             <!--${product.stock > 0 ? 'Còn Hàng (' : 'Hết Hàng'}--> 
                                             <!--${product.stock > 0 ? product.stock : ''}-->
                                             <!--${product.stock > 0 ? ')' : ''}-->
-                                            ${product.stock > 0 ? 'Còn Hàng' : 'Hết Hàng'} 
+                                            ${product.stock>0 && product.status.equals('active') ? 'Còn Hàng' : product.status.equals('inactive') ? 'Ngưng Bán' : 'Hết Hàng'} 
                                         </span>
                                     </div>
                                 </div>
