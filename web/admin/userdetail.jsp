@@ -167,7 +167,7 @@
 
                                         <div class="col-md-8">
                                             <div class="mb-3">
-                                                <label class="form-label">Username:</label>
+                                                <label class="form-label">Tên đăng nhập:</label>
                                                 <input type="text" class="form-control" name="username" value="${user.username}" readonly>
                                             </div>
 

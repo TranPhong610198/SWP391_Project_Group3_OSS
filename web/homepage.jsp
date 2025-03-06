@@ -632,8 +632,6 @@
 
         </div>
 
-
-
         <!-- Chat Button -->
         <div class="ai-chat-button" onclick="toggleChatWidget()">
             <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
