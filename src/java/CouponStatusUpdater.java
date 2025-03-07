@@ -24,7 +24,7 @@ public class CouponStatusUpdater extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new CouponStatusTask(), 0, 1, TimeUnit.MINUTES); // Chạy mỗi phút
+        scheduler.scheduleAtFixedRate(new CouponStatusTask(), 0, 1, TimeUnit.DAYS); // Chạy mỗi phút
     }
 
     @Override
