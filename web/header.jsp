@@ -188,7 +188,7 @@
                             <!-- Cart -->
                             <a href="cartdetail" class="cart-icon">
                                 <i class="fas fa-shopping-cart"></i>
-                                <!--<span class="cart-count">0</span>-->
+                                <span class="cart-count">${cartCount}</span>
                             </a>
                         </div>
                     </div>
