@@ -19,6 +19,43 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.css">
         <!-- Custom CSS -->
         <style>
+            .back-to-top {
+                position: fixed;
+                bottom: 120px; /* Vị trí cao hơn nút chat AI */
+                right: 20px;
+                background-color: #0984e3;
+                color: white;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 999;
+            }
+
+            .back-to-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .back-to-top .arrow {
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                display: inline-block;
+                padding: 6px;
+                transform: rotate(-135deg);
+            }
+
+            .back-to-top:hover {
+                background-color: #0077cc;
+            }
             .productSwiper {
                 padding: 2rem 1rem;
                 position: relative;
@@ -678,6 +715,10 @@
                 <button onclick="sendMessage()">Gửi</button>
             </div>
         </div>
+        <!-- Back to Top -->
+        <button id="backToTopButton" class="back-to-top">
+            <div class="arrow"></div>
+        </button>
         <script>
             // Hiển thị/ẩn chat widget
             function toggleChatWidget() {
@@ -807,6 +848,28 @@
                             },
                         },
                     });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const backToTopButton = document.getElementById('backToTopButton');
+
+                // Hiển thị nút khi cuộn xuống 300px từ đầu trang
+                window.addEventListener('scroll', function () {
+                    if (window.pageYOffset > 300) {
+                        backToTopButton.classList.add('show');
+                    } else {
+                        backToTopButton.classList.remove('show');
+                    }
+                });
+
+                // Khi nhấp vào nút, cuộn lên đầu trang
+                backToTopButton.addEventListener('click', function () {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
         </script>
     </body>
 </html>
