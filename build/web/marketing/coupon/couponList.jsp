@@ -165,6 +165,7 @@
                 font-weight: 600;
                 padding: 5px 10px;
                 border-radius: 50px;
+                white-space: nowrap;
             }
 
             /* Toggle button */
@@ -196,6 +197,22 @@
 
             .pagination .page-item .page-link:hover {
                 background-color: var(--hover-color);
+            }
+
+            .badge-vip {
+                background-color: #ffd700; /* Màu vàng kim cho VIP */
+                color: #2c3e50; /* Màu chữ tối để tương phản */
+                font-weight: 600;
+                padding: 5px 10px;
+                border-radius: 50px;
+            }
+
+            .badge-normal {
+                background-color: #6c757d; /* Màu xám cho Normal */
+                color: white; /* Màu chữ trắng để tương phản */
+                font-weight: 600;
+                padding: 5px 10px;
+                border-radius: 50px;
             }
 
             /* Responsive */
@@ -230,8 +247,10 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <!-- Thông báo thành công -->
                 <c:if test="${not empty param.success}">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+<!--                    <div class="alert alert-success alert-dismissible fade show" role="alert">-->
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         <c:choose>
                             <c:when test="${param.success eq 'add'}">
                                 Thêm mã giảm giá thành công!
@@ -247,8 +266,10 @@
                     </div>
                 </c:if>
 
+                <!-- Thông báo lỗi -->
                 <c:if test="${param.error eq 'delete'}">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+<!--                    <div class="alert alert-danger alert-dismissible fade show" role="alert">-->
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         Không thể xóa mã giảm giá. Vui lòng thử lại!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -264,7 +285,7 @@
                     </div>
                     <div class="card-body">
                         <form action="couponlist" method="GET" class="row g-3">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
@@ -277,6 +298,13 @@
                                     <option value="">Tất cả loại giảm giá</option>
                                     <option value="percentage" ${filterType == 'percentage' ? 'selected' : ''}>Phần trăm</option>
                                     <option value="fixed" ${filterType == 'fixed' ? 'selected' : ''}>Cố định</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" id="filterCouponType" name="filterCouponType">
+                                    <option value="">Tất cả loại mã</option>
+                                    <option value="normal" ${filterCouponType == 'normal' ? 'selected' : ''}>Thường</option>
+                                    <option value="vip" ${filterCouponType == 'vip' ? 'selected' : ''}>VIP</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -327,7 +355,22 @@
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>Loại mã</th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=discount_type&sortOrder=${sortField == 'discount_type' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Loại giảm giá
+                                                <span class="sort-icons">
+                                                    ${sortField == 'discount_type' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=coupon_type&sortOrder=${sortField == 'coupon_type' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Loại mã
+                                                <span class="sort-icons">
+                                                    ${sortField == 'coupon_type' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=discount_value&sortOrder=${sortField == 'discount_value' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Giá trị
@@ -336,7 +379,14 @@
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>Tối thiểu</th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=min_order_amount&sortOrder=${sortField == 'min_order_amount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Tối thiểu
+                                                <span class="sort-icons">
+                                                    ${sortField == 'min_order_amount' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=max_discount&sortOrder=${sortField == 'max_discount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Giảm tối đa
@@ -347,13 +397,20 @@
                                         </th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=usage_limit&sortOrder=${sortField == 'usage_limit' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Lượt dùng
+                                                Số lượng
                                                 <span class="sort-icons">
                                                     ${sortField == 'usage_limit' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>Đã dùng</th>
+                                        <th>
+                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=used_count&sortOrder=${sortField == 'used_count' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Đã dùng
+                                                <span class="sort-icons">
+                                                    ${sortField == 'used_count' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=expiry_date&sortOrder=${sortField == 'expiry_date' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Ngày hết hạn
@@ -376,6 +433,11 @@
                                                     <td>
                                                         <span class="badge-discount-type">
                                                             ${coupon.discount_type == 'percentage' ? 'Phần trăm' : 'Cố định'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge ${coupon.couponType == 'vip' ? 'badge-vip' : 'badge-normal'}">
+                                                            ${coupon.couponType == 'vip' ? 'VIP' : 'Thường'}
                                                         </span>
                                                     </td>
                                                     <td>
@@ -453,7 +515,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <tr>
-                                            <td colspan="11" class="empty-state">
+                                            <td colspan="12" class="empty-state">
                                                 <i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
                                                 <p>Không tìm thấy mã giảm giá nào. Vui lòng thử lại với điều kiện tìm kiếm khác hoặc tạo mã giảm giá mới.</p>
                                                 <a href="addCoupon" class="btn btn-primary mt-3">
@@ -478,7 +540,7 @@
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="couponlist?page=${currentPage-1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}" aria-label="Previous">
+                                    <a class="page-link" href="couponlist?page=${currentPage-1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}" aria-label="Previous">
                                         <i class="fas fa-chevron-left"></i>
                                     </a>
                                 </li>
@@ -493,7 +555,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <li class="page-item">
-                                            <a class="page-link" href="couponlist?page=${i}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}">${i}</a>
+                                            <a class="page-link" href="couponlist?page=${i}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}">${i}</a>
                                         </li>
                                     </c:otherwise>
                                 </c:choose>
@@ -501,7 +563,7 @@
 
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="couponlist?page=${currentPage+1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}" aria-label="Next">
+                                    <a class="page-link" href="couponlist?page=${currentPage+1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}" aria-label="Next">
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
@@ -515,9 +577,22 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Add JavaScript for sidebar functionality -->
         <script>
             $(document).ready(function () {
+                // Tự động tắt thông báo thành công sau 5 giây
+                if ($('#successAlert').length) {
+                    setTimeout(function () {
+                        $('#successAlert').alert('close');
+                    }, 5000); // 3000ms = 3 giây
+                }
+
+                // Tự động tắt thông báo lỗi sau 5 giây
+                if ($('#errorAlert').length) {
+                    setTimeout(function () {
+                        $('#errorAlert').alert('close');
+                    }, 5000); // 3000ms = 3 giây
+                }
+
                 // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');

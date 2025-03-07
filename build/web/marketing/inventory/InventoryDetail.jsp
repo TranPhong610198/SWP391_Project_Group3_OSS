@@ -112,9 +112,9 @@
 
         <div class="main-content">
             <div class="container py-4">
-                <!-- Success Messages -->
+                <!-- Thông báo thành công -->
                 <c:if test="${not empty param.success}">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         <c:choose>
                             <c:when test="${param.success eq 'add'}">
                                 Thêm mẫu sản phẩm thành công!
@@ -132,7 +132,7 @@
 
                 <!-- Error Messages -->
                 <c:if test="${not empty errorMessage || not empty param.error}">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         ${not empty errorMessage ? errorMessage : 'Không thể xóa mẫu sản phẩm. Vui lòng thử lại!'}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -267,6 +267,20 @@
 
         <script>
             $(document).ready(function () {
+                // Tự động tắt thông báo thành công sau 5 giây
+                if ($('#successAlert').length) {
+                    setTimeout(function () {
+                        $('#successAlert').alert('close');
+                    }, 5000); // 3000ms = 5 giây
+                }
+
+                // Tự động tắt thông báo lỗi sau 5 giây
+                if ($('#errorAlert').length) {
+                    setTimeout(function () {
+                        $('#errorAlert').alert('close');
+                    }, 5000); // 3000ms = 5 giây
+                }
+
                 // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');

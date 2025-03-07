@@ -21,12 +21,13 @@ public class Coupon {
     private int used_count;
     private Date expiry_date;
     private Date created_at;
+    private String couponType;
     private String status;
 
     public Coupon() {
     }
 
-    public Coupon(int id, String code, String discount_type, double discount_value, double min_order_amount, double max_discount, int usage_limit, int used_count, Date expiry_date, Date created_at, String status) {
+    public Coupon(int id, String code, String discount_type, double discount_value, double min_order_amount, double max_discount, int usage_limit, int used_count, Date expiry_date, Date created_at, String couponType, String status) {
         this.id = id;
         this.code = code;
         this.discount_type = discount_type;
@@ -37,6 +38,7 @@ public class Coupon {
         this.used_count = used_count;
         this.expiry_date = expiry_date;
         this.created_at = created_at;
+        this.couponType = couponType;
         this.status = status;
     }
 
@@ -119,6 +121,14 @@ public class Coupon {
 
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
+    }
+    
+    public String getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(String couponType) {
+        this.couponType = couponType;
     }
 
     public String getStatus() {

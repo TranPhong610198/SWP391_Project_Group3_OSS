@@ -18,31 +18,34 @@ import java.util.List;
 
 public class CouponDAO extends DBContext {
 
-    public List<Coupon> getCoupons(String searchCode, String filterType, String filterStatus, String sortField, String sortOrder, int page, int recordsPerPage) {
+    public List<Coupon> getCoupons(String searchCode, String filterType, String filterCouponType, String filterStatus, String sortField, String sortOrder, int page, int recordsPerPage) {
         updateExpiredCoupons();
 
         List<Coupon> list = new ArrayList<>();
         String sql = "SELECT * FROM coupons WHERE 1=1";
 
-        // tìm kiếm vs lọc
+        // Tìm kiếm và lọc
         if (searchCode != null && !searchCode.isEmpty()) {
             sql += " AND code LIKE ?";
         }
         if (filterType != null && !filterType.isEmpty()) {
             sql += " AND discount_type = ?";
         }
+        if (filterCouponType != null && !filterCouponType.isEmpty()) {
+            sql += " AND coupon_type = ?";
+        }
         if (filterStatus != null && !filterStatus.isEmpty()) {
             sql += " AND status = ?";
         }
 
-        // sắp xếp
+        // Sắp xếp
         if (sortField != null && !sortField.isEmpty()) {
             sql += " ORDER BY " + sortField + (sortOrder.equals("desc") ? " DESC" : " ASC");
         } else {
-            sql += " ORDER BY created_at desc"; // Sắp xếp default 
+            sql += " ORDER BY created_at DESC"; // Sắp xếp mặc định
         }
 
-        // phân trang
+        // Phân trang
         sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try {
@@ -54,6 +57,9 @@ public class CouponDAO extends DBContext {
             }
             if (filterType != null && !filterType.isEmpty()) {
                 ps.setString(parameterIndex++, filterType);
+            }
+            if (filterCouponType != null && !filterCouponType.isEmpty()) {
+                ps.setString(parameterIndex++, filterCouponType);
             }
             if (filterStatus != null && !filterStatus.isEmpty()) {
                 ps.setString(parameterIndex++, filterStatus);
@@ -75,10 +81,10 @@ public class CouponDAO extends DBContext {
                 coupon.setUsed_count(rs.getInt("used_count"));
                 coupon.setExpiry_date(rs.getDate("expiry_date"));
                 coupon.setCreated_at(rs.getDate("created_at"));
+                coupon.setCouponType(rs.getString("coupon_type"));
                 coupon.setStatus(rs.getString("status"));
                 list.add(coupon);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,7 +143,7 @@ public class CouponDAO extends DBContext {
     }
 
     public boolean addCoupon(Coupon coupon) {
-        String sql = "INSERT INTO coupons (code, discount_type, discount_value, min_order_amount, max_discount, usage_limit, used_count, expiry_date, created_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO coupons (code, discount_type, discount_value, min_order_amount, max_discount, usage_limit, used_count, expiry_date, created_at, coupon_type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, coupon.getCode());
             ps.setString(2, coupon.getDiscount_type());
@@ -148,7 +154,8 @@ public class CouponDAO extends DBContext {
             ps.setInt(7, coupon.getUsed_count());
             ps.setDate(8, coupon.getExpiry_date());
             ps.setDate(9, coupon.getCreated_at());
-            ps.setString(10, coupon.getStatus());
+            ps.setString(10, coupon.getCouponType());
+            ps.setString(11, coupon.getStatus());
 
             int result = ps.executeUpdate();
             return result > 0;
@@ -203,6 +210,7 @@ public class CouponDAO extends DBContext {
                 coupon.setUsed_count(rs.getInt("used_count"));
                 coupon.setExpiry_date(rs.getDate("expiry_date"));
                 coupon.setCreated_at(rs.getDate("created_at"));
+                coupon.setCouponType(rs.getString("coupon_type"));
                 coupon.setStatus(rs.getString("status"));
                 return coupon;
             }
@@ -213,7 +221,7 @@ public class CouponDAO extends DBContext {
     }
 
     public boolean updateCoupon(Coupon coupon) {
-        String sql = "UPDATE coupons SET code = ?, discount_type = ?, discount_value = ?, min_order_amount = ?, max_discount = ?, usage_limit = ?, expiry_date = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE coupons SET code = ?, discount_type = ?, discount_value = ?, min_order_amount = ?, max_discount = ?, usage_limit = ?, expiry_date = ?, coupon_type = ?, status = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, coupon.getCode());
             ps.setString(2, coupon.getDiscount_type());
@@ -222,8 +230,9 @@ public class CouponDAO extends DBContext {
             ps.setDouble(5, coupon.getMax_discount());
             ps.setInt(6, coupon.getUsage_limit());
             ps.setDate(7, coupon.getExpiry_date());
-            ps.setString(8, coupon.getStatus());
-            ps.setInt(9, coupon.getId());
+            ps.setString(8, coupon.getCouponType());
+            ps.setString(9, coupon.getStatus());
+            ps.setInt(10, coupon.getId());
             int result = ps.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
@@ -249,6 +258,7 @@ public class CouponDAO extends DBContext {
                 coupon.setUsed_count(rs.getInt("used_count"));
                 coupon.setExpiry_date(rs.getDate("expiry_date"));
                 coupon.setCreated_at(rs.getDate("created_at"));
+                coupon.setCouponType(rs.getString("coupon_type"));
                 coupon.setStatus(rs.getString("status"));
                 return coupon;
             }
@@ -260,7 +270,7 @@ public class CouponDAO extends DBContext {
 
     public List<Coupon> getAvailableCoupons() {
         updateExpiredCoupons();
-        
+
         List<Coupon> coupons = new ArrayList<>();
         String sql = "SELECT * FROM coupons "
                 + "WHERE status = 'active' "
@@ -281,6 +291,7 @@ public class CouponDAO extends DBContext {
                 coupon.setUsage_limit(rs.getInt("usage_limit"));
                 coupon.setUsed_count(rs.getInt("used_count"));
                 coupon.setExpiry_date(rs.getDate("expiry_date"));
+                coupon.setCouponType(rs.getString("coupon_type"));
                 coupon.setStatus(rs.getString("status"));
                 coupons.add(coupon);
             }
@@ -292,7 +303,7 @@ public class CouponDAO extends DBContext {
 
     public static void main(String[] args) {
         CouponDAO dao = new CouponDAO();
-        List<Coupon> list = dao.getCoupons("", "", "", "", "", 1, 10);
+        List<Coupon> list = dao.getCoupons(" ", "", "", "", "", "", 1, 10);
         for (Coupon o : list) {
             System.out.println(o);
         }

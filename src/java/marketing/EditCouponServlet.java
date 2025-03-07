@@ -64,6 +64,7 @@ public class EditCouponServlet extends HttpServlet {
         String maxDiscountStr = request.getParameter("max_discount");
         String usageLimitStr = request.getParameter("usage_limit");
         String expiryDateStr = request.getParameter("expiry_date");
+        String couponType = request.getParameter("coupon_type");
         String status = request.getParameter("status") != null ? "active" : "inactive";
 
         // Kiểm tra ID
@@ -88,7 +89,7 @@ public class EditCouponServlet extends HttpServlet {
         if (!validateCouponData(couponDAO, code, discountType, discountValueStr, minOrderAmountStr,
                 maxDiscountStr, usageLimitStr, expiryDateStr, originalCoupon.getCode(), errorMessages)) {
             setFormAttributes(request, id, code, discountType, discountValueStr, minOrderAmountStr,
-                    maxDiscountStr, usageLimitStr, expiryDateStr, status);
+                    maxDiscountStr, usageLimitStr, expiryDateStr, couponType, status);
             request.setAttribute("error", errorMessages.toString());
             request.setAttribute("coupon", originalCoupon);
             request.getRequestDispatcher("/marketing/coupon/editCoupon.jsp").forward(request, response);
@@ -106,33 +107,33 @@ public class EditCouponServlet extends HttpServlet {
             // Tạo đối tượng Coupon
             Coupon coupon = new Coupon(id, code, discountType, discountValue.doubleValue(), minOrderAmount.doubleValue(),
                     maxDiscount.doubleValue(), usageLimit, originalCoupon.getUsed_count(), expiryDate,
-                    originalCoupon.getCreated_at(), status);
+                    originalCoupon.getCreated_at(), couponType, status);
 
             // Cập nhật coupon
             if (couponDAO.updateCoupon(coupon)) {
                 response.sendRedirect("couponlist?success=edit");
             } else {
                 setFormAttributes(request, id, code, discountType, discountValueStr, minOrderAmountStr,
-                        maxDiscountStr, usageLimitStr, expiryDateStr, status);
+                        maxDiscountStr, usageLimitStr, expiryDateStr, couponType, status);
                 request.setAttribute("error", "Không thể cập nhật mã giảm giá. Vui lòng thử lại.");
                 request.setAttribute("coupon", originalCoupon);
                 request.getRequestDispatcher("/marketing/coupon/editCoupon.jsp").forward(request, response);
             }
         } catch (NumberFormatException | ArithmeticException e) {
             setFormAttributes(request, id, code, discountType, discountValueStr, minOrderAmountStr,
-                    maxDiscountStr, usageLimitStr, expiryDateStr, status);
+                    maxDiscountStr, usageLimitStr, expiryDateStr, couponType, status);
             request.setAttribute("error", "Dữ liệu số không hợp lệ. Vui lòng kiểm tra lại.");
             request.setAttribute("coupon", originalCoupon);
             request.getRequestDispatcher("/marketing/coupon/editCoupon.jsp").forward(request, response);
         } catch (IllegalArgumentException e) {
             setFormAttributes(request, id, code, discountType, discountValueStr, minOrderAmountStr,
-                    maxDiscountStr, usageLimitStr, expiryDateStr, status);
+                    maxDiscountStr, usageLimitStr, expiryDateStr, couponType, status);
             request.setAttribute("error", "Ngày không hợp lệ. Vui lòng kiểm tra lại định dạng ngày.");
             request.setAttribute("coupon", originalCoupon);
             request.getRequestDispatcher("/marketing/coupon/editCoupon.jsp").forward(request, response);
         } catch (Exception e) {
             setFormAttributes(request, id, code, discountType, discountValueStr, minOrderAmountStr,
-                    maxDiscountStr, usageLimitStr, expiryDateStr, status);
+                    maxDiscountStr, usageLimitStr, expiryDateStr, couponType, status);
             request.setAttribute("error", "Đã xảy ra lỗi không mong muốn: " + e.getMessage());
             request.setAttribute("coupon", originalCoupon);
             request.getRequestDispatcher("/marketing/coupon/editCoupon.jsp").forward(request, response);
@@ -213,7 +214,7 @@ public class EditCouponServlet extends HttpServlet {
 
     private void setFormAttributes(HttpServletRequest request, int id, String code, String discountType,
             String discountValueStr, String minOrderAmountStr, String maxDiscountStr,
-            String usageLimitStr, String expiryDateStr, String status) {
+            String usageLimitStr, String expiryDateStr, String couponType, String status) {
         request.setAttribute("id", id);
         request.setAttribute("code", code);
         request.setAttribute("discount_type", discountType);
@@ -222,6 +223,7 @@ public class EditCouponServlet extends HttpServlet {
         request.setAttribute("max_discount", maxDiscountStr);
         request.setAttribute("usage_limit", usageLimitStr);
         request.setAttribute("expiry_date", expiryDateStr);
+        request.setAttribute("coupon_type", couponType);
         request.setAttribute("status", status);
     }
 

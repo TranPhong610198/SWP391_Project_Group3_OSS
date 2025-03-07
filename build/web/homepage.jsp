@@ -180,13 +180,18 @@
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
             .carousel-item img {
-                height: 500px; /* Tăng từ 500px lên 700px */
-                object-fit: cover;
                 width: 100%;
+                height: 616px;    /* Đặt chiều cao cố định */
+                object-fit: cover;
+                margin: 0 auto;   /* Căn giữa */
+                display: block;
             }
+
             #mainCarousel {
+                position: relative;
                 margin-bottom: 50px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                overflow: hidden; /* Đảm bảo hình không tràn ra ngoài */
             }
 
             .carousel-caption {
@@ -314,6 +319,27 @@
             .ai-chat-button:hover {
                 transform: scale(1.1);
             }
+            @media (max-width: 1521px) {
+                .carousel-item img {
+                    width: 100%;
+                    height: 616px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .carousel-item img {
+                    height: 400px; /* Giảm chiều cao cho mobile */
+                }
+
+                .carousel-arrow-down {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .carousel-arrow-down::after {
+                    font-size: 20px;
+                }
+            }
         </style>
 
 
@@ -405,7 +431,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="product-title">${product.title}</h5>
-                                                
+
                                                 <div class="product-price">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
@@ -517,7 +543,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Phụ kiện -->
             <section class="mb-5">
                 <div class="container">
@@ -549,7 +575,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Giày dép -->
             <section class="mb-5">
                 <div class="container">
@@ -581,7 +607,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Bài đăng mới nhất -->
             <section class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
