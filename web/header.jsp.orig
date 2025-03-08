@@ -188,7 +188,11 @@
                             <!-- Cart -->
                             <a href="cartdetail" class="cart-icon">
                                 <i class="fas fa-shopping-cart"></i>
+<<<<<<< HEAD
+<!--                                <span class="cart-count">0</span>-->
+=======
                                 <span class="cart-count">${cartCount}</span>
+>>>>>>> ae0b31c2628962e58a5024d5b3c9565d4ecebda9
                             </a>
                         </div>
                     </div>

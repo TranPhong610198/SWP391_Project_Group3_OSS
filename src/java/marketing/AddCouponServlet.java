@@ -43,6 +43,7 @@ public class AddCouponServlet extends HttpServlet {
         String expiryDateStr = request.getParameter("expiry_date");
         String usageLimitStr = request.getParameter("usage_limit");
         String maxDiscountStr = request.getParameter("max_discount");
+        String couponType = request.getParameter("coupon_type");
         String status = request.getParameter("status") != null ? "active" : "inactive";
 
         if (!validateCouponData(couponDAO, code, discountType, discountValueStr, minOrderAmountStr,
@@ -63,7 +64,7 @@ public class AddCouponServlet extends HttpServlet {
 
             // Tạo đối tượng Coupon
             Coupon coupon = new Coupon(0, code, discountType, discountValue, minOrderAmount,
-                    maxDiscount, usageLimit, 0, expiryDate, createdAt, status);
+                    maxDiscount, usageLimit, 0, expiryDate, createdAt, couponType, status);
 
             // Thêm coupon vào DB
             if (couponDAO.addCoupon(coupon)) {
@@ -130,8 +131,8 @@ public class AddCouponServlet extends HttpServlet {
 
             // Kiểm tra giá trị đơn hàng tối thiểu
             double minOrderAmount = Double.parseDouble(minOrderAmountStr);
-            if (minOrderAmount < 1000 || minOrderAmount > MAX_AMOUNT) {
-                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 10 triệu VNĐ.<br>");
+            if (minOrderAmount < 1000 || minOrderAmount > 10000000) {
+                errorMessages.append("Giá trị đơn hàng tối thiểu phải từ 1.000 VNĐ đến 99.999.999 triệu VNĐ.<br>");
                 isValid = false;
             }
 

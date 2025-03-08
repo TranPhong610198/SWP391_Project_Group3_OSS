@@ -12,6 +12,68 @@
         <title>Header</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="assests/css/Header.css" rel="stylesheet" type="text/css"/>
+        <style>
+            /* CSS cho menu phân cấp */
+            .navbar-nav .dropdown-menu {
+                display: none;
+                position: absolute;
+                background: white;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                z-index: 1000;
+                min-width: 200px;
+                border-radius: 4px;
+                padding: 10px 0;
+            }
+
+            .navbar-nav .dropdown:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .navbar-nav .dropdown-submenu {
+                position: relative;
+            }
+
+            .navbar-nav .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+            }
+
+            .navbar-nav .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .navbar-nav .dropdown-item {
+                padding: 8px 20px;
+                color: #333;
+                text-decoration: none;
+                display: block;
+            }
+
+            .navbar-nav .dropdown-item:hover {
+                background-color: #f8f9fa;
+            }
+
+            .navbar-nav .dropdown-toggle::after {
+                display: inline-block;
+                margin-left: 5px;
+                vertical-align: middle;
+                content: "";
+                border-top: 5px solid;
+                border-right: 5px solid transparent;
+                border-bottom: 0;
+                border-left: 5px solid transparent;
+            }
+
+            .navbar-nav .dropdown-submenu > a::after {
+                content: "";
+                float: right;
+                margin-top: 8px;
+                border-left: 5px solid;
+                border-top: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg fixed-top">
@@ -29,25 +91,52 @@
                 <!-- Main Navigation -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
-                        <c:forEach items="${level1Categories}" var="level1">
-                            <li class="nav-item">
-                                <a class="nav-link" href="listproduct?category=${level1.id}">${level1.name}</a>
-                                <div class="mega-menu">
-                                    <div class="row">
-                                        <c:forEach items="${level2ByParent[level1.id]}" var="level2">
-                                            <div class="col-md-3">
-                                                <h5><a href="listproduct?category=${level2.id}">${level2.name}</a></h5>
-                                                <ul>
-                                                    <c:forEach items="${level3ByParent[level2.id]}" var="level3">
-                                                        <li><a href="listproduct?category=${level3.id}">${level3.name}</a></li>
-                                                        </c:forEach>
-                                                </ul>
-                                            </div>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </li>
-                        </c:forEach>
+                        <!-- Mục "Danh mục" với dropdown phân cấp -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button">
+                                Danh mục
+                            </a>
+                            <ul class="dropdown-menu">
+                                <c:forEach items="${level1Categories}" var="level1">
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item" href="listproduct?category=${level1.id}">
+                                            ${level1.name}
+                                            
+                                        </a>
+                                        <c:if test="${not empty level2ByParent[level1.id]}">
+                                            <ul class="dropdown-menu">
+                                                <c:forEach items="${level2ByParent[level1.id]}" var="level2">
+                                                    <li class="dropdown-submenu">
+                                                        <a class="dropdown-item" href="listproduct?category=${level2.id}">
+                                                            ${level2.name}
+                                                            
+                                                        </a>
+                                                        <c:if test="${not empty level3ByParent[level2.id]}">
+                                                            <ul class="dropdown-menu">
+                                                                <c:forEach items="${level3ByParent[level2.id]}" var="level3">
+                                                                    <li>
+                                                                        <a class="dropdown-item" href="listproduct?category=${level3.id}">
+                                                                            ${level3.name}
+                                                                        </a>
+                                                                    </li>
+                                                                </c:forEach>
+                                                            </ul>
+                                                        </c:if>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </c:if>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+
+                        </li>
+                        <a class="nav-link dropdown-toggle" href="listproduct" id="categoriesDropdown" role="button">
+                            Danh sách sản phẩm
+                        </a>
+                        <a class="nav-link dropdown-toggle" href="posts" id="categoriesDropdown" role="button">
+                            Danh sách bài đăng
+                        </a>
                     </ul>
 
                     <!-- Right Side Items -->
@@ -99,7 +188,7 @@
                             <!-- Cart -->
                             <a href="cartdetail" class="cart-icon">
                                 <i class="fas fa-shopping-cart"></i>
-<!--                                <span class="cart-count">0</span>-->
+                                <span class="cart-count">${cartCount}</span>
                             </a>
                         </div>
                     </div>
@@ -133,7 +222,7 @@
                     }
                 });
 
-                var navLinks = document.querySelectorAll('.nav-link');
+                var navLinks = document.querySelectorAll('.nav-link:not(.dropdown-toggle)');
                 navLinks.forEach(function (navLink) {
                     navLink.addEventListener('click', function () {
                         if (window.innerWidth < 992) {
@@ -143,6 +232,23 @@
                         }
                     });
                 });
+
+                // Xử lý delay cho dropdown menu trên thiết bị di động
+                if (window.innerWidth < 992) {
+                    document.querySelectorAll('.dropdown-submenu > a').forEach(function (element) {
+                        element.addEventListener('click', function (e) {
+                            let nextEl = this.nextElementSibling;
+                            if (nextEl && nextEl.classList.contains('dropdown-menu')) {
+                                e.preventDefault();
+                                if (nextEl.style.display == 'block') {
+                                    nextEl.style.display = 'none';
+                                } else {
+                                    nextEl.style.display = 'block';
+                                }
+                            }
+                        });
+                    });
+                }
             });
         </script>
     </body>

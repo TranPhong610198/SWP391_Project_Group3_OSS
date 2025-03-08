@@ -63,6 +63,7 @@ public class CouponListServlet extends HttpServlet {
         // Lấy các tham số từ request
         String searchCode = request.getParameter("searchCode");
         String filterType = request.getParameter("filterType");
+        String filterCouponType = request.getParameter("filterCouponType");
         String filterStatus = request.getParameter("filterStatus");
         String sortField = request.getParameter("sortField");
         String sortOrder = request.getParameter("sortOrder");
@@ -72,7 +73,7 @@ public class CouponListServlet extends HttpServlet {
         int recordsPerPage = 10; // Số lượng coupon trên mỗi trang
 
         CouponDAO couponDAO = new CouponDAO();
-        List<Coupon> couponList = couponDAO.getCoupons(searchCode, filterType, filterStatus, sortField, sortOrder, page, recordsPerPage);
+        List<Coupon> couponList = couponDAO.getCoupons(searchCode, filterType, filterCouponType, filterStatus, sortField, sortOrder, page, recordsPerPage);
 
         // Tính tổng số coupon (cho phân trang)
         int totalRecords = couponDAO.getTotalCoupons(searchCode, filterType, filterStatus);
@@ -82,6 +83,7 @@ public class CouponListServlet extends HttpServlet {
         request.setAttribute("couponList", couponList);
         request.setAttribute("searchCode", searchCode);
         request.setAttribute("filterType", filterType);
+        request.setAttribute("filterCouponType", filterCouponType);
         request.setAttribute("filterStatus", filterStatus);
         request.setAttribute("sortField", sortField);
         request.setAttribute("sortOrder", sortOrder);

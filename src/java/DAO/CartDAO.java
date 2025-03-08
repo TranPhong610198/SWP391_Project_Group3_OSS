@@ -110,7 +110,6 @@ public class CartDAO extends DBContext {
         saveCartToCookies(response, cart);
     }
 
-   
     // Phương thức xóa item từ cookie
     public void deleteCartItemFromCookie(HttpServletRequest request, HttpServletResponse response, int cartItemId) {
         Cart cart = getCartFromCookies(request);
@@ -138,22 +137,20 @@ public class CartDAO extends DBContext {
         System.out.println("Attempted to delete item ID: " + cartItemId + " - Success: " + itemRemoved);
     }
 
-   
     public Cart getCart(HttpServletRequest request, Integer userId) {
         if (userId != null) {
-            
+
             Cart cart = getCartByUserId(userId);
             if (cart == null) {
                 cart = createCart(userId);
             }
             return cart;
         } else {
-            
+
             return getCartFromCookies(request);
         }
     }
 
-    
     public boolean deleteProductFromCart(int productId) {
         String query = "DELETE FROM cart_items WHERE product_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -188,7 +185,6 @@ public class CartDAO extends DBContext {
         return cart;
     }
 
-   
     public double calculateTotalAmount(Cart cart) {
         double total = 0;
         if (cart != null && cart.getItems() != null) {
@@ -199,7 +195,6 @@ public class CartDAO extends DBContext {
         return total;
     }
 
-    
     public Cart getCartByUserId(int userId) {
         Cart cart = null;
         String sql = "SELECT * FROM cart WHERE user_id = ?";
@@ -212,10 +207,10 @@ public class CartDAO extends DBContext {
                 cart.setId(rs.getInt("id"));
                 cart.setUserId(rs.getInt("user_id"));
                 cart.setCreatedAt(rs.getTimestamp("created_at"));
-               
+
                 cart.setItems(getCartItems(cart.getId()));
             } else {
-               
+
                 cart = createCart(userId);
             }
         } catch (SQLException e) {
@@ -224,7 +219,6 @@ public class CartDAO extends DBContext {
         return cart;
     }
 
-    
     private List<CartItem> getCartItems(int cartId) {
         List<CartItem> items = new ArrayList<>();
         String sql = "SELECT ci.*, pv.size_id, pv.color_id, "
@@ -247,7 +241,6 @@ public class CartDAO extends DBContext {
                 item.setVariantId(rs.getInt("variant_id"));
                 item.setQuantity(rs.getInt("quantity"));
 
-                
                 item.setProductTitle(rs.getString("title"));
                 item.setProductThumbnail(rs.getString("thumbnail"));
                 item.setProductPrice(rs.getDouble("sale_price"));
@@ -262,7 +255,6 @@ public class CartDAO extends DBContext {
         return items;
     }
 
-    
     public boolean updateCartItemQuantity(int cartItemId, int quantity) {
         String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
         try {
@@ -276,10 +268,9 @@ public class CartDAO extends DBContext {
         }
     }
 
-    
     public void deleteCartItem(HttpServletRequest request, HttpServletResponse response, int cartItemId, Integer userId) {
         if (userId != null) {
-            
+
             String sql = "DELETE FROM cart_items WHERE id = ?";
             try {
                 PreparedStatement st = connection.prepareStatement(sql);
@@ -289,19 +280,18 @@ public class CartDAO extends DBContext {
                 System.out.println("Error deleting cart item: " + e.getMessage());
             }
         } else {
-            
+
             deleteCartItemFromCookie(request, response, cartItemId);
         }
     }
 
-    
     public boolean addCartItem(CartItem item) {
         String sql = "INSERT INTO cart_items (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)";
         try {
-            
+
             Cart cart = getCartByUserId(item.getCartId());
             if (cart == null) {
-              
+
                 cart = createCart(item.getCartId());
             }
 
@@ -317,43 +307,38 @@ public class CartDAO extends DBContext {
         }
     }
 
-   
     public void mergeCarts(HttpServletRequest request, HttpServletResponse response, int userId) {
-        
+
         Cart cookieCart = getCartFromCookies(request);
 
         if (cookieCart == null || cookieCart.getItems() == null || cookieCart.getItems().isEmpty()) {
             return; // No items in cookie cart to merge
         }
 
-        
         Cart dbCart = getCartByUserId(userId);
         if (dbCart == null) {
             dbCart = createCart(userId);
         }
 
-        
         for (CartItem cookieItem : cookieCart.getItems()) {
-            
+
             boolean itemExists = false;
             for (CartItem dbItem : dbCart.getItems()) {
                 if (dbItem.getProductId() == cookieItem.getProductId()
                         && dbItem.getVariantId() == cookieItem.getVariantId()) {
-                   
+
                     updateCartItemQuantity(dbItem.getId(), dbItem.getQuantity() + cookieItem.getQuantity());
                     itemExists = true;
                     break;
                 }
             }
 
-            
             if (!itemExists) {
                 cookieItem.setCartId(dbCart.getId());
                 addCartItem(cookieItem);
             }
         }
 
-      
         Cart emptyCart = new Cart();
         emptyCart.setItems(new ArrayList<>());
         saveCartToCookies(response, emptyCart);
@@ -365,5 +350,33 @@ public class CartDAO extends DBContext {
 
     public String decodeCookieValue(String value) throws Exception {
         return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
+    }
+
+    //VTĐ thêm để đếm số hàng trong giỏ hàng trên header
+    public int getCartItemCount(int cartId) {
+        int count = 0;
+        String sql = "SELECT SUM(quantity) as total FROM cart_items WHERE cart_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, cartId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting cart item count: " + e.getMessage());
+        }
+        return count;
+    }
+
+    public int getCartItemCountFromCookie(HttpServletRequest request) {
+        Cart cart = getCartFromCookies(request);
+        int count = 0;
+        if (cart != null && cart.getItems() != null) {
+            for (CartItem item : cart.getItems()) {
+                count += item.getQuantity();
+            }
+        }
+        return count;
     }
 }

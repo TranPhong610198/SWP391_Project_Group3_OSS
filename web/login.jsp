@@ -33,7 +33,7 @@
         </style>
     </head>
     <body>
-        <a href="${pageContext.request.contextPath}/homepage.jsp" class="home-icon">
+        <a href="${pageContext.request.contextPath}/home" class="home-icon">
             <i class="fas fa-home"></i>
         </a>
         <div class="container" id="main">

@@ -245,6 +245,22 @@
                                 <input type="date" class="form-control" id="expiry_date" name="expiry_date" value="${param.expiry_date != null ? param.expiry_date : coupon.expiry_date}" required>
                             </div>
 
+                            <!-- Coupon type -->
+                            <div class="mb-3">
+                                <label class="form-label required-field">Loại mã giảm giá</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="coupon_type" id="normalRadio" 
+                                           value="normal" ${param.coupon_type == 'normal' || (param.coupon_type == null && coupon.couponType == 'normal') ? 'checked' : ''} required>
+                                    <label class="form-check-label" for="normalRadio">Normal</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="coupon_type" id="vipRadio" 
+                                           value="vip" ${param.coupon_type == 'vip' || (param.coupon_type == null && coupon.couponType == 'vip') ? 'checked' : ''}>
+                                    <label class="form-check-label" for="vipRadio">VIP</label>
+                                </div>
+                                <div class="form-text">Chọn "VIP" nếu mã chỉ dành cho thành viên VIP.</div>
+                            </div>
+
                             <!-- Status -->
                             <div class="mb-3">
                                 <div class="form-check form-switch">

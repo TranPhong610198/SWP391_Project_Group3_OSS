@@ -19,6 +19,43 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.css">
         <!-- Custom CSS -->
         <style>
+            .back-to-top {
+                position: fixed;
+                bottom: 120px; /* Vị trí cao hơn nút chat AI */
+                right: 20px;
+                background-color: #0984e3;
+                color: white;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 999;
+            }
+
+            .back-to-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .back-to-top .arrow {
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                display: inline-block;
+                padding: 6px;
+                transform: rotate(-135deg);
+            }
+
+            .back-to-top:hover {
+                background-color: #0077cc;
+            }
             .productSwiper {
                 padding: 2rem 1rem;
                 position: relative;
@@ -180,13 +217,18 @@
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
             .carousel-item img {
-                height: 500px; /* Tăng từ 500px lên 700px */
-                object-fit: cover;
                 width: 100%;
+                height: 616px;    /* Đặt chiều cao cố định */
+                object-fit: cover;
+                margin: 0 auto;   /* Căn giữa */
+                display: block;
             }
+
             #mainCarousel {
+                position: relative;
                 margin-bottom: 50px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                overflow: hidden; /* Đảm bảo hình không tràn ra ngoài */
             }
 
             .carousel-caption {
@@ -314,6 +356,27 @@
             .ai-chat-button:hover {
                 transform: scale(1.1);
             }
+            @media (max-width: 1521px) {
+                .carousel-item img {
+                    width: 100%;
+                    height: 616px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .carousel-item img {
+                    height: 400px; /* Giảm chiều cao cho mobile */
+                }
+
+                .carousel-arrow-down {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .carousel-arrow-down::after {
+                    font-size: 20px;
+                }
+            }
         </style>
 
 
@@ -405,7 +468,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="product-title">${product.title}</h5>
-                                                
+
                                                 <div class="product-price">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
@@ -517,7 +580,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Phụ kiện -->
             <section class="mb-5">
                 <div class="container">
@@ -549,7 +612,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Giày dép -->
             <section class="mb-5">
                 <div class="container">
@@ -581,7 +644,7 @@
                     </div>
                 </div>
             </section>
-            
+
             <!-- Bài đăng mới nhất -->
             <section class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -652,6 +715,10 @@
                 <button onclick="sendMessage()">Gửi</button>
             </div>
         </div>
+        <!-- Back to Top -->
+        <button id="backToTopButton" class="back-to-top">
+            <div class="arrow"></div>
+        </button>
         <script>
             // Hiển thị/ẩn chat widget
             function toggleChatWidget() {
@@ -781,6 +848,28 @@
                             },
                         },
                     });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const backToTopButton = document.getElementById('backToTopButton');
+
+                // Hiển thị nút khi cuộn xuống 300px từ đầu trang
+                window.addEventListener('scroll', function () {
+                    if (window.pageYOffset > 300) {
+                        backToTopButton.classList.add('show');
+                    } else {
+                        backToTopButton.classList.remove('show');
+                    }
+                });
+
+                // Khi nhấp vào nút, cuộn lên đầu trang
+                backToTopButton.addEventListener('click', function () {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
         </script>
     </body>
 </html>

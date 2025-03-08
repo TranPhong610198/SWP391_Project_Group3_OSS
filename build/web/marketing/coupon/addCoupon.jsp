@@ -229,7 +229,7 @@
                                     <span class="input-group-text">₫</span>
                                 </div>
                             </div>
-                                    
+
                             <!-- Max discount (only for percentage type) -->
                             <div class="mb-3" id="maxDiscountContainer" style="display:none;">
                                 <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
@@ -250,6 +250,22 @@
                             <div class="mb-3">
                                 <label for="expiryDate" class="form-label required-field">Ngày hết hạn</label>
                                 <input type="date" class="form-control" id="expiryDate" name="expiry_date" value="${param.expiry_date}" required>
+                            </div>
+
+                            <!-- Coupon type -->
+                            <div class="mb-3">
+                                <label class="form-label required-field">Loại mã giảm giá</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="coupon_type" id="normalRadio" 
+                                           value="normal" ${param.coupon_type == 'normal' || empty param.coupon_type ? 'checked' : ''} required>
+                                    <label class="form-check-label" for="normalRadio">Normal</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="coupon_type" id="vipRadio" 
+                                           value="vip" ${param.coupon_type == 'vip' ? 'checked' : ''}>
+                                    <label class="form-check-label" for="vipRadio">VIP</label>
+                                </div>
+                                <div class="form-text">Chọn "VIP" nếu mã chỉ dành cho thành viên VIP.</div>
                             </div>
 
                             <!-- Status -->
@@ -278,7 +294,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Add JavaScript for sidebar and form functionality -->
         <script>
             $(document).ready(function () {
                 // Toggle sidebar
@@ -344,9 +359,11 @@
                 // Gán sự kiện change
                 $discountType.on('change', handleDiscountTypeChange);
 
-                // Set minimum date for expiry date as today
-                const today = new Date().toISOString().split('T')[0];
-                $('#expiryDate').attr('min', today);
+                // set ngày hết hạn min là ngày mai
+                const today = new Date();
+                today.setDate(today.getDate() + 1);
+                const minDate = today.toISOString().split('T')[0];
+                $('#expiryDate').attr('min', minDate);
             });
 
             // Hàm định dạng tiền tệ
