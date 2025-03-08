@@ -427,6 +427,10 @@ public class InventoryDAO extends DBContext {
     }
 
     public boolean deleteVariant(int variantId) {
+        CartDAO cartDAO = new CartDAO();
+        // Xóa cart_items chứa variantId
+        cartDAO.deleteCartItemByVariantId(variantId);
+        
         // lấy color_id and size_id
         String getIdsSQL = "SELECT color_id, size_id FROM product_variants WHERE id = ?";
         int colorId = 0;

@@ -379,4 +379,37 @@ public class CartDAO extends DBContext {
         }
         return count;
     }
+
+    /**
+     * *******************Huy*************************
+     */
+    /**
+     * ***********************************************
+     */
+    // Xóa cart_items chứa variantId trong database
+    public void deleteCartItemByVariantId(int variantId) {
+        String sql = "DELETE FROM cart_items WHERE variant_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, variantId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error deleting cart item by variantId: " + e.getMessage());
+        }
+    }
+
+    // Xóa cart_items chứa variantId trong cookie
+    public void deleteCartItemByVariantIdFromCookie(HttpServletRequest request, HttpServletResponse response, int variantId) {
+        Cart cart = getCartFromCookies(request);
+        if (cart != null && cart.getItems() != null) {
+            List<CartItem> updatedItems = new ArrayList<>();
+            for (CartItem item : cart.getItems()) {
+                if (item.getVariantId() != variantId) {
+                    updatedItems.add(item);
+                }
+            }
+            cart.setItems(updatedItems);
+            saveCartToCookies(response, cart);
+        }
+    }
+
 }
