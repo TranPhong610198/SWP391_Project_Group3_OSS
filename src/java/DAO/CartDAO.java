@@ -355,7 +355,7 @@ public class CartDAO extends DBContext {
     //VTĐ thêm để đếm số hàng trong giỏ hàng trên header
     public int getCartItemCount(int cartId) {
         int count = 0;
-        String sql = "SELECT SUM(quantity) as total FROM cart_items WHERE cart_id = ?";
+        String sql = "SELECT COUNT(DISTINCT id) as total FROM cart_items WHERE cart_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cartId);
@@ -371,13 +371,10 @@ public class CartDAO extends DBContext {
 
     public int getCartItemCountFromCookie(HttpServletRequest request) {
         Cart cart = getCartFromCookies(request);
-        int count = 0;
         if (cart != null && cart.getItems() != null) {
-            for (CartItem item : cart.getItems()) {
-                count += item.getQuantity();
-            }
+            return cart.getItems().size();
         }
-        return count;
+        return 0;
     }
 
     /**

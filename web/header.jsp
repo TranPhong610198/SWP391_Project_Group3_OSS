@@ -98,35 +98,39 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <c:forEach items="${level1Categories}" var="level1">
-                                    <li class="dropdown-submenu">
-                                        <a class="dropdown-item" href="listproduct?category=${level1.id}">
-                                            ${level1.name}
-                                            
-                                        </a>
-                                        <c:if test="${not empty level2ByParent[level1.id]}">
-                                            <ul class="dropdown-menu">
-                                                <c:forEach items="${level2ByParent[level1.id]}" var="level2">
-                                                    <li class="dropdown-submenu">
-                                                        <a class="dropdown-item" href="listproduct?category=${level2.id}">
-                                                            ${level2.name}
-                                                            
-                                                        </a>
-                                                        <c:if test="${not empty level3ByParent[level2.id]}">
-                                                            <ul class="dropdown-menu">
-                                                                <c:forEach items="${level3ByParent[level2.id]}" var="level3">
-                                                                    <li>
-                                                                        <a class="dropdown-item" href="listproduct?category=${level3.id}">
-                                                                            ${level3.name}
-                                                                        </a>
-                                                                    </li>
-                                                                </c:forEach>
-                                                            </ul>
+                                    <c:if test="${level1.status == 'active'}">
+                                        <li class="dropdown-submenu">
+                                            <a class="dropdown-item" href="listproduct?category=${level1.id}">
+                                                ${level1.name}
+                                            </a>
+                                            <c:if test="${not empty level2ByParent[level1.id]}">
+                                                <ul class="dropdown-menu">
+                                                    <c:forEach items="${level2ByParent[level1.id]}" var="level2">
+                                                        <c:if test="${level2.status == 'active'}">
+                                                            <li class="dropdown-submenu">
+                                                                <a class="dropdown-item" href="listproduct?category=${level2.id}">
+                                                                    ${level2.name}
+                                                                </a>
+                                                                <c:if test="${not empty level3ByParent[level2.id]}">
+                                                                    <ul class="dropdown-menu">
+                                                                        <c:forEach items="${level3ByParent[level2.id]}" var="level3">
+                                                                            <c:if test="${level3.status == 'active'}">
+                                                                                <li>
+                                                                                    <a class="dropdown-item" href="listproduct?category=${level3.id}">
+                                                                                        ${level3.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </ul>
+                                                                </c:if>
+                                                            </li>
                                                         </c:if>
-                                                    </li>
-                                                </c:forEach>
-                                            </ul>
-                                        </c:if>
-                                    </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </c:if>
+                                        </li>
+                                    </c:if>
                                 </c:forEach>
                             </ul>
 
