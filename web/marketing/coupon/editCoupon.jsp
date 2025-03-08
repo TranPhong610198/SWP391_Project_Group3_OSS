@@ -251,7 +251,7 @@
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="coupon_type" id="normalRadio" 
                                            value="normal" ${param.coupon_type == 'normal' || (param.coupon_type == null && coupon.couponType == 'normal') ? 'checked' : ''} required>
-                                    <label class="form-check-label" for="normalRadio">Normal</label>
+                                    <label class="form-check-label" for="normalRadio">Thường</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="coupon_type" id="vipRadio" 

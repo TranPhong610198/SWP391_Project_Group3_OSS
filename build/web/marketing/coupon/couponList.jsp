@@ -583,14 +583,14 @@
                 if ($('#successAlert').length) {
                     setTimeout(function () {
                         $('#successAlert').alert('close');
-                    }, 5000); // 3000ms = 3 giây
+                    }, 3000); // 3000ms = 3 giây
                 }
 
                 // Tự động tắt thông báo lỗi sau 5 giây
                 if ($('#errorAlert').length) {
                     setTimeout(function () {
                         $('#errorAlert').alert('close');
-                    }, 5000); // 3000ms = 3 giây
+                    }, 3000); // 3000ms = 3 giây
                 }
 
                 // Toggle sidebar
