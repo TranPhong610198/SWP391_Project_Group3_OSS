@@ -36,6 +36,41 @@ public class CategoryDAO extends DBContext {
         return categories;
     }
 
+    // Kiểm tra xem tên danh mục đã tồn tại hay chưa
+    public boolean isCategoryNameExists(String name) {
+        String sql = "SELECT COUNT(*) FROM categories WHERE name = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking category name: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Kiểm tra xem tên danh mục đã tồn tại hay chưa (không tính ID hiện tại - dùng khi cập nhật)
+    public boolean isCategoryNameExists(String name, int excludeId) {
+        String sql = "SELECT COUNT(*) FROM categories WHERE name = ? AND id != ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, name);
+            statement.setInt(2, excludeId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking category name: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<Category> getThirdLevelCategories() {
         List<Category> thirdLevelCats = new ArrayList<>();
         String sql = "SELECT * FROM categories WHERE level = 3";

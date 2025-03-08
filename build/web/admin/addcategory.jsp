@@ -78,6 +78,17 @@
                     margin-left: 0;
                 }
             }
+            
+            .parent-inactive-alert {
+                font-size: 13px;
+                color: #dc3545;
+                display: none;
+                align-items: center;
+                margin-top: 8px;
+                padding: 8px 12px;
+                background-color: rgba(220, 53, 69, 0.1);
+                border-radius: 4px;
+            }
         </style>
     </head>
     <body>
@@ -91,6 +102,12 @@
                 </h2>
 
                 <!-- Alerts -->
+                <c:if test="${not empty error}">
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle me-2"></i>${error}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </c:if>
                 <c:if test="${not empty param.error}">
                     <div class="alert alert-danger alert-dismissible fade show">
                         <i class="fas fa-exclamation-circle me-2"></i>${param.error}
@@ -117,7 +134,7 @@
                                     <div class="mb-3">
                                         <label class="form-label required-field">Tên danh mục</label>
                                         <input type="text" name="name" class="form-control" required 
-                                               placeholder="Nhập tên danh mục">
+                                               placeholder="Nhập tên danh mục" value="${categoryName}">
                                         <div class="invalid-feedback">
                                             Vui lòng nhập tên danh mục
                                         </div>
@@ -126,13 +143,13 @@
                                     <!-- Parent Category -->
                                     <div class="mb-3">
                                         <label class="form-label">Danh mục cha</label>
-                                        <select name="parentId" class="form-select" id="parentCategory">
+                                        <select name="parentId" class="form-select" id="parentCategory" onchange="checkParentStatus()">
                                             <option value="">Không có (Danh mục cấp 1)</option>
                                             <c:forEach items="${potentialParents}" var="parent">
-                                                <option value="${parent.id}" data-level="${parent.level}">
-                                                    <c:if test="${parent.level == 2}">
-                                                       
-                                                    </c:if>
+                                                <option value="${parent.id}" 
+                                                        data-level="${parent.level}" 
+                                                        data-status="${parent.status}"
+                                                        ${parent.id == categoryParentId ? 'selected' : ''}>
                                                     ${parent.name}
                                                     <c:if test="${parent.level == 1}">
                                                         (Cấp 1)
@@ -140,9 +157,14 @@
                                                     <c:if test="${parent.level == 2}">
                                                         (Cấp 2)
                                                     </c:if>
+                                                    ${parent.status == 'inactive' ? '- Không hoạt động' : ''}
                                                 </option>
                                             </c:forEach>
                                         </select>
+                                        <div id="parentStatusAlert" class="parent-inactive-alert">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Danh mục cha đang không hoạt động. Danh mục này sẽ tự động được đặt thành không hoạt động.
+                                        </div>
                                         <div class="form-text">
                                             <i class="fas fa-info-circle me-1"></i>
                                             Cấp độ danh mục:<br>
@@ -158,16 +180,20 @@
                                     <div class="mb-3">
                                         <label class="form-label">Mô tả</label>
                                         <textarea name="description" class="form-control" rows="3" 
-                                                  placeholder="Nhập mô tả cho danh mục"></textarea>
+                                                  placeholder="Nhập mô tả cho danh mục">${categoryDescription}</textarea>
                                     </div>
 
                                     <!-- Status -->
                                     <div class="mb-3">
                                         <label class="form-label">Trạng thái</label>
-                                        <select name="status" class="form-select">
-                                            <option value="active">Hoạt động</option>
-                                            <option value="inactive">Không hoạt động</option>
+                                        <select name="status" class="form-select" id="categoryStatus">
+                                            <option value="active" ${categoryStatus == 'active' || empty categoryStatus ? 'selected' : ''}>Hoạt động</option>
+                                            <option value="inactive" ${categoryStatus == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                                         </select>
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Lưu ý: Khi đặt trạng thái không hoạt động, tất cả danh mục con sẽ tự động chuyển sang không hoạt động.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -220,12 +246,45 @@
                     const parentLevel = parseInt(selectedOption.dataset.level);
                     levelInput.value = parentLevel + 1;
                 }
+                
+                // Kiểm tra trạng thái danh mục cha
+                checkParentStatus();
             });
+            
+            // Kiểm tra trạng thái danh mục cha
+            function checkParentStatus() {
+                var parentSelect = document.getElementById('parentCategory');
+                var statusSelect = document.getElementById('categoryStatus');
+                var parentAlert = document.getElementById('parentStatusAlert');
+                
+                if (parentSelect.selectedIndex > 0) { // Nếu đã chọn danh mục cha
+                    var option = parentSelect.options[parentSelect.selectedIndex];
+                    var parentStatus = option.getAttribute('data-status');
+                    
+                    if (parentStatus === 'inactive') {
+                        // Parent is inactive, force this category to be inactive
+                        parentAlert.style.display = 'flex';
+                        statusSelect.value = 'inactive';
+                        statusSelect.disabled = true;
+                    } else {
+                        // Parent is active, allow any status
+                        parentAlert.style.display = 'none';
+                        statusSelect.disabled = false;
+                    }
+                } else {
+                    // No parent selected
+                    parentAlert.style.display = 'none';
+                    statusSelect.disabled = false;
+                }
+            }
 
             // Highlight active menu item
             $(document).ready(function () {
                 $('.menu-item').removeClass('active');
                 $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
+                
+                // Check parent status on page load
+                checkParentStatus();
             });
         </script>
     </body>

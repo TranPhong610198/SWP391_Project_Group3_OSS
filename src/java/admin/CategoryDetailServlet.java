@@ -60,7 +60,7 @@ public class CategoryDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
+       try {
             String idStr = request.getParameter("id");
             if (idStr == null || idStr.trim().isEmpty()) {
                 response.sendRedirect("categorylists?error=ID danh mục không hợp lệ");
@@ -145,6 +145,12 @@ public class CategoryDetailServlet extends HttpServlet {
                             return;
                         }
                         level = parentCategory.getLevel() + 1;
+                        
+                        // Check if parent category is inactive, force this category to be inactive too
+                        if ("inactive".equals(parentCategory.getStatus()) && !"inactive".equals(status)) {
+                            status = "inactive";
+                            request.setAttribute("statusForced", true);
+                        }
                     }
                 } catch (NumberFormatException e) {
                     String errorMsg = java.net.URLEncoder.encode("Danh mục cha không hợp lệ", "UTF-8");
@@ -153,6 +159,10 @@ public class CategoryDetailServlet extends HttpServlet {
                 }
             }
 
+            // Get the current category to check if status has changed
+            Category currentCategory = categoryDAO.getCategoryById(id);
+            boolean statusChanged = currentCategory != null && !status.equals(currentCategory.getStatus());
+            
             // Cập nhật category
             Category category = new Category();
             category.setId(id);
@@ -164,8 +174,21 @@ public class CategoryDetailServlet extends HttpServlet {
 
             boolean success = categoryDAO.updateCategory(category);
 
+            // If category status changed and has children, update all child categories to match
+            if (success && statusChanged) {
+                updateChildCategoriesStatus(id, status);
+            }
+
             if (success) {
-                String msg = java.net.URLEncoder.encode("Cập nhật thành công", "UTF-8");
+                String msg;
+                if (request.getAttribute("statusForced") != null) {
+                    msg = java.net.URLEncoder.encode("Cập nhật thành công. Lưu ý: Trạng thái đã tự động được đặt thành không hoạt động vì danh mục cha không hoạt động.", "UTF-8");
+                } else if (statusChanged) {
+                    String statusMsg = "active".equals(status) ? "hoạt động" : "không hoạt động";
+                    msg = java.net.URLEncoder.encode("Cập nhật thành công. Tất cả danh mục con đã được cập nhật thành " + statusMsg + ".", "UTF-8");
+                } else {
+                    msg = java.net.URLEncoder.encode("Cập nhật thành công", "UTF-8");
+                }
                 response.sendRedirect("categorydetail?id=" + id + "&message=" + msg);
             } else {
                 String errorMsg = java.net.URLEncoder.encode("Không thể cập nhật danh mục", "UTF-8");
@@ -176,6 +199,20 @@ public class CategoryDetailServlet extends HttpServlet {
             response.sendRedirect("error.jsp");
         }
     }
+    
+    // Helper method to update all child categories' status recursively
+    private void updateChildCategoriesStatus(int parentId, String status) {
+        List<Category> children = categoryDAO.getChildCategories(parentId);
+        for (Category child : children) {
+            child.setStatus(status);
+            categoryDAO.updateCategory(child);
+            
+            // Recursively update all descendants
+            updateChildCategoriesStatus(child.getId(), status);
+        }
+    }
+   
+    
     
 
     /** 

@@ -106,6 +106,19 @@
                 margin: 0 2px;
             }
 
+            .sort-link {
+                text-decoration: none;
+                color: var(--primary-color);
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .sort-link:hover {
+                color: var(--accent-color);
+            }
+
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -164,14 +177,6 @@
                                     <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <select name="sort" class="form-select">
-                                    <option value="">Sắp xếp mặc định</option>
-                                    <option value="name" ${sortBy == 'name' ? 'selected' : ''}>Tên</option>
-                                    <option value="status" ${sortBy == 'status' ? 'selected' : ''}>Trạng thái</option>
-                                    <option value="level" ${sortBy == 'level' ? 'selected' : ''}>Cấp độ</option>
-                                </select>
-                            </div>
                             <div class="d-flex">
                                         <button type="submit" class="btn btn-primary me-2">
                                             <i class="fas fa-filter me-1"></i>Lọc
@@ -208,11 +213,43 @@
                                         <thead>
                                             <tr class="bg-light">
                                                 <th class="text-center" style="width: 60px;">STT</th>
-                                                <th>Tên danh mục</th>
-                                                <th>Danh mục cha</th>
-                                                <th>Cấp độ</th>
+                                                <th>
+                                                    <a href="categorylists?sortField=name&sortDir=${sortField == 'name' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&status=${statusFilter}&search=${searchQuery}" 
+                                                       class="sort-link">
+                                                        Tên danh mục
+                                                        <span class="sort-icons">
+                                                            ${sortField == 'name' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        </span>
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="categorylists?sortField=parent_id&sortDir=${sortField == 'parent_id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&status=${statusFilter}&search=${searchQuery}" 
+                                                       class="sort-link">
+                                                        Danh mục cha
+                                                        <span class="sort-icons">
+                                                            ${sortField == 'parent_id' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        </span>
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="categorylists?sortField=level&sortDir=${sortField == 'level' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&status=${statusFilter}&search=${searchQuery}" 
+                                                       class="sort-link">
+                                                        Cấp độ
+                                                        <span class="sort-icons">
+                                                            ${sortField == 'level' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        </span>
+                                                    </a>
+                                                </th>
                                                 <th>Mô tả</th>
-                                                <th>Trạng thái</th>
+                                                <th>
+                                                    <a href="categorylists?sortField=status&sortDir=${sortField == 'status' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&status=${statusFilter}&search=${searchQuery}" 
+                                                       class="sort-link">
+                                                        Trạng thái
+                                                        <span class="sort-icons">
+                                                            ${sortField == 'status' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                        </span>
+                                                    </a>
+                                                </th>
                                                 <th class="text-center">Thao tác</th>
                                             </tr>
                                         </thead>
@@ -258,19 +295,19 @@
                         <nav aria-label="Page navigation">
                             <ul class="pagination mb-0">
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="categorylists?page=${currentPage - 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}">
+                                    <a class="page-link" href="categorylists?page=${currentPage - 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortField ? '&sortField='.concat(sortField) : ''}${not empty sortDir ? '&sortDir='.concat(sortDir) : ''}">
                                         <i class="fas fa-chevron-left"></i>
                                     </a>
                                 </li>
 
                                 <c:forEach begin="1" end="${totalPages}" var="i">
                                     <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                        <a class="page-link" href="categorylists?page=${i}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}">${i}</a>
+                                        <a class="page-link" href="categorylists?page=${i}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortField ? '&sortField='.concat(sortField) : ''}${not empty sortDir ? '&sortDir='.concat(sortDir) : ''}">${i}</a>
                                     </li>
                                 </c:forEach>
 
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="categorylists?page=${currentPage + 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortBy ? '&sort='.concat(sortBy) : ''}">
+                                    <a class="page-link" href="categorylists?page=${currentPage + 1}${not empty searchQuery ? '&search='.concat(searchQuery) : ''}${not empty statusFilter ? '&status='.concat(statusFilter) : ''}${not empty sortField ? '&sortField='.concat(sortField) : ''}${not empty sortDir ? '&sortDir='.concat(sortDir) : ''}">
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
@@ -285,23 +322,23 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-                                                            function deleteCategory(categoryId) {
-                                                                if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-                                                                    window.location.href = 'categorydelete?id=' + categoryId;
-                                                                }
-                                                            }
+            function deleteCategory(categoryId) {
+                if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+                    window.location.href = 'categorydelete?id=' + categoryId;
+                }
+            }
 
-                                                            $(document).ready(function () {
-                                                                // Highlight active menu item
-                                                                $('.menu-item').removeClass('active');
-                                                                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
+            $(document).ready(function () {
+                // Highlight active menu item
+                $('.menu-item').removeClass('active');
+                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
 
-                                                                // Initialize tooltips
-                                                                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                                                                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                                                                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                                                                });
-                                                            });
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+            });
         </script>
     </body>
 </html>

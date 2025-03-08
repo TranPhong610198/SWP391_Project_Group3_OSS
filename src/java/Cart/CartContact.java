@@ -257,7 +257,7 @@ public class CartContact extends HttpServlet {
         if (user == null) {
             // Lưu thông tin để quay lại sau khi đăng nhập
             session.setAttribute("orderPending", true);
-            redirectPage = "cartcompletion-guest.jsp"; // Trang thông báo cho khách
+            redirectPage = "cartcompletion.jsp"; // Trang thông báo cho khách
         } else {
             redirectPage = "cartcompletion.jsp"; // Trang hoàn tất đơn hàng
         }

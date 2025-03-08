@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,88 +65,109 @@ private static final int PAGE_SIZE = 10;
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-        CategoryDAO categoryDAO = new CategoryDAO();
+            CategoryDAO categoryDAO = new CategoryDAO();
 
-        // Lấy các tham số
-        String searchQuery = request.getParameter("search");
-        String sortBy = request.getParameter("sort");
-        String statusFilter = request.getParameter("status");
+            // Lấy các tham số
+            String searchQuery = request.getParameter("search");
+            String sortField = request.getParameter("sortField");
+            String sortDir = request.getParameter("sortDir");
+            String statusFilter = request.getParameter("status");
 
-        // Xử lý phân trang
-        int page = 1;
-        String pageStr = request.getParameter("page");
-        if (pageStr != null && !pageStr.trim().isEmpty()) {
-            try {
-                page = Integer.parseInt(pageStr);
-            } catch (NumberFormatException e) {
-                page = 1;
+            // Xử lý phân trang
+            int page = 1;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null && !pageStr.trim().isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageStr);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
             }
-        }
 
-        // Lấy tất cả danh mục và áp dụng filter
-        List<Category> allCategories = categoryDAO.getAll();
-        List<Category> filteredCategories = new ArrayList<>(allCategories);
+            // Lấy tất cả danh mục và áp dụng filter
+            List<Category> allCategories = categoryDAO.getAll();
+            List<Category> filteredCategories = new ArrayList<>(allCategories);
 
-        // Áp dụng bộ lọc tìm kiếm
-        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            filteredCategories.removeIf(c -> 
-                !c.getName().toLowerCase().contains(searchQuery.toLowerCase()));
-        }
-
-        // Áp dụng bộ lọc trạng thái
-        if (statusFilter != null && !statusFilter.isEmpty()) {
-            filteredCategories.removeIf(c -> 
-                !c.getStatus().equals(statusFilter));
-        }
-
-        // Áp dụng sắp xếp
-        if (sortBy != null && !sortBy.isEmpty()) {
-            switch (sortBy) {
-                case "name":
-                    filteredCategories.sort((a, b) -> 
-                        a.getName().compareToIgnoreCase(b.getName()));
-                    break;
-                case "status":
-                    filteredCategories.sort((a, b) -> 
-                        a.getStatus().compareToIgnoreCase(b.getStatus()));
-                    break;
+            // Áp dụng bộ lọc tìm kiếm
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                filteredCategories.removeIf(c -> 
+                    !c.getName().toLowerCase().contains(searchQuery.toLowerCase()));
             }
+
+            // Áp dụng bộ lọc trạng thái
+            if (statusFilter != null && !statusFilter.isEmpty()) {
+                filteredCategories.removeIf(c -> 
+                    !c.getStatus().equals(statusFilter));
+            }
+
+            // Áp dụng sắp xếp theo cột
+            if (sortField != null && !sortField.isEmpty()) {
+                Comparator<Category> comparator = null;
+                
+                switch (sortField) {
+                    case "name":
+                        comparator = Comparator.comparing(Category::getName, String.CASE_INSENSITIVE_ORDER);
+                        break;
+                    case "parent_id":
+                        comparator = Comparator.comparing(
+                            c -> c.getParentName() != null ? c.getParentName() : "", 
+                            String.CASE_INSENSITIVE_ORDER
+                        );
+                        break;
+                    case "level":
+                        comparator = Comparator.comparingInt(Category::getLevel);
+                        break;
+                    case "status":
+                        comparator = Comparator.comparing(Category::getStatus, String.CASE_INSENSITIVE_ORDER);
+                        break;
+                    default:
+                        comparator = Comparator.comparingInt(Category::getId);
+                        break;
+                }
+                
+                // Đảo ngược thứ tự nếu là desc
+                if ("desc".equals(sortDir)) {
+                    comparator = comparator.reversed();
+                }
+                
+                filteredCategories.sort(comparator);
+            }
+
+            // Tính toán phân trang
+            int totalCategories = filteredCategories.size();
+            int totalPages = (int) Math.ceil((double) totalCategories / PAGE_SIZE);
+
+            // Điều chỉnh page nếu cần
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            // Lấy danh sách cho trang hiện tại
+            int startIndex = (page - 1) * PAGE_SIZE;
+            int endIndex = Math.min(startIndex + PAGE_SIZE, totalCategories);
+            List<Category> pagedCategories = startIndex < totalCategories ?
+                filteredCategories.subList(startIndex, endIndex) : 
+                new ArrayList<>();
+
+            // Set attributes
+            request.setAttribute("categories", pagedCategories);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", PAGE_SIZE);
+            request.setAttribute("totalCategories", totalCategories);
+            request.setAttribute("searchQuery", searchQuery);
+            request.setAttribute("statusFilter", statusFilter);
+            request.setAttribute("sortField", sortField);
+            request.setAttribute("sortDir", sortDir);
+
+            // Forward to JSP
+            request.getRequestDispatcher("categorylists.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("error.jsp");
         }
-
-        // Tính toán phân trang
-        int totalCategories = filteredCategories.size();
-        int pageSize = 10;
-        int totalPages = (int) Math.ceil((double) totalCategories / pageSize);
-
-        // Điều chỉnh page nếu cần
-        if (page < 1) page = 1;
-        if (page > totalPages && totalPages > 0) page = totalPages;
-
-        // Lấy danh sách cho trang hiện tại
-        int startIndex = (page - 1) * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, totalCategories);
-        List<Category> pagedCategories = startIndex < totalCategories ?
-            filteredCategories.subList(startIndex, endIndex) : 
-            new ArrayList<>();
-
-        // Set attributes
-        request.setAttribute("categories", pagedCategories);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("pageSize", pageSize);
-        request.setAttribute("totalCategories", totalCategories);
-        request.setAttribute("searchQuery", searchQuery);
-        request.setAttribute("statusFilter", statusFilter);
-        request.setAttribute("sortBy", sortBy);
-
-        // Forward to JSP
-        request.getRequestDispatcher("categorylists.jsp").forward(request, response);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        response.sendRedirect("error.jsp");
     }
-    }
+    
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -160,7 +182,16 @@ private static final int PAGE_SIZE = 10;
             throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/categorylists");
     }
-
+private void updateChildCategoriesStatus(CategoryDAO categoryDAO, int parentId, String status) {
+        List<Category> children = categoryDAO.getChildCategories(parentId);
+        for (Category child : children) {
+            child.setStatus(status);
+            categoryDAO.updateCategory(child);
+            
+            // Recursively update all descendants
+            updateChildCategoriesStatus(categoryDAO, child.getId(), status);
+        }
+    }
     /**
      * Returns a short description of the servlet.
      *

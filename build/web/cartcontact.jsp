@@ -361,7 +361,7 @@
                                     <input type="radio" class="form-check-input" 
                                            name="payment_method" value="bank">
                                     <label class="form-check-label">
-                                        <strong>Chuyển khoản ngân hàng</strong><br>
+                                        <strong>Thanh toán trực tuyến</strong><br>
                                         <small class="text-muted">Chuyển khoản qua tài khoản ngân hàng</small>
                                     </label>
                                 </div>

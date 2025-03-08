@@ -57,32 +57,6 @@
                 margin-bottom: 5px;
             }
 
-            .edit-buttons {
-                display: none;
-            }
-
-            .editing .edit-buttons {
-                display: block;
-            }
-
-            .editing .view-content {
-                display: none;
-            }
-
-            .edit-content {
-                display: none;
-            }
-
-            .editing .edit-content {
-                display: block;
-            }
-
-            .status-badge {
-                padding: 6px 12px;
-                border-radius: 20px;
-                font-size: 14px;
-            }
-
             .table {
                 margin-bottom: 0;
             }
@@ -115,6 +89,70 @@
 
             .breadcrumb-item.active {
                 color: var(--primary-color);
+            }
+
+            .status-badge {
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-size: 14px;
+            }
+
+            .info-message {
+                font-size: 13px;
+                color: #dc3545;
+                display: flex;
+                align-items: center;
+                margin-top: 8px;
+                padding: 8px 12px;
+                background-color: rgba(220, 53, 69, 0.1);
+                border-radius: 4px;
+            }
+
+            .parent-inactive-alert {
+                font-size: 13px;
+                color: #dc3545;
+                display: flex;
+                align-items: center;
+                margin-top: 8px;
+                padding: 8px 12px;
+                background-color: rgba(220, 53, 69, 0.1);
+                border-radius: 4px;
+            }
+
+            .back-btn {
+                color: #fff;
+                background-color: #6c757d;
+                border-color: #6c757d;
+                padding: 0.375rem 0.75rem;
+                font-size: 1rem;
+                border-radius: 0.25rem;
+                text-decoration: none;
+                display: inline-block;
+                transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+            }
+
+            .back-btn:hover {
+                color: #fff;
+                background-color: #5a6268;
+                border-color: #545b62;
+            }
+
+            .status-info {
+                font-size: 12px;
+                color: #dc3545;
+                margin-top: 5px;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .btn-group {
+                margin-top: 1.5rem;
             }
 
             @media (max-width: 768px) {
@@ -158,76 +196,74 @@
 
                 <!-- Category Details Card -->
                 <div class="card" id="categoryForm">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="fas fa-info-circle me-2"></i>Thông tin danh mục
-                        </div>
-                        <button onclick="toggleEdit()" class="btn btn-primary btn-sm" id="editButton">
-                            <i class="fas fa-edit me-2"></i>Chỉnh sửa
-                        </button>
+                    <div class="card-header">
+                        <i class="fas fa-info-circle me-2"></i>Thông tin danh mục
                     </div>
                     <div class="card-body">
                         <form action="categorydetail" method="post">
                             <input type="hidden" name="id" value="${category.id}">
+                            
                             <div class="row">
                                 <div class="col-md-6">
                                     <!-- Category Name -->
-                                    <div class="mb-3">
-                                        <div class="info-label">Tên danh mục</div>
-                                        <div class="view-content">${category.name}</div>
-                                        <div class="edit-content">
-                                            <input type="text" name="name" class="form-control" 
-                                                   value="${category.name}" required>
-                                        </div>
+                                    <div class="form-group">
+                                        <label class="info-label" for="categoryName">Tên danh mục</label>
+                                        <input type="text" id="categoryName" name="name" class="form-control" 
+                                               value="${category.name}" required>
                                     </div>
 
-                                    <!-- Level -->
-                                    <div class="mb-3">
-                                        <div class="info-label">Cấp độ</div>
-                                        <div class="view-content">Cấp ${category.level}</div>
-                                        <div class="edit-content">
-                                            <select name="parentId" class="form-select" id="parentCategory">
-                                                <option value="">Không có (Danh mục cấp 1)</option>
-                                                <c:forEach items="${potentialParents}" var="parent">
-                                                    <c:if test="${parent.id != category.id}">
-                                                        <option value="${parent.id}" 
-                                                                ${parent.id == category.parentId ? 'selected' : ''}
-                                                                data-level="${parent.level}">
-                                                            <c:if test="${parent.level == 2}">
-                                                            </c:if>
-                                                            ${parent.name}
-                                                            (Cấp ${parent.level})
-                                                        </option>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </select>
+                                    <!-- Level (Parent Category Selection) -->
+                                    <div class="form-group">
+                                        <label class="info-label" for="parentCategory">Cấp độ</label>
+                                        <select name="parentId" class="form-select" id="parentCategory" onchange="checkParentStatus()">
+                                            <option value="" data-status="active">Không có (Danh mục cấp 1)</option>
+                                            <c:forEach items="${potentialParents}" var="parent">
+                                                <c:if test="${parent.id != category.id}">
+                                                    <option value="${parent.id}" 
+                                                            ${parent.id == category.parentId ? 'selected' : ''}
+                                                            data-level="${parent.level}"
+                                                            data-status="${parent.status}">
+                                                        ${parent.name}
+                                                        (Cấp ${parent.level}) 
+                                                        ${parent.status == 'inactive' ? '- Không hoạt động' : ''}
+                                                    </option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
+                                        <div id="parentStatusAlert" class="parent-inactive-alert" style="display: none;">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Danh mục cha đang không hoạt động. Danh mục này sẽ tự động được đặt thành không hoạt động.
                                         </div>
                                     </div>
 
                                     <!-- Status -->
-                                    <div class="mb-3">
-                                        <div class="info-label">Trạng thái</div>
-                                        <div class="view-content">
-                                            <span class="badge ${category.status == 'active' ? 'bg-success' : 'bg-danger'}">
-                                                ${category.status == 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                                            </span>
+                                    <div class="form-group">
+                                        <label class="info-label" for="categoryStatus">Trạng thái</label>
+                                        <select name="status" class="form-select" id="categoryStatus">
+                                            <option value="active" ${category.status == 'active' ? 'selected' : ''}>
+                                                Hoạt động
+                                            </option>
+                                            <option value="inactive" ${category.status == 'inactive' ? 'selected' : ''}>
+                                                Không hoạt động
+                                            </option>
+                                        </select>
+                                        <div class="info-message" id="statusInfo">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Lưu ý: Khi thay đổi trạng thái, tất cả danh mục con sẽ tự động kế thừa trạng thái này.
                                         </div>
-                                        <div class="edit-content">
-                                            <select name="status" class="form-select">
-                                                <option value="active" ${category.status == 'active' ? 'selected' : ''}>
-                                                    Hoạt động
-                                                </option>
-                                                <option value="inactive" ${category.status == 'inactive' ? 'selected' : ''}>
-                                                    Không hoạt động
-                                                </option>
-                                            </select>
-                                        </div>
+                                        
+                                        <c:if test="${parentCategory != null && parentCategory.status == 'inactive'}">
+                                            <div class="parent-inactive-alert mt-2">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                Danh mục cha đang không hoạt động.
+                                            </div>
+                                        </c:if>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <!-- Parent Category -->
-                                    <div class="mb-3">
+                                    <!-- Parent Category Info -->
+                                    <div class="form-group">
                                         <div class="info-label">Danh mục cha</div>
                                         <div>
                                             <c:choose>
@@ -235,6 +271,9 @@
                                                     <a href="categorydetail?id=${parentCategory.id}" class="text-primary">
                                                         ${parentCategory.name}
                                                     </a>
+                                                    <c:if test="${parentCategory.status == 'inactive'}">
+                                                        <span class="badge bg-danger ms-2">Không hoạt động</span>
+                                                    </c:if>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="text-muted">Danh mục gốc</span>
@@ -244,26 +283,21 @@
                                     </div>
 
                                     <!-- Description -->
-                                    <div class="mb-3">
-                                        <div class="info-label">Mô tả</div>
-                                        <div class="view-content">
-                                            ${category.description != null && !category.description.trim().isEmpty() ? category.description : 'Không có mô tả'}
-                                        </div>
-                                        <div class="edit-content">
-                                            <textarea name="description" class="form-control" rows="3">${category.description}</textarea>
-                                        </div>
+                                    <div class="form-group">
+                                        <label class="info-label" for="description">Mô tả</label>
+                                        <textarea id="description" name="description" class="form-control" rows="5">${category.description}</textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Save and Cancel buttons -->
-                            <div class="edit-buttons mt-3">
-                                <button type="submit" class="btn btn-success btn-sm">
+                            <!-- Action Buttons -->
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-success">
                                     <i class="fas fa-save me-2"></i>Lưu thay đổi
                                 </button>
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelEdit()">
+                                <a href="categorylists" class="btn btn-secondary ms-2">
                                     <i class="fas fa-times me-2"></i>Hủy
-                                </button>
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -319,14 +353,23 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Bottom Action Buttons -->
                 <div class="mt-4">
                     <a href="categorylists" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Quay lại
                     </a>
-                    <button onclick="deleteCategory(${category.id})" class="btn btn-danger">
-                        <i class="fas fa-trash me-2"></i>Xóa
-                    </button>
+                    <c:if test="${empty childCategories}">
+                        <button onclick="deleteCategory(${category.id})" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Xóa
+                        </button>
+                    </c:if>
+                    <c:if test="${not empty childCategories}">
+                        <button class="btn btn-danger" disabled 
+                                data-bs-toggle="tooltip" 
+                                title="Không thể xóa danh mục có danh mục con">
+                            <i class="fas fa-trash me-2"></i>Xóa
+                        </button>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -335,27 +378,49 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-                        function toggleEdit() {
-                            document.querySelector('#categoryForm').classList.add('editing');
-                            document.getElementById('editButton').style.display = 'none';
-                        }
+            function deleteCategory(categoryId) {
+                if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+                    window.location.href = 'categorydelete?id=' + categoryId;
+                }
+            }
 
-                        function cancelEdit() {
-                            document.querySelector('#categoryForm').classList.remove('editing');
-                            document.getElementById('editButton').style.display = 'block';
-                        }
+            function checkParentStatus() {
+                var parentSelect = document.getElementById('parentCategory');
+                var statusSelect = document.getElementById('categoryStatus');
+                var parentAlert = document.getElementById('parentStatusAlert');
+                
+                if (parentSelect.selectedIndex !== -1) {
+                    var option = parentSelect.options[parentSelect.selectedIndex];
+                    var parentStatus = option.getAttribute('data-status');
+                    
+                    if (parentStatus === 'inactive') {
+                        // Parent is inactive, force this category to be inactive
+                        parentAlert.style.display = 'flex';
+                        statusSelect.value = 'inactive';
+                        statusSelect.disabled = true;
+                    } else {
+                        // Parent is active, allow any status
+                        parentAlert.style.display = 'none';
+                        statusSelect.disabled = false;
+                    }
+                }
+            }
 
-                        function deleteCategory(categoryId) {
-                            if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-                                window.location.href = 'categorydelete?id=' + categoryId;
-                            }
-                        }
-
-                        // Highlight active menu item
-                        $(document).ready(function () {
-                            $('.menu-item').removeClass('active');
-                            $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
-                        });
+            // Initialize page
+            $(document).ready(function () {
+                // Highlight active menu item
+                $('.menu-item').removeClass('active');
+                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
+                
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+                
+                // Check parent status on page load
+                checkParentStatus();
+            });
         </script>
     </body>
 </html>

@@ -62,7 +62,7 @@ public class CategoryAddServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
+         try {
             // Lấy danh sách các danh mục có thể chọn làm cha (level 1 và 2)
             List<Category> potentialParents = categoryDAO.getPotentialParents();
             request.setAttribute("potentialParents", potentialParents);
@@ -71,6 +71,7 @@ public class CategoryAddServlet extends HttpServlet {
             System.out.println("Error in CategoryAddServlet.doGet: " + e.getMessage());
             response.sendRedirect("error.jsp");
         }
+    
 
     }
 
@@ -85,7 +86,7 @@ public class CategoryAddServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
+         try {
             request.setCharacterEncoding("UTF-8");
 
             String name = request.getParameter("name");
@@ -96,6 +97,22 @@ public class CategoryAddServlet extends HttpServlet {
             // Validate name
             if (name == null || name.trim().isEmpty()) {
                 request.setAttribute("error", "Vui lòng nhập tên danh mục");
+                List<Category> potentialParents = categoryDAO.getPotentialParents();
+                request.setAttribute("potentialParents", potentialParents);
+                request.getRequestDispatcher("addcategory.jsp").forward(request, response);
+                return;
+            }
+            
+            // Kiểm tra tên danh mục đã tồn tại hay chưa
+            if (categoryDAO.isCategoryNameExists(name.trim())) {
+                request.setAttribute("error", "Tên danh mục đã tồn tại, vui lòng chọn tên khác");
+                request.setAttribute("categoryName", name); // Giữ lại tên đã nhập
+                request.setAttribute("categoryDescription", description); // Giữ lại mô tả
+                request.setAttribute("categoryParentId", parentIdStr); // Giữ lại parent id
+                request.setAttribute("categoryStatus", status); // Giữ lại trạng thái
+                
+                List<Category> potentialParents = categoryDAO.getPotentialParents();
+                request.setAttribute("potentialParents", potentialParents);
                 request.getRequestDispatcher("addcategory.jsp").forward(request, response);
                 return;
             }
@@ -112,13 +129,32 @@ public class CategoryAddServlet extends HttpServlet {
                     if (parentCategory != null) {
                         if (parentCategory.getLevel() >= 3) {
                             request.setAttribute("error", "Không thể thêm danh mục con vào cấp 3");
+                            request.setAttribute("categoryName", name); // Giữ lại tên đã nhập
+                            request.setAttribute("categoryDescription", description); // Giữ lại mô tả
+                            request.setAttribute("categoryParentId", parentIdStr); // Giữ lại parent id
+                            request.setAttribute("categoryStatus", status); // Giữ lại trạng thái
+                            
+                            List<Category> potentialParents = categoryDAO.getPotentialParents();
+                            request.setAttribute("potentialParents", potentialParents);
                             request.getRequestDispatcher("addcategory.jsp").forward(request, response);
                             return;
                         }
                         level = parentCategory.getLevel() + 1;
+                        
+                        // Nếu danh mục cha không hoạt động, thì danh mục con cũng không hoạt động
+                        if ("inactive".equals(parentCategory.getStatus())) {
+                            status = "inactive";
+                        }
                     }
                 } catch (NumberFormatException e) {
                     request.setAttribute("error", "Danh mục cha không hợp lệ");
+                    request.setAttribute("categoryName", name); // Giữ lại tên đã nhập
+                    request.setAttribute("categoryDescription", description); // Giữ lại mô tả
+                    request.setAttribute("categoryParentId", parentIdStr); // Giữ lại parent id
+                    request.setAttribute("categoryStatus", status); // Giữ lại trạng thái
+                    
+                    List<Category> potentialParents = categoryDAO.getPotentialParents();
+                    request.setAttribute("potentialParents", potentialParents);
                     request.getRequestDispatcher("addcategory.jsp").forward(request, response);
                     return;
                 }
@@ -126,7 +162,7 @@ public class CategoryAddServlet extends HttpServlet {
 
             // Tạo category mới
             Category newCategory = new Category();
-            newCategory.setName(name);
+            newCategory.setName(name.trim());
             newCategory.setDescription(description);
             newCategory.setParentId(parentId);
             newCategory.setLevel(level);
@@ -136,18 +172,29 @@ public class CategoryAddServlet extends HttpServlet {
             boolean success = categoryDAO.addCategory(newCategory);
 
             if (success) {
-                response.sendRedirect("categorylists");
+                String successMessage = java.net.URLEncoder.encode("Thêm danh mục thành công", "UTF-8");
+                response.sendRedirect("categorylists?message=" + successMessage);
             } else {
                 request.setAttribute("error", "Không thể thêm danh mục");
+                request.setAttribute("categoryName", name); // Giữ lại tên đã nhập
+                request.setAttribute("categoryDescription", description); // Giữ lại mô tả
+                request.setAttribute("categoryParentId", parentIdStr); // Giữ lại parent id
+                request.setAttribute("categoryStatus", status); // Giữ lại trạng thái
+                
+                List<Category> potentialParents = categoryDAO.getPotentialParents();
+                request.setAttribute("potentialParents", potentialParents);
                 request.getRequestDispatcher("addcategory.jsp").forward(request, response);
             }
         } catch (Exception e) {
             System.out.println("Error in CategoryAddServlet.doPost: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi: " + e.getMessage());
+            List<Category> potentialParents = categoryDAO.getPotentialParents();
+            request.setAttribute("potentialParents", potentialParents);
             request.getRequestDispatcher("addcategory.jsp").forward(request, response);
         }
     }
+    
 
     /**
      * Returns a short description of the servlet.
