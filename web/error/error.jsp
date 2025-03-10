@@ -118,20 +118,22 @@
 </head>
 <body>
     <div class="container">
-        <div class="hanger">👕</div>
+        <!--<div class="hanger">👕</div>-->
         <h1>Ồ không! Trang này đã đi mua sắm rồi</h1>
-        <p>Có vẻ như trang bạn đang tìm kiếm đã rời khỏi cửa hàng. Đừng lo lắng, chúng tôi có rất nhiều items thời trang khác đang chờ bạn!</p>
+        <p>Có vẻ như trang bạn đang tìm kiếm đã rời khỏi cửa hàng. Đừng lo lắng, chúng tôi có rất nhiều sản phẩm thời trang khác đang chờ bạn!</p>
         
         <div class="fashion-items">
+            <div class="fashion-item">👕</div>
             <div class="fashion-item">👗</div>
             <div class="fashion-item">👔</div>
             <div class="fashion-item">👖</div>
+            <div class="fashion-item">👠</div>
         </div>
         
-        <div class="shoes">👠</div>
+        <!--<div class="shoes">👠</div>-->
         
-        <a href="/" class="btn">Quay về trang chủ</a>
-        <a href="/collections" class="btn">Xem bộ sưu tập mới</a>
+        <a href="${pageContext.request.contextPath}/home" class="btn">Quay về trang chủ</a>
+        <a href="${pageContext.request.contextPath}/listproduct" class="btn">Xem Sản phẩm khác</a>
     </div>
 </body>
 </html>

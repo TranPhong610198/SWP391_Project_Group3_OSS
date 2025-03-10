@@ -5,13 +5,17 @@
 package marketing;
 
 import DAO.CartDAO;
+import DAO.InventoryDAO;
 import DAO.ProductDAO;
 import entity.Product;
+import entity.User;
+import entity.Variant;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,6 +30,7 @@ public class DeleteProductServlet extends HttpServlet {
 
     private ProductDAO productDAO = new ProductDAO();
     private CartDAO cartDAO = new CartDAO();
+    InventoryDAO inventoryDAO = new InventoryDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -77,13 +82,28 @@ public class DeleteProductServlet extends HttpServlet {
             if (productDAO.hasStock(productId)) {
                 response.sendRedirect("productlist?alert=ER2_HS");
                 return;
-            }
+            } else { //Xóa các model thuộc sản phẩm - Tái sửa dụng code của của phần delete model
+                List<Variant> listVariants = inventoryDAO.getProductVariants(productId);
+                CartDAO cartDAO = new CartDAO();
 
-            //kiểm tra giỏ
-            if (productDAO.hasProductInCart(productId)) {
-                if (!cartDAO.deleteProductFromCart(productId)) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Lỗi khi xóa sản phẩm trong giỏ hàng");
-                    return;
+                // Xóa variant khỏi cart_items và cookie
+                HttpSession session = request.getSession();
+                User user = (User) session.getAttribute("acc");
+                if (user != null) {
+                    // Xóa khỏi bảng cart_items trong database
+                    for (Variant tempV : listVariants) {
+                        cartDAO.deleteCartItemByVariantId(tempV.getId());
+                        inventoryDAO.deleteVariant(tempV.getId());
+                    }
+                } else {
+                    // Xóa khỏi cookie
+                    for (Variant tempV : listVariants) {
+                        System.out.println(tempV.getId());
+                        cartDAO.deleteCartItemByVariantIdFromCookie(request, response, tempV.getId());
+                        inventoryDAO.deleteVariant(tempV.getId());
+                        System.out.println(tempV.getId());
+
+                    }
                 }
             }
 

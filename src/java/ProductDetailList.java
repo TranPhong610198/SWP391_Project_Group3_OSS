@@ -81,6 +81,12 @@ public class ProductDetailList extends HttpServlet {
                 return;
             }
 
+            String cateStatus = categoryDAO.getCategoryById(product.getCategoryId()).getStatus();
+            if (!cateStatus.equals("active")) {
+                request.getRequestDispatcher("error/error.jsp").forward(request, response);
+                return;
+            }
+
             //Xử lý lấy ảnh
             List<String> subImages = productDAO.getProductImages(productId);
 
@@ -101,7 +107,7 @@ public class ProductDetailList extends HttpServlet {
 
             //Lấy màu
             List<Color> colors = productDAO.getColorsByProductId(productId);
-            
+
             //            String sizeId = request.getParameter("sizeId");
 //            String colorId = request.getParameter("colorId");
 //
@@ -117,7 +123,6 @@ public class ProductDetailList extends HttpServlet {
 //                request.setAttribute("colorId", Integer.parseInt(colorId));
 //            } else {
 //            }
-
             //Lấy số lượng
             int stock = productDAO.getTotalStockByProductId(productId);
 
@@ -176,8 +181,8 @@ public class ProductDetailList extends HttpServlet {
 
                 // Lấy thông tin sản phẩm để hiển thị trong giỏ hàng
                 Product product = productDAO.getProductById(productId);
-                if(product.getStatus().equals("inactive") || product.getStatus().equals("EOStock")){
-                    response.sendRedirect("productdetail?id="+product.getId()+"&alert=EOS");
+                if (product.getStatus().equals("inactive") || product.getStatus().equals("EOStock")) {
+                    response.sendRedirect("productdetail?id=" + product.getId() + "&alert=EOS");
                     return;
                 }
 
@@ -214,9 +219,9 @@ public class ProductDetailList extends HttpServlet {
                     item.setColor(colorName);
 
                     if (cartDAO.addCartItem(item)) {
-                        response.sendRedirect("productdetail?id="+product.getId()+"&alert=SS");
+                        response.sendRedirect("productdetail?id=" + product.getId() + "&alert=SS");
                     } else {
-                        response.sendRedirect("productdetail?id="+product.getId()+"&alert=ERR");
+                        response.sendRedirect("productdetail?id=" + product.getId() + "&alert=ERR");
                     }
 
                 } else {
@@ -235,7 +240,7 @@ public class ProductDetailList extends HttpServlet {
 
                     // Thêm vào giỏ hàng cookie
                     cartDAO.addItemToCookieCart(request, response, item);
-                    response.sendRedirect("productdetail?id="+product.getId()+"&alert=SS");
+                    response.sendRedirect("productdetail?id=" + product.getId() + "&alert=SS");
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -254,6 +259,12 @@ public class ProductDetailList extends HttpServlet {
                 Product product = productDAO.getProductById(productId);
                 if (product == null) {
                     response.sendRedirect("listproduct?ErrNullID");
+                    return;
+                }
+
+                String cateStatus = categoryDAO.getCategoryById(product.getCategoryId()).getStatus();
+                if (!cateStatus.equals("active")) {
+                    request.getRequestDispatcher("error/error.jsp").forward(request, response);
                     return;
                 }
 
