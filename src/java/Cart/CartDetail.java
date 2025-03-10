@@ -3,9 +3,11 @@ package Cart;
 import DAO.CartDAO;
 import DAO.CouponDAO;
 import DAO.InventoryDAO;
+import DAO.ProductDAO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Coupon;
+import entity.Product;
 import entity.User;
 import entity.Variant;
 import java.io.IOException;
@@ -24,10 +26,11 @@ import java.util.Map;
 
 @WebServlet(name = "CartDetail", urlPatterns = {"/cartdetail"})
 public class CartDetail extends HttpServlet {
-
+    private ProductDAO productDAO = new ProductDAO();
     private CartDAO cartDAO = new CartDAO();
     private CouponDAO couponDAO = new CouponDAO();
-     private InventoryDAO inventoryDAO = new InventoryDAO();
+    private InventoryDAO inventoryDAO = new InventoryDAO();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -47,13 +50,13 @@ public class CartDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
         Cart cart = user != null
                 ? cartDAO.getCart(request, user.getId())
                 : cartDAO.getCart(request, null);
-        
+
         // Lấy thông tin tồn kho cho mỗi sản phẩm trong giỏ hàng
         Map<Integer, Integer> stock = new HashMap<>();
         if (cart != null && cart.getItems() != null) {
@@ -65,7 +68,17 @@ public class CartDetail extends HttpServlet {
             }
         }
         request.setAttribute("stockMap", stock);
+        
+        Map<Integer, String> productStatusMap = new HashMap<>();
+        for (CartItem item : cart.getItems()) {
+            Product product = productDAO.getProductById(item.getProductId());
+            if (product != null) {
+                productStatusMap.put(item.getId(), product.getStatus());
+            }
+        }
 
+// Truyền thông tin trạng thái sản phẩm tới JSP
+        request.setAttribute("productStatusMap", productStatusMap);
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
 
@@ -111,8 +124,7 @@ public class CartDetail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
+
         String action = request.getParameter("action");
 
         HttpSession session = request.getSession();
@@ -135,15 +147,15 @@ public class CartDetail extends HttpServlet {
 
         response.sendRedirect("cartdetail");
     }
-    
-    private void handleCheckStock(HttpServletRequest request, HttpServletResponse response) 
+
+    private void handleCheckStock(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        
+
         try {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
-            
+
             Variant variant = inventoryDAO.getVariant(variantId);
             if (variant != null) {
                 out.print("{\"success\": true, \"stockQuantity\": " + variant.getQuantity() + "}");
@@ -225,16 +237,16 @@ public class CartDetail extends HttpServlet {
             // Kiểm tra số lượng tồn kho
             int variantId = -1;
             Cart cart = user != null
-                ? cartDAO.getCartByUserId(user.getId())
-                : cartDAO.getCartFromCookies(request);
-            
+                    ? cartDAO.getCartByUserId(user.getId())
+                    : cartDAO.getCartFromCookies(request);
+
             for (CartItem item : cart.getItems()) {
                 if (item.getId() == cartItemId) {
                     variantId = item.getVariantId();
                     break;
                 }
             }
-            
+
             if (variantId != -1) {
                 Variant variant = inventoryDAO.getVariant(variantId);
                 if (variant != null && variant.getQuantity() < quantity) {
@@ -245,27 +257,26 @@ public class CartDetail extends HttpServlet {
             System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
 
             if (user != null) {
-                
+
                 boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
                 if (!success) {
                     System.out.println("Failed to update cart item quantity in database");
                 }
             } else {
-                
+
                 cartDAO.updateCartItemQuantityInCookie(request, response, cartItemId, quantity);
             }
-            
-            
+
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
             out.print("{\"success\": true, \"updatedQuantity\": " + quantity + "}");
             out.flush();
-            
+
         } catch (NumberFormatException | IOException e) {
             System.out.println("Error parsing quantity: " + e.getMessage());
             System.out.println("cartItemId: " + request.getParameter("cartItemId"));
             System.out.println("quantity: " + request.getParameter("quantity"));
-            
+
             try {
                 response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
@@ -369,7 +380,6 @@ public class CartDetail extends HttpServlet {
 
         return discount;
     }
-    
 
     @Override
     public String getServletInfo() {

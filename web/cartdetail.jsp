@@ -10,15 +10,11 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
-            /* Cải thiện CSS cho trang giỏ hàng */
-
-            /* Cấu trúc chung */
             .container {
                 max-width: 1200px;
                 padding: 20px 15px;
             }
 
-            /* Header giỏ hàng */
             .page-header {
                 border-bottom: 2px solid #f0f0f0;
                 padding-bottom: 15px;
@@ -41,7 +37,6 @@
                 border-radius: 2px;
             }
 
-            /* Links bar */
             .links-card {
                 margin-bottom: 30px;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.05);
@@ -62,7 +57,6 @@
                 transform: translateY(-2px);
             }
 
-            /* Bảng giỏ hàng */
             .table {
                 margin-bottom: 0;
             }
@@ -73,12 +67,10 @@
                 padding: 16px 12px;
             }
 
-            /* Căn chỉnh cột sản phẩm sang trái */
             .table td:nth-child(2) {
                 text-align: left;
             }
 
-            /* Checkbox "Tất cả" */
             .form-check {
                 display: flex;
                 align-items: center;
@@ -97,7 +89,6 @@
                 font-size: 14px;
             }
 
-            /* Hình ảnh sản phẩm */
             .product-image {
                 width: 80px;
                 height: 80px;
@@ -106,7 +97,6 @@
                 border: 1px solid #f0f0f0;
             }
 
-            /* Tiêu đề sản phẩm */
             .product-title {
                 font-size: 15px;
                 font-weight: 600;
@@ -124,14 +114,12 @@
                 color: #64748b;
             }
 
-            /* Giá sản phẩm */
             .price {
                 font-weight: 700;
                 color: #333;
                 font-size: 16px;
             }
 
-            /* Điều khiển số lượng */
             .quantity-control {
                 margin: 0 auto;
                 max-width: 120px;
@@ -174,7 +162,6 @@
                 background-color: white;
             }
 
-            /* Xóa mũi tên tăng/giảm mặc định */
             input[type=number]::-webkit-inner-spin-button,
             input[type=number]::-webkit-outer-spin-button {
                 -webkit-appearance: none;
@@ -185,7 +172,6 @@
                 -moz-appearance: textfield;
             }
 
-            /* Cải thiện hiển thị trạng thái */
             .stock-status {
                 display: inline-flex;
                 align-items: center;
@@ -197,13 +183,16 @@
                 margin: 0 auto;
                 min-width: 100px;
             }
-
             .stock-status.in-stock {
                 background-color: rgba(40, 167, 69, 0.1);
                 color: #28a745;
             }
-
             .stock-status.out-of-stock {
+                background-color: rgba(255, 193, 7, 0.1);
+                color: #ffc107;
+            }
+
+            .stock-status.paused {
                 background-color: rgba(220, 53, 69, 0.1);
                 color: #dc3545;
             }
@@ -422,8 +411,9 @@
                                                                     <input type="checkbox" class="form-check-input product-select" 
                                                                            name="selectedItems" value="${item.id}"
                                                                            onchange="updateTotalAmount()"
-                                                                           ${stockMap[item.id] <= 0 ? 'disabled' : ''}
-                                                                           data-stock="${stockMap[item.id]}">
+                                                                           ${stockMap[item.id] <= 0 || productStatusMap[item.id] == 'inactive' ? 'disabled' : ''}
+                                                                           data-stock="${stockMap[item.id]}"
+                                                                           data-status="${productStatusMap[item.id]}">
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -454,19 +444,20 @@
                                                                     <div class="input-group">
                                                                         <button type="button" class="btn btn-outline-secondary" 
                                                                                 onclick="updateQuantity(this, -1)"
-                                                                                ${stockMap[item.id] <= 0 ? 'disabled' : ''}>
+                                                                                ${stockMap[item.id] <= 0 || productStatusMap[item.id] == 'inactive' ? 'disabled' : ''}>
                                                                             <i class="fas fa-minus"></i>
                                                                         </button>
                                                                         <input type="number" value="${item.quantity}" min="1" max="${stockMap[item.id]}"
-                                                                               class="form-control text-center quantity-input ${stockMap[item.id] <= 0 ? 'bg-light' : ''}"
+                                                                               class="form-control text-center quantity-input ${stockMap[item.id] <= 0 || productStatusMap[item.id] == 'inactive' ? 'bg-light' : ''}"
                                                                                data-item-id="${item.id}"
                                                                                data-variant-id="${item.variantId}"
                                                                                data-max-stock="${stockMap[item.id]}"
+                                                                               data-status="${productStatusMap[item.id]}"
                                                                                onchange="handleQuantityChange(this)"
-                                                                               ${stockMap[item.id] <= 0 ? 'disabled' : ''}>
+                                                                               ${stockMap[item.id] <= 0 || productStatusMap[item.id] == 'inactive' ? 'disabled' : ''}>
                                                                         <button type="button" class="btn btn-outline-secondary" 
                                                                                 onclick="updateQuantity(this, 1)"
-                                                                                ${stockMap[item.id] <= 0 ? 'disabled' : ''}>
+                                                                                ${stockMap[item.id] <= 0 || productStatusMap[item.id] == 'inactive' ? 'disabled' : ''}>
                                                                             <i class="fas fa-plus"></i>
                                                                         </button>
                                                                     </div>
@@ -474,10 +465,10 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="stock-status ${stockMap[item.id] > 0 ? 'in-stock' : 'out-of-stock'}">
-                                                                    <i class="fas ${stockMap[item.id] > 0 ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                                                <div class="stock-status ${productStatusMap[item.id] == 'inactive' ? 'paused' : stockMap[item.id] > 0 ? 'in-stock' : 'out-of-stock'}">
+                                                                    <i class="fas ${productStatusMap[item.id] == 'inactive' ? 'fa-times-circle' : stockMap[item.id] > 0 ? 'fa-check-circle' : 'fa-pause-circle'}"></i>
                                                                     <span class="ms-2">
-                                                                        ${stockMap[item.id] > 0 ? 'Còn Hàng' : 'Hết Hàng'}
+                                                                        ${productStatusMap[item.id] == 'inactive' ? 'Ngưng Bán' : stockMap[item.id] > 0 ? 'Còn Hàng' : 'Hết Hàng'}
                                                                     </span>
                                                                 </div>
                                                             </td>
@@ -600,19 +591,19 @@
                                     }
                                 }
 
-// Xử lý thanh toán
+                                // Xử lý thanh toán
                                 function submitCheckout() {
                                     const form = document.getElementById('checkoutForm');
                                     const checkboxes = document.getElementsByClassName('product-select');
                                     let hasSelectedItems = false;
-                                    let hasOutOfStockSelected = false;
+                                    let hasInvalidItemSelected = false;
 
                                     // Thêm input hidden cho số lượng của từng sản phẩm được chọn
                                     for (let checkbox of checkboxes) {
                                         if (checkbox.checked) {
-                                            if (checkbox.disabled || parseInt(checkbox.dataset.stock) <= 0) {
-                                                hasOutOfStockSelected = true;
-                                                continue; // Bỏ qua sản phẩm hết hàng
+                                            if (checkbox.disabled || parseInt(checkbox.dataset.stock) <= 0 || checkbox.dataset.status === 'inactive') {
+                                                hasInvalidItemSelected = true;
+                                                continue; // Bỏ qua sản phẩm hết hàng hoặc ngưng bán
                                             }
 
                                             hasSelectedItems = true;
@@ -629,8 +620,8 @@
                                         }
                                     }
 
-                                    if (hasOutOfStockSelected) {
-                                        alert('Không thể thanh toán sản phẩm hết hàng. Vui lòng bỏ chọn sản phẩm hết hàng và thử lại.');
+                                    if (hasInvalidItemSelected) {
+                                        alert('Không thể thanh toán sản phẩm hết hàng hoặc ngưng bán. Vui lòng bỏ chọn những sản phẩm này và thử lại.');
                                         return;
                                     }
 
@@ -653,14 +644,14 @@
                                     form.submit();
                                 }
 
-// Cập nhật tổng tiền
+                                // Cập nhật tổng tiền
                                 function updateTotalAmount() {
                                     const checkboxes = document.getElementsByClassName('product-select');
                                     let totalAmount = 0;
                                     let selectedCount = 0;
 
                                     for (let checkbox of checkboxes) {
-                                        // Chỉ tính các sản phẩm được chọn và còn hàng
+                                        // Chỉ tính các sản phẩm được chọn, còn hàng và không ngưng bán
                                         if (checkbox.checked && !checkbox.disabled) {
                                             const row = checkbox.closest('tr');
                                             const priceText = row.querySelector('td:nth-child(3)').textContent;
@@ -696,11 +687,11 @@
                                     // Update selectAll checkbox status
                                     const selectAll = document.getElementById('selectAll');
                                     if (checkboxes.length > 0) {
-                                        // Đếm các checkbox không bị disabled (còn hàng)
+                                        // Đếm các checkbox không bị disabled (còn hàng và không ngưng bán)
                                         const enabledCheckboxes = Array.from(checkboxes).filter(checkbox => !checkbox.disabled);
                                         const checkedEnabledCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked && !checkbox.disabled);
 
-                                        // Chỉ cập nhật trạng thái "selectAll" dựa trên các sản phẩm còn hàng
+                                        // Chỉ cập nhật trạng thái "selectAll" dựa trên các sản phẩm còn hàng và không ngưng bán
                                         if (enabledCheckboxes.length > 0) {
                                             selectAll.checked = checkedEnabledCheckboxes.length === enabledCheckboxes.length;
                                             selectAll.indeterminate = checkedEnabledCheckboxes.length > 0 && checkedEnabledCheckboxes.length < enabledCheckboxes.length;
@@ -711,7 +702,7 @@
                                     }
                                 }
 
-// Tính giảm giá dựa trên mã coupon
+                                // Tính giảm giá dựa trên mã coupon
                                 function calculateDiscount(totalAmount) {
                                     let discount = 0;
                                     const select = document.querySelector('select[name="couponCode"]');
@@ -736,7 +727,7 @@
                                     return discount;
                                 }
 
-// Hiển thị giảm giá
+                                // Hiển thị giảm giá
                                 function updateDiscountDisplay(discount) {
                                     const discountRow = document.getElementById('discountRow');
                                     if (discount > 0) {
@@ -747,17 +738,17 @@
                                     }
                                 }
 
-// Định dạng tiền tệ
+                                // Định dạng tiền tệ
                                 function formatCurrency(amount) {
                                     return '₫' + amount.toLocaleString('vi-VN');
                                 }
 
-// Chọn hoặc bỏ chọn tất cả sản phẩm
+                                // Chọn hoặc bỏ chọn tất cả sản phẩm
                                 function toggleAllProducts() {
                                     const selectAll = document.getElementById('selectAll');
                                     const checkboxes = document.getElementsByClassName('product-select');
                                     for (let checkbox of checkboxes) {
-                                        // Chỉ toggle các checkbox không bị disabled (còn hàng)
+                                        // Chỉ toggle các checkbox không bị disabled (còn hàng và không ngưng bán)
                                         if (!checkbox.disabled) {
                                             checkbox.checked = selectAll.checked;
                                         }
@@ -765,12 +756,23 @@
                                     updateTotalAmount();
                                 }
 
-// Cập nhật số lượng sản phẩm
+                                // Cập nhật số lượng sản phẩm
                                 function updateQuantity(button, change) {
                                     const input = button.parentElement.querySelector('input');
                                     const currentValue = parseInt(input.value) || 1;
                                     const maxStock = parseInt(input.dataset.maxStock) || 0;
+                                    const status = input.dataset.status;
                                     const newValue = currentValue + change;
+
+                                    // Kiểm tra sản phẩm có ngưng bán không
+                                    if (status === 'inactive') {
+                                        showStockMessage(
+                                                input,
+                                                `Sản phẩm đã ngưng kinh doanh.`,
+                                                true
+                                                );
+                                        return;
+                                    }
 
                                     if (newValue >= 1) {
                                         // Kiểm tra số lượng tồn kho
@@ -796,10 +798,22 @@
                                     }
                                 }
 
-// Xử lý thay đổi số lượng
+                                // Xử lý thay đổi số lượng
                                 function handleQuantityChange(input) {
                                     let value = parseInt(input.value) || 1;
                                     const maxStock = parseInt(input.dataset.maxStock) || 0;
+                                    const status = input.dataset.status;
+
+                                    // Kiểm tra sản phẩm có ngưng bán không
+                                    if (status === 'inactive') {
+                                        input.value = 0;
+                                        showStockMessage(
+                                                input,
+                                                `Sản phẩm đã ngưng kinh doanh.`,
+                                                true
+                                                );
+                                        return;
+                                    }
 
                                     // Đảm bảo giá trị tối thiểu là 1
                                     if (value < 1) {
@@ -829,7 +843,7 @@
                                     }
                                 }
 
-// Cập nhật số lượng trên server
+                                // Cập nhật số lượng trên server
                                 function updateQuantityOnServer(itemId, quantity) {
                                     // Kiểm tra tính hợp lệ của dữ liệu
                                     if (!itemId || !quantity || quantity < 1) {
@@ -868,6 +882,7 @@
                                                                 true
                                                                 );
                                                     });
+
                                                     updateTotalAmount();
                                                 }
                                             })
@@ -876,7 +891,7 @@
                                             });
                                 }
 
-// Xóa sản phẩm khỏi giỏ hàng
+                                // Xóa sản phẩm khỏi giỏ hàng
                                 function deleteItem(itemId) {
                                     if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
                                         const formData = new URLSearchParams();
@@ -904,27 +919,37 @@
                                     }
                                 }
 
-// Kiểm tra tất cả số lượng khi trang được tải
+                                // Kiểm tra tất cả số lượng khi trang được tải
                                 function validateAllQuantities() {
                                     const inputs = document.querySelectorAll('.quantity-input');
 
                                     for (const input of inputs) {
                                         const maxStock = parseInt(input.dataset.maxStock) || 0;
                                         const currentValue = parseInt(input.value) || 1;
+                                        const status = input.dataset.status;
 
-                                        if (maxStock > 0 && currentValue > maxStock) {
+                                        if ((maxStock > 0 && currentValue > maxStock) || status === 'inactive') {
                                             // Hiển thị thông báo lỗi
-                                            input.value = maxStock;
-                                            showStockMessage(
-                                                    input,
-                                                    `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${maxStock} sản phẩm.`,
-                                                    true
-                                                    );
+                                            if (status === 'inactive') {
+                                                input.value = 0;
+                                                showStockMessage(
+                                                        input,
+                                                        `Sản phẩm đã ngưng kinh doanh.`,
+                                                        true
+                                                        );
+                                            } else {
+                                                input.value = maxStock;
+                                                showStockMessage(
+                                                        input,
+                                                        `Số lượng đã được điều chỉnh do tồn kho chỉ còn ${maxStock} sản phẩm.`,
+                                                        true
+                                                        );
+                                            }
 
                                             // Cập nhật số lượng trên server
                                             const itemId = input.dataset.itemId;
                                             if (itemId) {
-                                                updateQuantityOnServer(itemId, maxStock);
+                                                updateQuantityOnServer(itemId, status === 'inactive' ? 0 : maxStock);
                                             }
                                         }
                                     }
@@ -933,7 +958,7 @@
                                     updateTotalAmount();
                                 }
 
-// Khởi tạo trang
+                                // Khởi tạo trang
                                 document.addEventListener('DOMContentLoaded', function () {
                                     // Check if there are any items in the cart
                                     const checkboxes = document.getElementsByClassName('product-select');
@@ -944,7 +969,7 @@
                                         // Update total amount
                                         updateTotalAmount();
 
-                                        // Vô hiệu hóa "selectAll" nếu tất cả sản phẩm đều hết hàng
+                                        // Vô hiệu hóa "selectAll" nếu tất cả sản phẩm đều hết hàng hoặc ngưng bán
                                         const enabledCheckboxes = Array.from(checkboxes).filter(checkbox => !checkbox.disabled);
                                         if (enabledCheckboxes.length === 0) {
                                             document.getElementById('selectAll').disabled = true;
