@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,6 +85,10 @@ public class DeleteProductServlet extends HttpServlet {
                 return;
             } else { //Xóa các model thuộc sản phẩm - Tái sửa dụng code của của phần delete model
                 List<Variant> listVariants = inventoryDAO.getProductVariants(productId);
+                List<Integer> variantIds = new ArrayList<>();
+                for (Variant tempV : listVariants) {
+                    variantIds.add(tempV.getId());
+                }
                 CartDAO cartDAO = new CartDAO();
 
                 // Xóa variant khỏi cart_items và cookie
@@ -91,18 +96,15 @@ public class DeleteProductServlet extends HttpServlet {
                 User user = (User) session.getAttribute("acc");
                 if (user != null) {
                     // Xóa khỏi bảng cart_items trong database
-                    for (Variant tempV : listVariants) {
-                        cartDAO.deleteCartItemByVariantId(tempV.getId());
-                        inventoryDAO.deleteVariant(tempV.getId());
+                    for (int tempId : variantIds) {
+                        cartDAO.deleteCartItemByVariantId(tempId);
+                        inventoryDAO.deleteVariant(tempId);
                     }
                 } else {
                     // Xóa khỏi cookie
-                    for (Variant tempV : listVariants) {
-                        System.out.println(tempV.getId());
-                        cartDAO.deleteCartItemByVariantIdFromCookie(request, response, tempV.getId());
-                        inventoryDAO.deleteVariant(tempV.getId());
-                        System.out.println(tempV.getId());
-
+                    cartDAO.deleteCartItemsByVariantIdsFromCookie(request, response, variantIds);
+                    for (int tempId : variantIds) {
+                        inventoryDAO.deleteVariant(tempId);
                     }
                 }
             }

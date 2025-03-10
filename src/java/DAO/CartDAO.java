@@ -409,4 +409,19 @@ public class CartDAO extends DBContext {
         }
     }
 
+    // Xóa nhiều sản phẩm trong cart cookie
+    public void deleteCartItemsByVariantIdsFromCookie(HttpServletRequest request, HttpServletResponse response, List<Integer> variantIds) {
+        Cart cart = getCartFromCookies(request);
+        if (cart != null && cart.getItems() != null) {
+            List<CartItem> updatedItems = new ArrayList<>();
+            for (CartItem item : cart.getItems()) {
+                if (!variantIds.contains(item.getVariantId())) {
+                    updatedItems.add(item);
+                }
+            }
+            cart.setItems(updatedItems);
+            saveCartToCookies(response, cart);
+        }
+    }
+
 }
