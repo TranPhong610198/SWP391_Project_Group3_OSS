@@ -3,10 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
+import DAO.CategoryDAO;
 import DAO.FooterDAO;
 import DAO.PostDAO;
 import DAO.ProductDAO;
 import DAO.SliderDAO;
+import entity.Category;
 import entity.Footer;
 import entity.Post;
 import entity.Product;
@@ -18,7 +20,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -67,34 +71,36 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         SliderDAO sliderDAO = new SliderDAO();
         PostDAO postDAO = new PostDAO();
-        ProductDAO productDAO = new ProductDAO(); // Add this line
+        ProductDAO productDAO = new ProductDAO();
+        CategoryDAO categoryDAO = new CategoryDAO();
 
-        // Existing code for sliders and posts...
+        // Lấy danh sách các slider và bài đăng
         List<Slider> activeSliders = sliderDAO.getAllSliders(1, Integer.MAX_VALUE, "", "active");
-//        List<Post> featuredPosts = postDAO.getPostToHome(1, 3, "", null, "published", true, "created_at", "DESC");
         List<Post> latestPosts = postDAO.getPostToHome(1, 4, "", null, "published", null, "created_at", "DESC");
 
-        // Get featured products
-        List<Product> featuredProducts = productDAO.getFeaturedProducts(8); // Lấy 8 thằng sản phẩm mới nhất
+        // Lấy danh mục cấp 1 có trạng thái active
+        List<Category> level1Categories = categoryDAO.getActiveLevel1Categories();
 
-        List<Product> menClothingProducts = productDAO.getMenClothingProducts(4); // Lấy 4 sản phẩm quần áo nam
-        List<Product> womanClothingProducts = productDAO.getWomanClothingProducts(4);
-        List<Product> babyClothingProducts = productDAO.getBabyClothingProducts(4);
-        List<Product> shoesProducts = productDAO.getShoesProducts(4);
-        List<Product> accessoryProducts = productDAO.getAccessoryProducts(4);
+        // Lấy sản phẩm cho mỗi danh mục
+        Map<Integer, List<Product>> productsByCategory = new HashMap<>();
 
-        request.setAttribute("accessoryProducts", accessoryProducts);
-        request.setAttribute("shoesProducts", shoesProducts);
-        request.setAttribute("babyClothingProducts", babyClothingProducts);
-        request.setAttribute("womanClothingProducts", womanClothingProducts);
-        request.setAttribute("menClothingProducts", menClothingProducts);
+        for (Category category : level1Categories) {
+            // Lấy 4 sản phẩm cho mỗi danh mục
+            List<Product> products = productDAO.getProductsByCategory(category.getId(), 4);
+            productsByCategory.put(category.getId(), products);
+        }
+
+        // Lấy sản phẩm nổi bật
+        List<Product> featuredProducts = productDAO.getFeaturedProducts(8);
+
+        // Set attributes cho request
         request.setAttribute("sliders", activeSliders);
-//        request.setAttribute("featuredPosts", featuredPosts);
         request.setAttribute("latestPosts", latestPosts);
-        request.setAttribute("featuredProducts", featuredProducts); // Add this line
+        request.setAttribute("featuredProducts", featuredProducts);
+        request.setAttribute("level1Categories", level1Categories);
+        request.setAttribute("productsByCategory", productsByCategory);
 
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
-
     }
 
     /**

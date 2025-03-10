@@ -52,7 +52,7 @@ public class CategoryDAO extends DBContext {
         }
         return false;
     }
-    
+
     // Kiểm tra xem tên danh mục đã tồn tại hay chưa (không tính ID hiện tại - dùng khi cập nhật)
     public boolean isCategoryNameExists(String name, int excludeId) {
         String sql = "SELECT COUNT(*) FROM categories WHERE name = ? AND id != ?";
@@ -316,4 +316,27 @@ public class CategoryDAO extends DBContext {
             return false;
         }
     }
+
+    //VTĐ thêm để lấy sản phẩm ra home
+    public List<Category> getActiveLevel1Categories() {
+        List<Category> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM categories WHERE level = 1 AND status = 'active' ORDER BY id";
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Category category = new Category();
+                category.setId(rs.getInt("id"));
+                category.setName(rs.getString("name"));
+                category.setLevel(rs.getInt("level"));
+                category.setStatus(rs.getString("status"));
+                category.setParentId(rs.getInt("parent_id"));
+                result.add(category);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getActiveLevel1Categories: " + e.getMessage());
+        }
+        return result;
+    }
+    ////////////////////////////////////////////////////////////////////////////
 }
