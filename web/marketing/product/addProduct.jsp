@@ -153,6 +153,18 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:when>
+                        <c:when test="${alert.equals('ER_dp')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Sản phẩm đã tồn tại trong hệ thống.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
+                        <c:when test="${alert.equals('oP_IV')}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Giá nhập vào phải lớn hơn 0 và bé hơn 99.999.999
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:when>
                     </c:choose>
                 </c:if>
                 <h2 class="page-title">
@@ -167,7 +179,7 @@
                             <!-- Tên sản phẩm -->
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Tên sản phẩm</label>
-                                <input type="text" class="form-control" id="title" name="title" required />
+                                <input type="text" class="form-control" id="title" name="title" maxlength="100" required />
                                 <div class="form-text">Nhập tên sản phẩm đầy đủ và chính xác</div>
                             </div>
 

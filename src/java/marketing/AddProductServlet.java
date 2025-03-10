@@ -108,7 +108,17 @@ public class AddProductServlet extends HttpServlet {
             String title = request.getParameter("title");
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
             String description = request.getParameter("description");
+
+            if (productDAO.isProductExists(title, categoryId)) {
+                response.sendRedirect("addproduct?alert=ER_dp");
+                return;
+            }
+
             BigDecimal originalPrice = new BigDecimal(request.getParameter("originalPrice").replace(".", ""));
+            if (originalPrice.compareTo(BigDecimal.ZERO) < 1 || originalPrice.compareTo(BigDecimal.valueOf(100000000)) == 1) {
+                response.sendRedirect("addproduct?alert=oP_IV");
+                return;
+            }
             BigDecimal salePrice = new BigDecimal(request.getParameter("salePrice").replace(".", ""));
             boolean isCombo = request.getParameter("isCombo") != null;
             String comboGroupId = null;

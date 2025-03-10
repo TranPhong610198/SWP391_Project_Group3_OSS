@@ -349,8 +349,24 @@ public class ProductDAO extends DBContext {
     }
 //______________________________________________________Hết Phần DAO Cho Việc Add_________________________________________
 
+    // Kiểm tra trùng lặp
+    public boolean isProductExists(String title, int categoryId) {
+        String query = "SELECT COUNT(*) FROM products WHERE title = ? AND category_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, title);
+            ps.setInt(2, categoryId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 //_______________________________________________________Phần DAO Cho Việc Delete____________________________________________
     // Chuyển sản phẩm chính
+
     public boolean setIsComboByProductId(int productId, boolean isCombo) {
         String sql = "UPDATE products SET is_combo = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -777,7 +793,7 @@ public class ProductDAO extends DBContext {
         }
         return products;
     }
-    
+
     public List<Product> getBabyClothingProducts(int limit) {
         List<Product> products = new ArrayList<>();
         String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "
@@ -811,7 +827,7 @@ public class ProductDAO extends DBContext {
         }
         return products;
     }
-    
+
     public List<Product> getAccessoryProducts(int limit) {
         List<Product> products = new ArrayList<>();
         String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "
@@ -845,7 +861,7 @@ public class ProductDAO extends DBContext {
         }
         return products;
     }
-    
+
     public List<Product> getShoesProducts(int limit) {
         List<Product> products = new ArrayList<>();
         String query = "SELECT TOP (?) p.id, p.title, p.description, p.original_price, p.sale_price, p.thumbnail, c.name AS category_name "

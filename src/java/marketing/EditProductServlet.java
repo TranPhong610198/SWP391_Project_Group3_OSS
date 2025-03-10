@@ -107,7 +107,7 @@ public class EditProductServlet extends HttpServlet {
             Product product = productDAO.getProductById(productId);
 
             if (productDAO.hasProcessOrders(productId)) {
-                response.sendRedirect("editproduct?id="+productId+"&alert=ER1_OP");
+                response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_OP");
                 return;
             }
 
@@ -122,7 +122,7 @@ public class EditProductServlet extends HttpServlet {
             for (Part part : request.getParts()) {
                 if ((part.getName().equals("thumbnail") || part.getName().equals("subImage") || part.getName().equals("newSubImage")) && part.getSize() > 0) {
                     if (!isValidImage(part)) {
-                        response.sendRedirect("editproduct?id="+productId+"&alert=ER1_IVImg");
+                        response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_IVImg");
                         return;
                     }
                 }
@@ -134,7 +134,16 @@ public class EditProductServlet extends HttpServlet {
                 String title = request.getParameter("title");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 String description = request.getParameter("description");
+
+                if (productDAO.isProductExists(title, categoryId) && !product.getTitle().equals(title) && product.getCategoryId()!=categoryId) {
+                    response.sendRedirect("editproduct?id=" + productId + "&alert=ER_dp");
+                    return;
+                }
                 BigDecimal originalPrice = new BigDecimal(request.getParameter("originalPrice").replace(".", ""));
+                if (originalPrice.compareTo(BigDecimal.ZERO) < 1 || originalPrice.compareTo(BigDecimal.valueOf(100000000)) == 1) {
+                    response.sendRedirect("editproduct?id=" + productId + "&alert=oP_IV");
+                    return;
+                }
                 BigDecimal salePrice = new BigDecimal(request.getParameter("salePrice").replace(".", ""));
 
                 // xử lý phần combo
@@ -218,7 +227,7 @@ public class EditProductServlet extends HttpServlet {
                         productDAO.replaceProductImage(imageId, newImageUrl, uploadPath);
                         response.sendRedirect("editproduct?id=" + productId);
                     } else {
-                        response.sendRedirect("editproduct?id="+productId+"&alert=ERR");
+                        response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                         return;
                     }
                 }
@@ -229,7 +238,7 @@ public class EditProductServlet extends HttpServlet {
                 if (productDAO.deleteProductImage(imageId, uploadPath)) {
                     response.sendRedirect("editproduct?id=" + productId);
                 } else {
-                    response.sendRedirect("editproduct?id="+productId+"&alert=ERR");
+                    response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                     return;
                 }
             } else if ("addNewSubImage".equals(action)) {
@@ -239,7 +248,7 @@ public class EditProductServlet extends HttpServlet {
                     currentImages = new ArrayList<>(); // Khởi tạo danh sách rỗng nếu null
                 }
                 if (currentImages.size() >= 5) {
-                    response.sendRedirect("editproduct?id="+productId+"&alert=ER1_FULL");
+                    response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_FULL");
                     return;
                 }
                 // Xử lý từng ảnh trong danh sách
@@ -253,7 +262,7 @@ public class EditProductServlet extends HttpServlet {
                             productDAO.addSingleProductImage(productId, newImageUrl);
                             currentImages.add(newImageUrl); // Cập nhật danh sách ảnh
                         } else {
-                            response.sendRedirect("editproduct?id="+productId+"&alert=ERR");
+                            response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                             return;
                         }
                     }
