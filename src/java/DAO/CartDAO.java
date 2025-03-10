@@ -355,7 +355,7 @@ public class CartDAO extends DBContext {
     //VTĐ thêm để đếm số hàng trong giỏ hàng trên header
     public int getCartItemCount(int cartId) {
         int count = 0;
-        String sql = "SELECT SUM(quantity) as total FROM cart_items WHERE cart_id = ?";
+        String sql = "SELECT COUNT(DISTINCT id) as total FROM cart_items WHERE cart_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cartId);
@@ -371,12 +371,42 @@ public class CartDAO extends DBContext {
 
     public int getCartItemCountFromCookie(HttpServletRequest request) {
         Cart cart = getCartFromCookies(request);
-        int count = 0;
         if (cart != null && cart.getItems() != null) {
-            for (CartItem item : cart.getItems()) {
-                count += item.getQuantity();
-            }
+            return cart.getItems().size();
         }
-        return count;
+        return 0;
     }
+
+    /**
+     * *******************Huy*************************
+     */
+    /**
+     * ***********************************************
+     */
+    // Xóa cart_items chứa variantId trong database
+    public void deleteCartItemByVariantId(int variantId) {
+        String sql = "DELETE FROM cart_items WHERE variant_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, variantId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error deleting cart item by variantId: " + e.getMessage());
+        }
+    }
+
+    // Xóa cart_items chứa variantId trong cookie
+    public void deleteCartItemByVariantIdFromCookie(HttpServletRequest request, HttpServletResponse response, int variantId) {
+        Cart cart = getCartFromCookies(request);
+        if (cart != null && cart.getItems() != null) {
+            List<CartItem> updatedItems = new ArrayList<>();
+            for (CartItem item : cart.getItems()) {
+                if (item.getVariantId() != variantId) {
+                    updatedItems.add(item);
+                }
+            }
+            cart.setItems(updatedItems);
+            saveCartToCookies(response, cart);
+        }
+    }
+
 }
