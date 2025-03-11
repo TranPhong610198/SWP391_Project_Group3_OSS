@@ -257,10 +257,6 @@
                         }
                     }
                 });
-                
-                // Highlight the slider menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="sliderList"]').closest('.menu-item').addClass('active');
             });
             
             // Image preview functionality

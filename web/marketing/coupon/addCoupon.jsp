@@ -313,10 +313,6 @@
                         }
                     }
                 });
-
-                // Highlight current menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
                 
                 // Định dạng đầu vào tiền tệ khi load trang
                 $('.currency-input').each(function () {

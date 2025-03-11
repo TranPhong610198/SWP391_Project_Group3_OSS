@@ -270,14 +270,7 @@
                             $('.sidebar-toggle').show();
                         }
                     }
-                });
-                
-                // Since blog posts are part of content management, highlight that menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="postList"]').closest('.menu-item').addClass('active');
-                
-                // Open content submenu by default
-                $('#contentSubmenu').addClass('show');
+                });              
             });
             
             // Image preview functionality

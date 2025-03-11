@@ -150,13 +150,6 @@
                         }
                     }
                 });
-
-                // Highlight inventory management in sidebar
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
-
-                // Open product submenu by default
-                $('#productSubmenu').addClass('show');
             });
         </script>
     </body>
