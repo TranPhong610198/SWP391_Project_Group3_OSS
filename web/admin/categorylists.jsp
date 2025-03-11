@@ -177,7 +177,7 @@
                                     <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                                 </select>
                             </div>
-                            <div class="d-flex">
+                            <div class="col-md-3 d-flex">
                                         <button type="submit" class="btn btn-primary me-2">
                                             <i class="fas fa-filter me-1"></i>Lọc
                                         </button>
