@@ -474,6 +474,7 @@
                             </div>
 
                             <!-- Action Buttons -->
+                            <c:if test="${sessionScope.acc.role == 'customer' || sessionScope.acc.role == null}">
                             <div class="action-buttons">
                                 <button type="submit" name="action" value="buyNow" class="btn-buy-now">
                                     <i class="fas fa-bolt"></i> Mua Ngay
@@ -482,6 +483,7 @@
                                     <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ
                                 </button>
                             </div>
+                            </c:if>
                         </form>
 
                         <!-- Product Metadata -->

@@ -98,6 +98,7 @@
                             </div>
                         </form>
 
+                        <c:if test="${sessionScope.acc.role == 'customer' || sessionScope.acc.role == null}">        
                         <!-- Addresses section with modal button -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h3 class="section-title mb-0">
@@ -161,6 +162,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>
+                        </c:if>
 
                         <div class="mt-4 d-flex justify-content-end">
                             <button type="button" class="btn btn-secondary" onclick="window.location.href = '<%= request.getContextPath() %>/home'">

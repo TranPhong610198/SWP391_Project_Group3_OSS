@@ -7,14 +7,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="sidebar">
     <div class="sidebar-header p-3 border-bottom">
-        <h5 class="mt-2 mb-3">Marketing Dashboard</h5>
+        <h5 class="mt-2 mb-3">Quản Lý Tiếp Thị</h5>
     </div>
 
     <!-- User Profile Section -->
     <div class="user-profile p-3 border-bottom">
         <div class="d-flex align-items-center mb-2">
             <div class="avatar-container me-2">
-                <img src="${sessionScope.acc.avatar}" alt="Avatar" class="avatar-img rounded-circle"
+                <img src="${pageContext.request.contextPath}/${sessionScope.acc.avatar}" alt="Avatar" class="avatar-img rounded-circle"
                      onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
             </div>
             <div class="user-info">

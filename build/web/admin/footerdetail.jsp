@@ -341,10 +341,6 @@
                                                                    }
                                                                }
                                                            });
-
-                                                           // Highlight active menu item
-                                                           $('.menu-item').removeClass('active');
-                                                           $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
                                                        });
                                                        // Xem trước ảnh icon
                                                        function previewImage(input) {
