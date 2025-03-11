@@ -10,7 +10,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
-
             /* Container spacing */
             .container {
                 padding-top: 2rem;
@@ -39,6 +38,7 @@
                 border: none;
                 box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
                 margin-bottom: 1.5rem;
+                height: 100%;
             }
 
             .card-body {
@@ -131,6 +131,11 @@
             }
 
             /* Summary section styling */
+            .order-summary .card {
+                position: sticky;
+                top: 2rem;
+            }
+
             .card .d-flex {
                 margin-bottom: 0.75rem;
             }
@@ -194,6 +199,16 @@
             }
 
             /* Responsive adjustments */
+            @media (max-width: 991px) {
+                .order-summary {
+                    margin-top: 2rem;
+                }
+                
+                .order-summary .card {
+                    position: static;
+                }
+            }
+
             @media (max-width: 768px) {
                 .container {
                     padding-top: 1rem;
@@ -220,470 +235,437 @@
                 }
             }
         </style>
-    </style>
-</head>
-<body>
-    <div> <jsp:include page="/header.jsp" /></div><br><br>
-    <div class="container">
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="cartdetail">Giỏ hàng</a></li>
-                <li class="breadcrumb-item active">Thông tin giao hàng</li>
-            </ol>
-        </nav>
-
-        <div class="cart-contact">
-            <!-- Selected Products Summary -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Sản phẩm đã chọn</h5>
-                    <c:forEach items="${selectedItems}" var="item">
-                        <div class="product-item">
-                            <img src="${item.productThumbnail}" alt="${item.productTitle}" class="product-image">
-                            <div class="product-details">
-                                <div class="product-title">${item.productTitle}</div>
-                                <div class="product-variant">Size: ${item.size} | Màu: ${item.color}</div>
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <div>Số lượng: ${item.quantity}</div>
-                                    <div class="product-price">
-                                        <fmt:formatNumber value="${item.productPrice * item.quantity}" 
-                                                          type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
+    </head>
+    <body>
+        <div><jsp:include page="/header.jsp" /></div><br><br>
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="cartdetail">Giỏ hàng</a></li>
+                    <li class="breadcrumb-item active">Thông tin giao hàng</li>
+                </ol>
+            </nav>
 
             <form action="cartcontact" method="post">
-                <!-- Shipping Address Section -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ giao hàng
-                        </h5>
-
-
-                        <div class="address-list mb-3">
-                            <c:choose>
-                                <c:when test="${empty addresses}">
-                                    <div class="alert alert-info">
-                                        <p>Bạn chưa có địa chỉ giao hàng nào. Vui lòng thêm địa chỉ mới.</p>
-                                    </div>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach items="${addresses}" var="address">
-                                        <div class="address-item">
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" 
-                                                       name="shipping_address" 
-                                                       value="${address.id}"
-                                                       ${address.isDefault ? 'checked' : ''}>
-                                                <label class="form-check-label">
-                                                    <strong>${address.recipientName}</strong>
-                                                    <c:if test="${address.isDefault}">
-                                                        <span class="badge bg-primary ms-2">Mặc định</span>
-                                                    </c:if>
-                                                    <br>
-                                                    <span class="text-muted">
-                                                        <i class="fas fa-phone me-1"></i>${address.phone}
-                                                    </span><br>
-                                                    <span><i class="fas fa-home me-1"></i>${address.address}</span>
-                                                </label>
+                <div class="row">
+                    <!-- Left Column - Cart Contact Information -->
+                    <div class="col-lg-8">
+                        <!-- Selected Products Summary -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3"><i class="fas fa-house me-2"></i>Sản phẩm đã chọn</h5>
+                                <c:forEach items="${selectedItems}" var="item">
+                                    <div class="product-item">
+                                        <img src="${item.productThumbnail}" alt="${item.productTitle}" class="product-image">
+                                        <div class="product-details">
+                                            <div class="product-title">${item.productTitle}</div>
+                                            <div class="product-variant">Size: ${item.size} | Màu: ${item.color}</div>
+                                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                                <div>Số lượng: ${item.quantity}</div>
+                                                <div class="product-price">
+                                                    <fmt:formatNumber value="${item.productPrice * item.quantity}" 
+                                                                      type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                </div>
                                             </div>
                                         </div>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
+                                    </div>
+                                </c:forEach>
+                            </div>
                         </div>
 
-                        <button type="button" class="btn btn-outline-primary" 
-                                data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                            <i class="fas fa-plus me-2"></i>Thêm địa chỉ mới
-                        </button>
+                        <!-- Shipping Address Section -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ giao hàng
+                                </h5>
+
+                                <div class="address-list mb-3">
+                                    <c:choose>
+                                        <c:when test="${empty addresses}">
+                                            <div class="alert alert-info">
+                                                <p>Bạn chưa có địa chỉ giao hàng nào. Vui lòng thêm địa chỉ mới.</p>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:forEach items="${addresses}" var="address">
+                                                <div class="address-item">
+                                                    <div class="form-check">
+                                                        <input type="radio" class="form-check-input" 
+                                                               name="shipping_address" 
+                                                               value="${address.id}"
+                                                               ${address.isDefault ? 'checked' : ''}>
+                                                        <label class="form-check-label">
+                                                            <strong>${address.recipientName}</strong>
+                                                            <c:if test="${address.isDefault}">
+                                                                <span class="badge bg-primary ms-2">Mặc định</span>
+                                                            </c:if>
+                                                            <br>
+                                                            <span class="text-muted">
+                                                                <i class="fas fa-phone me-1"></i>${address.phone}
+                                                            </span><br>
+                                                            <span><i class="fas fa-home me-1"></i>${address.address}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-primary" 
+                                        data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                    <i class="fas fa-plus me-2"></i>Thêm địa chỉ mới
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Method Section -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-truck me-2"></i>Phương thức vận chuyển
+                                </h5>
+                                <div class="shipping-methods">
+                                    <div class="shipping-method">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" 
+                                                   name="shipping_method" value="standard" checked
+                                                   onchange="updateShippingFee(30000)">
+                                            <label class="form-check-label">
+                                                <strong>Giao hàng tiêu chuẩn</strong><br>
+                                                <small class="text-muted">3-5 ngày - 30.000₫</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="shipping-method">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" 
+                                                   name="shipping_method" value="express"
+                                                   onchange="updateShippingFee(45000)">
+                                            <label class="form-check-label">
+                                                <strong>Giao hàng nhanh</strong><br>
+                                                <small class="text-muted">1-2 ngày - 45.000₫</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method Section -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-credit-card me-2"></i>Phương thức thanh toán
+                                </h5>
+                                <div class="payment-methods">
+                                    <div class="payment-method">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" 
+                                                   name="payment_method" value="cod" checked>
+                                            <label class="form-check-label">
+                                                <strong>Thanh toán khi nhận hàng (COD)</strong><br>
+                                                <small class="text-muted">Thanh toán bằng tiền mặt khi nhận hàng</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" 
+                                                   name="payment_method" value="bank">
+                                            <label class="form-check-label">
+                                                <strong>Thanh toán trực tuyến</strong><br>
+                                                <small class="text-muted">Chuyển khoản qua tài khoản ngân hàng</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons - Only visible on mobile -->
+                        <div class="d-block d-lg-none">
+                            <div class="d-flex justify-content-between">
+                                <a href="cartdetail" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    Tiếp tục<i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Shipping Method Section -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-truck me-2"></i>Phương thức vận chuyển
-                        </h5>
-                        <div class="shipping-methods">
-                            <div class="shipping-method">
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" 
-                                           name="shipping_method" value="standard" checked
-                                           onchange="updateShippingFee(30000)">
-                                    <label class="form-check-label">
-                                        <strong>Giao hàng tiêu chuẩn</strong><br>
-                                        <small class="text-muted">3-5 ngày - 30.000₫</small>
-                                    </label>
+                    <!-- Right Column - Order Summary -->
+                    <div class="col-lg-4 order-summary">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Tóm tắt đơn hàng</h5>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Tạm tính:</span>
+                                    <span id="subtotal">
+                                        <fmt:formatNumber value="${subtotal}" 
+                                                          type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="shipping-method">
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" 
-                                           name="shipping_method" value="express"
-                                           onchange="updateShippingFee(45000)">
-                                    <label class="form-check-label">
-                                        <strong>Giao hàng nhanh</strong><br>
-                                        <small class="text-muted">1-2 ngày - 45.000₫</small>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Payment Method Section -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-credit-card me-2"></i>Phương thức thanh toán
-                        </h5>
-                        <div class="payment-methods">
-                            <div class="payment-method">
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" 
-                                           name="payment_method" value="cod" checked>
-                                    <label class="form-check-label">
-                                        <strong>Thanh toán khi nhận hàng (COD)</strong><br>
-                                        <small class="text-muted">Thanh toán bằng tiền mặt khi nhận hàng</small>
-                                    </label>
+                                <c:if test="${discount != null && discount > 0}">
+                                    <div class="d-flex justify-content-between mb-2 text-success">
+                                        <span>Giảm giá:</span>
+                                        <span id="discount">
+                                            -<fmt:formatNumber value="${discount}" 
+                                                              type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        </span>
+                                    </div>
+                                    <c:if test="${not empty appliedCoupon}">
+                                        <div class="mb-2 text-success">
+                                            <small>Mã giảm giá: ${appliedCoupon}</small>
+                                        </div>
+                                    </c:if>
+                                </c:if>
+
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Phí vận chuyển:</span>
+                                    <span id="shippingFee">
+                                        <fmt:formatNumber value="${shippingFee}" 
+                                                          type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="payment-method">
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" 
-                                           name="payment_method" value="bank">
-                                    <label class="form-check-label">
-                                        <strong>Thanh toán trực tuyến</strong><br>
-                                        <small class="text-muted">Chuyển khoản qua tài khoản ngân hàng</small>
-                                    </label>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Tổng cộng:</strong>
+                                    <strong class="text-primary" id="totalAmount">
+                                        <fmt:formatNumber value="${subtotal - (discount != null ? discount : 0) + shippingFee}" 
+                                                          type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                    </strong>
+                                </div>
+                                
+                                <!-- Navigation Buttons - Only visible on desktop -->
+                                <div class="d-none d-lg-block mt-4">
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            Tiếp tục<i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                        <a href="cartdetail" class="btn btn-outline-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Order Summary -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Tóm tắt đơn hàng</h5>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Tạm tính:</span>
-                            <span id="subtotal">
-                                <fmt:formatNumber value="${subtotal}" 
-                                                  type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                            </span>
-                        </div>
-
-                        <c:if test="${discount != null && discount > 0}">
-                            <div class="d-flex justify-content-between mb-2 text-success">
-                                <span>Giảm giá:</span>
-                                <span id="discount">
-                                    -<fmt:formatNumber value="${discount}" 
-                                                      type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                </span>
-                            </div>
-                            <c:if test="${not empty appliedCoupon}">
-                                <div class="mb-2 text-success">
-                                    <small>Mã giảm giá: ${appliedCoupon}</small>
-                                </div>
-                            </c:if>
-                        </c:if>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Phí vận chuyển:</span>
-                            <span id="shippingFee">
-                                <fmt:formatNumber value="${shippingFee}" 
-                                                  type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                            </span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between">
-                            <strong>Tổng cộng:</strong>
-                            <strong class="text-primary" id="totalAmount">
-                                <fmt:formatNumber value="${subtotal - (discount != null ? discount : 0) + shippingFee}" 
-                                                  type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                            </strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="d-flex justify-content-between">
-                    <a href="cartdetail" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        Tiếp tục<i class="fas fa-arrow-right ms-2"></i>
-                    </button>
                 </div>
             </form>
         </div>
-    </div>
 
-    <!-- Add Address Modal -->
-    <div class="modal fade" id="addAddressModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Thêm địa chỉ mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <!-- Add Address Modal -->
+        <div class="modal fade" id="addAddressModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm địa chỉ mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form action="cartcontact" method="post">
+                        <input type="hidden" name="action" value="add_address">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Họ tên người nhận</label>
+                                <input type="text" class="form-control" name="recipient_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" name="phone" 
+                                       pattern="[0-9]{10}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tỉnh/Thành phố</label>
+                                <select class="form-select" id="province" required>
+                                    <option value="">Chọn tỉnh/thành phố</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Quận/Huyện</label>
+                                <select class="form-select" id="district" required disabled>
+                                    <option value="">Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phường/Xã</label>
+                                <select class="form-select" id="ward" required disabled>
+                                    <option value="">Chọn phường/xã</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Địa chỉ cụ thể</label>
+                                <textarea class="form-control" id="specific_address" 
+                                          rows="2" placeholder="Số nhà, tên đường" required></textarea>
+                            </div>
+                            <input type="hidden" name="address" id="full_address">
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" 
+                                       name="is_default" id="defaultAddress">
+                                <label class="form-check-label" for="defaultAddress">
+                                    Đặt làm địa chỉ mặc định
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary">Thêm địa chỉ</button>
+                        </div>
+                    </form>
                 </div>
-                <form action="cartcontact" method="post">
-                    <input type="hidden" name="action" value="add_address">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Họ tên người nhận</label>
-                            <input type="text" class="form-control" name="recipient_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Số điện thoại</label>
-                            <input type="tel" class="form-control" name="phone" 
-                                   pattern="[0-9]{10}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Tỉnh/Thành phố</label>
-                            <select class="form-select" id="province" required>
-                                <option value="">Chọn tỉnh/thành phố</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Quận/Huyện</label>
-                            <select class="form-select" id="district" required disabled>
-                                <option value="">Chọn quận/huyện</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phường/Xã</label>
-                            <select class="form-select" id="ward" required disabled>
-                                <option value="">Chọn phường/xã</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Địa chỉ cụ thể</label>
-                            <textarea class="form-control" id="specific_address" 
-                                      rows="2" placeholder="Số nhà, tên đường" required></textarea>
-                        </div>
-                        <input type="hidden" name="address" id="full_address">
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" 
-                                   name="is_default" id="defaultAddress">
-                            <label class="form-check-label" for="defaultAddress">
-                                Đặt làm địa chỉ mặc định
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Thêm địa chỉ</button>
-                    </div>
-                </form>
             </div>
-        </div>
-    </div><br><br><br><br>
-    <div> <jsp:include page="/footer.jsp" /></div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-                                               // API URLs for address selection
-                                               const API_PROVINCE = 'https://provinces.open-api.vn/api/?depth=1';
-                                               const API_DISTRICT = 'https://provinces.open-api.vn/api/p/';
-                                               const API_WARD = 'https://provinces.open-api.vn/api/d/';
+        </div><br><br><br><br>
+        <div><jsp:include page="/footer.jsp" /></div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // API URLs for address selection
+            const API_PROVINCE = 'https://provinces.open-api.vn/api/?depth=1';
+            const API_DISTRICT = 'https://provinces.open-api.vn/api/p/';
+            const API_WARD = 'https://provinces.open-api.vn/api/d/';
 
-                                               // Update shipping fee and total amount
-                                               function updateShippingFee(fee) {
-                                                   const subtotal = ${subtotal};
-                                                   const formattedFee = new Intl.NumberFormat('vi-VN', {
-                                                       style: 'currency',
-                                                       currency: 'VND',
-                                                       maximumFractionDigits: 0
-                                                   }).format(fee);
+            // Update shipping fee and total amount
+            function updateShippingFee(fee) {
+                const subtotal = ${subtotal};
+                const discount = ${discount != null ? discount : 0};
 
-                                                   const total = subtotal + fee;
-                                                   const formattedTotal = new Intl.NumberFormat('vi-VN', {
-                                                       style: 'currency',
-                                                       currency: 'VND',
-                                                       maximumFractionDigits: 0
-                                                   }).format(total);
+                const formattedFee = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(fee);
 
-                                                   document.getElementById('shippingFee').textContent = formattedFee;
-                                                   document.getElementById('totalAmount').textContent = formattedTotal;
-                                               }
+                // Tính tổng tiền sau khi trừ giảm giá và cộng phí ship
+                const total = subtotal - discount + fee;
+                const formattedTotal = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(total);
 
-                                               // Elements for address form
-                                               const provinceSelect = document.getElementById('province');
-                                               const districtSelect = document.getElementById('district');
-                                               const wardSelect = document.getElementById('ward');
-                                               const specificAddress = document.getElementById('specific_address');
-                                               const fullAddressInput = document.getElementById('full_address');
+                document.getElementById('shippingFee').textContent = formattedFee;
+                document.getElementById('totalAmount').textContent = formattedTotal;
+            }
 
-                                               // Load provinces
-                                               async function loadProvinces() {
-                                                   try {
-                                                       const response = await fetch(API_PROVINCE);
-                                                       const data = await response.json();
-                                                       data.forEach(province => {
-                                                           const option = document.createElement('option');
-                                                           option.value = province.code;
-                                                           option.textContent = province.name;
-                                                           provinceSelect.appendChild(option);
-                                                       });
-                                                   } catch (error) {
-                                                       console.error('Error loading provinces:', error);
-                                                   }
-                                               }
+            // Elements for address form
+            const provinceSelect = document.getElementById('province');
+            const districtSelect = document.getElementById('district');
+            const wardSelect = document.getElementById('ward');
+            const specificAddress = document.getElementById('specific_address');
+            const fullAddressInput = document.getElementById('full_address');
 
-                                               // Load districts
-                                               async function loadDistricts(provinceCode) {
-                                                   try {
-                                                       const response = await fetch(API_DISTRICT + provinceCode + '?depth=2');
-                                                       const data = await response.json();
+            // Load provinces
+            async function loadProvinces() {
+                try {
+                    const response = await fetch(API_PROVINCE);
+                    const data = await response.json();
+                    data.forEach(province => {
+                        const option = document.createElement('option');
+                        option.value = province.code;
+                        option.textContent = province.name;
+                        provinceSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error loading provinces:', error);
+                }
+            }
 
-                                                       districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-                                                       districtSelect.disabled = false;
+            // Load districts
+            async function loadDistricts(provinceCode) {
+                try {
+                    const response = await fetch(API_DISTRICT + provinceCode + '?depth=2');
+                    const data = await response.json();
 
-                                                       wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                                                       wardSelect.disabled = true;
+                    districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                    districtSelect.disabled = false;
 
-                                                       data.districts.forEach(district => {
-                                                           const option = document.createElement('option');
-                                                           option.value = district.code;
-                                                           option.textContent = district.name;
-                                                           districtSelect.appendChild(option);
-                                                       });
-                                                   } catch (error) {
-                                                       console.error('Error loading districts:', error);
-                                                   }
-                                               }
+                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                    wardSelect.disabled = true;
 
-                                               // Load wards
-                                               async function loadWards(districtCode) {
-                                                   try {
-                                                       const response = await fetch(API_WARD + districtCode + '?depth=2');
-                                                       const data = await response.json();
+                    data.districts.forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district.code;
+                        option.textContent = district.name;
+                        districtSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error loading districts:', error);
+                }
+            }
 
-                                                       wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                                                       wardSelect.disabled = false;
+            // Load wards
+            async function loadWards(districtCode) {
+                try {
+                    const response = await fetch(API_WARD + districtCode + '?depth=2');
+                    const data = await response.json();
 
-                                                       data.wards.forEach(ward => {
-                                                           const option = document.createElement('option');
-                                                           option.value = ward.code;
-                                                           option.textContent = ward.name;
-                                                           wardSelect.appendChild(option);
-                                                       });
-                                                   } catch (error) {
-                                                       console.error('Error loading wards:', error);
-                                                   }
-                                               }
+                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                    wardSelect.disabled = false;
 
-                                               // Update full address
-                                               function updateFullAddress() {
-                                                   const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
-                                                   const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
-                                                   const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
-                                                   const specific = specificAddress.value.trim();
+                    data.wards.forEach(ward => {
+                        const option = document.createElement('option');
+                        option.value = ward.code;
+                        option.textContent = ward.name;
+                        wardSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error loading wards:', error);
+                }
+            }
 
-                                                   const addressParts = [];
-                                                   if (specific)
-                                                       addressParts.push(specific);
-                                                   if (ward)
-                                                       addressParts.push(ward);
-                                                   if (district)
-                                                       addressParts.push(district);
-                                                   if (province)
-                                                       addressParts.push(province);
+            // Update full address
+            function updateFullAddress() {
+                const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
+                const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
+                const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+                const specific = specificAddress.value.trim();
 
-                                                   fullAddressInput.value = addressParts.join(', ');
-                                               }
+                const addressParts = [];
+                if (specific)
+                    addressParts.push(specific);
+                if (ward)
+                    addressParts.push(ward);
+                if (district)
+                    addressParts.push(district);
+                if (province)
+                    addressParts.push(province);
 
-                                               // Event listeners
-                                               provinceSelect.addEventListener('change', (e) => {
-                                                   if (e.target.value) {
-                                                       loadDistricts(e.target.value);
-                                                   } else {
-                                                       districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-                                                       districtSelect.disabled = true;
-                                                       wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                                                       wardSelect.disabled = true;
-                                                   }
-                                                   updateFullAddress();
-                                               });
+                fullAddressInput.value = addressParts.join(', ');
+            }
 
-                                               districtSelect.addEventListener('change', (e) => {
-                                                   if (e.target.value) {
-                                                       loadWards(e.target.value);
-                                                   } else {
-                                                       wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                                                       wardSelect.disabled = true;
-                                                   }
-                                                   updateFullAddress();
-                                               });
+            // Event listeners
+            provinceSelect.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    loadDistricts(e.target.value);
+                } else {
+                    districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                    districtSelect.disabled = true;
+                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                    wardSelect.disabled = true;
+                }
+                updateFullAddress();
+            });
 
-                                               wardSelect.addEventListener('change', updateFullAddress);
-                                               specificAddress.addEventListener('input', updateFullAddress);
+            districtSelect.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    loadWards(e.target.value);
+                } else {
+                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                    wardSelect.disabled = true;
+                }
+                updateFullAddress();
+            });
 
-                                               // Initialize on page load
-                                               loadProvinces();
-                                               function checkout() {
-                                                   const selectedItems = [];
-                                                   const selectedQuantities = [];
-                                                   const checkboxes = document.getElementsByClassName('product-select');
+            wardSelect.addEventListener('change', updateFullAddress);
+            specificAddress.addEventListener('input', updateFullAddress);
 
-                                                   for (let checkbox of checkboxes) {
-                                                       if (checkbox.checked) {
-                                                           const row = checkbox.closest('tr');
-                                                           const itemId = row.dataset.itemId;
-                                                           const quantity = row.querySelector('input[type="number"]').value;
-
-                                                           selectedItems.push(itemId);
-                                                           selectedQuantities.push(quantity);
-                                                       }
-                                                   }
-
-                                                   if (selectedItems.length > 0) {
-                                                       // Store in session using AJAX
-                                                       fetch('cartdetail', {
-                                                           method: 'POST',
-                                                           headers: {
-                                                               'Content-Type': 'application/x-www-form-urlencoded',
-                                                           },
-                                                           body: 'action=store_selected&' +
-                                                                   'selectedItems=' + selectedItems.join(',') + '&' +
-                                                                   'selectedQuantities=' + selectedQuantities.join(',')
-                                                       }).then(response => {
-                                                           if (response.ok) {
-                                                               window.location.href = 'cartcontact';
-                                                           }
-                                                       });
-                                                   }
-                                               }
-                                               function updateShippingFee(fee) {
-                                                   const subtotal = ${subtotal};
-                                                   const discount = ${discount != null ? discount : 0};
-
-                                                   const formattedFee = new Intl.NumberFormat('vi-VN', {
-                                                       style: 'currency',
-                                                       currency: 'VND',
-                                                       maximumFractionDigits: 0
-                                                   }).format(fee);
-
-                                                   // Tính tổng tiền sau khi trừ giảm giá và cộng phí ship
-                                                   const total = subtotal - discount + fee;
-                                                   const formattedTotal = new Intl.NumberFormat('vi-VN', {
-                                                       style: 'currency',
-                                                       currency: 'VND',
-                                                       maximumFractionDigits: 0
-                                                   }).format(total);
-
-                                                   document.getElementById('shippingFee').textContent = formattedFee;
-                                                   document.getElementById('totalAmount').textContent = formattedTotal;
-                                               }
-    </script>
-</body>
+            // Initialize on page load
+            loadProvinces();
+        </script>
+    </body>
 </html>
