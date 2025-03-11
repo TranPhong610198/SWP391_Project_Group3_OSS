@@ -290,7 +290,7 @@
                                                     <span class="text-muted">
                                                         <i class="fas fa-phone me-1"></i>${address.phone}
                                                     </span><br>
-                                                    <span>${address.address}</span>
+                                                    <span><i class="fas fa-home me-1"></i>${address.address}</span>
                                                 </label>
                                             </div>
                                         </div>
