@@ -203,7 +203,7 @@
                 .order-summary {
                     margin-top: 2rem;
                 }
-                
+
                 .order-summary .card {
                     position: static;
                 }
@@ -388,7 +388,7 @@
                         <!-- Navigation Buttons - Only visible on mobile -->
                         <div class="d-block d-lg-none">
                             <div class="d-flex justify-content-between">
-                                <a href="cartdetail" class="btn btn-outline-secondary">
+                                <a href="cartdetail?from=contact" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
                                 </a>
                                 <button type="submit" class="btn btn-primary">
@@ -441,7 +441,7 @@
                                                           type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                     </strong>
                                 </div>
-                                
+
                                 <!-- Navigation Buttons - Only visible on desktop -->
                                 <div class="d-none d-lg-block mt-4">
                                     <div class="d-grid gap-2">
@@ -521,151 +521,151 @@
             </div>
         </div><br><br><br><br>
         <div><jsp:include page="/footer.jsp" /></div>
-        
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            // API URLs for address selection
-            const API_PROVINCE = 'https://provinces.open-api.vn/api/?depth=1';
-            const API_DISTRICT = 'https://provinces.open-api.vn/api/p/';
-            const API_WARD = 'https://provinces.open-api.vn/api/d/';
+                                                       // API URLs for address selection
+                                                       const API_PROVINCE = 'https://provinces.open-api.vn/api/?depth=1';
+                                                       const API_DISTRICT = 'https://provinces.open-api.vn/api/p/';
+                                                       const API_WARD = 'https://provinces.open-api.vn/api/d/';
 
-            // Update shipping fee and total amount
-            function updateShippingFee(fee) {
-                const subtotal = ${subtotal};
-                const discount = ${discount != null ? discount : 0};
+                                                       // Update shipping fee and total amount
+                                                       function updateShippingFee(fee) {
+                                                           const subtotal = ${subtotal};
+                                                           const discount = ${discount != null ? discount : 0};
 
-                const formattedFee = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND',
-                    maximumFractionDigits: 0
-                }).format(fee);
+                                                           const formattedFee = new Intl.NumberFormat('vi-VN', {
+                                                               style: 'currency',
+                                                               currency: 'VND',
+                                                               maximumFractionDigits: 0
+                                                           }).format(fee);
 
-                // Tính tổng tiền sau khi trừ giảm giá và cộng phí ship
-                const total = subtotal - discount + fee;
-                const formattedTotal = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND',
-                    maximumFractionDigits: 0
-                }).format(total);
+                                                           // Tính tổng tiền sau khi trừ giảm giá và cộng phí ship
+                                                           const total = subtotal - discount + fee;
+                                                           const formattedTotal = new Intl.NumberFormat('vi-VN', {
+                                                               style: 'currency',
+                                                               currency: 'VND',
+                                                               maximumFractionDigits: 0
+                                                           }).format(total);
 
-                document.getElementById('shippingFee').textContent = formattedFee;
-                document.getElementById('totalAmount').textContent = formattedTotal;
-            }
+                                                           document.getElementById('shippingFee').textContent = formattedFee;
+                                                           document.getElementById('totalAmount').textContent = formattedTotal;
+                                                       }
 
-            // Elements for address form
-            const provinceSelect = document.getElementById('province');
-            const districtSelect = document.getElementById('district');
-            const wardSelect = document.getElementById('ward');
-            const specificAddress = document.getElementById('specific_address');
-            const fullAddressInput = document.getElementById('full_address');
+                                                       // Elements for address form
+                                                       const provinceSelect = document.getElementById('province');
+                                                       const districtSelect = document.getElementById('district');
+                                                       const wardSelect = document.getElementById('ward');
+                                                       const specificAddress = document.getElementById('specific_address');
+                                                       const fullAddressInput = document.getElementById('full_address');
 
-            // Load provinces
-            async function loadProvinces() {
-                try {
-                    const response = await fetch(API_PROVINCE);
-                    const data = await response.json();
-                    data.forEach(province => {
-                        const option = document.createElement('option');
-                        option.value = province.code;
-                        option.textContent = province.name;
-                        provinceSelect.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error('Error loading provinces:', error);
-                }
-            }
+                                                       // Load provinces
+                                                       async function loadProvinces() {
+                                                           try {
+                                                               const response = await fetch(API_PROVINCE);
+                                                               const data = await response.json();
+                                                               data.forEach(province => {
+                                                                   const option = document.createElement('option');
+                                                                   option.value = province.code;
+                                                                   option.textContent = province.name;
+                                                                   provinceSelect.appendChild(option);
+                                                               });
+                                                           } catch (error) {
+                                                               console.error('Error loading provinces:', error);
+                                                           }
+                                                       }
 
-            // Load districts
-            async function loadDistricts(provinceCode) {
-                try {
-                    const response = await fetch(API_DISTRICT + provinceCode + '?depth=2');
-                    const data = await response.json();
+                                                       // Load districts
+                                                       async function loadDistricts(provinceCode) {
+                                                           try {
+                                                               const response = await fetch(API_DISTRICT + provinceCode + '?depth=2');
+                                                               const data = await response.json();
 
-                    districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-                    districtSelect.disabled = false;
+                                                               districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                                                               districtSelect.disabled = false;
 
-                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                    wardSelect.disabled = true;
+                                                               wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                               wardSelect.disabled = true;
 
-                    data.districts.forEach(district => {
-                        const option = document.createElement('option');
-                        option.value = district.code;
-                        option.textContent = district.name;
-                        districtSelect.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error('Error loading districts:', error);
-                }
-            }
+                                                               data.districts.forEach(district => {
+                                                                   const option = document.createElement('option');
+                                                                   option.value = district.code;
+                                                                   option.textContent = district.name;
+                                                                   districtSelect.appendChild(option);
+                                                               });
+                                                           } catch (error) {
+                                                               console.error('Error loading districts:', error);
+                                                           }
+                                                       }
 
-            // Load wards
-            async function loadWards(districtCode) {
-                try {
-                    const response = await fetch(API_WARD + districtCode + '?depth=2');
-                    const data = await response.json();
+                                                       // Load wards
+                                                       async function loadWards(districtCode) {
+                                                           try {
+                                                               const response = await fetch(API_WARD + districtCode + '?depth=2');
+                                                               const data = await response.json();
 
-                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                    wardSelect.disabled = false;
+                                                               wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                               wardSelect.disabled = false;
 
-                    data.wards.forEach(ward => {
-                        const option = document.createElement('option');
-                        option.value = ward.code;
-                        option.textContent = ward.name;
-                        wardSelect.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error('Error loading wards:', error);
-                }
-            }
+                                                               data.wards.forEach(ward => {
+                                                                   const option = document.createElement('option');
+                                                                   option.value = ward.code;
+                                                                   option.textContent = ward.name;
+                                                                   wardSelect.appendChild(option);
+                                                               });
+                                                           } catch (error) {
+                                                               console.error('Error loading wards:', error);
+                                                           }
+                                                       }
 
-            // Update full address
-            function updateFullAddress() {
-                const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
-                const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
-                const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
-                const specific = specificAddress.value.trim();
+                                                       // Update full address
+                                                       function updateFullAddress() {
+                                                           const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
+                                                           const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
+                                                           const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+                                                           const specific = specificAddress.value.trim();
 
-                const addressParts = [];
-                if (specific)
-                    addressParts.push(specific);
-                if (ward)
-                    addressParts.push(ward);
-                if (district)
-                    addressParts.push(district);
-                if (province)
-                    addressParts.push(province);
+                                                           const addressParts = [];
+                                                           if (specific)
+                                                               addressParts.push(specific);
+                                                           if (ward)
+                                                               addressParts.push(ward);
+                                                           if (district)
+                                                               addressParts.push(district);
+                                                           if (province)
+                                                               addressParts.push(province);
 
-                fullAddressInput.value = addressParts.join(', ');
-            }
+                                                           fullAddressInput.value = addressParts.join(', ');
+                                                       }
 
-            // Event listeners
-            provinceSelect.addEventListener('change', (e) => {
-                if (e.target.value) {
-                    loadDistricts(e.target.value);
-                } else {
-                    districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-                    districtSelect.disabled = true;
-                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                    wardSelect.disabled = true;
-                }
-                updateFullAddress();
-            });
+                                                       // Event listeners
+                                                       provinceSelect.addEventListener('change', (e) => {
+                                                           if (e.target.value) {
+                                                               loadDistricts(e.target.value);
+                                                           } else {
+                                                               districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+                                                               districtSelect.disabled = true;
+                                                               wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                               wardSelect.disabled = true;
+                                                           }
+                                                           updateFullAddress();
+                                                       });
 
-            districtSelect.addEventListener('change', (e) => {
-                if (e.target.value) {
-                    loadWards(e.target.value);
-                } else {
-                    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                    wardSelect.disabled = true;
-                }
-                updateFullAddress();
-            });
+                                                       districtSelect.addEventListener('change', (e) => {
+                                                           if (e.target.value) {
+                                                               loadWards(e.target.value);
+                                                           } else {
+                                                               wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+                                                               wardSelect.disabled = true;
+                                                           }
+                                                           updateFullAddress();
+                                                       });
 
-            wardSelect.addEventListener('change', updateFullAddress);
-            specificAddress.addEventListener('input', updateFullAddress);
+                                                       wardSelect.addEventListener('change', updateFullAddress);
+                                                       specificAddress.addEventListener('input', updateFullAddress);
 
-            // Initialize on page load
-            loadProvinces();
+                                                       // Initialize on page load
+                                                       loadProvinces();
         </script>
     </body>
 </html>
