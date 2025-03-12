@@ -5,6 +5,7 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="sidebar">
     <div class="sidebar-header p-3 border-bottom">
         <h5 class="mt-2 mb-3">Quản Lý Tiếp Thị</h5>
@@ -19,7 +20,14 @@
             </div>
             <div class="user-info">
                 <h6 class="mb-0 text-light">${sessionScope.acc.fullName}</h6>
-                <span class="text-light-50 small">Marketing</span>
+                <c:choose>
+                    <c:when test="${sessionScope.acc.role == 'admin'}">
+                        <span class="text-light-50 small">Administrator</span>
+                    </c:when>
+                    <c:when test="${sessionScope.acc.role == 'marketing'}">
+                        <span class="text-light-50 small">Marketing</span>
+                    </c:when>
+                </c:choose>
             </div>
         </div>
         <!-- Profile and Logout Buttons -->
@@ -38,7 +46,7 @@
         <li class="menu-item p-2">
             <a href="dashboard" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-chart-bar me-2"></i>
-                Dashboard
+                Bảng điều khiển
             </a>
         </li>
 
@@ -79,13 +87,6 @@
                 <!--                <span class="badge bg-danger rounded-pill">3</span>-->
             </a>
         </li>
-
-        <!--        <li class="menu-item p-2">
-                    <a href="analytics.jsp" class="text-decoration-none text-light d-flex align-items-center">
-                        <i class="fas fa-chart-line me-2"></i>
-                        Phân tích dữ liệu
-                    </a>
-                </li>-->
 
         <li class="menu-item p-2">
             <a href="#contentSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between collapsed">
@@ -132,13 +133,22 @@
                 Trang chủ
             </a>
         </li>
+
+        <c:if test="${sessionScope.acc.role == 'admin'}">
+            <li class="menu-item p-2">
+                <a href="${pageContext.request.contextPath}/admin/userlists" class="text-decoration-none text-light d-flex align-items-center">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Quay lại trang Quản trị
+                </a>
+            </li>
+        </c:if>
     </ul>
 
     <!-- No separate logout section as it's been moved to the User Profile section -->
 </div>
 
 <style>
-    /* Sidebar specific styles */
+    /* Giữ nguyên style hiện tại */
     .sidebar {
         position: fixed;
         left: 0;
@@ -160,7 +170,6 @@
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* User profile section */
     .user-profile {
         background-color: rgba(0,0,0,0.1);
     }
@@ -225,7 +234,7 @@
     }
 
     .submenu-item.active a {
-        padding-left: 7px; /* Adjust for the border */
+        padding-left: 7px;
         font-weight: 500;
     }
 
