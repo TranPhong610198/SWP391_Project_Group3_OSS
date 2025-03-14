@@ -150,12 +150,14 @@
                                             <span class="input-group-text bg-light">
                                                 <i class="fas fa-keyboard text-muted"></i>
                                             </span>
-                                            <input type="tel" class="form-control" id="value" name="value"
-                                                   value="${footer.value}" required pattern="\d{10,11}" 
-                                                   title="Số điện thoại phải có 10 hoặc 11 chữ số">
+                                            <input type="text" class="form-control" id="value" name="value"
+                                                   value="${footer.value}" required>
                                         </div>
-                                        <div class="invalid-feedback">
+                                        <div class="invalid-feedback" id="defaultFeedback">
                                             Vui lòng nhập giá trị
+                                        </div>
+                                        <div class="invalid-feedback" id="phoneFeedback" style="display: none;">
+                                            Số điện thoại phải có 10 hoặc 11 chữ số
                                         </div>
                                     </div>
 
@@ -239,6 +241,60 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
+                                                       document.addEventListener('DOMContentLoaded', function () {
+                                                           const valueInput = document.getElementById('value');
+                                                           const defaultFeedback = document.getElementById('defaultFeedback');
+                                                           const phoneFeedback = document.getElementById('phoneFeedback');
+
+                                                           // Hàm kiểm tra giá trị là số điện thoại hay không
+                                                           function isPhoneNumber(value) {
+                                                               return /^[0-9]+$/.test(value);
+                                                           }
+
+                                                           // Hàm kiểm tra định dạng số điện thoại hợp lệ
+                                                           function isValidPhoneNumber(value) {
+                                                               return /^\d{10,11}$/.test(value);
+                                                           }
+
+                                                           valueInput.addEventListener('input', function () {
+                                                               const value = this.value.trim();
+
+                                                               // Reset validation state
+                                                               this.setCustomValidity('');
+                                                               defaultFeedback.style.display = '';
+                                                               phoneFeedback.style.display = 'none';
+
+                                                               // Nếu giá trị rỗng
+                                                               if (value === '') {
+                                                                   this.setCustomValidity('Vui lòng nhập giá trị');
+                                                                   return;
+                                                               }
+
+                                                               // Nếu giá trị chỉ chứa số (có thể là số điện thoại)
+                                                               if (isPhoneNumber(value)) {
+                                                                   // Kiểm tra xem có phải số điện thoại hợp lệ không
+                                                                   if (!isValidPhoneNumber(value)) {
+                                                                       this.setCustomValidity('Số điện thoại không hợp lệ');
+                                                                       defaultFeedback.style.display = 'none';
+                                                                       phoneFeedback.style.display = 'block';
+                                                                   }
+                                                               }
+                                                           });
+
+                                                           // Validate khi form submit
+                                                           valueInput.closest('form').addEventListener('submit', function (e) {
+                                                               const value = valueInput.value.trim();
+
+                                                               if (isPhoneNumber(value) && !isValidPhoneNumber(value)) {
+                                                                   e.preventDefault();
+                                                                   valueInput.setCustomValidity('Số điện thoại không hợp lệ');
+                                                                   defaultFeedback.style.display = 'none';
+                                                                   phoneFeedback.style.display = 'block';
+                                                                   valueInput.reportValidity();
+                                                               }
+                                                           });
+                                                       });
+                                                       ///////////////////////////////////////////////////////////////////////////////////
                                                        $(document).ready(function () {
                                                            // Form validation
                                                            (function () {
@@ -285,10 +341,6 @@
                                                                    }
                                                                }
                                                            });
-
-                                                           // Highlight active menu item
-                                                           $('.menu-item').removeClass('active');
-                                                           $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
                                                        });
                                                        // Xem trước ảnh icon
                                                        function previewImage(input) {

@@ -277,15 +277,6 @@
                     statusSelect.disabled = false;
                 }
             }
-
-            // Highlight active menu item
-            $(document).ready(function () {
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
-                
-                // Check parent status on page load
-                checkParentStatus();
-            });
         </script>
     </body>
 </html>

@@ -684,19 +684,6 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public String getProductNameById(int productId) {
-        String sql = "SELECT title FROM products WHERE id = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, productId);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getString("title");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return null;
-    }
 
     //VTĐ lấy sản phẩm hiển thị lên home
     public List<Product> getProductsByCategory(int categoryId, int limit) {

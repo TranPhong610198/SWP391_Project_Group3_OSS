@@ -596,31 +596,26 @@
                                                                     }
                                                                 });
 
-//                                                                $('.sidebar-toggle').on('click', function () {
-//                                                                    $('.sidebar').toggleClass('active');
-//                                                                    $('.main-content').toggleClass('active');
-//                                                                    $(this).hide();
-//                                                                });
-//
-//                                                                $(document).on('click', function (e) {
-//                                                                    if ($(window).width() <= 768) {
-//                                                                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-//                                                                            $('.sidebar').removeClass('active');
-//                                                                            $('.main-content').removeClass('active');
-//                                                                            $('.sidebar-toggle').show();
-//                                                                        }
-//                                                                    }
-//                                                                });
-//
-//                                                                $('.menu-item').removeClass('active');
-//                                                                $('.menu-item a[href="productlist"]').closest('.menu-item').addClass('active');
-//
-//                                                                $('#productSubmenu').addClass('show');
-//
-//                                                                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-//                                                                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-//                                                                    return new bootstrap.Tooltip(tooltipTriggerEl)
-//                                                                });
+                                                                $('.sidebar-toggle').on('click', function () {
+                                                                    $('.sidebar').toggleClass('active');
+                                                                    $('.main-content').toggleClass('active');
+                                                                    $(this).hide();
+                                                                });
+
+                                                                $(document).on('click', function (e) {
+                                                                    if ($(window).width() <= 768) {
+                                                                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                            $('.sidebar').removeClass('active');
+                                                                            $('.main-content').removeClass('active');
+                                                                            $('.sidebar-toggle').show();
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                                                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                                                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                                                                });
                                                             });
 
                                                             function deleteProduct(id) {

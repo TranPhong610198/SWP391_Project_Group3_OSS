@@ -171,14 +171,13 @@
                     <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
                     <div class="d-flex justify-content-end mb-3">
                         <a href="addModel?productId=${inventory.productId}&source=${param.source}" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Thêm Biến Thể Mới
+                            <i class="fas fa-plus me-2"></i>Thêm Mẫu Mới
                         </a>
                     </div>
                     <div class="model-table-container">
                         <table class="table table-bordered table-hover">
                             <thead class="table-light sticky-top">
                                 <tr>
-                                    <th>Mã sản phẩm lưu kho</th>
                                     <th>Màu sắc</th>
                                     <th>Kích thước</th>
                                     <th>Số lượng</th>
@@ -189,7 +188,6 @@
                             <tbody>
                                 <c:forEach items="${variants}" var="variant">
                                     <tr>
-                                        <td>${variant.sku}</td>
                                         <td>${variant.color.name}</td>
                                         <td>${variant.size.name}</td>
                                         <td>${variant.quantity}</td>
@@ -242,7 +240,6 @@
                         </div>
                         <div class="modal-body">
                             Bạn có chắc chắn muốn xóa mẫu sản phẩm này?<br>
-                            Mã sản phẩm lưu kho: <strong>${variant.sku}</strong><br>
                             Màu sắc: <strong>${variant.color.name}</strong><br>
                             Kích thước: <strong>${variant.size.name}</strong>
                         </div>
@@ -298,13 +295,6 @@
                         }
                     }
                 });
-
-                // Highlight current menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
-
-                // Open product submenu by default
-                $('#productSubmenu').addClass('show');
             });
         </script>
     </body>

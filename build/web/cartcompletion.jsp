@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -68,6 +69,7 @@
     </style>
 </head>
 <body>
+    <div><jsp:include page="/header.jsp" /></div>
     <div class="container">
         <div class="completion-card">
             <!-- Icon thành công -->
@@ -80,16 +82,30 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h5>Thông tin đơn hàng</h5>
-                        <p><strong>Mã đơn hàng:</strong> #ORD123456</p>
-                        <p><strong>Ngày đặt:</strong> 19/02/2024</p>
-                        <p><strong>Tổng tiền:</strong> 530.000₫</p>
-                        <p><strong>Phương thức thanh toán:</strong> COD</p>
+                        <p><strong>Mã đơn hàng:</strong> #${orderCode}</p>
+                        <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${orderDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+                        <p><strong>Tổng tiền:</strong> 
+                            <fmt:formatNumber value="${total}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                        </p>
+                        <p><strong>Phương thức thanh toán:</strong> 
+                            <c:choose>
+                                <c:when test="${paymentMethod eq 'cod'}">Thanh toán khi nhận hàng (COD)</c:when>
+                                <c:when test="${paymentMethod eq 'bank'}">Thanh toán trực tuyến</c:when>
+                                <c:otherwise>${paymentMethod}</c:otherwise>
+                            </c:choose>
+                        </p>
                     </div>
                     <div class="col-md-6">
                         <h5>Thông tin giao hàng</h5>
-                        <p><strong>Người nhận:</strong> Nguyễn Văn A</p>
-                        <p><strong>Số điện thoại:</strong> 0987654321</p>
-                        <p><strong>Địa chỉ:</strong> 123 Đường ABC, Phường XYZ, Quận 1, TP.HCM</p>
+                        <p><strong>Người nhận:</strong> ${shippingAddress.recipientName}</p>
+                        <p><strong>Số điện thoại:</strong> ${shippingAddress.phone}</p>
+                        <p><strong>Địa chỉ:</strong> ${shippingAddress.address}</p>
+                        <p><strong>Phương thức vận chuyển:</strong>
+                            <c:choose>
+                                <c:when test="${shippingMethod eq 'express'}">Giao hàng nhanh (1-2 ngày)</c:when>
+                                <c:otherwise>Giao hàng tiêu chuẩn (3-5 ngày)</c:otherwise>
+                            </c:choose>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -101,7 +117,7 @@
                     <div class="status-step active text-center">
                         <i class="fas fa-shopping-cart"></i>
                         <div>Đặt hàng</div>
-                        <small>19/02 10:30</small>
+                        <small><fmt:formatDate value="${orderDate}" pattern="dd/MM HH:mm" /></small>
                     </div>
                     <div class="status-step text-center">
                         <i class="fas fa-box"></i>
@@ -135,11 +151,31 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <c:forEach items="${selectedItems}" var="item">
+                                <tr>
+                                    <td>${item.productTitle} - ${item.color}, Size ${item.size}</td>
+                                    <td>${item.quantity}</td>
+                                    <td><fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                    <td><fmt:formatNumber value="${item.productPrice * item.quantity}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                </tr>
+                            </c:forEach>
                             <tr>
-                                <td>Áo thun nam - Đen, Size L</td>
-                                <td>2</td>
-                                <td>250.000₫</td>
-                                <td>500.000₫</td>
+                                <td colspan="3" class="text-end"><strong>Tạm tính:</strong></td>
+                                <td><fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                            </tr>
+                            <c:if test="${discount != null && discount > 0}">
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Giảm giá:</strong></td>
+                                    <td class="text-success">-<fmt:formatNumber value="${discount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                </tr>
+                            </c:if>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Phí vận chuyển:</strong></td>
+                                <td><fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                                <td><strong><fmt:formatNumber value="${total}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></strong></td>
                             </tr>
                         </tbody>
                     </table>
@@ -149,20 +185,28 @@
             <!-- Thông tin thêm -->
             <div class="alert alert-info mt-4" role="alert">
                 <i class="fas fa-info-circle me-2"></i>
-                Chúng tôi sẽ gửi email xác nhận đơn hàng và thông tin cập nhật về việc giao hàng.
+                <c:choose>
+                    <c:when test="${paymentMethod eq 'bank'}">
+                        Vui lòng hoàn tất thanh toán để đơn hàng được xử lý. Chúng tôi sẽ gửi email xác nhận sau khi nhận được thanh toán.
+                    </c:when>
+                    <c:otherwise>
+                        Chúng tôi sẽ gửi email xác nhận đơn hàng và thông tin cập nhật về việc giao hàng.
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- Nút điều hướng -->
             <div class="mt-4">
-                <a href="cartdetails" class="btn btn-primary me-2">
+                <a href="myorder" class="btn btn-primary me-2">
                     <i class="fas fa-list me-2"></i>Xem đơn hàng của tôi
                 </a>
-                <a href="homepage.jsp" class="btn btn-outline-secondary">
+                <a href="home" class="btn btn-outline-secondary">
                     <i class="fas fa-home me-2"></i>Về trang chủ
                 </a>
             </div>
         </div>
     </div>
+    <div><jsp:include page="/footer.jsp" /></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

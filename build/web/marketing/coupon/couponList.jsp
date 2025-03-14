@@ -611,10 +611,6 @@
                     }
                 });
 
-                // Highlight current menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="couponlist"]').closest('.menu-item').addClass('active');
-
                 // Initialize tooltips
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
                 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

@@ -53,6 +53,13 @@ public class CartDetail extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
+        // Clear coupon if returning to cart page - THIS IS THE FIX
+        String fromPage = request.getParameter("from");
+        if ("contact".equals(fromPage) || request.getParameter("clearCoupon") != null) {
+            session.removeAttribute("appliedCoupon");
+            session.removeAttribute("cartDiscount");
+        }
+
         Cart cart = user != null
                 ? cartDAO.getCart(request, user.getId())
                 : cartDAO.getCart(request, null);
@@ -77,7 +84,7 @@ public class CartDetail extends HttpServlet {
             }
         }
 
-// Truyền thông tin trạng thái sản phẩm tới JSP
+        // Truyền thông tin trạng thái sản phẩm tới JSP
         request.setAttribute("productStatusMap", productStatusMap);
         List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
         request.setAttribute("availableCoupons", availableCoupons);
@@ -142,6 +149,12 @@ public class CartDetail extends HttpServlet {
             return;
         } else if ("checkStock".equals(action)) {
             handleCheckStock(request, response);
+            return;
+        } else if ("clearCoupon".equals(action)) {
+            // Add clear coupon action - THIS IS PART OF THE FIX
+            session.removeAttribute("appliedCoupon");
+            session.removeAttribute("cartDiscount");
+            response.sendRedirect("cartdetail");
             return;
         }
 
@@ -223,6 +236,10 @@ public class CartDetail extends HttpServlet {
                 session.removeAttribute("cartDiscount");
                 session.removeAttribute("appliedCoupon");
             }
+        } else {
+            // If no coupon is selected, clear any existing coupon - THIS IS PART OF THE FIX
+            session.removeAttribute("appliedCoupon");
+            session.removeAttribute("cartDiscount");
         }
 
         // Chuyển hướng sang trang contact mà không kiểm tra đăng nhập

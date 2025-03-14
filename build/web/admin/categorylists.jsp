@@ -177,7 +177,7 @@
                                     <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                                 </select>
                             </div>
-                            <div class="d-flex">
+                            <div class="col-md-3 d-flex">
                                         <button type="submit" class="btn btn-primary me-2">
                                             <i class="fas fa-filter me-1"></i>Lọc
                                         </button>
@@ -329,9 +329,6 @@
             }
 
             $(document).ready(function () {
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
 
                 // Initialize tooltips
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

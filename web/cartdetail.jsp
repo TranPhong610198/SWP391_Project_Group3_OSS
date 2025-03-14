@@ -502,29 +502,50 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title fw-bold mb-3">Mã giảm giá</h5>
-                            <select class="form-select mb-2" name="couponCode" onchange="updateTotalAmount()">
-                                <option value="">Chọn mã giảm giá</option>
-                                <c:forEach items="${availableCoupons}" var="coupon">
-                                    <option value="${coupon.code}" 
-                                            data-type="${coupon.discount_type}"
-                                            data-value="${coupon.discount_value}"
-                                            data-min="${coupon.min_order_amount}"
-                                            data-max="${coupon.max_discount}">
-                                        ${coupon.code} - 
-                                        <c:choose>
-                                            <c:when test="${coupon.discount_type == 'percentage'}">
-                                                Giảm ${coupon.discount_value}%
-                                            </c:when>
-                                            <c:otherwise>
-                                                Giảm ₫<fmt:formatNumber value="${coupon.discount_value}" type="number"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </option>
-                                </c:forEach>
-                            </select>
+                            <div class="d-flex">
+                                <select class="form-select mb-2 me-2" name="couponCode" onchange="updateTotalAmount()">
+                                    <option value="">Chọn mã giảm giá</option>
+                                    <c:forEach items="${availableCoupons}" var="coupon">
+                                        <option value="${coupon.code}" 
+                                                data-type="${coupon.discount_type}"
+                                                data-value="${coupon.discount_value}"
+                                                data-min="${coupon.min_order_amount}"
+                                                data-max="${coupon.max_discount}"
+                                                ${coupon.code eq appliedCoupon ? 'selected' : ''}>
+                                            ${coupon.code} - 
+                                            <c:choose>
+                                                <c:when test="${coupon.discount_type == 'percentage'}">
+                                                    Giảm ${coupon.discount_value}%
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Giảm ₫<fmt:formatNumber value="${coupon.discount_value}" type="number"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                                <c:if test="${not empty appliedCoupon}">
+                                    <form action="cartdetail" method="post" class="ms-2">
+                                        <input type="hidden" name="action" value="clearCoupon">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-times"></i> Xóa
+                                        </button>
+                                    </form>
+                                </c:if>
+                            </div>
                             <div id="couponMinAmount" class="small text-muted">
                                 Giá trị đơn hàng tối thiểu: ₫<span id="minOrderAmount">0</span>
                             </div>
+                            <c:if test="${not empty appliedCoupon}">
+                                <div class="small text-success mt-1">
+                                    <i class="fas fa-check-circle"></i> Đang áp dụng mã: ${appliedCoupon}
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty couponError}">
+                                <div class="small text-danger mt-1">
+                                    <i class="fas fa-exclamation-circle"></i> ${couponError}
+                                </div>
+                            </c:if>
                         </div>
                     </div>
 

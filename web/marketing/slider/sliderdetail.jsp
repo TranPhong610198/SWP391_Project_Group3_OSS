@@ -265,10 +265,6 @@
                         }
                     }
                 });
-
-                // Highlight the current menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="sliderList"]').closest('.menu-item').addClass('active');
                 
                 // Form validation
                 (function () {
