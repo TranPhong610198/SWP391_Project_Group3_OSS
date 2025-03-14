@@ -612,11 +612,6 @@
                                                                     }
                                                                 });
 
-                                                                $('.menu-item').removeClass('active');
-                                                                $('.menu-item a[href="productlist"]').closest('.menu-item').addClass('active');
-
-                                                                $('#productSubmenu').addClass('show');
-
                                                                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
                                                                 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                                                                     return new bootstrap.Tooltip(tooltipTriggerEl)

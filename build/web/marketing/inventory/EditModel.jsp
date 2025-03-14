@@ -88,35 +88,28 @@
                     </div>
                 </c:if>
                 <div class="info-section">
-                    <h5>Chỉnh Sửa Biến Thể</h5>
+                    <h5>Chỉnh Sửa Mẫu</h5>
                     <form action="editModel" method="POST">
                         <input type="hidden" name="productId" value="${variant.productId}">
                         <input type="hidden" name="variantId" value="${variant.id}">
                         <input type="hidden" name="source" value="${param.source}"> 
 
                         <div class="row g-3">
-                            <div class="col-md-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="sku" name="sku" 
-                                           value="${variant.sku}" readonly>
-                                    <label for="sku">Mã sản phẩm lưu kho</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="color" name="color" 
                                            value="${variant.color.name}" required>
                                     <label for="color">Màu sắc</label>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="size" name="size" 
                                            value="${variant.size.name}" required>
                                     <label for="size">Kích thước</label>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantity" name="quantity" 
                                            value="${variant.quantity}" required min="0">
@@ -160,13 +153,6 @@
                         }
                     }
                 });
-
-                // Highlight inventory management in sidebar
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
-
-                // Open product submenu by default
-                $('#productSubmenu').addClass('show');
             });
         </script>
     </body>

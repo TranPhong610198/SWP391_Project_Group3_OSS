@@ -329,9 +329,6 @@
             }
 
             $(document).ready(function () {
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="categorylists"]').closest('.menu-item').addClass('active');
 
                 // Initialize tooltips
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

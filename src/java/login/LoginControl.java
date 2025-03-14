@@ -166,14 +166,34 @@ public class LoginControl extends HttpServlet {
                 return;
             }
 
-            HttpSession session = request.getSession();
-            session.setAttribute("acc", account);
-            session.setAttribute("userID", account.getId());
-            // Kiểm tra có lưu URL trước đó không
-            String redirectURL = (String) session.getAttribute("redirectAfterLogin");
-            if (redirectURL != null) {
-                session.removeAttribute("redirectAfterLogin"); // Xóa session lưu URL
-                response.sendRedirect(redirectURL); // Quay lại trang trước đó
+            if (account != null && !"inactive".equals(account.getStatus()) && !"pending".equals(account.getStatus())) {
+                HttpSession session = request.getSession();
+                session.setAttribute("acc", account);
+                session.setAttribute("userID", account.getId());
+
+                // theo role
+                String role = account.getRole();
+                String redirectURL = (String) session.getAttribute("redirectAfterLogin");
+                if (redirectURL != null) {
+                    session.removeAttribute("redirectAfterLogin");
+                    response.sendRedirect(redirectURL); // Quay lại trang trước nếu có
+                } else {
+                    switch (role) {
+                        case "admin":
+                            response.sendRedirect(request.getContextPath() + "/admin/userlists");
+                            break;
+                        case "marketing":
+                            response.sendRedirect(request.getContextPath() + "/marketing/productlist");
+                            break;
+                        case "sale":
+                            response.sendRedirect(request.getContextPath() + "/sale/dashboard");
+                            break;
+                        case "customer":
+                        default:
+                            response.sendRedirect(request.getContextPath() + "/home");
+                            break;
+                    }
+                }
             } else {
                 response.sendRedirect(request.getContextPath() + "/home"); // Nếu không có, về trang chủ
             }

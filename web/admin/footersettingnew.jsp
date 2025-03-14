@@ -253,10 +253,6 @@
                     }
                 });
                 
-                // Highlight active menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href*="footer-settings"]').closest('.menu-item').addClass('active');
-                
                 // Form validation enhancement
                 $('form').on('submit', function(e) {
                     var valid = true;

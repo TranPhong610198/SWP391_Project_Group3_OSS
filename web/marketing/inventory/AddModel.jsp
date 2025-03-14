@@ -89,7 +89,7 @@
                 </c:if>
 
                 <div class="info-section">
-                    <h5>Thêm Biến Thể</h5>
+                    <h5>Thêm Mẫu Mới</h5>
                     <form action="addModel" method="POST">
                         <input type="hidden" name="productId" value="${productId}">
                         <input type="hidden" name="source" value="${param.source}">
@@ -150,13 +150,6 @@
                         }
                     }
                 });
-
-                // Highlight inventory management in sidebar
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="inventorylist"]').closest('.menu-item').addClass('active');
-
-                // Open product submenu by default
-                $('#productSubmenu').addClass('show');
             });
         </script>
     </body>

@@ -321,13 +321,6 @@
                         }
                     }
                 });
-
-                // Highlight the current menu item
-                $('.menu-item').removeClass('active');
-                $('.menu-item a[href="postList"]').closest('.menu-item').addClass('active');
-                
-                // Open content submenu by default
-                $('#contentSubmenu').addClass('show');
             });
 
             // Initialize CKEditor
