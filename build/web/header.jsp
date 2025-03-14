@@ -171,7 +171,7 @@
                                                 </c:when>
                                                 <c:otherwise> <!-- customer -->
                                                     <a href="${pageContext.request.contextPath}/profile">Trang cá nhân</a>
-                                                    <a href="${pageContext.request.contextPath}/orders">Lịch sử đơn hàng</a>
+                                                    <a href="${pageContext.request.contextPath}/myorder">Lịch sử đơn hàng</a>
                                                 </c:otherwise>
                                             </c:choose>
                                             <a href="${pageContext.request.contextPath}/profile">Trang cá nhân</a>
