@@ -167,102 +167,92 @@ public class CartContact extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-        String action = request.getParameter("action");
+    User user = (User) session.getAttribute("acc");
+    String action = request.getParameter("action");
 
-        if ("add_address".equals(action)) {
-            // Xử lý thêm địa chỉ mới
-            if (user != null) {
-                // Người dùng đã đăng nhập - lưu vào database
-                UserAddress newAddress = new UserAddress();
-                newAddress.setUserId(user.getId());
-                newAddress.setRecipientName(request.getParameter("recipient_name"));
-                newAddress.setPhone(request.getParameter("phone"));
-                newAddress.setAddress(request.getParameter("address"));
-                newAddress.setDefault(request.getParameter("is_default") != null);
+    if ("add_address".equals(action)) {
+        // Xử lý thêm địa chỉ mới
+        if (user != null) {
+            // Người dùng đã đăng nhập - lưu vào database
+            UserAddress newAddress = new UserAddress();
+            newAddress.setUserId(user.getId());
+            newAddress.setRecipientName(request.getParameter("recipient_name"));
+            newAddress.setPhone(request.getParameter("phone"));
+            newAddress.setAddress(request.getParameter("address"));
+            newAddress.setDefault(request.getParameter("is_default") != null);
 
-                userDAO.addUserAddress(newAddress);
-            } else {
-                // Người dùng chưa đăng nhập - lưu vào cookie
-                UserAddress newAddress = new UserAddress();
-                // Tạo ID duy nhất cho địa chỉ khách
-                newAddress.setId(generateGuestAddressId());
-                newAddress.setRecipientName(request.getParameter("recipient_name"));
-                newAddress.setPhone(request.getParameter("phone"));
-                newAddress.setAddress(request.getParameter("address"));
-                newAddress.setDefault(request.getParameter("is_default") != null);
-
-                // Lấy danh sách địa chỉ hiện tại từ cookie
-                List<UserAddress> guestAddresses = getGuestAddressesFromCookie(request);
-                
-                // Nếu đặt địa chỉ mới làm mặc định, cập nhật các địa chỉ khác
-                if (newAddress.isDefault()) {
-                    for (UserAddress address : guestAddresses) {
-                        address.setDefault(false);
-                    }
-                }
-                
-                // Nếu đây là địa chỉ đầu tiên, đặt làm mặc định
-                if (guestAddresses.isEmpty()) {
-                    newAddress.setDefault(true);
-                }
-                
-                guestAddresses.add(newAddress);
-                
-                // Lưu danh sách địa chỉ vào cookie
-                saveGuestAddressesToCookie(response, guestAddresses);
-            }
-
-            response.sendRedirect("cartcontact");
-            return;
-        }
-
-        // Lấy địa chỉ giao hàng đã chọn
-        String addressId = request.getParameter("shipping_address");
-        if (addressId == null || addressId.isEmpty()) {
-            request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
-            doGet(request, response);
-            return;
-        }
-
-        // Lấy phương thức vận chuyển và tính phí
-        String shippingMethod = request.getParameter("shipping_method");
-        double shippingFee = "express".equals(shippingMethod) ? 45000.0 : 30000.0;
-
-        // Lấy phương thức thanh toán
-        String paymentMethod = request.getParameter("payment_method");
-        if (paymentMethod == null || paymentMethod.isEmpty()) {
-            request.setAttribute("error", "Vui lòng chọn phương thức thanh toán");
-            doGet(request, response);
-            return;
-        }
-
-        // Lưu thông tin đơn hàng vào session
-        session.setAttribute("shipping_address_id", addressId);
-        session.setAttribute("shipping_method", shippingMethod);
-        session.setAttribute("shipping_fee", shippingFee);
-        session.setAttribute("payment_method", paymentMethod);
-
-        // Giữ lại thông tin giảm giá
-        Double discount = (Double) session.getAttribute("cartDiscount");
-        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
-        if (discount != null) {
-            session.setAttribute("order_discount", discount);
-            session.setAttribute("order_coupon", appliedCoupon);
-        }
-
-        // Xác định trang chuyển hướng dựa trên trạng thái đăng nhập
-        String redirectPage;
-        
-        if (user == null) {
-            // Lưu thông tin để quay lại sau khi đăng nhập
-            session.setAttribute("orderPending", true);
-            redirectPage = "cartcompletion.jsp"; // Trang thông báo cho khách
+            userDAO.addUserAddress(newAddress);
         } else {
-            redirectPage = "cartcompletion.jsp"; // Trang hoàn tất đơn hàng
+            // Người dùng chưa đăng nhập - lưu vào cookie
+            UserAddress newAddress = new UserAddress();
+            // Tạo ID duy nhất cho địa chỉ khách
+            newAddress.setId(generateGuestAddressId());
+            newAddress.setRecipientName(request.getParameter("recipient_name"));
+            newAddress.setPhone(request.getParameter("phone"));
+            newAddress.setAddress(request.getParameter("address"));
+            newAddress.setDefault(request.getParameter("is_default") != null);
+
+            // Lấy danh sách địa chỉ hiện tại từ cookie
+            List<UserAddress> guestAddresses = getGuestAddressesFromCookie(request);
+            
+            // Nếu đặt địa chỉ mới làm mặc định, cập nhật các địa chỉ khác
+            if (newAddress.isDefault()) {
+                for (UserAddress address : guestAddresses) {
+                    address.setDefault(false);
+                }
+            }
+            
+            // Nếu đây là địa chỉ đầu tiên, đặt làm mặc định
+            if (guestAddresses.isEmpty()) {
+                newAddress.setDefault(true);
+            }
+            
+            guestAddresses.add(newAddress);
+            
+            // Lưu danh sách địa chỉ vào cookie
+            saveGuestAddressesToCookie(response, guestAddresses);
         }
-        
-        response.sendRedirect(redirectPage);
+
+        response.sendRedirect("cartcontact");
+        return;
+    }
+
+    // Lấy địa chỉ giao hàng đã chọn
+    String addressId = request.getParameter("shipping_address");
+    if (addressId == null || addressId.isEmpty()) {
+        request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
+        doGet(request, response);
+        return;
+    }
+
+    // Lấy phương thức vận chuyển và tính phí
+    String shippingMethod = request.getParameter("shipping_method");
+    double shippingFee = "express".equals(shippingMethod) ? 45000.0 : 30000.0;
+
+    // Lấy phương thức thanh toán
+    String paymentMethod = request.getParameter("payment_method");
+    if (paymentMethod == null || paymentMethod.isEmpty()) {
+        request.setAttribute("error", "Vui lòng chọn phương thức thanh toán");
+        doGet(request, response);
+        return;
+    }
+
+    // Lưu thông tin đơn hàng vào session
+    session.setAttribute("shipping_address_id", addressId);
+    session.setAttribute("shipping_method", shippingMethod);
+    session.setAttribute("shipping_fee", shippingFee);
+    session.setAttribute("payment_method", paymentMethod);
+
+    // Giữ lại thông tin giảm giá
+    Double discount = (Double) session.getAttribute("cartDiscount");
+    String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+    if (discount != null) {
+        session.setAttribute("order_discount", discount);
+        session.setAttribute("order_coupon", appliedCoupon);
+    }
+
+    // Chuyển hướng đến CartCompletion servlet thay vì trực tiếp đến JSP
+    response.sendRedirect("cartcompletion");
     }
 
     /**
