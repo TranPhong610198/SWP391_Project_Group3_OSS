@@ -14,6 +14,7 @@
         <title>Edit Model</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <style>
             .main-content {
                 margin-left: 250px;
@@ -42,6 +43,59 @@
                 border-bottom: 1px solid #dee2e6;
                 padding-bottom: 0.5rem;
                 margin-bottom: 1rem;
+                color: #495057;
+                font-weight: 600;
+            }
+
+            /* Đồng bộ giao diện form-floating */
+            .form-floating .form-select {
+                padding-top: 1.625rem; 
+                padding-bottom: 0.375rem;
+            }
+
+            .form-floating label {
+                font-size: 0.875rem;
+                color: #6c757d;
+            }
+
+            /* Khoảng cách giữa các nhóm */
+            .row.g-3 > div {
+                margin-bottom: 1rem;
+            }
+
+            /* Tùy chỉnh Select2 để đồng bộ với form-floating */
+            .select2-container--default .select2-selection--single {
+                height: calc(3.5rem + 2px);
+                padding: 0.375rem 0.75rem;
+                border-radius: 0.25rem;
+                border: 1px solid #ced4da;
+                outline: none;
+            }
+
+            .select2-container--default.select2-container--focus .select2-selection--single,
+            .select2-container--default.select2-container--open .select2-selection--single {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+                outline: 0 !important;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: calc(3.5rem - 12px);
+                padding-top: 0.3rem;
+                padding-left: 0;
+                vertical-align: bottom;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: calc(3.5rem - 6px);
+            }
+
+            .form-control:hover, .form-select:hover, .select2-selection:hover {
+                border-color: #80bdff;
+            }
+
+            .form-control:focus, .form-select:focus {
+                box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
             }
 
             @media (max-width: 768px) {
@@ -92,23 +146,36 @@
                     <form action="editModel" method="POST">
                         <input type="hidden" name="productId" value="${variant.productId}">
                         <input type="hidden" name="variantId" value="${variant.id}">
-                        <input type="hidden" name="source" value="${param.source}"> 
+                        <input type="hidden" name="source" value="${param.source}">
 
                         <div class="row g-3">
+                            <!-- Màu sắc -->
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="color" name="color" 
-                                           value="${variant.color.name}" required>
-                                    <label for="color">Màu sắc</label>
+                                    <select class="form-select" id="colorInput" name="color" required>
+                                        <option value="" disabled>Chọn hoặc nhập màu sắc</option>
+                                        <c:forEach var="color" items="${colorList}">
+                                            <option value="${color.name}" ${color.name == variant.color.name ? 'selected' : ''}>${color.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <label for="colorInput">Màu sắc</label>
                                 </div>
                             </div>
+
+                            <!-- Kích thước -->
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="size" name="size" 
-                                           value="${variant.size.name}" required>
-                                    <label for="size">Kích thước</label>
+                                    <select class="form-select" id="sizeInput" name="size" required>
+                                        <option value="" disabled>Chọn hoặc nhập kích thước</option>
+                                        <c:forEach var="size" items="${sizeList}">
+                                            <option value="${size.name}" ${size.name == variant.size.name ? 'selected' : ''}>${size.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <label for="sizeInput">Kích thước</label>
                                 </div>
                             </div>
+
+                            <!-- Số lượng -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantity" name="quantity" 
@@ -133,9 +200,47 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script>
             $(document).ready(function () {
+                // Khởi tạo Select2 cho màu sắc
+                $('#colorInput').select2({
+                    placeholder: "Chọn hoặc nhập màu sắc",
+                    tags: true,
+                    width: '100%',
+                    dropdownParent: $('#colorInput').closest('.form-floating'),
+                    templateSelection: function(data) {
+                        if (data.id) {
+                            return $('<span style="padding-top: 0.5rem; display: block;">' + data.text + '</span>');
+                        }
+                        return data.text;
+                    }
+                });
+
+                // Khởi tạo Select2 cho kích thước
+                $('#sizeInput').select2({
+                    placeholder: "Chọn hoặc nhập kích thước",
+                    tags: true,
+                    width: '100%',
+                    dropdownParent: $('#sizeInput').closest('.form-floating'),
+                    templateSelection: function(data) {
+                        if (data.id) {
+                            return $('<span style="padding-top: 0.5rem; display: block;">' + data.text + '</span>');
+                        }
+                        return data.text;
+                    }
+                });
+
+                // Loại bỏ đường viền đen sau khi nhấn Enter
+                $(document).on('keydown', '.select2-search__field', function(event) {
+                    if (event.keyCode === 13) {
+                        setTimeout(function() {
+                            $('.select2-container--focus .select2-selection').css('outline', 'none');
+                        }, 10);
+                    }
+                });
+
                 // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');

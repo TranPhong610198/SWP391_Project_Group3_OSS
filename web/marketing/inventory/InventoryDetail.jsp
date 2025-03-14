@@ -171,7 +171,7 @@
                     <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
                     <div class="d-flex justify-content-end mb-3">
                         <a href="addModel?productId=${inventory.productId}&source=${param.source}" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Thêm Biến Thể Mới
+                            <i class="fas fa-plus me-2"></i>Thêm Mẫu Mới
                         </a>
                     </div>
                     <div class="model-table-container">

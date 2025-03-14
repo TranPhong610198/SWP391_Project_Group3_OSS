@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package marketing;
+package marketing.Inventory;
 
 import DAO.InventoryDAO;
 import DAO.ProductDAO;
@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -30,14 +31,22 @@ public class AddModelServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String productId = request.getParameter("productId");
-        String source = request.getParameter("source");
-        if (productId == null || productId.trim().isEmpty()) {
+        String productIdStr = request.getParameter("productId");
+        if (productIdStr == null || productIdStr.trim().isEmpty()) {
             response.sendRedirect("inventorylist");
             return;
         }
+
+        int productId = Integer.parseInt(productIdStr);
+        InventoryDAO inventoryDao = new InventoryDAO();
+
+        List<Color> colorList = inventoryDao.getColorsByProductId(productId);
+        List<Size> sizeList = inventoryDao.getSizesByProductId(productId);
+
         request.setAttribute("productId", productId);
-        request.setAttribute("source", source);
+        request.setAttribute("colorList", colorList);
+        request.setAttribute("sizeList", sizeList);
+
         request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
     }
 
@@ -50,42 +59,38 @@ public class AddModelServlet extends HttpServlet {
 
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
-            String source = request.getParameter("source"); // Lấy source trang
+            String source = request.getParameter("source");
             String colorName = request.getParameter("color").trim();
             String sizeName = request.getParameter("size").trim();
             String quantityStr = request.getParameter("quantity");
 
-            // Validation như hiện tại
+            // Lấy danh sách màu và kích thước để gửi lại nếu có lỗi
+            List<Color> colorList = inventoryDao.getColorsByProductId(productId);
+            List<Size> sizeList = inventoryDao.getSizesByProductId(productId);
+
+            // Kiểm tra lỗi đầu vào
             if (!COLOR_PATTERN.matcher(colorName).matches()) {
                 request.setAttribute("errorMessage", "Màu sắc chỉ được phép chứa chữ cái và khoảng trắng");
                 request.setAttribute("productId", productId);
-                request.setAttribute("source", source); 
+                request.setAttribute("source", source);
+                request.setAttribute("colorList", colorList);
+                request.setAttribute("sizeList", sizeList);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
 
             int quantity;
             try {
-                if (quantityStr.length() > 9) {
-                    request.setAttribute("errorMessage", "Số lượng phải từ 0 đến 1,000,000");
-                    request.setAttribute("productId", productId);
-                    request.setAttribute("source", source);
-                    request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
-                    return;
-                }
-
                 quantity = Integer.parseInt(quantityStr);
                 if (quantity < 0 || quantity > MAX_QUANTITY) {
-                    request.setAttribute("errorMessage", "Số lượng phải từ 0 đến 1,000,000");
-                    request.setAttribute("productId", productId);
-                    request.setAttribute("source", source); 
-                    request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
-                    return;
+                    throw new NumberFormatException();
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "Số lượng không hợp lệ");
+                request.setAttribute("errorMessage", "Số lượng phải là số nguyên từ 0 đến " + MAX_QUANTITY);
                 request.setAttribute("productId", productId);
-                request.setAttribute("source", source); 
+                request.setAttribute("source", source);
+                request.setAttribute("colorList", colorList);
+                request.setAttribute("sizeList", sizeList);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
@@ -114,9 +119,11 @@ public class AddModelServlet extends HttpServlet {
             }
 
             if (inventoryDao.isVariantExists(productId, colorId, sizeId)) {
-                request.setAttribute("errorMessage", "Mẫu này đã tồn tại");
+                request.setAttribute("errorMessage", "Mẫu với màu " + colorName + " và kích thước " + sizeName + " đã tồn tại");
                 request.setAttribute("productId", productId);
-                request.setAttribute("source", source); 
+                request.setAttribute("source", source);
+                request.setAttribute("colorList", colorList);
+                request.setAttribute("sizeList", sizeList);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
@@ -130,16 +137,18 @@ public class AddModelServlet extends HttpServlet {
             // Tạo URL chuyển hướng với source
             String redirectUrl = "inventoryDetail?id=" + productId + "&success=add";
             if (source != null && !source.trim().isEmpty()) {
-                redirectUrl += "&source=" + source; 
+                redirectUrl += "&source=" + source;
             }
-            System.out.println("Source in doPost: " + source);
             response.sendRedirect(redirectUrl);
 
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             request.setAttribute("productId", request.getParameter("productId"));
-            request.setAttribute("source", request.getParameter("source")); 
+            request.setAttribute("source", request.getParameter("source"));
+            request.setAttribute("colorList", inventoryDao.getColorsByProductId(Integer.parseInt(request.getParameter("productId"))));
+            request.setAttribute("sizeList", inventoryDao.getSizesByProductId(Integer.parseInt(request.getParameter("productId"))));
             request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
         }
     }
+
 }

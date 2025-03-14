@@ -330,6 +330,37 @@ public class InventoryDAO extends DBContext {
         }
         return false;
     }
+    
+    public List<Color> getColorsByProductId(int productId) {
+        List<Color> colors = new ArrayList<>();
+        String sql = "SELECT id, color FROM product_colors WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                colors.add(new Color(rs.getInt("id"), rs.getString("color")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return colors;
+    }
+
+    public List<Size> getSizesByProductId(int productId) {
+        List<Size> sizes = new ArrayList<>();
+        String sql = "SELECT id, size FROM product_sizes WHERE product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                sizes.add(new Size(rs.getInt("id"), rs.getString("size")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sizes;
+    }
+
 
     public int addColor(int productId, String colorName) {
         String sql = "INSERT INTO product_colors (product_id, color) OUTPUT INSERTED.id VALUES (?, ?)";
