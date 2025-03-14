@@ -618,4 +618,42 @@ private void updateProductStatus(int productId) {
         System.out.println("Error updating product status: " + e.getMessage());
     }
 }
+// Thêm phương thức này vào InventoryDAO nếu chưa có
+public boolean increaseVariantStock(int variantId, int quantity) {
+    if (quantity <= 0) return false;
+    
+    try {
+        // Cập nhật số lượng trong bảng product_variants
+        String sql = "UPDATE product_variants SET stock_quantity = stock_quantity + ?, last_restock_date = GETDATE() WHERE id = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, quantity);
+        stmt.setInt(2, variantId);
+        int rowsAffected = stmt.executeUpdate();
+        
+        if (rowsAffected > 0) {
+            // Lấy product_id từ variant_id
+            String sqlGetProduct = "SELECT product_id FROM product_variants WHERE id = ?";
+            PreparedStatement stmtGetProduct = connection.prepareStatement(sqlGetProduct);
+            stmtGetProduct.setInt(1, variantId);
+            ResultSet rs = stmtGetProduct.executeQuery();
+            
+            if (rs.next()) {
+                int productId = rs.getInt("product_id");
+                
+                // Cập nhật trạng thái sản phẩm nếu cần
+                updateProductStatus(productId);
+            }
+            
+            rs.close();
+            stmtGetProduct.close();
+            return true;
+        }
+        
+        stmt.close();
+        return false;
+    } catch (SQLException e) {
+        System.out.println("Error increasing variant stock: " + e.getMessage());
+        return false;
+    }
+}
 }
