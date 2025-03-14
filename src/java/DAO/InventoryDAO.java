@@ -187,22 +187,21 @@ public class InventoryDAO extends DBContext {
 
     public List<Variant> getProductVariants(int productId) {
         String sql = """
-                SELECT 
-                    pv.id, 
-                    pv.product_id, 
-                    pc.id as color_id, 
-                    pc.color as color_name,
-                    ps.id as size_id, 
-                    ps.size as size_name,
-                    pv.stock_quantity, 
-                    pv.last_restock_date,
-                    pv.sku
-                FROM product_variants pv
-                JOIN product_colors pc ON pv.color_id = pc.id
-                JOIN product_sizes ps ON pv.size_id = ps.id
-                WHERE pv.product_id = ?
-                ORDER BY pc.color, ps.size
-                """;
+                    SELECT 
+                        pv.id, 
+                        pv.product_id, 
+                        pc.id as color_id, 
+                        pc.color as color_name,
+                        ps.id as size_id, 
+                        ps.size as size_name,
+                        pv.stock_quantity, 
+                        pv.last_restock_date
+                    FROM product_variants pv
+                    JOIN product_colors pc ON pv.color_id = pc.id
+                    JOIN product_sizes ps ON pv.size_id = ps.id
+                    WHERE pv.product_id = ?
+                    ORDER BY pc.color, ps.size
+                    """;
 
         List<Variant> variants = new ArrayList<>();
 
@@ -220,8 +219,7 @@ public class InventoryDAO extends DBContext {
                         color,
                         size,
                         rs.getInt("stock_quantity"),
-                        rs.getTimestamp("last_restock_date"),
-                        rs.getString("sku")
+                        rs.getTimestamp("last_restock_date")
                 ));
             }
         } catch (SQLException e) {
@@ -265,18 +263,17 @@ public class InventoryDAO extends DBContext {
 
     public Variant getVariant(int variantId) {
         String sql = """
-                SELECT 
-                    pv.id, 
-                    pv.product_id,
-                    pc.id as color_id, pc.color as color_name,
-                    ps.id as size_id, ps.size as size_name,
-                    pv.stock_quantity, pv.last_restock_date,
-                    pv.sku
-                FROM product_variants pv
-                JOIN product_colors pc ON pv.color_id = pc.id
-                JOIN product_sizes ps ON pv.size_id = ps.id
-                WHERE pv.id = ?
-                """;
+                    SELECT 
+                        pv.id, 
+                        pv.product_id,
+                        pc.id as color_id, pc.color as color_name,
+                        ps.id as size_id, ps.size as size_name,
+                        pv.stock_quantity, pv.last_restock_date
+                    FROM product_variants pv
+                    JOIN product_colors pc ON pv.color_id = pc.id
+                    JOIN product_sizes ps ON pv.size_id = ps.id
+                    WHERE pv.id = ?
+                    """;
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, variantId);
@@ -292,8 +289,7 @@ public class InventoryDAO extends DBContext {
                         color,
                         size,
                         rs.getInt("stock_quantity"),
-                        rs.getTimestamp("last_restock_date"),
-                        rs.getString("sku")
+                        rs.getTimestamp("last_restock_date")
                 );
             }
         } catch (SQLException e) {
@@ -365,14 +361,13 @@ public class InventoryDAO extends DBContext {
         return -1;
     }
 
-    public void addNewVariant(int productId, int colorId, int sizeId, int quantity, String sku) {
-        String sql = "INSERT INTO product_variants (product_id, color_id, size_id, stock_quantity, last_restock_date, sku) VALUES (?, ?, ?, ?, GETDATE(), ?)";
+    public void addNewVariant(int productId, int colorId, int sizeId, int quantity) {
+        String sql = "INSERT INTO product_variants (product_id, color_id, size_id, stock_quantity, last_restock_date) VALUES (?, ?, ?, ?, GETDATE())";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, productId);
             st.setInt(2, colorId);
             st.setInt(3, sizeId);
             st.setInt(4, quantity);
-            st.setString(5, sku);
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -401,14 +396,13 @@ public class InventoryDAO extends DBContext {
         }
     }
 
-    public void updateVariant(int variantId, int colorId, int sizeId, int quantity, String sku) {
-        String sql = "UPDATE product_variants SET color_id = ?, size_id = ?, stock_quantity = ?, last_restock_date = GETDATE(), sku = ? WHERE id = ?";
+    public void updateVariant(int variantId, int colorId, int sizeId, int quantity) {
+        String sql = "UPDATE product_variants SET color_id = ?, size_id = ?, stock_quantity = ?, last_restock_date = GETDATE() WHERE id = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, colorId);
             st.setInt(2, sizeId);
             st.setInt(3, quantity);
-            st.setString(4, sku);
-            st.setInt(5, variantId);
+            st.setInt(4, variantId);
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -427,10 +421,6 @@ public class InventoryDAO extends DBContext {
     }
 
     public boolean deleteVariant(int variantId) {
-        CartDAO cartDAO = new CartDAO();
-        // Xóa cart_items chứa variantId
-        cartDAO.deleteCartItemByVariantId(variantId);
-        
         // lấy color_id and size_id
         String getIdsSQL = "SELECT color_id, size_id FROM product_variants WHERE id = ?";
         int colorId = 0;
