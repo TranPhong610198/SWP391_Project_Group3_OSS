@@ -330,7 +330,7 @@ public class InventoryDAO extends DBContext {
         }
         return false;
     }
-    
+
     public List<Color> getColorsByProductId(int productId) {
         List<Color> colors = new ArrayList<>();
         String sql = "SELECT id, color FROM product_colors WHERE product_id = ?";
@@ -360,7 +360,6 @@ public class InventoryDAO extends DBContext {
         }
         return sizes;
     }
-
 
     public int addColor(int productId, String colorName) {
         String sql = "INSERT INTO product_colors (product_id, color) OUTPUT INSERTED.id VALUES (?, ?)";
@@ -602,99 +601,103 @@ public class InventoryDAO extends DBContext {
     }
 //______________________THANH______________________
     // Thêm phương thức decreaseVariantStock vào InventoryDAO
-public boolean decreaseVariantStock(int variantId, int quantity) {
-    try {
-        // First, check current stock to ensure we don't go below 0
-        String checkSql = "SELECT stock_quantity FROM product_variants WHERE id = ?";
-        PreparedStatement checkStmt = connection.prepareStatement(checkSql);
-        checkStmt.setInt(1, variantId);
-        ResultSet rs = checkStmt.executeQuery();
-        
-        if (rs.next()) {
-            int currentStock = rs.getInt("stock_quantity");
-            int newStock = Math.max(0, currentStock - quantity); // Ensure we don't go below 0
-            
-            // Update the stock
-            String updateSql = "UPDATE product_variants SET stock_quantity = ? WHERE id = ?";
-            PreparedStatement updateStmt = connection.prepareStatement(updateSql);
-            updateStmt.setInt(1, newStock);
-            updateStmt.setInt(2, variantId);
-            int result = updateStmt.executeUpdate();
-            
-            updateStmt.close();
+
+    public boolean decreaseVariantStock(int variantId, int quantity) {
+        try {
+            // First, check current stock to ensure we don't go below 0
+            String checkSql = "SELECT stock_quantity FROM product_variants WHERE id = ?";
+            PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+            checkStmt.setInt(1, variantId);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                int currentStock = rs.getInt("stock_quantity");
+                int newStock = Math.max(0, currentStock - quantity); // Ensure we don't go below 0
+
+                // Update the stock
+                String updateSql = "UPDATE product_variants SET stock_quantity = ? WHERE id = ?";
+                PreparedStatement updateStmt = connection.prepareStatement(updateSql);
+                updateStmt.setInt(1, newStock);
+                updateStmt.setInt(2, variantId);
+                int result = updateStmt.executeUpdate();
+
+                updateStmt.close();
+                rs.close();
+                checkStmt.close();
+
+                return result > 0;
+            }
+
             rs.close();
             checkStmt.close();
-            
-            return result > 0;
+            return false;
+        } catch (SQLException e) {
+            System.out.println("Error decreasing variant stock: " + e.getMessage());
+            return false;
         }
-        
-        rs.close();
-        checkStmt.close();
-        return false;
-    } catch (SQLException e) {
-        System.out.println("Error decreasing variant stock: " + e.getMessage());
-        return false;
     }
-}
 
 // Thêm phương thức kiểm tra và cập nhật trạng thái sản phẩm
-private void updateProductStatus(int productId) {
-    String checkStockSql = "SELECT SUM(stock_quantity) as total FROM product_variants WHERE product_id = ?";
-    try (PreparedStatement st = connection.prepareStatement(checkStockSql)) {
-        st.setInt(1, productId);
-        ResultSet rs = st.executeQuery();
-        if (rs.next()) {
-            int totalStock = rs.getInt("total");
-            String newStatus = totalStock > 0 ? "active" : "EOStock";
-            
-            // Cập nhật trạng thái sản phẩm
-            String updateStatusSql = "UPDATE products SET status = ? WHERE id = ?";
-            try (PreparedStatement updateSt = connection.prepareStatement(updateStatusSql)) {
-                updateSt.setString(1, newStatus);
-                updateSt.setInt(2, productId);
-                updateSt.executeUpdate();
-            }
-        }
-    } catch (SQLException e) {
-        System.out.println("Error updating product status: " + e.getMessage());
-    }
-}
-// Thêm phương thức này vào InventoryDAO nếu chưa có
-public boolean increaseVariantStock(int variantId, int quantity) {
-    if (quantity <= 0) return false;
-    
-    try {
-        // Cập nhật số lượng trong bảng product_variants
-        String sql = "UPDATE product_variants SET stock_quantity = stock_quantity + ?, last_restock_date = GETDATE() WHERE id = ?";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, quantity);
-        stmt.setInt(2, variantId);
-        int rowsAffected = stmt.executeUpdate();
-        
-        if (rowsAffected > 0) {
-            // Lấy product_id từ variant_id
-            String sqlGetProduct = "SELECT product_id FROM product_variants WHERE id = ?";
-            PreparedStatement stmtGetProduct = connection.prepareStatement(sqlGetProduct);
-            stmtGetProduct.setInt(1, variantId);
-            ResultSet rs = stmtGetProduct.executeQuery();
-            
+    private void updateProductStatus(int productId) {
+        String checkStockSql = "SELECT SUM(stock_quantity) as total FROM product_variants WHERE product_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(checkStockSql)) {
+            st.setInt(1, productId);
+            ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                int productId = rs.getInt("product_id");
-                
-                // Cập nhật trạng thái sản phẩm nếu cần
-                updateProductStatus(productId);
+                int totalStock = rs.getInt("total");
+                String newStatus = totalStock > 0 ? "active" : "EOStock";
+
+                // Cập nhật trạng thái sản phẩm
+                String updateStatusSql = "UPDATE products SET status = ? WHERE id = ?";
+                try (PreparedStatement updateSt = connection.prepareStatement(updateStatusSql)) {
+                    updateSt.setString(1, newStatus);
+                    updateSt.setInt(2, productId);
+                    updateSt.executeUpdate();
+                }
             }
-            
-            rs.close();
-            stmtGetProduct.close();
-            return true;
+        } catch (SQLException e) {
+            System.out.println("Error updating product status: " + e.getMessage());
         }
-        
-        stmt.close();
-        return false;
-    } catch (SQLException e) {
-        System.out.println("Error increasing variant stock: " + e.getMessage());
-        return false;
     }
-}
+// Thêm phương thức này vào InventoryDAO nếu chưa có
+
+    public boolean increaseVariantStock(int variantId, int quantity) {
+        if (quantity <= 0) {
+            return false;
+        }
+
+        try {
+            // Cập nhật số lượng trong bảng product_variants
+            String sql = "UPDATE product_variants SET stock_quantity = stock_quantity + ?, last_restock_date = GETDATE() WHERE id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, quantity);
+            stmt.setInt(2, variantId);
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // Lấy product_id từ variant_id
+                String sqlGetProduct = "SELECT product_id FROM product_variants WHERE id = ?";
+                PreparedStatement stmtGetProduct = connection.prepareStatement(sqlGetProduct);
+                stmtGetProduct.setInt(1, variantId);
+                ResultSet rs = stmtGetProduct.executeQuery();
+
+                if (rs.next()) {
+                    int productId = rs.getInt("product_id");
+
+                    // Cập nhật trạng thái sản phẩm nếu cần
+                    updateProductStatus(productId);
+                }
+
+                rs.close();
+                stmtGetProduct.close();
+                return true;
+            }
+
+            stmt.close();
+            return false;
+        } catch (SQLException e) {
+            System.out.println("Error increasing variant stock: " + e.getMessage());
+            return false;
+        }
+    }
 }

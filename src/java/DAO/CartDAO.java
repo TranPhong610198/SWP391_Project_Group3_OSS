@@ -343,7 +343,6 @@ public class CartDAO extends DBContext {
 //        emptyCart.setItems(new ArrayList<>());
 //        saveCartToCookies(response, emptyCart);
 //    }
-
     public String encodeCookieValue(String value) throws Exception {
         return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }

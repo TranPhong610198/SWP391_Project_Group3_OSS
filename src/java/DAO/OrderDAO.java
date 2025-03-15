@@ -634,4 +634,46 @@ public class OrderDAO extends DBContext {
             return false;
         }
     }
+
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+
+        try {
+            String sql = "SELECT o.*, p.payment_method, p.payment_status "
+                    + "FROM orders o "
+                    + "LEFT JOIN payments p ON o.id = p.order_id "
+                    + "ORDER BY o.created_at DESC";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setOrderCode(rs.getString("notes")); // Mã đơn hàng được lưu trong notes
+                order.setStatus(rs.getString("status"));
+                order.setTotal(rs.getDouble("total_amount"));
+                order.setRecipientName(rs.getString("recipient_name"));
+                order.setRecipientEmail(rs.getString("recipient_email"));
+                order.setPhone(rs.getString("recipient_phone"));
+                order.setAddress(rs.getString("recipient_address"));
+                order.setOrderDate(rs.getTimestamp("created_at"));
+                order.setPaymentMethod(rs.getString("payment_method"));
+                order.setPaymentStatus(rs.getString("payment_status"));
+
+                // Get order items
+                order.setItems(getOrderItems(order.getId()));
+
+                orders.add(order);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println("Error getting all orders: " + e.getMessage());
+        }
+
+        return orders;
+    }
 }
