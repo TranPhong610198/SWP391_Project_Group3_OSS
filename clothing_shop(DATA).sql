@@ -1320,3 +1320,32 @@ INSERT [dbo].[sliders] ([id], [title], [image_url], [link], [status], [display_o
 GO
 SET IDENTITY_INSERT [dbo].[sliders] OFF
 GO
+
+
+-- sample orders
+INSERT INTO orders (user_id, status, total_amount, recipient_name, recipient_email, recipient_phone, recipient_address, notes) VALUES
+(1, 'completed', 150.00, N'Nguyen Van A', 'nguyenvana@example.com', '0123456789', N'123 ABC Street, Hanoi', N'Giao hàng vào buổi sáng'),
+(2, 'processing', 200.00, N'Tran Thi B', 'tranthib@example.com', '0987654321', N'456 DEF Street, Ho Chi Minh', NULL),
+(3, 'shipped', 75.00, N'Le Van C', 'levanc@example.com', '0345678901', N'789 GHI Street, Da Nang', N'Để lại ở cửa');
+
+-- sample order items
+INSERT INTO order_items (order_id, product_id, variant_id, quantity, unit_price) VALUES
+(1, 1, 1, 2, 50.00),
+(1, 2, 3, 1, 50.00),
+(2, 3, 5, 1, 200.00),
+(3, 4, 7, 3, 25.00);
+
+-- sample order history
+INSERT INTO order_history (order_id, updated_by, status, notes) VALUES
+(1, 1, 'processing', N'Đơn hàng đang được chuẩn bị'),
+(1, 2, 'shipped', N'Đơn hàng đã được chuyển qua VNPost'),
+(1, 3, 'completed', N'Khách hàng đã nhận được đơn hàng'),
+(2, 2, 'processing', N'Đang chờ xác nhận hàng'),
+(3, 1, 'shipped', N'Giao hàng dự kiến ​​trong 3 ngày');
+
+-- sample feedback
+INSERT INTO feedback (order_item_id, user_id, rating, comment, status) VALUES
+(1, 1, 5, N'Chất lượng tuyệt vời và giao hàng nhanh!', 'approved'),
+(2, 1, 4, N'Sản phẩm tốt nhưng bao bì bị rách', 'approved'),
+(3, 2, 3, N'Sản phẩm ổn, mong đợi chất liệu tốt hơn', 'approved'),
+(4, 3, 5, N'Rất thích! Sẽ mua lại.', 'approved');
