@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @WebServlet(name = "CartCompletion", urlPatterns = {"/cartcompletion"})
 public class CartCompletion extends HttpServlet {
@@ -140,68 +141,65 @@ public class CartCompletion extends HttpServlet {
         }
         total += shippingFee;
         
-        // Tạo đối tượng Order
-        Order order = new Order();
+        // In CartCompletion.java, locate the section where you create the order object
+// and ensure the orderCode is set correctly:
+
+// Tạo đối tượng Order
+Order order = new Order();
+
+// Thiết lập thông tin đơn hàng
+if (user != null) {
+    order.setUserId(user.getId());
+    order.setRecipientEmail(user.getEmail());
+} else {
+    // Khách vãng lai sẽ có userId là null trong database
+    order.setRecipientEmail(shippingAddress.getRecipientName() != null ? 
+        shippingAddress.getRecipientName() : "guest@example.com");
+}
+
+// Tạo mã đơn hàng duy nhất và dễ đọc
+Random random = new Random();
+int randomNumber = random.nextInt(900000) + 100000; // Số ngẫu nhiên từ 100000 đến 999999
+String orderCode = "ORD" + randomNumber;
+order.setOrderCode(orderCode);
+
+order.setStatus("pending");
+order.setTotal(total);
+order.setRecipientName(shippingAddress.getRecipientName());
+order.setPhone(shippingAddress.getPhone());
+order.setAddress(shippingAddress.getAddress());
+order.setItems(selectedItems);
+
+// Nếu có mã giảm giá
+if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
+    order.setDiscountAmount(discountAmount);
+    order.setCouponCode(appliedCoupon);
+}
+
+// Lưu thông tin giao hàng và thanh toán
+order.setShippingMethod(shippingMethod);
+order.setPaymentMethod(paymentMethod);
+order.setShippingFee(shippingFee);
+
+// Nếu là thanh toán trực tuyến qua VNPay
+if ("bank".equals(paymentMethod)) {
+    // Lưu đơn hàng vào database trước
+    Order savedOrder = orderDAO.createOrder(order);
+    
+    if (savedOrder != null) {
+        // Lưu thông tin đơn hàng vào session để sử dụng sau khi thanh toán
+        session.setAttribute("pending_order", savedOrder);
         
-        // Thiết lập thông tin đơn hàng
-        if (user != null) {
-            order.setUserId(user.getId());
-            order.setRecipientEmail(user.getEmail());
-        } else {
-            // Khách vãng lai sẽ có userId là null trong database
-            order.setRecipientEmail("guest@example.com"); // Hoặc có thể lấy từ form nếu có
-        }
-        
-        order.setStatus("pending");
-        order.setTotal(total);
-        order.setRecipientName(shippingAddress.getRecipientName());
-        order.setPhone(shippingAddress.getPhone());
-        order.setAddress(shippingAddress.getAddress());
-        order.setItems(selectedItems);
-        
-        // Nếu có mã giảm giá
-        if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
-            order.setDiscountAmount(discountAmount);
-            order.setCouponCode(appliedCoupon);
-        }
-        
-        // Lưu thông tin giao hàng và thanh toán
-        order.setShippingMethod(shippingMethod);
-        order.setPaymentMethod(paymentMethod);
-        
-        // Nếu là thanh toán trực tuyến
-        if ("bank".equals(paymentMethod)) {
-            // Lưu thông tin đơn hàng vào session để sử dụng sau khi thanh toán
-            session.setAttribute("pending_order", order);
-            
-            // Chuyển hướng đến trang thanh toán trực tuyến
-            response.sendRedirect("payment");
-            return;
-        }
-        
-        // Xử lý đơn hàng COD
-        boolean orderSuccess = processOrder(request, response, order, selectedItems, user);
-        
-        if (orderSuccess) {
-            // Chuẩn bị dữ liệu cho trang xác nhận
-            request.setAttribute("orderCode", order.getOrderCode());
-            request.setAttribute("orderDate", new Date());
-            request.setAttribute("selectedItems", selectedItems);
-            request.setAttribute("subtotal", subtotal);
-            request.setAttribute("discount", discountAmount);
-            request.setAttribute("shippingFee", shippingFee);
-            request.setAttribute("total", total);
-            request.setAttribute("shippingAddress", shippingAddress);
-            request.setAttribute("paymentMethod", paymentMethod);
-            request.setAttribute("shippingMethod", shippingMethod);
-            
-            // Chuyển đến trang xác nhận đơn hàng
-            request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
-        } else {
-            // Thông báo lỗi nếu có vấn đề khi xử lý đơn hàng
-            request.setAttribute("error", "Có lỗi xảy ra khi xử lý đơn hàng. Vui lòng thử lại.");
-            request.getRequestDispatcher("cartdetail").forward(request, response);
-        }
+        // Chuyển hướng đến trang thanh toán trực tuyến
+        response.sendRedirect("payment");
+        return;
+    } else {
+        // Xử lý lỗi khi không thể tạo đơn hàng
+        request.setAttribute("error", "Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
+        request.getRequestDispatcher("cartdetail").forward(request, response);
+        return;
+    }
+}
     }
 
     // Phương thức xử lý đơn hàng

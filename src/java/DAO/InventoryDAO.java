@@ -603,28 +603,38 @@ public class InventoryDAO extends DBContext {
 //______________________THANH______________________
     // Thêm phương thức decreaseVariantStock vào InventoryDAO
 public boolean decreaseVariantStock(int variantId, int quantity) {
-    // Kiểm tra số lượng hiện tại
-    Variant variant = getVariant(variantId);
-    if (variant == null || variant.getQuantity() < quantity) {
-        return false; // Không đủ số lượng để giảm
-    }
-    
-    // Giảm số lượng
-    String sql = "UPDATE product_variants SET stock_quantity = stock_quantity - ? WHERE id = ?";
-    try (PreparedStatement st = connection.prepareStatement(sql)) {
-        st.setInt(1, quantity);
-        st.setInt(2, variantId);
-        int rowsAffected = st.executeUpdate();
+    try {
+        // First, check current stock to ensure we don't go below 0
+        String checkSql = "SELECT stock_quantity FROM product_variants WHERE id = ?";
+        PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+        checkStmt.setInt(1, variantId);
+        ResultSet rs = checkStmt.executeQuery();
         
-        // Nếu giảm thành công, kiểm tra và cập nhật trạng thái sản phẩm nếu cần
-        if (rowsAffected > 0) {
-            updateProductStatus(variant.getProductId());
-            return true;
+        if (rs.next()) {
+            int currentStock = rs.getInt("stock_quantity");
+            int newStock = Math.max(0, currentStock - quantity); // Ensure we don't go below 0
+            
+            // Update the stock
+            String updateSql = "UPDATE product_variants SET stock_quantity = ? WHERE id = ?";
+            PreparedStatement updateStmt = connection.prepareStatement(updateSql);
+            updateStmt.setInt(1, newStock);
+            updateStmt.setInt(2, variantId);
+            int result = updateStmt.executeUpdate();
+            
+            updateStmt.close();
+            rs.close();
+            checkStmt.close();
+            
+            return result > 0;
         }
+        
+        rs.close();
+        checkStmt.close();
+        return false;
     } catch (SQLException e) {
-        System.out.println("Error decreasing stock: " + e.getMessage());
+        System.out.println("Error decreasing variant stock: " + e.getMessage());
+        return false;
     }
-    return false;
 }
 
 // Thêm phương thức kiểm tra và cập nhật trạng thái sản phẩm
