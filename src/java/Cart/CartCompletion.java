@@ -56,6 +56,53 @@ public class CartCompletion extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
+        // Kiểm tra xem có đơn hàng đã thanh toán thành công từ PaymentServlet chuyển tới không
+        Order completedOrder = (Order) session.getAttribute("completed_order");
+        if (completedOrder != null) {
+            // Chuẩn bị dữ liệu để hiển thị trang xác nhận đơn hàng
+            request.setAttribute("orderCode", completedOrder.getOrderCode());
+            
+            // Đảm bảo có ngày đặt hàng, nếu không thì tạo mới
+            Date orderDate = completedOrder.getOrderDate();
+            if (orderDate == null) {
+                orderDate = new Date(); // Lấy thời gian hiện tại nếu không có
+            }
+            request.setAttribute("orderDate", orderDate);
+            request.setAttribute("total", completedOrder.getTotal());
+            request.setAttribute("paymentMethod", completedOrder.getPaymentMethod());
+            request.setAttribute("shippingMethod", completedOrder.getShippingMethod());
+            request.setAttribute("shippingFee", completedOrder.getShippingFee());
+            request.setAttribute("selectedItems", completedOrder.getItems());
+            
+            // Tính toán subtotal
+            double subtotal = 0;
+            for (CartItem item : completedOrder.getItems()) {
+                subtotal += item.getProductPrice() * item.getQuantity();
+            }
+            request.setAttribute("subtotal", subtotal);
+            
+            // Đặt thông tin giảm giá nếu có
+            if (completedOrder.getDiscountAmount() > 0) {
+                request.setAttribute("discount", completedOrder.getDiscountAmount());
+            }
+            
+            // Chuẩn bị thông tin địa chỉ giao hàng
+            UserAddress shippingAddress = new UserAddress();
+            shippingAddress.setRecipientName(completedOrder.getRecipientName());
+            shippingAddress.setPhone(completedOrder.getPhone());
+            shippingAddress.setAddress(completedOrder.getAddress());
+            request.setAttribute("shippingAddress", shippingAddress);
+            
+            // Xóa đơn hàng đã hoàn thành khỏi session
+            session.removeAttribute("completed_order");
+            
+            // Chuyển đến trang xác nhận đơn hàng
+            request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
+            return;
+        }
+
+        // Nếu không có đơn hàng đã hoàn thành, xử lý logic thông thường
+        
         // Lấy thông tin đơn hàng từ session
         String addressId = (String) session.getAttribute("shipping_address_id");
         String shippingMethod = (String) session.getAttribute("shipping_method");
@@ -141,22 +188,20 @@ public class CartCompletion extends HttpServlet {
         }
         total += shippingFee;
 
-        // In CartCompletion.java, locate the section where you create the order object
-// and ensure the orderCode is set correctly:
-// Tạo đối tượng Order
+        // Tạo đối tượng Order
         Order order = new Order();
 
-// Thiết lập thông tin đơn hàng
+        // Thiết lập thông tin đơn hàng
         if (user != null) {
             order.setUserId(user.getId());
             order.setRecipientEmail(user.getEmail());
         } else {
             // Khách vãng lai sẽ có userId là null trong database
-            order.setRecipientEmail(shippingAddress.getRecipientName() != null
-                    ? shippingAddress.getRecipientName() : "guest@example.com");
+            order.setRecipientEmail(shippingAddress.getRecipientName()!= null
+                    ? shippingAddress.getRecipientName(): "guest@example.com");
         }
 
-// Tạo mã đơn hàng duy nhất và dễ đọc
+        // Tạo mã đơn hàng duy nhất và dễ đọc
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000; // Số ngẫu nhiên từ 100000 đến 999999
         String orderCode = "ORD" + randomNumber;
@@ -169,18 +214,18 @@ public class CartCompletion extends HttpServlet {
         order.setAddress(shippingAddress.getAddress());
         order.setItems(selectedItems);
 
-// Nếu có mã giảm giá
+        // Nếu có mã giảm giá
         if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
             order.setDiscountAmount(discountAmount);
             order.setCouponCode(appliedCoupon);
         }
 
-// Lưu thông tin giao hàng và thanh toán
+        // Lưu thông tin giao hàng và thanh toán
         order.setShippingMethod(shippingMethod);
         order.setPaymentMethod(paymentMethod);
         order.setShippingFee(shippingFee);
 
-// Nếu là thanh toán trực tuyến qua VNPay
+        // Nếu là thanh toán trực tuyến qua VNPay
         if ("bank".equals(paymentMethod)) {
             // Lưu đơn hàng vào database trước
             Order savedOrder = orderDAO.createOrder(order);
@@ -199,21 +244,26 @@ public class CartCompletion extends HttpServlet {
                 return;
             }
         }
-    }
 
-    // Phương thức xử lý đơn hàng
-    private boolean processOrder(HttpServletRequest request, HttpServletResponse response,
-            Order order, List<CartItem> selectedItems, User user) {
-        HttpSession session = request.getSession();
-
-        try {
+        // Xử lý đơn hàng COD
+        if ("cod".equals(paymentMethod)) {
             // Lưu đơn hàng vào database
             Order savedOrder = orderDAO.createOrder(order);
 
             if (savedOrder != null) {
-                // Cập nhật số lượng tồn kho
-                for (CartItem item : selectedItems) {
-                    inventoryDAO.decreaseVariantStock(item.getVariantId(), item.getQuantity());
+                // Cập nhật thông tin để hiển thị
+                request.setAttribute("orderCode", savedOrder.getOrderCode());
+                request.setAttribute("orderDate", new Date());
+                request.setAttribute("total", total);
+                request.setAttribute("paymentMethod", paymentMethod);
+                request.setAttribute("shippingMethod", shippingMethod);
+                request.setAttribute("shippingFee", shippingFee);
+                request.setAttribute("subtotal", subtotal);
+                request.setAttribute("selectedItems", selectedItems);
+                request.setAttribute("shippingAddress", shippingAddress);
+
+                if (discountAmount != null && discountAmount > 0) {
+                    request.setAttribute("discount", discountAmount);
                 }
 
                 // Xóa sản phẩm đã đặt khỏi giỏ hàng
@@ -230,14 +280,15 @@ public class CartCompletion extends HttpServlet {
                 // Xóa thông tin đặt hàng khỏi session
                 clearOrderSession(session);
 
-                return true;
+                // Chuyển đến trang xác nhận đơn hàng
+                request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
+                return;
+            } else {
+                request.setAttribute("error", "Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
+                request.getRequestDispatcher("cartdetail").forward(request, response);
+                return;
             }
-        } catch (Exception e) {
-            System.out.println("Error processing order: " + e.getMessage());
-            e.printStackTrace();
         }
-
-        return false;
     }
 
     @Override

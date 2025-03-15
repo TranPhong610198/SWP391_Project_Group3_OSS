@@ -247,7 +247,7 @@ public class PaymentServlet extends HttpServlet {
                     orderDAO.updatePaymentStatus(order.getId(), "completed");
                     request.setAttribute("orderId", order.getId());
 
-                    // Thêm đoạn code dưới đây để xóa giỏ hàng sau khi thanh toán thành công
+                    // Thêm đoạn code để xóa giỏ hàng sau khi thanh toán thành công
                     // Lấy userId nếu người dùng đã đăng nhập
                     Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
 
@@ -268,14 +268,14 @@ public class PaymentServlet extends HttpServlet {
                     }
                 }
 
+                // Lưu đơn hàng đã thanh toán vào session để hiển thị trên trang cartcompletion
+                session.setAttribute("completed_order", order);
+                
                 // Clear pending order from session
                 session.removeAttribute("pending_order");
 
-                // Set success message
-                request.setAttribute("paymentSuccess", true);
-                request.setAttribute("orderCode", order != null ? order.getOrderCode() : vnp_TxnRef);
-                request.setAttribute("order", order);
-                request.getRequestDispatcher("payment_success.jsp").forward(request, response);
+                // Chuyển hướng đến trang cartcompletion
+                response.sendRedirect("cartcompletion");
             } else {
                 // Payment failed or payment validation failed
                 String errorMessage = "Thanh toán không thành công. ";

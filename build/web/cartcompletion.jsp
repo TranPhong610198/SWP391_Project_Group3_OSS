@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <!-- Thông tin thêm -->
+<!--             Thông tin thêm 
             <div class="alert alert-info mt-4" role="alert">
                 <i class="fas fa-info-circle me-2"></i>
                 <c:choose>
@@ -193,7 +193,7 @@
                         Chúng tôi sẽ gửi email xác nhận đơn hàng và thông tin cập nhật về việc giao hàng.
                     </c:otherwise>
                 </c:choose>
-            </div>
+            </div>-->
 
             <!-- Nút điều hướng -->
             <div class="mt-4">
