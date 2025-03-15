@@ -67,7 +67,7 @@
         <div class="container-header">
             <!-- Logo -->
             <a class="navbar-brand" href="home">
-                <img src="${pageContext.request.contextPath}/uploads/logo/logoHuy.png" alt="Logo"/>
+                <img src="${pageContext.request.contextPath}\assests\css\logohuy.png" alt="Logo"/>
             </a>
 
             <!-- Navbar Toggle Button -->
