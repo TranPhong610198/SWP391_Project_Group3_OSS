@@ -187,8 +187,8 @@ public class FeedbackDAO extends DBContext {
     }
 
     /*--------- Không in sản phẩm trùng lặp ----------*/
-    public List<Feedback> getFeedbacksGroupedByProduct(String searchKeyword, String filterRating, String filterStatus,
-            int page, int recordsPerPage) {
+    public List<Feedback> getFeedbacksGroupedByProduct(String searchKeyword, String filterRating,
+            String sortField, String sortOrder, int page, int recordsPerPage) {
         List<Feedback> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT p.id AS product_id, p.title, p.thumbnail, ");
         sql.append("AVG(f.rating) AS avg_rating, COUNT(f.id) AS feedback_count ");
@@ -204,12 +204,16 @@ public class FeedbackDAO extends DBContext {
         if (filterRating != null && !filterRating.isEmpty()) {
             sql.append(" AND f.rating = ?");
         }
-        if (filterStatus != null && !filterStatus.isEmpty()) {
-            sql.append(" AND f.status = ?");
-        }
 
         sql.append(" GROUP BY p.id, p.title, p.thumbnail ");
-        sql.append(" ORDER BY p.id ");
+
+        // Thêm sắp xếp
+        if (sortField != null && !sortField.isEmpty()) {
+            sql.append(" ORDER BY ").append(sortField).append(" ").append(sortOrder != null && sortOrder.equals("desc") ? "DESC" : "ASC");
+        } else {
+            sql.append(" ORDER BY p.id ASC"); // Mặc định sắp xếp theo product_id
+        }
+
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
@@ -222,9 +226,6 @@ public class FeedbackDAO extends DBContext {
             if (filterRating != null && !filterRating.isEmpty()) {
                 ps.setInt(paramIndex++, Integer.parseInt(filterRating));
             }
-            if (filterStatus != null && !filterStatus.isEmpty()) {
-                ps.setString(paramIndex++, filterStatus);
-            }
 
             ps.setInt(paramIndex++, (page - 1) * recordsPerPage);
             ps.setInt(paramIndex++, recordsPerPage);
@@ -235,8 +236,8 @@ public class FeedbackDAO extends DBContext {
                 feedback.setProductId(rs.getInt("product_id"));
                 feedback.setProductTitle(rs.getString("title"));
                 feedback.setProductThumbnail(rs.getString("thumbnail"));
-                feedback.setRating(rs.getInt("avg_rating")); // Using rating to store average
-                feedback.setComment(rs.getString("feedback_count")); // Using comment to store count temporarily
+                feedback.setRating(rs.getInt("avg_rating")); // Lưu avg_rating vào rating
+                feedback.setComment(rs.getString("feedback_count")); // Lưu feedback_count vào comment
                 list.add(feedback);
             }
         } catch (SQLException e) {
@@ -245,7 +246,7 @@ public class FeedbackDAO extends DBContext {
         return list;
     }
 
-    public int getTotalProductsWithFeedback(String searchKeyword, String filterRating, String filterStatus) {
+    public int getTotalProductsWithFeedback(String searchKeyword, String filterRating) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.id) ");
         sql.append("FROM products p ");
         sql.append("LEFT JOIN order_items oi ON p.id = oi.product_id ");
@@ -259,9 +260,6 @@ public class FeedbackDAO extends DBContext {
         if (filterRating != null && !filterRating.isEmpty()) {
             sql.append(" AND f.rating = ?");
         }
-        if (filterStatus != null && !filterStatus.isEmpty()) {
-            sql.append(" AND f.status = ?");
-        }
 
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int paramIndex = 1;
@@ -272,9 +270,6 @@ public class FeedbackDAO extends DBContext {
             }
             if (filterRating != null && !filterRating.isEmpty()) {
                 ps.setInt(paramIndex++, Integer.parseInt(filterRating));
-            }
-            if (filterStatus != null && !filterStatus.isEmpty()) {
-                ps.setString(paramIndex++, filterStatus);
             }
 
             ResultSet rs = ps.executeQuery();

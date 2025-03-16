@@ -27,21 +27,25 @@ public class FeedbackListServlet extends HttpServlet {
             throws ServletException, IOException {
         String searchKeyword = request.getParameter("searchKeyword");
         String filterRating = request.getParameter("filterRating");
-        String filterStatus = request.getParameter("filterStatus");
+        String sortField = request.getParameter("sortField");
+        String sortOrder = request.getParameter("sortOrder");
         String pageStr = request.getParameter("page");
 
         int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
         int recordsPerPage = 10;
 
         FeedbackDAO feedbackDAO = new FeedbackDAO();
-        List<Feedback> feedbackList = feedbackDAO.getFeedbacksGroupedByProduct(searchKeyword, filterRating, filterStatus, page, recordsPerPage);
-        int totalRecords = feedbackDAO.getTotalProductsWithFeedback(searchKeyword, filterRating, filterStatus);
+        List<Feedback> feedbackList = feedbackDAO.getFeedbacksGroupedByProduct(
+                searchKeyword, filterRating, sortField, sortOrder, page, recordsPerPage
+        );
+        int totalRecords = feedbackDAO.getTotalProductsWithFeedback(searchKeyword, filterRating);
         int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
 
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("searchKeyword", searchKeyword);
         request.setAttribute("filterRating", filterRating);
-        request.setAttribute("filterStatus", filterStatus);
+        request.setAttribute("sortField", sortField);
+        request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalItems", totalRecords);

@@ -199,20 +199,8 @@
                 background-color: var(--hover-color);
             }
 
-            .badge-vip {
-                background-color: #ffd700; /* Màu vàng kim cho VIP */
-                color: #2c3e50; /* Màu chữ tối để tương phản */
-                font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
-            }
-
-            .badge-normal {
-                background-color: #6c757d; /* Màu xám cho Normal */
-                color: white; /* Màu chữ trắng để tương phản */
-                font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
+            .hidden {
+                display: none;
             }
 
             /* Responsive */
@@ -239,6 +227,7 @@
         </style>
     </head>
     <body>
+        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
@@ -246,23 +235,34 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <!-- Thông báo thành công -->
                 <c:if test="${not empty param.success}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
-                        Cập nhật trạng thái phản hồi thành công!
+                        <c:choose>
+                            <c:when test="${param.success eq 'update'}">
+                                Cập nhật trạng thái phản hồi thành công!
+                            </c:when>
+                            <c:otherwise>
+                                Thao tác thành công!
+                            </c:otherwise>
+                        </c:choose>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
+
+                <!-- Thông báo lỗi -->
                 <c:if test="${param.error eq 'update'}">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         Không thể cập nhật trạng thái phản hồi. Vui lòng thử lại!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
-
+                
                 <h2 class="page-title">
                     <i class="fas fa-comments me-2"></i>Quản lý phản hồi khách hàng
                 </h2>
 
+                <!-- Filter Section -->
                 <div class="card filter-card">
                     <div class="card-header">
                         <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
@@ -278,19 +278,18 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select" name="filterRating">
+                                <select class="form-select" id="filterRating" name="filterRating">
                                     <option value="">Tất cả đánh giá</option>
                                     <c:forEach begin="1" end="5" var="i">
-                                        <option value="${i}" ${filterRating == i ? 'selected' : ''}>${i} sao</option>
+                                        <option value="${i}" ${filterRating == i ? 'selected' : ''}>${i} ⭐</option>
                                     </c:forEach>
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <select class="form-select" name="filterStatus">
+                                <select class="form-select" id="filterStatus" name="filterStatus">
                                     <option value="">Tất cả trạng thái</option>
-                                    <option value="pending" ${filterStatus == 'pending' ? 'selected' : ''}>Chờ duyệt</option>
-                                    <option value="approved" ${filterStatus == 'approved' ? 'selected' : ''}>Đã duyệt</option>
-                                    <option value="rejected" ${filterStatus == 'rejected' ? 'selected' : ''}>Từ chối</option>
+                                    <option value="published" ${filterStatus == 'published' ? 'selected' : ''}>Đã xuất bản</option>
+                                    <option value="hidden" ${filterStatus == 'hidden' ? 'selected' : ''}>Đã ẩn</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -301,18 +300,23 @@
                                     <a href="feedbacklist" class="btn btn-secondary">
                                         <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
                                     </a>
-                                    <a href="feedbackall" class="btn btn-info">
-                                        <i class="fas fa-list me-2"></i>Xem tất cả phản hồi
-                                    </a>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
 
+                <!-- Feedback List Table -->
                 <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-list me-2"></i>Danh sách phản hồi theo sản phẩm
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-list me-2"></i>Danh sách phản hồi theo sản phẩm
+                        </div>
+                        <div>
+                            <a href="feedbackall" class="btn btn-info btn-sm">
+                                <i class="fas fa-list-alt me-2"></i>Xem tất cả phản hồi
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -320,9 +324,30 @@
                                 <thead>
                                     <tr class="bg-light">
                                         <th class="text-center" style="width: 60px;">STT</th>
-                                        <th>Sản phẩm</th>
-                                        <th>Đánh giá trung bình</th>
-                                        <th>Tổng số phản hồi</th>
+                                        <th>
+                                            <a href="feedbacklist?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=product_title&sortOrder=${sortField == 'product_title' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Sản phẩm
+                                                <span class="sort-icons">
+                                                    ${sortField == 'product_title' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="feedbacklist?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=avg_rating&sortOrder=${sortField == 'avg_rating' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Đánh giá trung bình
+                                                <span class="sort-icons">
+                                                    ${sortField == 'avg_rating' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="feedbacklist?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=feedback_count&sortOrder=${sortField == 'feedback_count' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Tổng số phản hồi
+                                                <span class="sort-icons">
+                                                    ${sortField == 'feedback_count' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th class="text-center">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -336,8 +361,12 @@
                                                         <img src="${feedback.productThumbnail}" alt="Thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                                                         ${feedback.productTitle}
                                                     </td>
-                                                    <td>${feedback.rating} sao</td>
-                                                    <td>${feedback.comment}</td> 
+                                                    <td><span class="rating">
+                                                            <c:forEach begin="1" end="${feedback.rating}">⭐</c:forEach>
+                                                            <span class="hidden">${feedback.rating}</span>
+                                                        </span>
+                                                    </td>
+                                                    <td>${feedback.comment}</td> <!-- feedback_count lưu trong comment -->
                                                     <td class="text-center">
                                                         <a href="feedbackdetail?productId=${feedback.productId}" class="btn btn-outline-primary btn-sm">
                                                             <i class="fas fa-eye"></i> Xem chi tiết
