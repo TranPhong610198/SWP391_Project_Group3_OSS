@@ -107,9 +107,9 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="customer-feedback.jsp" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/marketing/feedbacklist" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-comments me-2"></i>
-                Phản hồi khách hàng
+                Đánh giá sản phẩm
             </a>
         </li>
 
