@@ -318,12 +318,7 @@
                                     <tr class="bg-light">
                                         <th class="text-center" style="width: 60px;">STT</th>
                                         <th>
-                                            <a href="feedbacklist?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=product_title&sortOrder=${sortField == 'product_title' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Sản phẩm
-                                                <span class="sort-icons">
-                                                    ${sortField == 'product_title' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
-                                            </a>
+                                            Sản phẩm
                                         </th>
                                         <th>
                                             <a href="feedbacklist?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=avg_rating&sortOrder=${sortField == 'avg_rating' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">

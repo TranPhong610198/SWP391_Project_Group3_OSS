@@ -246,6 +246,20 @@
 
         <div class="main-content">
             <div class="container-fluid p-4">
+                <!-- Thông báo thành công -->
+                <c:if test="${param.success eq 'update'}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+                        Cập nhật trạng thái phản hồi thành công!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                <c:if test="${param.error eq 'update'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
+                        Không thể cập nhật trạng thái phản hồi. Vui lòng thử lại!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+
                 <c:if test="${param.success == 'delete_feedback'}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         Xóa feedback thành công!
@@ -258,6 +272,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
+                
+                
                 <h2 class="page-title">
                     <i class="fas fa-comments me-2"></i>Chi tiết phản hồi - ${feedbackList[0].productTitle}
                 </h2>
@@ -360,7 +376,7 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="btn-group" role="group">
-                                                            <form action="feedbacklist" method="POST" style="display: inline;">
+                                                            <form action="feedbackdetail" method="POST" style="display: inline;">
                                                                 <input type="hidden" name="action" value="updateStatus">
                                                                 <input type="hidden" name="id" value="${feedback.id}">
                                                                 <select name="status" onchange="this.form.submit()">
@@ -369,7 +385,7 @@
                                                                     <option value="rejected" ${feedback.status == 'rejected' ? 'selected' : ''}>Từ chối</option>
                                                                 </select>
                                                             </form>
-                                                            <form action="feedbacklist" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa feedback này?');">
+                                                            <form action="feedbackdetail" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa feedback này?');">
                                                                 <input type="hidden" name="action" value="deleteFeedback">
                                                                 <input type="hidden" name="id" value="${feedback.id}">
                                                                 <button type="submit" class="btn btn-danger btn-sm ms-1" title="Xóa feedback">
@@ -443,6 +459,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+            if ($('#successAlert').length) {
+                    setTimeout(function () {
+                        $('#successAlert').alert('close');
+                    }, 3000);
+                }
+                if ($('#errorAlert').length) {
+                    setTimeout(function () {
+                        $('#errorAlert').alert('close');
+                    }, 3000);
+                }
+            
             $('.sidebar-toggle').on('click', function () {
                 $('.sidebar').toggleClass('active');
                 $('.main-content').toggleClass('active');

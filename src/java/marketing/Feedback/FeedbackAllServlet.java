@@ -108,7 +108,37 @@ public class FeedbackAllServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+
+        if ("updateStatus".equals(action)) {
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String status = request.getParameter("status");
+                boolean updated = feedbackDAO.updateFeedbackStatus(id, status);
+                if (updated) {
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackall?success=update");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackall?error=update");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/marketing/feedbackall?error=update");
+            }
+        } else if ("deleteFeedback".equals(action)) {
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                boolean deleted = feedbackDAO.deleteFeedback(id);
+                if (deleted) {
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackall?success=delete_feedback");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackall?error=delete_feedback");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/marketing/feedbackall?error=delete_feedback");
+            }
+        }
     }
 
     /**
