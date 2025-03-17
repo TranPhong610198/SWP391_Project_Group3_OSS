@@ -259,7 +259,7 @@
                 </c:if>
                 
                 <h2 class="page-title">
-                    <i class="fas fa-comments me-2"></i>Quản lý phản hồi khách hàng
+                    <i class="fas fa-comments me-2"></i>Quản lý phản hồi sản phẩm
                 </h2>
 
                 <!-- Filter Section -->
@@ -274,22 +274,15 @@
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
-                                    <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo nội dung hoặc người dùng...">
+                                    <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo sản phẩm ...">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <select class="form-select" id="filterRating" name="filterRating">
                                     <option value="">Tất cả đánh giá</option>
                                     <c:forEach begin="1" end="5" var="i">
-                                        <option value="${i}" ${filterRating == i ? 'selected' : ''}>${i} ⭐</option>
+                                        <option value="${i}" ${filterRating == i ? 'selected' : ''}>${i} sao</option>
                                     </c:forEach>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select" id="filterStatus" name="filterStatus">
-                                    <option value="">Tất cả trạng thái</option>
-                                    <option value="published" ${filterStatus == 'published' ? 'selected' : ''}>Đã xuất bản</option>
-                                    <option value="hidden" ${filterStatus == 'hidden' ? 'selected' : ''}>Đã ẩn</option>
                                 </select>
                             </div>
                             <div class="col-md-4">

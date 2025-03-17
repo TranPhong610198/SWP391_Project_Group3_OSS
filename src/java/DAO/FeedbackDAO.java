@@ -6,6 +6,7 @@ package DAO;
 
 import Context.DBContext;
 import entity.Feedback;
+import entity.FeedbackImage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -186,7 +187,10 @@ public class FeedbackDAO extends DBContext {
         }
     }
 
-    /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
     public List<Feedback> getFeedbacksGroupedByProduct(String searchKeyword, String filterRating,
             String sortField, String sortOrder, int page, int recordsPerPage) {
         List<Feedback> list = new ArrayList<>();
@@ -195,11 +199,10 @@ public class FeedbackDAO extends DBContext {
         sql.append("FROM products p ");
         sql.append("LEFT JOIN order_items oi ON p.id = oi.product_id ");
         sql.append("LEFT JOIN feedback f ON oi.id = f.order_item_id ");
-        sql.append("LEFT JOIN users u ON f.user_id = u.id ");
         sql.append("WHERE 1=1");
 
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            sql.append(" AND (p.title LIKE ? OR u.full_name LIKE ?)");
+            sql.append(" AND p.title LIKE ?");
         }
         if (filterRating != null && !filterRating.isEmpty()) {
             sql.append(" AND f.rating = ?");
@@ -207,11 +210,10 @@ public class FeedbackDAO extends DBContext {
 
         sql.append(" GROUP BY p.id, p.title, p.thumbnail ");
 
-        // Thêm sắp xếp
         if (sortField != null && !sortField.isEmpty()) {
             sql.append(" ORDER BY ").append(sortField).append(" ").append(sortOrder != null && sortOrder.equals("desc") ? "DESC" : "ASC");
         } else {
-            sql.append(" ORDER BY p.id ASC"); // Mặc định sắp xếp theo product_id
+            sql.append(" ORDER BY p.id ASC");
         }
 
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
@@ -220,7 +222,6 @@ public class FeedbackDAO extends DBContext {
             int paramIndex = 1;
 
             if (searchKeyword != null && !searchKeyword.isEmpty()) {
-                ps.setString(paramIndex++, "%" + searchKeyword + "%");
                 ps.setString(paramIndex++, "%" + searchKeyword + "%");
             }
             if (filterRating != null && !filterRating.isEmpty()) {
@@ -236,8 +237,8 @@ public class FeedbackDAO extends DBContext {
                 feedback.setProductId(rs.getInt("product_id"));
                 feedback.setProductTitle(rs.getString("title"));
                 feedback.setProductThumbnail(rs.getString("thumbnail"));
-                feedback.setRating(rs.getInt("avg_rating")); // Lưu avg_rating vào rating
-                feedback.setComment(rs.getString("feedback_count")); // Lưu feedback_count vào comment
+                feedback.setRating(rs.getInt("avg_rating"));
+                feedback.setComment(rs.getString("feedback_count"));
                 list.add(feedback);
             }
         } catch (SQLException e) {
@@ -251,11 +252,10 @@ public class FeedbackDAO extends DBContext {
         sql.append("FROM products p ");
         sql.append("LEFT JOIN order_items oi ON p.id = oi.product_id ");
         sql.append("LEFT JOIN feedback f ON oi.id = f.order_item_id ");
-        sql.append("LEFT JOIN users u ON f.user_id = u.id ");
         sql.append("WHERE 1=1");
 
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            sql.append(" AND (p.title LIKE ? OR u.full_name LIKE ?)");
+            sql.append(" AND p.title LIKE ?");
         }
         if (filterRating != null && !filterRating.isEmpty()) {
             sql.append(" AND f.rating = ?");
@@ -265,7 +265,6 @@ public class FeedbackDAO extends DBContext {
             int paramIndex = 1;
 
             if (searchKeyword != null && !searchKeyword.isEmpty()) {
-                ps.setString(paramIndex++, "%" + searchKeyword + "%");
                 ps.setString(paramIndex++, "%" + searchKeyword + "%");
             }
             if (filterRating != null && !filterRating.isEmpty()) {
@@ -280,6 +279,26 @@ public class FeedbackDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+    
+        public List<FeedbackImage> getImagesByFeedbackId(int feedbackId) {
+        List<FeedbackImage> list = new ArrayList<>();
+        String sql = "SELECT * FROM feedback_images WHERE feedback_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, feedbackId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                FeedbackImage image = new FeedbackImage();
+                image.setId(rs.getInt("id"));
+                image.setFeedbackId(rs.getInt("feedback_id"));
+                image.setImageUrl(rs.getString("image_url"));
+                image.setCreatedAt(rs.getDate("created_at"));
+                list.add(image);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public boolean deleteFeedback(int feedbackId) {

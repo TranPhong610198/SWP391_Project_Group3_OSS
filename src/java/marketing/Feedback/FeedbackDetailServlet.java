@@ -5,7 +5,6 @@
 package marketing.Feedback;
 
 import DAO.FeedbackDAO;
-import DAO.FeedbackImageDAO;
 import entity.Feedback;
 import entity.FeedbackImage;
 import java.io.IOException;
@@ -80,9 +79,8 @@ public class FeedbackDetailServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
 
         // Lấy danh sách hình ảnh feedback
-        FeedbackImageDAO imageDAO = new FeedbackImageDAO();
         for (Feedback feedback : feedbackList) {
-            List<FeedbackImage> images = imageDAO.getImagesByFeedbackId(feedback.getId());
+            List<FeedbackImage> images = feedbackDAO.getImagesByFeedbackId(feedback.getId());
             request.setAttribute("images_" + feedback.getId(), images);
         }
 

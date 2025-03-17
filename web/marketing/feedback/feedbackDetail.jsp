@@ -277,7 +277,7 @@
                                     <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo nội dung hoặc người dùng...">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select class="form-select" name="filterRating">
                                     <option value="">Tất cả đánh giá</option>
                                     <c:forEach begin="1" end="5" var="i">
@@ -301,10 +301,12 @@
                                     <a href="feedbackdetail?productId=${productId}" class="btn btn-secondary">
                                         <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
                                     </a>
-                                    <a href="feedbacklist" class="btn btn-info">
-                                        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách sản phẩm
-                                    </a>
                                 </div>
+                            </div>
+                            <div>
+                                <a href="feedbacklist" class="btn btn-info">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách sản phẩm
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -323,7 +325,7 @@
                                         <th>Người dùng</th>
                                         <th>Đánh giá</th>
                                         <th>Nội dung</th>
-                                        <th>Hình ảnh</th>
+<!--                                        <th>Hình ảnh</th>-->
                                         <th>Trạng thái</th>
                                         <th class="text-center">Thao tác</th>
                                     </tr>
@@ -337,12 +339,12 @@
                                                     <td>${feedback.userFullName}</td>
                                                     <td>${feedback.rating} sao</td>
                                                     <td>${feedback.comment}</td>
-                                                    <td>
-                                                        <c:set var="images" value="${requestScope['images_'.concat(feedback.id)]}" />
-                                                        <c:forEach items="${images}" var="image">
-                                                            <img src="${image.imageUrl}" alt="Feedback Image" style="width: 50px; height: 50px; object-fit: cover; margin-right: 5px;">
-                                                        </c:forEach>
-                                                    </td>
+                                                    <!--<td>-->
+                                                        <%--<c:set var="images" value="${requestScope['images_'.concat(feedback.id)]}" />--%>
+                                                        <%--<c:forEach items="${images}" var="image">--%>
+                                                            <!--<img src="${image.imageUrl}" alt="Feedback Image" style="width: 50px; height: 50px; object-fit: cover; margin-right: 5px;">-->
+                                                        <%--</c:forEach>--%>
+                                                    <!--</td>-->
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${feedback.status == 'approved'}">
@@ -358,9 +360,6 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="btn-group" role="group">
-                                                            <a href="feedbackreply?feedbackId=${feedback.id}" class="btn btn-outline-primary btn-sm" title="Phản hồi">
-                                                                <i class="fas fa-reply"></i>
-                                                            </a>
                                                             <form action="feedbacklist" method="POST" style="display: inline;">
                                                                 <input type="hidden" name="action" value="updateStatus">
                                                                 <input type="hidden" name="id" value="${feedback.id}">
@@ -378,6 +377,9 @@
                                                                 </button>
                                                             </form>
                                                         </div>
+                                                        <a href="feedbackreply?feedbackId=${feedback.id}" class="btn btn-outline-primary btn-sm" title="Phản hồi">
+                                                            <i class="fas fa-reply"></i>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

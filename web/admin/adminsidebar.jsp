@@ -58,13 +58,6 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="customer-feedback.jsp" class="text-decoration-none text-light d-flex align-items-center">
-                <i class="fas fa-comments me-2"></i>
-                Phản hồi khách hàng
-            </a>
-        </li>
-
-        <li class="menu-item p-2">
             <a href="reports.jsp" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-file-alt me-2"></i>
                 Báo cáo
