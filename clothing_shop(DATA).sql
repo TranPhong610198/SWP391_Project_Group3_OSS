@@ -2,15 +2,15 @@
 GO
 SET IDENTITY_INSERT [dbo].[users] ON 
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (1, N'TheMoriarty', N'tphong610198@gmail.com', N'$2a$12$CuXL88lRV.caI3o.5ZB/wOM3mUPxEeVp7PnUYC9Tu6iefOfhTlfxO', N'Trần Phong', N'male', N'0123456789', N'uploads/avatars/bb5cb37c-fb96-4a04-a5d6-7bd5732bf5b0.jpg', N'admin', N'active', CAST(N'2025-02-09T16:58:16.1666667' AS DateTime2), CAST(N'2025-02-09T17:12:48.3000000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (1, N'admin123', N'tphong610198@gmail.com', N'$2a$12$CuXL88lRV.caI3o.5ZB/wOM3mUPxEeVp7PnUYC9Tu6iefOfhTlfxO', N'Trần Phong', N'male', N'0123456789', N'uploads/avatars/bb5cb37c-fb96-4a04-a5d6-7bd5732bf5b0.jpg', N'admin', N'active', CAST(N'2025-02-09T16:58:16.1666667' AS DateTime2), CAST(N'2025-02-09T17:12:48.3000000' AS DateTime2))
 GO
 INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (2, N'phongthhe186443', N'phongthhe186443@fpt.edu.vn', N'$2a$10$mqTbeXOjwWftYcp3HvgbF.vynnSvUqQfBUY6wj7m7m/tiEnv/YYA6', N'Tran Hoai Phong (K18 HL)', N'other', NULL, N'https://lh3.googleusercontent.com/a/ACg8ocLrSqjCMqEhVL5SMILJ6OOpPyI5S64iKP29HhPEV9aIOgF0i-g=s96-c', N'customer', N'active', CAST(N'2025-02-09T17:02:23.6133333' AS DateTime2), CAST(N'2025-02-09T17:02:23.6133333' AS DateTime2))
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (3, N'huy123', N'huy412004@gmail.com', N'$2a$10$sYcqeKA5lzaWHHEHojLoxe378EtZni5873xBA8YfljCthxCADhmoy', N'Nguyen Danh Huy', N'male', N'0987654321', N'uploads/avatars/huannhi.jpg', N'marketing', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (3, N'marketing123', N'huy412004@gmail.com', N'$2a$10$sYcqeKA5lzaWHHEHojLoxe378EtZni5873xBA8YfljCthxCADhmoy', N'Nguyen Danh Huy', N'male', N'0987654321', N'uploads/avatars/huannhi.jpg', N'marketing', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (4, N'YaoLao', N'YaoLao@gmail.com', N'$2a$10$XFl8Zk5zSXQo/PjN4df.k.twXuumSIvYM7jLRqVcvx2heTFVyW0Ca', N'Dược Lão', N'male', N'0912345678', N'uploads/avatars/duoclao.jpg', N'marketing', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (4, N'user123', N'user123@gmail.com', N'$2a$10$XFl8Zk5zSXQo/PjN4df.k.twXuumSIvYM7jLRqVcvx2heTFVyW0Ca', N'Dược Lão', N'male', N'0912345678', N'uploads/avatars/duoclao.jpg', N'customer', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
-INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (5, N'XiaoYan', N'XiaoYan@gmail.com', N'$2a$10$ojVPuuE5ZVLPE/wWOSRFIeNKLkBZh/CZeHE57ij4F.cfKYsdmIxAO', N'Tiêu Viêm', N'male', N'0978123456', N'uploads/avatars/tieuviem.jpg', N'sale', N'pending', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
+INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (5, N'sale123', N'sale123@gmail.com', N'$2a$10$ojVPuuE5ZVLPE/wWOSRFIeNKLkBZh/CZeHE57ij4F.cfKYsdmIxAO', N'Tiêu Viêm', N'male', N'0978123456', N'uploads/avatars/tieuviem.jpg', N'sale', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
 INSERT [dbo].[users] ([id], [username], [email], [password_hash], [full_name], [gender], [mobile], [avatar], [role], [status], [created_at], [updated_at]) VALUES (6, N'XiaoZhan', N'XiaoZhan@gmail.com', N'$2a$10$7d0sV4kA8mSbQoJhGmROJumQnBeqtpzzMxz7yslGGf5Z1lhx85M7O', N'Tiêu Chiến', N'male', N'0934567890', N'uploads/avatars/default.jpg', N'customer', N'active', CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2), CAST(N'2025-02-10T03:04:56.3300000' AS DateTime2))
 GO
@@ -220,6 +220,8 @@ INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (7, N'Thắt lưng da', 61, N'Thắt lưng da cao cấp, bền đẹp theo thời gian', CAST(180000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), N'https://authenticvietnam.vn/wp-content/uploads/that-lung-da-gucci-nam-406831DJ20T_2145_001_100_0000_Light-Leather-belt-with-Double-G-buckle.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (8, N'Thắt lưng da', 61, N'Thắt lưng da cao cấp, bền đẹp theo thời gian', CAST(180000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), N'https://babuhandmade.com/wp-content/uploads/2022/01/that-lung-da-day-that-lung-nam-that-lung-nam-dep-that-lung-da-bo-that-lung-da-nam-that-lung-nam-da-bo-mua-that-lung-nam-day-that-lung-da-bo-xin-leather-belts-belts-belt-for-men-buckle-belt-1.jpg', N'EOStock', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
+GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (9, N'Giày thể thao', 29, N'Giày thể thao nhẹ nhàng, phù hợp cho cả nam và nữ', CAST(450000.00 AS Decimal(10, 2)), CAST(500000.00 AS Decimal(10, 2)), N'https://img.mwc.com.vn/giay-thoi-trang?w=480&h=510&FileInput=/Resources/Product/2024/09/22/z5855779313414_2914371405362ca7f474791328971969.jpg', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (10, N'Giày sneaker', 30, N'Giày sneaker thời trang, phù hợp cho đi chơi', CAST(350000.00 AS Decimal(10, 2)), CAST(400000.00 AS Decimal(10, 2)), N'https://bizweb.dktcdn.net/thumb/large/100/041/044/products/48f5343d-9f9a-4ed2-aa02-de2ad1f4fabc-jpeg.jpg?v=1694597357733', N'active', 0, NULL, CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2), CAST(N'2025-02-10T05:35:14.1666667' AS DateTime2))
@@ -238,7 +240,7 @@ INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (17, N'Váy công chúa cho bé gái', 58, N'Váy công chúa lấp lánh cho bé gái, phù hợp dự tiệc', CAST(289000.00 AS Decimal(10, 2)), CAST(320000.00 AS Decimal(10, 2)), N'https://tutupetti.com/wp-content/uploads/2023/07/dam_dep_cho_be_du_tiec_04.jpg', N'active', 0, NULL, CAST(N'2025-02-24T10:35:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:35:00.0000000' AS DateTime2))
 GO
-INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (18, N'Balo nam thời trang', 60, N'Balo nam chống nước, nhiều ngăn, phù hợp đi học, đi làm', CAST(299000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://down-vn.img.susercontent.com/file/sg-11134201-22120-qz5c8pq2mlkv95', N'active', 0, NULL, CAST(N'2025-02-24T10:40:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:40:00.0000000' AS DateTime2))
+INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (18, N'Balo nam thời trang', 60, N'Balo nam chống nước, nhiều ngăn, phù hợp đi học, đi làm', CAST(299000.00 AS Decimal(10, 2)), CAST(350000.00 AS Decimal(10, 2)), N'https://gubag.vn/wp-content/uploads/2021/07/balo-nam-thoi-trang-gb-bl14-xd.webp', N'active', 0, NULL, CAST(N'2025-02-24T10:40:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:40:00.0000000' AS DateTime2))
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (19, N'Dây chuyền bạc nữ', 67, N'Dây chuyền bạc 925 thiết kế tinh tế, sang trọng', CAST(225000.00 AS Decimal(10, 2)), CAST(250000.00 AS Decimal(10, 2)), N'https://pos.nvncdn.com/211f76-106986/ps/20240805_RdCu2zj3rc.jpeg', N'active', 0, NULL, CAST(N'2025-02-24T10:45:00.0000000' AS DateTime2), CAST(N'2025-02-24T10:45:00.0000000' AS DateTime2))
 GO
@@ -1323,29 +1325,136 @@ GO
 
 
 -- sample orders
-INSERT INTO orders (user_id, status, total_amount, recipient_name, recipient_email, recipient_phone, recipient_address, notes) VALUES
-(1, 'completed', 150.00, N'Nguyen Van A', 'nguyenvana@example.com', '0123456789', N'123 ABC Street, Hanoi', N'Giao hàng vào buổi sáng'),
-(2, 'processing', 200.00, N'Tran Thi B', 'tranthib@example.com', '0987654321', N'456 DEF Street, Ho Chi Minh', NULL),
-(3, 'shipped', 75.00, N'Le Van C', 'levanc@example.com', '0345678901', N'789 GHI Street, Da Nang', N'Để lại ở cửa');
+SET IDENTITY_INSERT orders ON;
+INSERT INTO orders (id, user_id, status, total_amount, recipient_name, recipient_email, recipient_phone, recipient_address, notes, created_at, updated_at) 
+VALUES 
+(1, 2, N'completed', 1200000, N'Tran Hoai Phong', N'phongthhe186443@fpt.edu.vn', N'0987654321', N'123 Đường ABC, TP.HCM', N'Giao nhanh giúp tôi.', GETDATE(), GETDATE()),
+(2, 4, N'completed', 800000, N'Dược Lão', N'user123@gmail.com', N'0912345678', N'456 Đường XYZ, Hà Nội', N'Liên hệ trước khi giao.', GETDATE(), GETDATE()),
+(3, 6, N'completed', 650000, N'Tiêu Chiến', N'XiaoZhan@gmail.com', N'0934567890', N'789 Đường DEF, Đà Nẵng', NULL, GETDATE(), GETDATE()),
+(4, 8, N'completed', 950000, N'Mỹ Đỗ Toa', N'Medusa@gmail.com', N'0923456789', N'101 Đường GHI, TP.HCM', NULL, GETDATE(), GETDATE()),
+(5, 10, N'completed', 1500000, N'Hải Ba Đông', N'HaiBoDong@gmail.com', N'0998765432', N'202 Đường JKL, Hà Nội', N'Giao buổi sáng.', GETDATE(), GETDATE()),
+(6, 12, N'completed', 700000, N'Cổ Nguyên', N'GuYuan@gmail.com', N'0981234567', N'303 Đường MNO, Đà Nẵng', NULL, GETDATE(), GETDATE()),
+(7, 14, N'completed', 620000, N'Vân Sơn', N'YunShan@gmail.com', N'0919876543', N'404 Đường PQR, TP.HCM', NULL, GETDATE(), GETDATE()),
+(8, 16, N'completed', 1050000, N'Hồ Gia', N'HuJia@gmail.com', N'0932198765', N'505 Đường STU, Hà Nội', NULL, GETDATE(), GETDATE()),
+(9, 18, N'completed', 780000, N'Diệp Hiên', N'YanXiao@gmail.com', N'0965432198', N'606 Đường VWX, Đà Nẵng', NULL, GETDATE(), GETDATE()),
+(10, 20, N'completed', 1200000, N'Tiêu Lôi', N'XiaoLei@gmail.com', N'0987654329', N'707 Đường YZA, TP.HCM', NULL, GETDATE(), GETDATE()),
+(11, 22, N'completed', 800000, N'Tử Nghiên', N'ZiYan@gmail.com', N'0909876543', N'808 Đường BCD, Hà Nội', NULL, GETDATE(), GETDATE()),
+(12, 2, N'completed', 850000, N'Tran Hoai Phong', N'phongthhe186443@fpt.edu.vn', N'0987654321', N'909 Đường EFG, Đà Nẵng', NULL, GETDATE(), GETDATE());
+SET IDENTITY_INSERT orders OFF;
 
 -- sample order items
-INSERT INTO order_items (order_id, product_id, variant_id, quantity, unit_price) VALUES
-(1, 1, 1, 2, 50.00),
-(1, 2, 3, 1, 50.00),
-(2, 3, 5, 1, 200.00),
-(3, 4, 7, 3, 25.00);
+SET IDENTITY_INSERT order_items ON;
+INSERT INTO order_items (id, order_id, product_id, variant_id, quantity, unit_price)
+VALUES 
+-- Mỗi đơn hàng có 1-5 sản phẩm, tổng 30 sản phẩm
+(1, 1, 1, 1, 2, 250000),
+(2, 1, 2, 2, 1, 300000),
+(3, 1, 3, 3, 2, 220000),
+(4, 2, 4, 4, 1, 280000),
+(5, 2, 5, 5, 2, 150000),
+(6, 3, 6, 6, 1, 120000),
+(7, 3, 7, 7, 1, 200000),
+(8, 4, 8, 8, 3, 180000),
+(9, 4, 9, 9, 2, 500000),
+(10, 5, 10, 10, 1, 400000),
+(11, 5, 11, 11, 1, 550000),
+(12, 6, 12, 12, 1, 200000),
+(13, 6, 13, 13, 1, 450000),
+(14, 7, 14, 14, 2, 320000),
+(15, 7, 15, 15, 1, 280000),
+(16, 8, 16, 16, 1, 150000),
+(17, 8, 17, 17, 1, 180000),
+(18, 9, 18, 18, 1, 450000),
+(19, 9, 19, 19, 1, 350000),
+(20, 10, 20, 20, 1, 320000),
+(21, 10, 21, 21, 1, 250000),
+(22, 11, 22, 22, 1, 400000),
+(23, 11, 23, 23, 1, 350000),
+(24, 12, 24, 24, 1, 500000),
+(25, 12, 25, 25, 1, 600000),
+(26, 12, 26, 26, 1, 450000),
+(27, 12, 27, 27, 1, 400000),
+(28, 12, 28, 28, 1, 300000),
+(29, 12, 29, 29, 1, 250000),
+(30, 12, 30, 30, 1, 500000);
+SET IDENTITY_INSERT order_items OFF;
+
 
 -- sample order history
-INSERT INTO order_history (order_id, updated_by, status, notes) VALUES
-(1, 1, 'processing', N'Đơn hàng đang được chuẩn bị'),
-(1, 2, 'shipped', N'Đơn hàng đã được chuyển qua VNPost'),
-(1, 3, 'completed', N'Khách hàng đã nhận được đơn hàng'),
-(2, 2, 'processing', N'Đang chờ xác nhận hàng'),
-(3, 1, 'shipped', N'Giao hàng dự kiến ​​trong 3 ngày');
+SET IDENTITY_INSERT order_history ON;
+INSERT INTO order_history (id, order_id, updated_by, status, notes, updated_at)
+VALUES 
+(1, 1, 2, N'completed', N'Giao hàng thành công', GETDATE()),
+(2, 2, 4, N'completed', N'Khách hàng đã nhận hàng', GETDATE()),
+(3, 3, 6, N'completed', N'Đã giao hàng đúng hẹn', GETDATE()),
+(4, 4, 8, N'completed', N'Đơn hàng hoàn tất', GETDATE()),
+(5, 5, 10, N'completed', N'Khách hàng hài lòng về sản phẩm', GETDATE()),
+(6, 6, 12, N'completed', N'Xác nhận nhận hàng', GETDATE()),
+(7, 7, 14, N'completed', N'Hoàn tất đơn hàng', GETDATE()),
+(8, 8, 16, N'completed', N'Giao hàng đúng lịch trình', GETDATE()),
+(9, 9, 18, N'completed', N'Đã giao thành công', GETDATE()),
+(10, 10, 20, N'completed', N'Khách hàng nhận hàng và đánh giá tốt', GETDATE()),
+(11, 11, 22, N'completed', N'Đơn hàng hoàn thành', GETDATE()),
+(12, 12, 2, N'completed', N'Giao hàng tận nơi đúng thời gian', GETDATE());
+SET IDENTITY_INSERT order_history OFF;
 
 -- sample feedback
-INSERT INTO feedback (order_item_id, user_id, rating, comment, status) VALUES
-(1, 1, 5, N'Chất lượng tuyệt vời và giao hàng nhanh!', 'approved'),
-(2, 1, 4, N'Sản phẩm tốt nhưng bao bì bị rách', 'approved'),
-(3, 2, 3, N'Sản phẩm ổn, mong đợi chất liệu tốt hơn', 'approved'),
-(4, 3, 5, N'Rất thích! Sẽ mua lại.', 'approved');
+SET IDENTITY_INSERT feedback ON;
+INSERT INTO feedback (id, order_item_id, user_id, rating, comment, status, created_at, updated_at)
+VALUES 
+-- Sản phẩm 1 (5 feedback)
+(1, 1, 2, 5, N'Chất vải mềm, thiết kế đẹp.', N'approved', GETDATE(), GETDATE()),
+(2, 1, 3, 4, N'Rất đáng tiền.', N'approved', GETDATE(), GETDATE()),
+(3, 1, 4, 5, N'Áo rất thoáng mát.', N'approved', GETDATE(), GETDATE()),
+(4, 1, 5, 5, N'Đẹp hơn mong đợi.', N'approved', GETDATE(), GETDATE()),
+(5, 1, 6, 4, N'Tốt nhưng giao hơi chậm.', N'approved', GETDATE(), GETDATE()),
+
+-- Sản phẩm 2 (5 feedback)
+(6, 2, 2, 5, N'Quần chất lượng tốt.', N'approved', GETDATE(), GETDATE()),
+(7, 2, 3, 4, N'Đáng giá từng xu.', N'approved', GETDATE(), GETDATE()),
+(8, 2, 4, 5, N'Phù hợp với mọi dịp.', N'approved', GETDATE(), GETDATE()),
+(9, 2, 5, 5, N'Quá tuyệt vời!', N'approved', GETDATE(), GETDATE()),
+(10, 2, 6, 4, N'Form hơi rộng.', N'approved', GETDATE(), GETDATE()),
+
+-- 2 sản phẩm có 3 feedback mỗi sản phẩm
+(11, 3, 2, 5, N'Chân váy rất đẹp.', N'approved', GETDATE(), GETDATE()),
+(12, 3, 3, 4, N'Chất lượng khá ổn.', N'approved', GETDATE(), GETDATE()),
+(13, 3, 4, 5, N'Váy rất nữ tính.', N'approved', GETDATE(), GETDATE()),
+(14, 4, 5, 5, N'Rất hợp thời trang.', N'approved', GETDATE(), GETDATE()),
+(15, 4, 6, 4, N'Giao hàng nhanh.', N'approved', GETDATE(), GETDATE()),
+(16, 4, 7, 5, N'Rất hài lòng!', N'approved', GETDATE(), GETDATE()),
+
+-- 1 feedback mỗi sản phẩm
+(17, 5, 8, 5, N'Giày êm chân.', N'approved', GETDATE(), GETDATE()),
+(18, 6, 9, 5, N'Áo khoác rất đẹp.', N'approved', GETDATE(), GETDATE()),
+(19, 7, 10, 4, N'Form vừa vặn.', N'approved', GETDATE(), GETDATE()),
+(20, 8, 11, 5, N'Thắt lưng đẹp.', N'approved', GETDATE(), GETDATE());
+SET IDENTITY_INSERT feedback OFF;
+
+SET IDENTITY_INSERT feedback_images ON;
+INSERT INTO feedback_images (id, feedback_id, image_url, created_at)
+VALUES 
+(1, 1, 'https://cf.shopee.vn/file/75e56bda77d932ef890d7b03dbdd5707', GETDATE()),
+(2, 1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSErJXXvUcb5i5jdUvdeGO-NR70mvuVq0N4sNGaafrs6UpQ1iY5jzEWixFv0Qa1I1H1mKs&usqp=CAU', GETDATE()),
+(3, 1, 'https://product.hstatic.net/1000253775/product/ao-so-mi-tay-dai-icondenim-antibacterial-mugwort-collar-accent__10__ac405cf069ce440896f97d27d9cbb241_large.jpg', GETDATE()),
+(4, 1, 'https://tronxinh.com/wp-content/uploads/2024/06/ao-so-mi-co-sen-tron-a62-2.jpeg', GETDATE()),
+(5, 1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXSzh_U0bmXT_E9sHqm2TOuRSkZuXzc4lrZcP1N9WWRGsLxPJRu6x3vPMGsecVs6Vu2lI&usqp=CAU', GETDATE()),
+(6, 2, 'https://product.hstatic.net/1000273146/product/d2672-den-s_1679123087723_50a621a421ed4572841426460e315969_grande.jpg', GETDATE()),
+(7, 3, 'https://pos.nvncdn.com/02bf86-4082/ps/20240410_A4m1QT38KW.jpeg', GETDATE()),
+(8, 4, 'https://jemcloset.com/cdn/shop/articles/ao-form-rong.jpg?v=1687786004', GETDATE());
+SET IDENTITY_INSERT feedback_images OFF;
+
+SET IDENTITY_INSERT feedback_reply ON;
+INSERT INTO feedback_reply (id, feedback_id, user_id, comment, created_at, updated_at)
+VALUES 
+(1, 1, 2, N'Cảm ơn bạn đã mua hàng!', GETDATE(), GETDATE()),
+(2, 2, 2, N'Rất vui vì bạn hài lòng.', GETDATE(), GETDATE()),
+(3, 3, 3, N'Cảm ơn phản hồi của bạn.', GETDATE(), GETDATE()),
+(4, 4, 4, N'Mong bạn sẽ tiếp tục ủng hộ!', GETDATE(), GETDATE()),
+(5, 5, 5, N'Chúng tôi sẽ tiếp tục cải thiện.', GETDATE(), GETDATE()),
+(6, 6, 6, N'Cảm ơn bạn đã tin tưởng.', GETDATE(), GETDATE()),
+(7, 7, 7, N'Chúng tôi sẽ cập nhật thêm mẫu mới.', GETDATE(), GETDATE()),
+(8, 8, 8, N'Rất vui khi bạn thích sản phẩm!', GETDATE(), GETDATE()),
+(9, 9, 9, N'Cảm ơn bạn đã góp ý.', GETDATE(), GETDATE()),
+(10, 10, 10, N'Chúng tôi rất trân trọng phản hồi của bạn.', GETDATE(), GETDATE());
+SET IDENTITY_INSERT feedback_reply OFF;
