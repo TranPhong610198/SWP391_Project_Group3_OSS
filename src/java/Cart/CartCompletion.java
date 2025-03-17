@@ -59,13 +59,13 @@ public class CartCompletion extends HttpServlet {
         // Kiểm tra xem có đơn hàng đã thanh toán thành công từ PaymentServlet chuyển tới không
         Order completedOrder = (Order) session.getAttribute("completed_order");
         if (completedOrder != null) {
-            // Chuẩn bị dữ liệu để hiển thị trang xác nhận đơn hàng
+            
             request.setAttribute("orderCode", completedOrder.getOrderCode());
             
             // Đảm bảo có ngày đặt hàng, nếu không thì tạo mới
             Date orderDate = completedOrder.getOrderDate();
             if (orderDate == null) {
-                orderDate = new Date(); // Lấy thời gian hiện tại nếu không có
+                orderDate = new Date();
             }
             request.setAttribute("orderDate", orderDate);
             request.setAttribute("total", completedOrder.getTotal());
@@ -73,6 +73,10 @@ public class CartCompletion extends HttpServlet {
             request.setAttribute("shippingMethod", completedOrder.getShippingMethod());
             request.setAttribute("shippingFee", completedOrder.getShippingFee());
             request.setAttribute("selectedItems", completedOrder.getItems());
+            
+            // Hiển thị trạng thái thanh toán - FIX HERE
+            // Sử dụng trạng thái thanh toán từ đối tượng Order thay vì hardcode
+            request.setAttribute("paymentStatus", completedOrder.getPaymentStatus());
             
             // Tính toán subtotal
             double subtotal = 0;
@@ -101,8 +105,6 @@ public class CartCompletion extends HttpServlet {
             return;
         }
 
-        // Nếu không có đơn hàng đã hoàn thành, xử lý logic thông thường
-        
         // Lấy thông tin đơn hàng từ session
         String addressId = (String) session.getAttribute("shipping_address_id");
         String shippingMethod = (String) session.getAttribute("shipping_method");
@@ -224,6 +226,13 @@ public class CartCompletion extends HttpServlet {
         order.setShippingMethod(shippingMethod);
         order.setPaymentMethod(paymentMethod);
         order.setShippingFee(shippingFee);
+        
+        // Đặt trạng thái thanh toán ban đầu
+        if ("bank".equals(paymentMethod) || "bank_transfer".equals(paymentMethod)) {
+            order.setPaymentStatus("pending"); // Trạng thái ban đầu là "pending" cho thanh toán online
+        } else {
+            order.setPaymentStatus("pending"); // Mặc định cho COD
+        }
 
         // Nếu là thanh toán trực tuyến qua VNPay
         if ("bank".equals(paymentMethod)) {
@@ -256,6 +265,7 @@ public class CartCompletion extends HttpServlet {
                 request.setAttribute("orderDate", new Date());
                 request.setAttribute("total", total);
                 request.setAttribute("paymentMethod", paymentMethod);
+                request.setAttribute("paymentStatus", "pending"); // Đơn hàng COD có trạng thái thanh toán là "pending"
                 request.setAttribute("shippingMethod", shippingMethod);
                 request.setAttribute("shippingFee", shippingFee);
                 request.setAttribute("subtotal", subtotal);

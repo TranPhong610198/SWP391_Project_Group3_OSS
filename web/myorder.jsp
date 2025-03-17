@@ -734,7 +734,7 @@
                                     </c:if>
                                     
                                     <c:if test="${order.status == 'completed'}">
-                                        <a href="buyagain?orderId=${order.id}" class="btn-reorder">
+                                        <a href="productdetail?id=${product.id}" class="btn-reorder">
                                             <i class="fas fa-redo"></i> Mua lại
                                         </a>
                                     </c:if>

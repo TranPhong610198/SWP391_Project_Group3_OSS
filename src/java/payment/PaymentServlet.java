@@ -167,6 +167,7 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
+    // Replace the current processVNPayReturn method with this version:
     private void processVNPayReturn(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -192,29 +193,18 @@ public class PaymentServlet extends HttpServlet {
             String vnp_Amount = request.getParameter("vnp_Amount");
             String vnp_OrderInfo = request.getParameter("vnp_OrderInfo");
 
-            // Log essential values
-            System.out.println("Transaction Reference: " + vnp_TxnRef);
-            System.out.println("Response Code: " + vnp_ResponseCode);
-            System.out.println("Transaction Status: " + vnp_TransactionStatus);
-
             HttpSession session = request.getSession();
             Order order = (Order) session.getAttribute("pending_order");
 
             // Verify transaction with our records
             boolean isValidHash = validateVNPayHash(vnp_Params, vnp_SecureHash);
-            System.out.println("Hash validation: " + (isValidHash ? "Valid" : "Invalid"));
-
             boolean isValidTransaction = false;
             if (order != null) {
                 String cleanOrderCode = order.getOrderCode().replaceAll("[^a-zA-Z0-9]", "");
                 isValidTransaction = cleanOrderCode.equals(vnp_TxnRef)
                         && String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
-                System.out.println("Transaction validation: " + (isValidTransaction ? "Valid" : "Invalid"));
             } else {
                 // If order is not in session, try to find it by order code
-                System.out.println("Order not found in session, attempting to retrieve from database");
-
-                // Extract order code from vnp_TxnRef or vnp_OrderInfo
                 String orderCode = null;
                 if (vnp_OrderInfo != null && vnp_OrderInfo.contains("Thanh toan don hang ")) {
                     orderCode = vnp_OrderInfo.replace("Thanh toan don hang ", "");
@@ -222,7 +212,7 @@ public class PaymentServlet extends HttpServlet {
 
                 if (orderCode != null) {
                     // Find order by order code
-                    List<Order> orders = orderDAO.getAllOrders(); // You need to implement this method
+                    List<Order> orders = orderDAO.getAllOrders();
                     for (Order o : orders) {
                         if (orderCode.equals(o.getOrderCode())) {
                             order = o;
@@ -232,8 +222,6 @@ public class PaymentServlet extends HttpServlet {
 
                     if (order != null) {
                         isValidTransaction = String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
-                        System.out.println("Retrieved order from database: " + order.getId());
-                        System.out.println("Transaction validation: " + (isValidTransaction ? "Valid" : "Invalid"));
                     }
                 }
             }
@@ -241,43 +229,49 @@ public class PaymentServlet extends HttpServlet {
             // Check if payment is successful
             if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
                 // Payment successful - process order
-                // Update order status and payment status in the database
                 if (order != null) {
+                    // Update payment status - DIRECT DATABASE ACCESS
+                    try (java.sql.Connection conn = new Context.DBContext().connection; java.sql.PreparedStatement stmt = conn.prepareStatement(
+                            "UPDATE payments SET payment_status = 'completed' WHERE order_id = ?")) {
+
+                        stmt.setInt(1, order.getId());
+                        int updateResult = stmt.executeUpdate();
+                        System.out.println("Updated payment status result: " + updateResult + " rows affected");
+                    } catch (Exception e) {
+                        System.out.println("Error updating payment status: " + e.getMessage());
+                    }
+
+                    // Update order status
                     orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
-                    orderDAO.updatePaymentStatus(order.getId(), "completed");
+
+                    // Update the in-memory order object
+                    order.setPaymentStatus("completed");
+
                     request.setAttribute("orderId", order.getId());
 
-                    // Thêm đoạn code để xóa giỏ hàng sau khi thanh toán thành công
-                    // Lấy userId nếu người dùng đã đăng nhập
+                    // Clear cart
                     Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
-
-                    // Khởi tạo CartDAO để xóa giỏ hàng
                     DAO.CartDAO cartDAO = new DAO.CartDAO();
 
-                    // Xóa giỏ hàng cho người dùng đã đăng nhập hoặc xóa cookie giỏ hàng
                     if (userId != null) {
-                        // Xóa cart_items trong database
                         for (CartItem item : order.getItems()) {
                             cartDAO.deleteCartItem(request, response, item.getId(), userId);
                         }
                     } else {
-                        // Xóa cookie giỏ hàng bằng cách tạo cart trống
                         Cart emptyCart = new Cart();
                         emptyCart.setItems(new ArrayList<>());
                         cartDAO.saveCartToCookies(response, emptyCart);
                     }
                 }
 
-                // Lưu đơn hàng đã thanh toán vào session để hiển thị trên trang cartcompletion
+                // Store completed order in session for display
                 session.setAttribute("completed_order", order);
-                
-                // Clear pending order from session
                 session.removeAttribute("pending_order");
 
-                // Chuyển hướng đến trang cartcompletion
+                // Redirect to completion page
                 response.sendRedirect("cartcompletion");
             } else {
-                // Payment failed or payment validation failed
+                // Payment failed or validation failed
                 String errorMessage = "Thanh toán không thành công. ";
 
                 if ("24".equals(vnp_ResponseCode)) {

@@ -47,7 +47,7 @@ public class OrderDetail extends HttpServlet {
             return;
         }
         
-        // Get order details
+        // Get order details - ensure we get the latest data from database
         Order order = orderDAO.getOrderById(orderId);
         
         // Check if order exists and belongs to the current user
@@ -55,6 +55,11 @@ public class OrderDetail extends HttpServlet {
             response.sendRedirect("myorder");
             return;
         }
+        
+        // Output debug information to logs
+        System.out.println("Order ID: " + order.getId());
+        System.out.println("Payment Method: " + order.getPaymentMethod());
+        System.out.println("Payment Status: " + order.getPaymentStatus());
         
         // Get order history
         List<OrderHistory> orderHistory = orderDAO.getOrderHistory(orderId);

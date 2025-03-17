@@ -604,34 +604,71 @@ public class OrderDAO extends DBContext {
 // Add this method to your OrderDAO class
 
     public boolean updatePaymentStatus(int orderId, String status) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
         try {
+            conn = connection;
+            conn.setAutoCommit(false); // Start transaction
+
+            // Use explicit transaction to ensure both operations complete or fail together
+            // 1. Update payment status in payments table
             String sql = "UPDATE payments SET payment_status = ?, updated_at = GETDATE() WHERE order_id = ?";
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, status);
             stmt.setInt(2, orderId);
             int result = stmt.executeUpdate();
-            stmt.close();
 
-            // Add payment info to order history
+            if (result <= 0) {
+                // No rows updated - possibly no payment record exists
+                System.out.println("Warning: No payment record found for order ID: " + orderId);
+                // Optionally insert a new payment record if needed
+            }
+
+            // 2. Add payment info to order history
             String historyNote = "pending".equals(status) ? "Đang chờ thanh toán"
                     : "completed".equals(status) ? "Đã thanh toán thành công"
                     : "failed".equals(status) ? "Thanh toán không thành công"
                     : "refunded".equals(status) ? "Đã hoàn tiền" : "Cập nhật trạng thái thanh toán: " + status;
 
+            stmt.close(); // Close the previous statement
+
             String orderHistorySql = "INSERT INTO order_history (order_id, updated_by, status, notes, updated_at) "
-                    + "VALUES (?, 1, ?, ?, GETDATE())";
+                    + "VALUES (?, 1, (SELECT status FROM orders WHERE id = ?), ?, GETDATE())";
 
-            PreparedStatement historyStmt = connection.prepareStatement(orderHistorySql);
-            historyStmt.setInt(1, orderId);
-            historyStmt.setString(2, "pending"); // Keep current order status, just add a note
-            historyStmt.setString(3, historyNote);
-            historyStmt.executeUpdate();
-            historyStmt.close();
+            stmt = conn.prepareStatement(orderHistorySql);
+            stmt.setInt(1, orderId);
+            stmt.setInt(2, orderId);
+            stmt.setString(3, historyNote);
+            stmt.executeUpdate();
 
-            return result > 0;
+            // Commit the transaction
+            conn.commit();
+
+            return true;
         } catch (SQLException e) {
+            // If any error occurs, roll back the transaction
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error rolling back transaction: " + ex.getMessage());
+            }
             System.out.println("Error updating payment status: " + e.getMessage());
+            e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true); // Reset auto-commit mode
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing resources: " + e.getMessage());
+            }
         }
     }
 
