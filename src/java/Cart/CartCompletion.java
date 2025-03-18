@@ -129,7 +129,6 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
     Random random = new Random();
     String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
-
     order.setOrderCode(orderCode);
     order.setStatus("pending");
     order.setTotal(total);

@@ -52,8 +52,6 @@ public class OrderDAO extends DBContext {
 
             // Tạo mã đơn hàng
            String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
-
-
             stmtOrder.setString(8, orderCode);
             stmtOrder.executeUpdate();
 
