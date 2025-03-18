@@ -1458,3 +1458,52 @@ VALUES
 (9, 9, 9, N'Cảm ơn bạn đã góp ý.', GETDATE(), GETDATE()),
 (10, 10, 10, N'Chúng tôi rất trân trọng phản hồi của bạn.', GETDATE(), GETDATE());
 SET IDENTITY_INSERT feedback_reply OFF;
+
+SET IDENTITY_INSERT customer_contact_history ON;
+INSERT INTO customer_contact_history (user_id, customer_type, email, full_name, gender, mobile, address, total_purchases, total_spend, updated_at, updated_by)
+VALUES 
+    -- User 2 (customer)
+    (2, 'vip', 'phongthhe186443@fpt.edu.vn', N'Tran Hoai Phong (K18 HL)', 'male', NULL, N'123 Lê Văn Lương, Quận 7, TP.HCM', 47, 12500.00, CAST(N'2025-03-12T10:24:18.1666667' AS DateTime2), 1),
+    
+    -- User 4 (customer)
+    (4, 'normal', 'user123@gmail.com', N'Dược Lão', 'male', '0912345678', N'28 Nguyễn Thị Minh Khai, Quận 1, TP.HCM', 12, 3450.75, CAST(N'2025-03-05T14:12:23.3000000' AS DateTime2), 3),
+    
+    -- User 6 (customer)
+    (6, 'vip', 'XiaoZhan@gmail.com', N'Tiêu Chiến', 'male', '0934567890', N'45 Lý Thường Kiệt, Quận 10, TP.HCM', 65, 15750.50, CAST(N'2025-03-15T09:45:32.4000000' AS DateTime2), 5),
+    
+    -- User 8 (customer)
+    (8, 'normal', 'Medusa@gmail.com', N'Mỹ Đỗ Toa', 'female', '0923456789', N'56 Võ Văn Tần, Quận 3, TP.HCM', 8, 2100.25, CAST(N'2025-02-26T16:58:44.7000000' AS DateTime2), 1),
+    
+    -- User 10 (customer)
+    (10, 'vip', 'HaiBoDong@gmail.com', N'Hải Ba Đông', 'male', '0998765432', N'72 Nguyễn Huệ, Quận 1, TP.HCM', 39, 9875.00, CAST(N'2025-03-10T11:34:52.9000000' AS DateTime2), 3),
+    
+    -- User 12 (customer)
+    (12, 'normal', 'GuYuan@gmail.com', N'Cổ Nguyên', 'male', '0981234567', N'110 Trần Hưng Đạo, Quận 5, TP.HCM', 15, 4250.50, CAST(N'2025-03-01T13:22:17.1000000' AS DateTime2), 5),
+    
+    -- User 13 (customer)
+    (13, 'normal', 'GuXun@gmail.com', N'Cổ Xán', 'male', '0976543210', N'235 Nguyễn Văn Cừ, Quận 5, TP.HCM', 7, 1800.75, CAST(N'2025-02-22T15:44:26.6000000' AS DateTime2), 1),
+    
+    -- User 16 (customer)
+    (16, 'vip', 'HuJia@gmail.com', N'Hồ Gia', 'female', '0932198765', N'78 Điện Biên Phủ, Quận Bình Thạnh, TP.HCM', 52, 14200.00, CAST(N'2025-03-14T10:15:37.2000000' AS DateTime2), 3),
+    
+    -- User 17 (customer)
+    (17, 'normal', 'LingYing@gmail.com', N'Lăng Ảnh', 'male', '0954321987', N'90 Nguyễn Thái Học, Quận 1, TP.HCM', 21, 5750.25, CAST(N'2025-03-07T09:34:12.5000000' AS DateTime2), 5),
+    
+    -- User 18 (customer)
+    (18, 'normal', 'YanXiao@gmail.com', N'Diệp Hiên', 'male', '0965432198', N'122 Lê Lợi, Quận 1, TP.HCM', 18, 4850.00, CAST(N'2025-03-04T14:56:32.8000000' AS DateTime2), 1),
+    
+    -- User 20 (customer)
+    (20, 'vip', 'XiaoLei@gmail.com', N'Tiêu Lôi', 'male', '0987654329', N'45 Cách Mạng Tháng 8, Quận 3, TP.HCM', 41, 11250.75, CAST(N'2025-03-11T16:28:45.3000000' AS DateTime2), 3),
+    
+    -- User 22 (customer)
+    (22, 'normal', 'ZiYan@gmail.com', N'Tử Nghiên', 'female', '0909876543', N'62 Nguyễn Công Trứ, Quận 1, TP.HCM', 25, 6750.50, CAST(N'2025-03-08T11:45:23.9000000' AS DateTime2), 5),
+    
+    -- Non-registered customers
+    (NULL, 'normal', 'nguyen.van.a@example.com', N'Nguyễn Văn A', 'male', '0912345678', N'15 Nguyễn Đình Chiểu, Quận 3, TP.HCM', 3, 850.00, CAST(N'2025-02-18T09:12:43.5000000' AS DateTime2), 1),
+    (NULL, 'normal', 'tran.thi.b@example.com', N'Trần Thị B', 'female', '0923456789', N'28 Hai Bà Trưng, Quận 1, TP.HCM', 5, 1250.25, CAST(N'2025-02-20T14:45:26.7000000' AS DateTime2), 3),
+    (NULL, 'normal', 'le.van.c@example.com', N'Lê Văn C', 'male', '0934567890', N'56 Nguyễn Trãi, Quận 5, TP.HCM', 32, 8750.50, CAST(N'2025-03-09T10:34:17.2000000' AS DateTime2), 5),
+    (NULL, 'normal', 'pham.thi.d@example.com', N'Phạm Thị D', 'female', '0945678901', N'78 Lý Thái Tổ, Quận 10, TP.HCM', 9, 2350.75, CAST(N'2025-02-28T15:22:38.4000000' AS DateTime2), 1),
+    (NULL, 'normal', 'hoang.van.e@example.com', N'Hoàng Văn E', 'male', '0956789012', N'90 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 6, 1650.00, CAST(N'2025-02-24T11:56:22.8000000' AS DateTime2), 3),
+    (NULL, 'normal', 'vo.thi.f@example.com', N'Võ Thị F', 'female', '0967890123', N'123 Trần Hưng Đạo, Quận 1, TP.HCM', 30, 8250.25, CAST(N'2025-03-08T16:34:49.5000000' AS DateTime2), 5)
+;
+SET IDENTITY_INSERT customer_contact_history OFF;
