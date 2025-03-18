@@ -190,6 +190,12 @@
                                 <label for="display_order" class="form-label">Thứ tự hiển thị</label>
                                 <input type="number" class="form-control" id="display_order" 
                                        name="display_order" min="1" required>
+                                <small class="text-muted">
+                                    Thứ tự hiển thị đã tồn tại: 
+                                    <c:forEach items="${existingOrders}" var="order" varStatus="status">
+                                        ${order}<c:if test="${!status.last}">, </c:if>
+                                    </c:forEach>
+                                </small>
                             </div>
 
                             <div class="col-md-6">
@@ -204,6 +210,7 @@
                                 <label for="notes" class="form-label">Ghi chú</label>
                                 <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
                             </div>
+                            
 
                             <div class="col-12 mt-4">
                                 <div class="d-flex justify-content-end gap-2">                                   
@@ -280,5 +287,18 @@
     height: 400
 });
         </script>
+        <script>
+    $(document).ready(function() {
+    // Kiểm tra CKEditor khi submit
+    $('form').on('submit', function(event) {
+        var notes = CKEDITOR.instances['notes'].getData().trim(); // Lấy dữ liệu từ CKEditor
+
+        if (notes === '') {
+            alert('Vui lòng nhập ghi chú.'); // Hiển thị cảnh báo giống HTML mặc định
+            event.preventDefault(); // Ngăn form gửi đi
+        }
+    });
+});
+</script>
     </body>
 </html>

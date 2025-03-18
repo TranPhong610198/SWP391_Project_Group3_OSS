@@ -180,20 +180,21 @@
                 <h2 class="page-title">
                     <i class="fas fa-newspaper me-2"></i>Quản lý bài đăng
                 </h2>
-                <c:if test="${not empty sessionScope.success}">
-                    <div class="alert alert-success" role="alert">
+                <c:if test="${sessionScope.success != null}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="fas fa-check-circle me-2"></i>${sessionScope.success}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <% session.removeAttribute("success"); %>
                 </c:if>
 
                 <c:if test="${not empty sessionScope.error}">
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <i class="fas fa-exclamation-circle me-2"></i>${sessionScope.error}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <% session.removeAttribute("error"); %>
                 </c:if>
-
                 <!-- Filter Section -->
                 <div class="card filter-card">
                     <div class="card-header">

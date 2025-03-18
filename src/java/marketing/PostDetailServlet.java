@@ -159,9 +159,10 @@ public class PostDetailServlet extends HttpServlet {
 
 
         if (isUpdated) {
-            request.setAttribute("post", postDAO.getPostById(id));
-    request.setAttribute("success", "Đã chỉnh sửa thành công");
-    request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
+            // Lưu thông báo thành công vào session thay vì request
+        request.getSession().setAttribute("success", "Bài đăng đã được cập nhật thành công.");
+        // Chuyển hướng về trang danh sách bài đăng
+        response.sendRedirect("postList");
         } else {
 
             request.setAttribute("post", oldPost);

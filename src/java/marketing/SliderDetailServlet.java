@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.util.List;
 
 /**
  *
@@ -73,6 +74,8 @@ public class SliderDetailServlet extends HttpServlet {
             sliderId = Integer.parseInt(sId);
             SliderDAO sliderDAO = new SliderDAO();
             Slider slider = sliderDAO.getSliderById(sliderId);
+            List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(sliderId);
+            request.setAttribute("existingOrders", existingOrders);
 
             request.setAttribute("slider", slider);
             request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
@@ -101,88 +104,90 @@ public class SliderDetailServlet extends HttpServlet {
         int display_order = Integer.parseInt(request.getParameter("display_order"));
         String status = request.getParameter("status");
         String notes = request.getParameter("notes");
-        
+
         SliderDAO sliderDAO = new SliderDAO();
-        
+
+        // Kiểm tra dữ liệu đầu vào
         if (title.isEmpty() || link.isEmpty() || notes == null || notes.isEmpty()) {
-        request.setAttribute("error", "Tất cả các trường không được để trống.");
-        Slider currentSlider = sliderDAO.getSliderById(id);
-        request.setAttribute("slider", currentSlider);
-        request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
-        return;
-    }
-        
-        // Get the original slider to check for changes later
-        Slider originalSlider = sliderDAO.getSliderById(id);
-    
-        if (sliderDAO.isDisplayOrderExists(display_order, id)) {
-        request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
-        
-        // Get current slider data to redisplay the form
-        Slider currentSlider = sliderDAO.getSliderById(id);
-        request.setAttribute("slider", currentSlider);
-        request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
-        return;
-    }
-        
-        String image_url = oldImage; // Default to keeping old image
-        
-        try {
-            Part imagePart = request.getPart("image");
-            if (imagePart != null && imagePart.getSize() > 0) {
-                String uploadPath = request.getServletContext().getRealPath("")+ File.separator + "uploads/sliders/";
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-                
-                if (oldImage != null && !oldImage.startsWith("http") && !oldImage.isEmpty()) {
-                String oldImagePath = request.getServletContext().getRealPath("") + File.separator + oldImage;
-                File oldFile = new File(oldImagePath);
-                if (oldFile.exists()) {
-                    oldFile.delete();
-                }
-            }
-                String fileName = System.currentTimeMillis() + "_" + imagePart.getSubmittedFileName();
-                String filePath = uploadPath + File.separator + fileName;
-                
-                imagePart.write(filePath);
-                image_url = "uploads/sliders/" + fileName;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error","Lỗi khi tải hình ảnh lên: "+e.getMessage());
-            Slider currentSlider = new SliderDAO().getSliderById(id);
+            request.setAttribute("error", "Tất cả các trường không được để trống.");
+            Slider currentSlider = sliderDAO.getSliderById(id);
             request.setAttribute("slider", currentSlider);
             request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
             return;
         }
 
-        Slider slider = new Slider(id, title, image_url,link, status, display_order, notes);
+        // Lấy slider gốc để kiểm tra có thay đổi không
+        Slider originalSlider = sliderDAO.getSliderById(id);
 
-        // Check if there are any changes to the slider
+        // Kiểm tra thứ tự hiển thị trùng lặp - chỉ khi thứ tự hiển thị được thay đổi
+        if (originalSlider.getDisplay_order() != display_order && sliderDAO.isDisplayOrderExists(display_order, id)) {
+            request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
+            Slider currentSlider = sliderDAO.getSliderById(id);
+            request.setAttribute("slider", currentSlider);
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+            return;
+        }
+
+        String image_url = oldImage; // Mặc định giữ lại ảnh cũ
+        boolean imageChanged = false;
+
+        try {
+            Part imagePart = request.getPart("image");
+            if (imagePart != null && imagePart.getSize() > 0) {
+                imageChanged = true;
+                String uploadPath = request.getServletContext().getRealPath("") + File.separator + "uploads/sliders/";
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                if (oldImage != null && !oldImage.startsWith("http") && !oldImage.isEmpty()) {
+                    String oldImagePath = request.getServletContext().getRealPath("") + File.separator + oldImage;
+                    File oldFile = new File(oldImagePath);
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
+                }
+                String fileName = System.currentTimeMillis() + "_" + imagePart.getSubmittedFileName();
+                String filePath = uploadPath + File.separator + fileName;
+
+                imagePart.write(filePath);
+                image_url = "uploads/sliders/" + fileName;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi tải hình ảnh lên: " + e.getMessage());
+            Slider currentSlider = sliderDAO.getSliderById(id);
+            request.setAttribute("slider", currentSlider);
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra có thay đổi nào không
         boolean hasChanges = !originalSlider.getTitle().equals(title)
-                || !originalSlider.getImage_url().equals(image_url)
+                || imageChanged
                 || !originalSlider.getLink().equals(link)
                 || originalSlider.getDisplay_order() != display_order
                 || !originalSlider.getStatus().equals(status)
                 || !originalSlider.getNotes().equals(notes);
 
-        // If no changes, redirect back to slider list
+        // Nếu không có thay đổi, chuyển hướng về danh sách slider không hiển thị thông báo
         if (!hasChanges) {
             response.sendRedirect("sliderList");
             return;
         }
-       
+
+        // Tạo slider mới với thông tin đã cập nhật
+        Slider slider = new Slider(id, title, image_url, link, status, display_order, notes);
+
         boolean isUpdated = sliderDAO.updateSlider(slider);
 
         if (isUpdated) {
-            // Show success message on the same page instead of redirecting
-            Slider updatedSlider = sliderDAO.getSliderById(id);
-            request.setAttribute("slider", updatedSlider);
-            request.setAttribute("success", "Cập nhật thanh trượt thành công.");
-            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+            // Đặt thông báo thành công vào session và chuyển hướng về trang danh sách
+            request.getSession().setAttribute("success", "Cập nhật thanh trượt thành công.");
+            response.sendRedirect("sliderList");
         } else {
+            // Nếu cập nhật thất bại, vẫn ở lại trang chi tiết và hiển thị thông báo lỗi
             Slider s = sliderDAO.getSliderById(id);
             request.setAttribute("slider", s);
             request.setAttribute("error", "Cập nhật thanh trượt thất bại.");

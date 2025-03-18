@@ -294,5 +294,19 @@
                 height: 400
             });
         </script>
+        <script>
+    $(document).ready(function() {
+        // Kiểm tra CKEditor khi submit
+        $('form').on('submit', function(event) {
+            var content = CKEDITOR.instances['content'].getData().trim(); // Lấy dữ liệu từ CKEditor
+
+            if (content === '') {
+                alert('Vui lòng nhập nội dung chi tiết.'); // Hiển thị cảnh báo giống HTML mặc định
+                event.preventDefault(); // Ngăn form gửi đi
+            }
+        });
+    });
+</script>
+
     </body>
 </html>

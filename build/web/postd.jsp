@@ -37,10 +37,38 @@
             object-fit: cover;
         }
         .post-content {
-            line-height: 1.8;
-            font-size: 1.1rem;
-            color: #333;
-        }
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #333;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+}
+
+/* Make sure images and other media don't overflow */
+.post-content img, 
+.post-content video, 
+.post-content iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Handle overflow for pre and code blocks */
+.post-content pre, 
+.post-content code {
+    white-space: pre-wrap;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* Handle tables */
+.post-content table {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+}
         .featured-badge {
             background-color: #ffc107;
             color: #212529;
@@ -178,7 +206,11 @@
                         <div class="text-center mb-4">
                             <img src="${post.getThumbnail()}" alt="${post.title}" class="img-fluid post-thumbnail">
                         </div>
-                        <div class="post-content">${post.content}</div>
+                        <div class="post-content">
+    <div class="content-wrapper">
+        ${post.content}
+    </div>
+</div>
                     </article>
                          <%-- Replace the existing featured posts section with this unified related posts section --%>
 <c:if test="${not empty relatedPosts && relatedPosts.size() > 0}">

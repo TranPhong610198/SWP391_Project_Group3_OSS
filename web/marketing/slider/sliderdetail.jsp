@@ -104,7 +104,7 @@
     <body>
         <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        
+
         <!-- Sidebar Toggle Button -->
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
@@ -139,7 +139,7 @@
                             </div>
                             <div class="card-body">
                                 <img src="${slider.image_url.startsWith('https')? slider.image_url : pageContext.request.contextPath.concat('/').concat(slider.image_url)}" alt="${slider.title}" class="slider-image">
-                                
+
                                 <h3 class="mb-3">${slider.getTitle()}</h3>
                                 <div class="mb-3">
                                     <p><strong>Liên kết:</strong> <a href="${slider.getLink()}" target="_blank">${slider.getLink()}</a></p>
@@ -165,8 +165,9 @@
                                 <i class="fas fa-pencil-alt me-2"></i>Chỉnh sửa thanh trượt
                             </div>
                             <div class="card-body">
-                                <form method="POST" action="${pageContext.request.contextPath}/marketing/detailSlider" 
-                                      enctype="multipart/form-data" class="needs-validation" novalidate>
+                                <!-- Replace the existing form in sliderdetail.jsp with this form -->
+                                <form id="sliderForm" method="POST" action="${pageContext.request.contextPath}/marketing/detailSlider" 
+                                      enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="${slider.getId()}">
 
                                     <div class="mb-3">
@@ -189,16 +190,22 @@
                                                value="${slider.getLink()}" required>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="display_order" class="form-label fw-bold">Thứ tự hiển thị</label>
-                                        <input type="number" class="form-control" id="display_order" name="display_order" 
-                                               value="${slider.getDisplay_order()}" required min="1">
-                                    </div>
+                                               <div class="mb-3">
+                                                   <label for="display_order" class="form-label fw-bold">Thứ tự hiển thị</label>
+                                                   <input type="number" class="form-control" id="display_order" name="display_order" 
+                                                          value="${slider.getDisplay_order()}" required min="1">
+                                                   <small class="text-muted">
+                                                       Thứ tự hiển thị đã tồn tại: 
+                                                       <c:forEach items="${existingOrders}" var="order" varStatus="status">
+                                                           ${order}<c:if test="${!status.last}">, </c:if>
+                                                       </c:forEach>
+                                                   </small>
+                                               </div>
 
                                     <div class="mb-3">
                                         <label for="notes" class="form-label fw-bold">Ghi chú</label>
                                         <textarea class="form-control" id="notes" name="notes" 
-                                                  rows="4">${slider.getNotes()}</textarea>
+                                                  rows="4" required>${slider.getNotes()}</textarea>
                                     </div>
 
                                     <div class="mb-4">
@@ -232,27 +239,19 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const titleInput = document.getElementById("title");
-        const titleCharCount = document.getElementById("title-char-count");
+            // Replace the complex form validation script in sliderdetail.jsp with this one
+            document.addEventListener("DOMContentLoaded", function () {
+                const titleInput = document.getElementById("title");
+                const titleCharCount = document.getElementById("title-char-count");
 
-        // Hiển thị số ký tự ban đầu
-        titleCharCount.textContent = titleInput.value.length;
+                // Display initial character count
+                titleCharCount.textContent = titleInput.value.length;
 
-        // Cập nhật khi nhập dữ liệu
-        titleInput.addEventListener("input", function () {
-            titleCharCount.textContent = titleInput.value.length;
-        });
-    });
-</script>
-        <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
+                // Update character count when typing
+                titleInput.addEventListener("input", function () {
+                    titleCharCount.textContent = titleInput.value.length;
                 });
+
 
                 // Close sidebar when clicking outside on mobile
                 $(document).on('click', function (e) {
@@ -282,12 +281,80 @@
                         })
                 })()
             });
-            // Initialize CKEditor
-            CKEDITOR.replace('notes', {
-    filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
-    filebrowserUploadMethod: 'form',
-    height: 400
+
+// Initialize CKEditor
+            var editor = CKEDITOR.replace('notes', {
+                filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+                filebrowserUploadMethod: 'form',
+                height: 400
+            });
+
+// Simple CKEditor validation
+// CKEditor validation for notes field
+            $(document).ready(function () {
+                // Initialize CKEditor
+                var editor = CKEDITOR.replace('notes', {
+                    filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+                    filebrowserUploadMethod: 'form',
+                    height: 400
+                });
+
+                // Set up form validation
+                $('#sliderForm').on('submit', function (event) {
+                    var notesContent = CKEDITOR.instances.notes.getData().trim();
+
+                    // If notes is empty, show custom alert and prevent form submission
+                    if (notesContent === '') {
+                        alert('Vui lòng nhập ghi chú.'); // Custom message: "Please enter notes"
+                        event.preventDefault(); // Prevent form submission
+                        return false;
+                    }
+
+                    // Update the textarea with CKEditor content
+                    document.getElementById('notes').value = notesContent;
+                });
+
+                // Character counter for title field
+                const titleInput = document.getElementById("title");
+                const titleCharCount = document.getElementById("title-char-count");
+
+                // Display initial character count
+                titleCharCount.textContent = titleInput.value.length;
+
+                // Update character count when typing
+                titleInput.addEventListener("input", function () {
+                    titleCharCount.textContent = titleInput.value.length;
+                });
+            });
+            
+            // Add this inside the document.addEventListener("DOMContentLoaded", function () {...}) block
+const displayOrderInput = document.getElementById("display_order");
+const existingOrders = [
+                    <c:forEach items="${existingOrders}" var="order" varStatus="status">
+                        ${order}<c:if test="${!status.last}">,</c:if>
+                    </c:forEach>
+];
+
+displayOrderInput.addEventListener("input", function() {
+    const value = parseInt(this.value);
+    const warningElement = document.getElementById("display-order-warning") || 
+                           document.createElement("small");
+    
+    if (!warningElement.id) {
+        warningElement.id = "display-order-warning";
+        warningElement.classList.add("text-danger", "d-block", "mt-1");
+        this.parentNode.appendChild(warningElement);
+    }
+    
+    if (existingOrders.includes(value)) {
+        warningElement.textContent = "Cảnh báo: Thứ tự này đã tồn tại!";
+        warningElement.style.display = "block";
+    } else {
+        warningElement.style.display = "none";
+    }
 });
+            
         </script>
+
     </body>
 </html>

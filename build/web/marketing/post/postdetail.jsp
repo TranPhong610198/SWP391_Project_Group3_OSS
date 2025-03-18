@@ -217,65 +217,65 @@
                             </div>
                             <div class="card-body">
                                 <form method="POST" action="${pageContext.request.contextPath}/marketing/detailPost" 
-                                      enctype="multipart/form-data" class="needs-validation" novalidate>
-                                    <input type="hidden" name="id" value="${post.getId()}">
+      enctype="multipart/form-data">
+    <input type="hidden" name="id" value="${post.getId()}">
 
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label fw-bold">Tiêu đề <span class="text-muted"></span></label>
-                                        <input type="text" class="form-control" id="title" name="title" 
-                                               value="${post.getTitle()}" required maxlength="50">
-                                        <small class="text-muted"><span id="title-char-count">0</span>/50 ký tự</small>
-                                    </div>
+    <div class="mb-3">
+        <label for="title" class="form-label fw-bold">Tiêu đề <span class="text-muted"></span></label>
+        <input type="text" class="form-control" id="title" name="title" 
+               value="${post.getTitle()}" required maxlength="50">
+        <small class="text-muted"><span id="title-char-count">0</span>/50 ký tự</small>
+    </div>
 
-                                    <div class="mb-3">
-                                        <label for="thumbnail" class="form-label fw-bold">Ảnh bìa</label>
-                                        <input type="file" class="form-control" id="thumbnail" name="thumbnail" 
-                                               accept="image/*">
-                                        <input type="hidden" name="old_thumbnail" value="${post.getThumbnail()}">
-                                    </div>
+    <div class="mb-3">
+        <label for="thumbnail" class="form-label fw-bold">Ảnh bìa</label>
+        <input type="file" class="form-control" id="thumbnail" name="thumbnail" 
+               accept="image/*">
+        <input type="hidden" name="old_thumbnail" value="${post.getThumbnail()}">
+    </div>
 
-                                        <div class="mb-3">
-                                            <label for="summary" class="form-label fw-bold">Thông tin tóm tắt <span class="text-muted"></span></label>
-                                            <textarea class="form-control" id="summary" name="summary" 
-                                                      rows="3" required maxlength="100">${post.getSummary()}</textarea>
-                                            <small class="text-muted"><span id="summary-char-count">0</span>/100 ký tự</small>
-                                        </div>
+    <div class="mb-3">
+        <label for="summary" class="form-label fw-bold">Thông tin tóm tắt <span class="text-muted"></span></label>
+        <textarea class="form-control" id="summary" name="summary" 
+                  rows="3" required maxlength="100">${post.getSummary()}</textarea>
+        <small class="text-muted"><span id="summary-char-count">0</span>/100 ký tự</small>
+    </div>
 
-                                    <div class="mb-3">
-                                        <label for="content" class="form-label fw-bold">Nội dung</label>
-                                        <textarea class="form-control" id="content" name="content" 
-                                                  rows="6" required>${post.getContent()}</textarea>
-                                    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label fw-bold">Nội dung</label>
+        <textarea class="form-control" id="content" name="content" 
+                  rows="6" required>${post.getContent()}</textarea>
+    </div>
 
-                                    <div class="mb-4">
-                                        <label for="status" class="form-label fw-bold">Trạng thái</label>
-                                        <select class="form-select" id="status" name="status" required>
-                                            <option value="published" ${post.getStatus() == 'published' ? 'selected' : ''}>
-                                                Đã xuất bản
-                                            </option>
-                                            <option value="draft" ${post.getStatus() == 'draft' ? 'selected' : ''}>
-                                                Bản thảo
-                                            </option>
-                                        </select>
-                                    </div>
-                                                
-                                            <div class="mb-3 form-check">
-                                                <input type="checkbox" class="form-check-input" id="isFeatured" name="isFeatured" 
-                                                       ${post.isIsFeatured() ? 'checked' : ''}>
-                                                <label class="form-check-label fw-bold" for="isFeatured">
-                                                    <i class="fas fa-star text-warning me-2"></i>Đánh dấu là bài viết nổi bật
-                                                </label>
-                                            </div>            
+    <div class="mb-4">
+        <label for="status" class="form-label fw-bold">Trạng thái</label>
+        <select class="form-select" id="status" name="status" required>
+            <option value="published" ${post.getStatus() == 'published' ? 'selected' : ''}>
+                Đã xuất bản
+            </option>
+            <option value="draft" ${post.getStatus() == 'draft' ? 'selected' : ''}>
+                Bản thảo
+            </option>
+        </select>
+    </div>
+            
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="isFeatured" name="isFeatured" 
+               ${post.isIsFeatured() ? 'checked' : ''}>
+        <label class="form-check-label fw-bold" for="isFeatured">
+            <i class="fas fa-star text-warning me-2"></i>Đánh dấu là bài viết nổi bật
+        </label>
+    </div>            
 
-                                    <div class="d-flex gap-2">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save me-2"></i>Lưu thay đổi
-                                        </button>
-                                        <a href="${pageContext.request.contextPath}/marketing/postList" class="btn btn-outline-secondary">
-                                            <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                        </a>
-                                    </div>
-                                </form>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Lưu thay đổi
+        </button>
+        <a href="${pageContext.request.contextPath}/marketing/postList" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+</form>
                             </div>
                         </div>
                     </div>
@@ -330,5 +330,18 @@
                 height: 400
             });
         </script>
+        <script>
+    $(document).ready(function() {
+        // Kiểm tra CKEditor khi submit
+        $('form').on('submit', function(event) {
+            var content = CKEDITOR.instances['content'].getData().trim(); // Lấy dữ liệu từ CKEditor
+
+            if (content === '') {
+                alert('Vui lòng nhập nội dung chi tiết.'); // Hiển thị cảnh báo giống HTML mặc định
+                event.preventDefault(); // Ngăn form gửi đi
+            }
+        });
+    });
+</script>
     </body>
 </html>

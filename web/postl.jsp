@@ -105,7 +105,7 @@
             <div class="row">
                 <!-- Main Content -->
                 <div class="col-lg-8">
-                    <h2 class="mb-4">Các bài đăng</h2>
+                    <h2 class="mb-4">Tất cả bài đăng</h2>
                     
                     <div class="row g-4">
                         <c:choose>

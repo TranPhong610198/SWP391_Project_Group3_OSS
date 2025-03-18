@@ -151,21 +151,15 @@ public class AddPostServlet extends HttpServlet {
         boolean isAdded = postDAO.addPost(post);
 
         if (isAdded) {
-            request.setAttribute("success", "Đã thêm bài đăng thành công!");
+    // Change from request attribute to session attribute
+    session.setAttribute("success", "Đã thêm bài đăng thành công!");
     
-    // Reset form
-    request.setAttribute("post", new Post());
-    
-    // Lấy lại danh sách users nếu cần
-    List<User> users = postDAO.getAuthorsByRole();
-    request.setAttribute("users", users);
-    
-    // Chuyển về trang form thay vì redirect
+    // Redirect to post list
+    response.sendRedirect(request.getContextPath() + "/marketing/postList");
+} else {
+    request.setAttribute("error", "Thêm bài viết thất bại!");
     request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Thêm bài viết thất bại!");
-            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
-        }
+}
         
     } catch (Exception e) {
         e.printStackTrace();

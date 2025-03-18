@@ -9,8 +9,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.util.List;
 
 @WebServlet(name = "AddSliderServlet", urlPatterns = {"/marketing/addSlider"})
 @MultipartConfig(
@@ -23,6 +25,10 @@ public class AddSliderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Get all existing display orders by passing -1 as an ID that doesn't exist
+    SliderDAO sliderDAO = new SliderDAO();
+    List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+    request.setAttribute("existingOrders", existingOrders);
         // Forward to the slider form page
         request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
     }
@@ -31,6 +37,7 @@ public class AddSliderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
         try {
             // Get parameters from the form
             String title = request.getParameter("title");
@@ -102,11 +109,11 @@ public class AddSliderServlet extends HttpServlet {
             
             boolean isAdded = sliderDAO.addSlider(slider);
 
-             if (isAdded) {
-                request.setAttribute("success", "Đã thêm thanh trượt thành công!");
-                // Reset form by creating a new Slider object
-                request.setAttribute("slider", new Slider());
-                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
+            if (isAdded) {
+                // Set success message in session to persist across redirects
+                session.setAttribute("success", "Đã thêm thanh trượt thành công!");
+                // Redirect to sliderList page
+                response.sendRedirect(request.getContextPath() + "/marketing/sliderList");
             } else {
                 request.setAttribute("error", "Thêm thanh trượt thất bại!");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);

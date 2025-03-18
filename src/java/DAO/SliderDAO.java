@@ -191,6 +191,23 @@ public class SliderDAO extends DBContext {
     }
     return false;
 }
+    
+    public List<Integer> getAllDisplayOrdersExcept(int sliderId) {
+    List<Integer> orders = new ArrayList<>();
+    String sql = "SELECT display_order FROM sliders WHERE id != ? ORDER BY display_order ASC";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setInt(1, sliderId);
+        try (ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                orders.add(rs.getInt("display_order"));
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error getting display orders: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return orders;
+}
 
     public static void main(String[] args) {
         SliderDAO sliderDAO = new SliderDAO();
