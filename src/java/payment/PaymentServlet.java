@@ -32,7 +32,6 @@ public class PaymentServlet extends HttpServlet {
     private OrderDAO orderDAO = new OrderDAO();
     private InventoryDAO inventoryDAO = new InventoryDAO();
 
-    // VNPay configuration constants
     private static final String VNP_VERSION = "2.1.0";
     private static final String VNP_COMMAND = "pay";
     private static final String VNP_TMN_CODE = "UE7X71VT";
@@ -193,6 +192,19 @@ public class PaymentServlet extends HttpServlet {
                 order = orderDAO.createOrder(order);
             }
 
+            // Xóa giỏ hàng trong mọi trường hợp
+            Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
+            DAO.CartDAO cartDAO = new DAO.CartDAO();
+            if (userId != null) {
+                for (CartItem item : order.getItems()) {
+                    cartDAO.deleteCartItem(request, response, item.getId(), userId);
+                }
+            } else {
+                Cart emptyCart = new Cart();
+                emptyCart.setItems(new ArrayList<>());
+                cartDAO.saveCartToCookies(response, emptyCart);
+            }
+
             if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
                 // Thanh toán thành công
                 try (java.sql.Connection conn = new Context.DBContext().connection;
@@ -207,20 +219,8 @@ public class PaymentServlet extends HttpServlet {
 
                 orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
                 order.setPaymentStatus("completed");
-
-                Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
-                DAO.CartDAO cartDAO = new DAO.CartDAO();
-                if (userId != null) {
-                    for (CartItem item : order.getItems()) {
-                        cartDAO.deleteCartItem(request, response, item.getId(), userId);
-                    }
-                } else {
-                    Cart emptyCart = new Cart();
-                    emptyCart.setItems(new ArrayList<>());
-                    cartDAO.saveCartToCookies(response, emptyCart);
-                }
             } else {
-                // Thanh toán thất bại hoặc bị hủy
+                // Thanh toán thất bại hoặc bị hủy (bao gồm mã lỗi 24)
                 try (java.sql.Connection conn = new Context.DBContext().connection;
                      java.sql.PreparedStatement stmt = conn.prepareStatement(
                              "UPDATE payments SET payment_status = 'pending' WHERE order_id = ?")) {

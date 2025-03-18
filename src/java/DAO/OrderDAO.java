@@ -51,9 +51,8 @@ public class OrderDAO extends DBContext {
             stmtOrder.setString(7, order.getAddress());
 
             // Tạo mã đơn hàng
-            Random random = new Random();
-            int randomNumber = random.nextInt(900000) + 100000; // Số ngẫu nhiên từ 100000 đến 999999
-            String orderCode = "ORD" + randomNumber;
+           String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
+
 
             stmtOrder.setString(8, orderCode);
             stmtOrder.executeUpdate();
