@@ -129,7 +129,7 @@ public class CustomerDAO extends DBContext {
      */
     public boolean addCustomer(Customer customer) {
         String sql = "INSERT INTO customer_contact_history (user_id, customer_type, email, full_name, gender, " +
-                    "mobile, address, total_purchases, total_spend, updated_by, updated_at) " +
+                    "mobile, address, total_purchases, total_spend, updated_at) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
         
         try {
@@ -150,7 +150,7 @@ public class CustomerDAO extends DBContext {
             st.setString(7, customer.getAddress());
             st.setInt(8, customer.getTotalPurchases());
             st.setBigDecimal(9, customer.getTotalSpend());
-            st.setInt(10, customer.getUpdatedBy());
+            
             
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -167,7 +167,7 @@ public class CustomerDAO extends DBContext {
     public boolean updateCustomer(Customer customer) {
         String sql = "UPDATE customer_contact_history SET user_id = ?, customer_type = ?, email = ?, " +
                     "full_name = ?, gender = ?, mobile = ?, address = ?, total_purchases = ?, " +
-                    "total_spend = ?, updated_by = ?, updated_at = GETDATE() WHERE id = ?";
+                    "total_spend = ?, updated_at = GETDATE() WHERE id = ?";
         
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -187,8 +187,8 @@ public class CustomerDAO extends DBContext {
             st.setString(7, customer.getAddress());
             st.setInt(8, customer.getTotalPurchases());
             st.setBigDecimal(9, customer.getTotalSpend());
-            st.setInt(10, customer.getUpdatedBy());
-            st.setInt(11, customer.getId());
+            
+            st.setInt(10, customer.getId());
             
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -289,13 +289,13 @@ public class CustomerDAO extends DBContext {
      */
     public boolean updateCustomerPurchaseStats(int customerId, BigDecimal orderAmount, int updatedBy) {
         String sql = "UPDATE customer_contact_history SET total_purchases = total_purchases + 1, " +
-                    "total_spend = total_spend + ?, updated_by = ?, updated_at = GETDATE() WHERE id = ?";
+                    "total_spend = total_spend + ?, updated_at = GETDATE() WHERE id = ?";
         
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setBigDecimal(1, orderAmount);
-            st.setInt(2, updatedBy);
-            st.setInt(3, customerId);
+            
+            st.setInt(2, customerId);
             
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -328,10 +328,7 @@ public class CustomerDAO extends DBContext {
         customer.setTotalPurchases(rs.getInt("total_purchases"));
         customer.setTotalSpend(rs.getBigDecimal("total_spend"));
         
-        int updatedBy = rs.getInt("updated_by");
-        if (!rs.wasNull()) {
-            customer.setUpdatedBy(updatedBy);
-        }
+        
         
         Timestamp updatedAt = rs.getTimestamp("updated_at");
         if (updatedAt != null) {
