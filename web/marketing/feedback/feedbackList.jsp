@@ -274,7 +274,7 @@
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
-                                    <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo sản phẩm ...">
+                                    <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo sản phẩm">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -306,7 +306,7 @@
                             <i class="fas fa-list me-2"></i>Danh sách phản hồi theo sản phẩm
                         </div>
                         <div>
-                            <a href="feedbackall" class="btn btn-info btn-sm">
+                            <a href="feedbackall" class="btn btn-info btn-sx">
                                 <i class="fas fa-list-alt me-2"></i>Xem tất cả phản hồi
                             </a>
                         </div>

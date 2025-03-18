@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-package marketing;
+package marketing.Coupon;
 
 import DAO.CouponDAO;
 import entity.Coupon;
@@ -57,14 +53,14 @@ public class AddCouponServlet extends HttpServlet {
             // Parse dữ liệu
             double discountValue = Double.parseDouble(discountValueStr);
             double minOrderAmount = Double.parseDouble(minOrderAmountStr);
-            int usageLimit = Integer.parseInt(usageLimitStr);
+            Integer usageLimit = (usageLimitStr == null || usageLimitStr.trim().isEmpty()) ? null : Integer.parseInt(usageLimitStr);
             double maxDiscount = "percentage".equals(discountType) ? Double.parseDouble(maxDiscountStr) : 0;
             java.sql.Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
             java.sql.Date createdAt = new java.sql.Date(new Date().getTime());
 
             // Tạo đối tượng Coupon
             Coupon coupon = new Coupon(0, code, discountType, discountValue, minOrderAmount,
-                    maxDiscount, usageLimit, 0, expiryDate, createdAt, couponType, status);
+                    maxDiscount, usageLimit == null ? 0 : usageLimit, 0, expiryDate, createdAt, couponType, status);
 
             // Thêm coupon vào DB
             if (couponDAO.addCoupon(coupon)) {
@@ -136,11 +132,13 @@ public class AddCouponServlet extends HttpServlet {
                 isValid = false;
             }
 
-            // Kiểm tra số lần sử dụng tối đa
-            int usageLimit = Integer.parseInt(usageLimitStr);
-            if (usageLimit <= 0 || usageLimit > MAX_USAGE_LIMIT) {
-                errorMessages.append("Số lần sử dụng tối đa phải từ 1 đến 1.000.000 lần.<br>");
-                isValid = false;
+            // Kiểm tra số lần sử dụng tối đa (cho phép rỗng)
+            if (usageLimitStr != null && !usageLimitStr.trim().isEmpty()) {
+                int usageLimit = Integer.parseInt(usageLimitStr);
+                if (usageLimit <= 0 || usageLimit > MAX_USAGE_LIMIT) {
+                    errorMessages.append("Số lần sử dụng tối đa phải từ 1 đến 1.000.000 lần.<br>");
+                    isValid = false;
+                }
             }
 
             // Kiểm tra ngày hết hạn
@@ -160,14 +158,8 @@ public class AddCouponServlet extends HttpServlet {
         return isValid;
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

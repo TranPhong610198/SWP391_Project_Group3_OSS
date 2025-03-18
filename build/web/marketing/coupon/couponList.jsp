@@ -249,7 +249,6 @@
             <div class="container-fluid p-4">
                 <!-- Thông báo thành công -->
                 <c:if test="${not empty param.success}">
-<!--                    <div class="alert alert-success alert-dismissible fade show" role="alert">-->
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         <c:choose>
                             <c:when test="${param.success eq 'add'}">
@@ -268,7 +267,6 @@
 
                 <!-- Thông báo lỗi -->
                 <c:if test="${param.error eq 'delete'}">
-<!--                    <div class="alert alert-danger alert-dismissible fade show" role="alert">-->
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         Không thể xóa mã giảm giá. Vui lòng thử lại!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -336,7 +334,7 @@
                             <i class="fas fa-ticket-alt me-2"></i>Danh sách mã giảm giá
                         </div>
                         <div>
-                            <a href="addCoupon" class="btn btn-success btn-sm">
+                            <a href="addCoupon" class="btn btn-success btn-sx">
                                 <i class="fas fa-plus me-2"></i>Thêm mã mới
                             </a>
                         </div>
@@ -395,22 +393,7 @@
                                                 </span>
                                             </a>
                                         </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=usage_limit&sortOrder=${sortField == 'usage_limit' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Số lượng
-                                                <span class="sort-icons">
-                                                    ${sortField == 'usage_limit' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=used_count&sortOrder=${sortField == 'used_count' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Đã dùng
-                                                <span class="sort-icons">
-                                                    ${sortField == 'used_count' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
-                                            </a>
-                                        </th>
+                                        <th>Số lượng</th> <!-- Merged column -->
                                         <th>
                                             <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=expiry_date&sortOrder=${sortField == 'expiry_date' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Ngày hết hạn
@@ -461,8 +444,7 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>${coupon.usage_limit == 0 ? 'Không giới hạn' : coupon.usage_limit}</td>
-                                                    <td>${coupon.used_count}</td>
+                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? 'Không giới hạn' : coupon.usage_limit}</td> <!-- Merged column content -->
                                                     <td><fmt:formatDate value="${coupon.expiry_date}" pattern="dd/MM/yyyy"/></td>
                                                     <td>
                                                         <c:choose>
@@ -490,41 +472,41 @@
                                                 </tr>
 
                                                 <!-- Delete Confirmation Modal -->
-                                            <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="couponlist?action=delete&id=${coupon.id}">Xác nhận xóa</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Bạn có chắc chắn muốn xóa mã giảm giá <strong>${coupon.code}</strong>?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                            <form action="couponlist" method="POST" style="display: inline;">
-                                                                <input type="hidden" name="action" value="delete">
-                                                                <input type="hidden" name="id" value="${coupon.id}">
-                                                                <button type="submit" class="btn btn-danger">Xóa</button>
-                                                            </form>
+                                                <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="couponlist?action=delete&id=${coupon.id}">Xác nhận xóa</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Bạn có chắc chắn muốn xóa mã giảm giá <strong>${coupon.code}</strong>?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                                <form action="couponlist" method="POST" style="display: inline;">
+                                                                    <input type="hidden" name="action" value="delete">
+                                                                    <input type="hidden" name="id" value="${coupon.id}">
+                                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <tr>
-                                            <td colspan="12" class="empty-state">
-                                                <i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
-                                                <p>Không tìm thấy mã giảm giá nào. Vui lòng thử lại với điều kiện tìm kiếm khác hoặc tạo mã giảm giá mới.</p>
-                                                <a href="addCoupon" class="btn btn-primary mt-3">
-                                                    <i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </c:otherwise>
-                                </c:choose>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <tr>
+                                                <td colspan="10" class="empty-state">
+                                                    <i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
+                                                    <p>Không tìm thấy mã giảm giá nào. Vui lòng thử lại với điều kiện tìm kiếm khác hoặc tạo mã giảm giá mới.</p>
+                                                    <a href="addCoupon" class="btn btn-primary mt-3">
+                                                        <i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </tbody>
                             </table>
                         </div>
@@ -579,18 +561,18 @@
 
         <script>
             $(document).ready(function () {
-                // Tự động tắt thông báo thành công sau 5 giây
+                // Tự động tắt thông báo thành công sau 3 giây
                 if ($('#successAlert').length) {
                     setTimeout(function () {
                         $('#successAlert').alert('close');
-                    }, 3000); // 3000ms = 3 giây
+                    }, 3000);
                 }
 
-                // Tự động tắt thông báo lỗi sau 5 giây
+                // Tự động tắt thông báo lỗi sau 3 giây
                 if ($('#errorAlert').length) {
                     setTimeout(function () {
                         $('#errorAlert').alert('close');
-                    }, 3000); // 3000ms = 3 giây
+                    }, 3000);
                 }
 
                 // Toggle sidebar

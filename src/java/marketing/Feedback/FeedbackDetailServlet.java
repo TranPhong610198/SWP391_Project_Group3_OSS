@@ -79,11 +79,10 @@ public class FeedbackDetailServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
 
         // Lấy danh sách hình ảnh feedback
-        for (Feedback feedback : feedbackList) {
-            List<FeedbackImage> images = feedbackDAO.getImagesByFeedbackId(feedback.getId());
-            request.setAttribute("images_" + feedback.getId(), images);
-        }
-
+//        for (Feedback feedback : feedbackList) {
+//            List<FeedbackImage> images = feedbackDAO.getImagesByFeedbackId(feedback.getId());
+//            request.setAttribute("images_" + feedback.getId(), images);
+//        }
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("productId", productId);
         request.setAttribute("searchKeyword", searchKeyword);
@@ -111,6 +110,7 @@ public class FeedbackDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action");
         FeedbackDAO feedbackDAO = new FeedbackDAO();
+        int productId = Integer.parseInt(request.getParameter("productId"));
 
         if ("updateStatus".equals(action)) {
             try {
@@ -118,9 +118,9 @@ public class FeedbackDetailServlet extends HttpServlet {
                 String status = request.getParameter("status");
                 boolean updated = feedbackDAO.updateFeedbackStatus(id, status);
                 if (updated) {
-                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + id + "&success=update");
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + productId + "&success=update");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + id + "&error=update");
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + productId + "&error=update");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -131,9 +131,9 @@ public class FeedbackDetailServlet extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
                 boolean deleted = feedbackDAO.deleteFeedback(id);
                 if (deleted) {
-                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + id + "&success=delete_feedback");
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + productId + "&success=delete_feedback");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + id + "&error=delete_feedback");
+                    response.sendRedirect(request.getContextPath() + "/marketing/feedbackdetail?productId=" + productId + "&error=delete_feedback");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

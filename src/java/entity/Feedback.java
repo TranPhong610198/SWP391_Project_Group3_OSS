@@ -21,6 +21,7 @@ public class Feedback {
     private Date createdAt;
     private Date updatedAt;
     private String userFullName;
+    private String userName;
     private String productTitle;
     private String productThumbnail;
     private int productId;
@@ -99,6 +100,15 @@ public class Feedback {
     public void setUserFullName(String userFullName) {
         this.userFullName = userFullName;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    
 
     public String getProductTitle() {
         return productTitle;

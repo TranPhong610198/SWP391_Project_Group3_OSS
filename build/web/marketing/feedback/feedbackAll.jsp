@@ -214,6 +214,28 @@
                 padding: 5px 10px;
                 border-radius: 50px;
             }
+            
+            select[name="status"] {
+                width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của container */
+                padding: 5px; /* Tăng khoảng cách bên trong */
+                border: 1px solid var(--border-color); /* Đồng bộ với màu viền */
+                border-radius: 5px; /* Bo tròn góc */
+                background-color: var(--light-color); /* Màu nền nhẹ nhàng */
+                color: var(--primary-color); /* Màu chữ chính */
+                font-size: 14px; /* Kích thước chữ */
+                transition: all 0.3s ease-in-out; /* Hiệu ứng mượt khi hover hoặc focus */
+            }
+
+            select[name="status"]:hover {
+                background-color: var(--hover-color); /* Màu nền khi hover */
+            }
+
+            select[name="status"]:focus {
+                outline: none; /* Loại bỏ viền mặc định khi focus */
+                border-color: var(--accent-color); /* Đổi màu viền khi focus */
+                box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Hiệu ứng ánh sáng viền */
+            }
+
 
             /* Responsive */
             @media (max-width: 768px) {
@@ -288,7 +310,7 @@
                                 <span class="input-group-text bg-white">
                                     <i class="fas fa-search text-muted"></i>
                                 </span>
-                                <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo nội dung hoặc người dùng...">
+                                <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control search-box" placeholder="Tìm kiếm theo nội dung hoặc tài khoản">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -318,8 +340,8 @@
                             </div>
                         </div>
                         <div>
-                            <a href="feedbacklist" class="btn btn-info">
-                                <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách sản phẩm
+                            <a href="feedbacklist" class="btn btn-view">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
                             </a>
                         </div>
                     </form>
@@ -337,10 +359,9 @@
                                 <tr class="bg-light">
                                     <th class="text-center" style="width: 60px;">STT</th>
                                     <th>Sản phẩm</th>
-                                    <th>Người dùng</th>
+                                    <th>Tài khoản</th>
                                     <th>Đánh giá</th>
                                     <th>Nội dung</th>
-<!--                                    <th>Hình ảnh</th>-->
                                     <th>Trạng thái</th>
                                     <th class="text-center">Thao tác</th>
                                 </tr>
@@ -355,15 +376,9 @@
                                                     <img src="${feedback.productThumbnail}" alt="Thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                                                     ${feedback.productTitle}
                                                 </td>
-                                                <td>${feedback.userFullName}</td>
+                                                <td>${feedback.userName}</td>
                                                 <td>${feedback.rating} sao</td>
                                                 <td>${feedback.comment}</td>
-                                                <!--<td>-->
-                                                    <%--<c:set var="images" value="${requestScope['images_'.concat(feedback.id)]}" />--%>
-                                                    <%--<c:forEach items="${images}" var="image">--%>
-                                                        <!--<img src="${image.imageUrl}" alt="Feedback Image" style="width: 50px; height: 50px; object-fit: cover; margin-right: 5px;">-->
-                                                    <%--</c:forEach>--%>
-                                                <!--</td>-->
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${feedback.status == 'approved'}">
@@ -388,20 +403,39 @@
                                                                 <option value="rejected" ${feedback.status == 'rejected' ? 'selected' : ''}>Từ chối</option>
                                                             </select>
                                                         </form>
-                                                        <form action="feedbackall" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa feedback này?');">
-                                                            <input type="hidden" name="action" value="deleteFeedback">
-                                                            <input type="hidden" name="id" value="${feedback.id}">
-                                                            <button type="submit" class="btn btn-danger btn-sm ms-1" title="Xóa feedback">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
                                                     </div>
-                                                    <a href="feedbackreply?feedbackId=${feedback.id}" class="btn btn-outline-primary btn-sm" title="Phản hồi">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm ms-1" title="Xóa feedback" data-bs-toggle="modal" data-bs-target="#deleteModal${feedback.id}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                    <a href="feedbackreply?feedbackId=${feedback.id}" class="btn btn-outline-primary btn-sm ms-1" title="Phản hồi">
                                                         <i class="fas fa-reply"></i>
                                                     </a>
                                                 </td>
                                             </tr>
-                                        </c:forEach>
+                                            <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal${feedback.id}" tabindex="-1" aria-labelledby="deleteModalLabel${feedback.id}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel${feedback.id}">Xác nhận xóa</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Bạn có chắc chắn muốn xóa đánh giá này?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                        <form action="feedbackall" method="POST">
+                                                            <input type="hidden" name="action" value="deleteFeedback">
+                                                            <input type="hidden" name="id" value="${feedback.id}">
+                                                            <input type="hidden" name="productId" value="${feedback.productId}">
+                                                            <button type="submit" class="btn btn-danger">Xóa</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
                                     </c:when>
                                     <c:otherwise>
                                         <tr>

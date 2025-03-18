@@ -150,7 +150,11 @@ public class CouponDAO extends DBContext {
             ps.setDouble(3, coupon.getDiscount_value());
             ps.setDouble(4, coupon.getMin_order_amount());
             ps.setDouble(5, coupon.getMax_discount());
-            ps.setInt(6, coupon.getUsage_limit());
+            if (coupon.getUsage_limit() == 0) {
+                ps.setNull(6, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(6, coupon.getUsage_limit());
+            }
             ps.setInt(7, coupon.getUsed_count());
             ps.setDate(8, coupon.getExpiry_date());
             ps.setDate(9, coupon.getCreated_at());
@@ -228,7 +232,11 @@ public class CouponDAO extends DBContext {
             ps.setDouble(3, coupon.getDiscount_value());
             ps.setDouble(4, coupon.getMin_order_amount());
             ps.setDouble(5, coupon.getMax_discount());
-            ps.setInt(6, coupon.getUsage_limit());
+            if (coupon.getUsage_limit() == 0) {
+                ps.setNull(6, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(6, coupon.getUsage_limit());
+            }
             ps.setDate(7, coupon.getExpiry_date());
             ps.setString(8, coupon.getCouponType());
             ps.setString(9, coupon.getStatus());

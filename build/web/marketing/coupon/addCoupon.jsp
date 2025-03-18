@@ -32,7 +32,6 @@
                 background-color: #f8f9fa;
             }
 
-            /* Main content styles */
             .main-content {
                 margin-left: 250px;
                 transition: all 0.3s;
@@ -62,7 +61,6 @@
                 display: inline-block;
             }
 
-            /* Form styles */
             .form-label {
                 font-weight: 500;
                 color: var(--primary-color);
@@ -89,7 +87,6 @@
                 color: var(--danger-color);
             }
 
-            /* Toggle button */
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -102,14 +99,12 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
 
-            /* Form card */
             .form-card {
                 background-color: white;
                 border-radius: 8px;
                 margin-bottom: 20px;
             }
 
-            /* Toggle switch */
             .form-switch .form-check-input {
                 width: 3em;
                 height: 1.5em;
@@ -121,7 +116,6 @@
                 border-color: var(--success-color);
             }
 
-            /* Button styles */
             .btn-submit {
                 background-color: var(--accent-color);
                 color: white;
@@ -150,7 +144,6 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
-            /* Responsive */
             @media (max-width: 768px) {
                 .main-content {
                     margin-left: 0;
@@ -165,7 +158,6 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
@@ -178,28 +170,24 @@
                     <i class="fas fa-tag me-2"></i>Thêm mã giảm giá mới
                 </h2>
 
-                <!-- Form Card -->
                 <div class="card form-card">
                     <div class="card-header">
                         <i class="fas fa-plus-circle me-2"></i>Thông tin mã giảm giá
                     </div>
                     <div class="card-body">
                         <form action="addCoupon" method="POST" id="couponForm" onsubmit="return prepareFormSubmission()">
-                            <!-- Thêm phần hiển thị lỗi chung -->
                             <c:if test="${not empty error}">
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     ${error}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             </c:if>
-                            <!-- Coupon code -->
+
                             <div class="mb-3">
                                 <label for="couponCode" class="form-label required-field">Mã giảm giá</label>
-                                <input type="text" class="form-control" 
-                                       id="couponCode" name="code" value="${param.code}" required maxlength="20">
+                                <input type="text" class="form-control" id="couponCode" name="code" value="${param.code}" required maxlength="20">
                             </div>
 
-                            <!-- Discount type -->
                             <div class="mb-3">
                                 <label for="discountType" class="form-label required-field">Loại giảm giá</label>
                                 <select class="form-select" id="discountType" name="discount_type" required>
@@ -209,7 +197,6 @@
                                 </select>
                             </div>
 
-                            <!-- Discount value -->
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
@@ -220,7 +207,6 @@
                                 <span id="discountValueText" class="form-text">text thay đổi theo loại giảm giá</span>
                             </div>
 
-                            <!-- Minimum order amount -->
                             <div class="mb-3">
                                 <label for="minOrderAmount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
@@ -230,7 +216,6 @@
                                 </div>
                             </div>
 
-                            <!-- Max discount (only for percentage type) -->
                             <div class="mb-3" id="maxDiscountContainer" style="display:none;">
                                 <label for="maxDiscount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
@@ -240,19 +225,17 @@
                                 </div>
                             </div>
 
-                            <!-- Usage limit -->
                             <div class="mb-3">
-                                <label for="usageLimit" class="form-label required-field">Số lần sử dụng tối đa</label>
+                                <label for="usageLimit" class="form-label">Số lần sử dụng tối đa</label>
                                 <input type="number" class="form-control" id="usageLimit" name="usage_limit" value="${param.usage_limit}" min="0">
+                                <div class="form-text">Để trống nếu không giới hạn số lần sử dụng.</div>
                             </div>
 
-                            <!-- Expiry date -->
                             <div class="mb-3">
                                 <label for="expiryDate" class="form-label required-field">Ngày hết hạn</label>
                                 <input type="date" class="form-control" id="expiryDate" name="expiry_date" value="${param.expiry_date}" required>
                             </div>
 
-                            <!-- Coupon type -->
                             <div class="mb-3">
                                 <label class="form-label required-field">Loại mã giảm giá</label>
                                 <div class="form-check form-check-inline">
@@ -268,7 +251,6 @@
                                 <div class="form-text">Chọn "VIP" nếu mã chỉ dành cho thành viên VIP.</div>
                             </div>
 
-                            <!-- Status -->
                             <div class="mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="statusSwitch" name="status" value="active" ${param.status == 'active' ? 'checked' : ''}>
@@ -276,7 +258,6 @@
                                 <div class="form-text">Bật để kích hoạt mã giảm giá ngay lập tức.</div>
                             </div>
 
-                            <!-- Buttons -->
                             <div class="d-flex justify-content-end mt-4">
                                 <a href="couponlist" class="btn btn-cancel me-2">
                                     <i class="fas fa-times me-2"></i>Hủy
@@ -296,14 +277,12 @@
 
         <script>
             $(document).ready(function () {
-                // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
                     $('.main-content').toggleClass('active');
                     $(this).hide();
                 });
 
-                // Close sidebar when clicking outside on mobile
                 $(document).on('click', function (e) {
                     if ($(window).width() <= 768) {
                         if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
@@ -313,8 +292,7 @@
                         }
                     }
                 });
-                
-                // Định dạng đầu vào tiền tệ khi load trang
+
                 $('.currency-input').each(function () {
                     formatCurrency(this);
                 });
@@ -323,14 +301,12 @@
 
         <script>
             $(document).ready(function () {
-                // Lấy các phần tử một lần để tái sử dụng
                 const $discountType = $('#discountType');
                 const $discountSymbol = $('#discountSymbol');
                 const $maxDiscountContainer = $('#maxDiscountContainer');
                 const $maxDiscount = $('#maxDiscount');
                 const $discountValueText = $('#discountValueText');
 
-                // Hàm xử lý thay đổi loại giảm giá
                 function handleDiscountTypeChange() {
                     const selectedType = $discountType.val();
                     if (selectedType === 'percentage') {
@@ -349,38 +325,25 @@
                     }
                 }
 
-                // Kiểm tra trạng thái ban đầu
                 handleDiscountTypeChange();
-
-                // Gán sự kiện change
                 $discountType.on('change', handleDiscountTypeChange);
 
-                // set ngày hết hạn min là ngày mai
                 const today = new Date();
                 today.setDate(today.getDate() + 1);
                 const minDate = today.toISOString().split('T')[0];
                 $('#expiryDate').attr('min', minDate);
             });
 
-            // Hàm định dạng tiền tệ
             function formatCurrency(input) {
                 if (!input.value) return;
-                // Xóa các dấu chấm hiện có và các ký tự không phải số
                 let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
-
-                // Định dạng với dấu chấm làm dấu phân cách hàng nghìn
                 if (value.length > 0) {
                     value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
                 }
-
-                // Hiển thị giá trị đã định dạng
                 input.value = value;
-
-                // Lưu giá trị thô để gửi biểu mẫu
                 input.dataset.rawValue = value.replace(/\./g, '');
             }
 
-            // Chuẩn bị dữ liệu trước khi gửi biểu mẫu
             function prepareFormSubmission() {
                 const formattedInputs = document.querySelectorAll('.currency-input');
                 formattedInputs.forEach(input => {

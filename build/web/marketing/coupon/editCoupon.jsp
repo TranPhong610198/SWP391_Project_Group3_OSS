@@ -152,7 +152,6 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
@@ -165,7 +164,6 @@
                     <i class="fas fa-edit me-2"></i>Chỉnh sửa mã giảm giá
                 </h2>
 
-                <!-- Form Card -->
                 <div class="card form-card">
                     <div class="card-header">
                         <i class="fas fa-pen-square me-2"></i>Thông tin mã giảm giá
@@ -180,14 +178,12 @@
                                 </div>
                             </c:if>
 
-                            <!-- Coupon code -->
                             <div class="mb-3">
                                 <label for="code" class="form-label required-field">Mã giảm giá</label>
                                 <input type="text" class="form-control" id="code" name="code" value="${param.code != null ? param.code : coupon.code}" required maxlength="20">
                                 <div class="form-text">Nhập mã giảm giá không quá 20 ký tự, chỉ sử dụng chữ cái, số và dấu gạch dưới.</div>
                             </div>
 
-                            <!-- Discount type -->
                             <div class="mb-3">
                                 <label for="discount_type" class="form-label required-field">Loại giảm giá</label>
                                 <select class="form-select" id="discount_type" name="discount_type" required>
@@ -196,7 +192,6 @@
                                 </select>
                             </div>
 
-                            <!-- Discount value -->
                             <div class="mb-3">
                                 <label for="discount_value" class="form-label required-field">Giá trị giảm</label>
                                 <div class="input-group">
@@ -209,7 +204,6 @@
                                 <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
                             </div>
 
-                            <!-- Minimum order amount -->
                             <div class="mb-3">
                                 <label for="min_order_amount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
                                 <div class="input-group">
@@ -221,7 +215,6 @@
                                 </div>
                             </div>
 
-                            <!-- Max discount -->
                             <div class="mb-3" id="maxDiscountContainer">
                                 <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
                                 <div class="input-group">
@@ -233,19 +226,17 @@
                                 </div>
                             </div>
 
-                            <!-- Usage limit -->
                             <div class="mb-3">
-                                <label for="usage_limit" class="form-label required-field">Số lần sử dụng tối đa</label>
+                                <label for="usage_limit" class="form-label">Số lần sử dụng tối đa</label>
                                 <input type="number" class="form-control" id="usage_limit" name="usage_limit" value="${param.usage_limit != null ? param.usage_limit : coupon.usage_limit}" min="0">
+                                <div class="form-text">Để trống nếu không giới hạn số lần sử dụng.</div>
                             </div>
 
-                            <!-- Expiry date -->
                             <div class="mb-3">
                                 <label for="expiry_date" class="form-label required-field">Ngày hết hạn</label>
                                 <input type="date" class="form-control" id="expiry_date" name="expiry_date" value="${param.expiry_date != null ? param.expiry_date : coupon.expiry_date}" required>
                             </div>
 
-                            <!-- Coupon type -->
                             <div class="mb-3">
                                 <label class="form-label required-field">Loại mã giảm giá</label>
                                 <div class="form-check form-check-inline">
@@ -261,7 +252,6 @@
                                 <div class="form-text">Chọn "VIP" nếu mã chỉ dành cho thành viên VIP.</div>
                             </div>
 
-                            <!-- Status -->
                             <div class="mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="statusSwitch" name="status" value="active" ${param.status == 'active' || (param.status == null && coupon.status == 'active') ? 'checked' : ''}>
@@ -269,7 +259,6 @@
                                 <div class="form-text">Bật để kích hoạt mã giảm giá.</div>
                             </div>
 
-                            <!-- Buttons -->
                             <div class="d-flex justify-content-end mt-4">
                                 <a href="couponlist" class="btn btn-cancel me-2">
                                     <i class="fas fa-times me-2"></i>Hủy
@@ -288,84 +277,65 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-               $(document).ready(function () {
-                   // Đặt ngày tối thiểu cho ngày hết hạn là hôm nay
-                   const today = new Date();
-                   const formattedDate = today.toISOString().split('T')[0];
-                   $('#expiry_date').attr('min', formattedDate);
+            $(document).ready(function () {
+                const today = new Date();
+                const formattedDate = today.toISOString().split('T')[0];
+                $('#expiry_date').attr('min', formattedDate);
 
-                   // Toggle sidebar
-                   $('.sidebar-toggle').on('click', function () {
-                       $('.sidebar').toggleClass('active');
-                       $('.main-content').toggleClass('active');
-                       $(this).hide();
-                   });
+                $('.sidebar-toggle').on('click', function () {
+                    $('.sidebar').toggleClass('active');
+                    $('.main-content').toggleClass('active');
+                    $(this).hide();
+                });
 
-                   // Close sidebar when clicking outside on mobile
-                   $(document).on('click', function (e) {
-                       if ($(window).width() <= 768) {
-                           if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                               $('.sidebar').removeClass('active');
-                               $('.main-content').removeClass('active');
-                               $('.sidebar-toggle').show();
-                           }
-                       }
-                   });
+                $(document).on('click', function (e) {
+                    if ($(window).width() <= 768) {
+                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                            $('.sidebar').removeClass('active');
+                            $('.main-content').removeClass('active');
+                            $('.sidebar-toggle').show();
+                        }
+                    }
+                });
 
-                   //Định dạng đầu vào tiền tệ khi load trang
-                   $('.currency-input').each(function () {
-                       formatCurrency(this);
-                   });
+                $('.currency-input').each(function () {
+                    formatCurrency(this);
+                });
 
-                   // discount type change
-                   function updateDiscountType() {
-                       const selectedType = $('#discount_type').val();
-                       if (selectedType === 'percentage') {
-                           $('#discountSymbol').text('%');
-                           $('#maxDiscountContainer').show();
-                           $('#discountValueText').text('Nhập phần trăm giảm giá (1-50%).');
-                       } else {
-                           $('#discountSymbol').text('₫');
-                           $('#maxDiscountContainer').hide();
-                           $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
-                       }
-                   }
+                function updateDiscountType() {
+                    const selectedType = $('#discount_type').val();
+                    if (selectedType === 'percentage') {
+                        $('#discountSymbol').text('%');
+                        $('#maxDiscountContainer').show();
+                        $('#discountValueText').text('Nhập phần trăm giảm giá (1-50%).');
+                    } else {
+                        $('#discountSymbol').text('₫');
+                        $('#maxDiscountContainer').hide();
+                        $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
+                    }
+                }
 
-                   $('#discount_type').on('change', updateDiscountType);
-                   updateDiscountType(); // Run on page load
-               });
+                $('#discount_type').on('change', updateDiscountType);
+                updateDiscountType();
+            });
 
-               // vnd format
-               function formatCurrency(input) {
-                   if (!input.value)
-                       return;
-                   // Xóa các dấu chấm hiện có và các ký tự không phải số 
-                   let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
+            function formatCurrency(input) {
+                if (!input.value) return;
+                let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
+                if (value.length > 0) {
+                    value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
+                }
+                input.value = value;
+                input.dataset.rawValue = value.replace(/\./g, '');
+            }
 
-                   // Định dạng với dấu chấm làm dấu phân cách hàng nghìn
-                   if (value.length > 0) {
-                       value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
-                   }
-
-                   // display 
-                   input.value = value;
-
-                   // Lưu lại giá trị số thô trong thuộc tính dữ liệu để gửi biểu mẫu
-                   input.dataset.rawValue = value.replace(/\./g, '');
-               }
-
-               // gửi biểu mẫu để update
-               function prepareFormSubmission() {
-                   // lấy tất cả các đầu vào được định dạng
-                   const formattedInputs = document.querySelectorAll('.currency-input');
-
-                   // Thay thế các giá trị đã định dạng bằng các giá trị thô để gửi
-                   formattedInputs.forEach(input => {
-                       input.value = input.dataset.rawValue || input.value.replace(/\./g, '');
-                   });
-
-                   return true;
-               }
+            function prepareFormSubmission() {
+                const formattedInputs = document.querySelectorAll('.currency-input');
+                formattedInputs.forEach(input => {
+                    input.value = input.dataset.rawValue || input.value.replace(/\./g, '');
+                });
+                return true;
+            }
         </script>
     </body>
 </html>

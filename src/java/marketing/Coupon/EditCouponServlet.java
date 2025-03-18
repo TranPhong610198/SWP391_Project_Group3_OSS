@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-package marketing;
+package marketing.Coupon;
 
 import DAO.CouponDAO;
 import entity.Coupon;
@@ -55,7 +51,6 @@ public class EditCouponServlet extends HttpServlet {
         CouponDAO couponDAO = new CouponDAO();
         StringBuilder errorMessages = new StringBuilder();
 
-        // Lấy dữ liệu từ request
         String idStr = request.getParameter("id");
         String code = request.getParameter("code");
         String discountType = request.getParameter("discount_type");
@@ -67,7 +62,6 @@ public class EditCouponServlet extends HttpServlet {
         String couponType = request.getParameter("coupon_type");
         String status = request.getParameter("status") != null ? "active" : "inactive";
 
-        // Kiểm tra ID
         int id;
         try {
             id = Integer.parseInt(idStr);
@@ -77,7 +71,6 @@ public class EditCouponServlet extends HttpServlet {
             return;
         }
 
-        // Lấy coupon gốc
         Coupon originalCoupon = couponDAO.getCouponById(id);
         if (originalCoupon == null) {
             request.setAttribute("error", "Không tìm thấy mã giảm giá để chỉnh sửa.");
@@ -85,7 +78,6 @@ public class EditCouponServlet extends HttpServlet {
             return;
         }
 
-        // Kiểm tra dữ liệu đầu vào
         if (!validateCouponData(couponDAO, code, discountType, discountValueStr, minOrderAmountStr,
                 maxDiscountStr, usageLimitStr, expiryDateStr, originalCoupon.getCode(), errorMessages)) {
             setFormAttributes(request, id, code, discountType, discountValueStr, minOrderAmountStr,
@@ -97,19 +89,16 @@ public class EditCouponServlet extends HttpServlet {
         }
 
         try {
-            // Parse dữ liệu với BigDecimal
             BigDecimal discountValue = new BigDecimal(discountValueStr);
             BigDecimal minOrderAmount = new BigDecimal(minOrderAmountStr);
-            int usageLimit = Integer.parseInt(usageLimitStr);
+            Integer usageLimit = (usageLimitStr == null || usageLimitStr.trim().isEmpty()) ? null : Integer.parseInt(usageLimitStr);
             BigDecimal maxDiscount = "percentage".equals(discountType) ? new BigDecimal(maxDiscountStr) : BigDecimal.ZERO;
             java.sql.Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
 
-            // Tạo đối tượng Coupon
             Coupon coupon = new Coupon(id, code, discountType, discountValue.doubleValue(), minOrderAmount.doubleValue(),
-                    maxDiscount.doubleValue(), usageLimit, originalCoupon.getUsed_count(), expiryDate,
+                    maxDiscount.doubleValue(), usageLimit == null ? 0 : usageLimit, originalCoupon.getUsed_count(), expiryDate,
                     originalCoupon.getCreated_at(), couponType, status);
 
-            // Cập nhật coupon
             if (couponDAO.updateCoupon(coupon)) {
                 response.sendRedirect("couponlist?success=edit");
             } else {
@@ -145,7 +134,6 @@ public class EditCouponServlet extends HttpServlet {
             String usageLimitStr, String expiryDateStr, String originalCode, StringBuilder errorMessages) {
         boolean isValid = true;
 
-        // Kiểm tra mã giảm giá
         if (code == null || code.trim().isEmpty() || !code.matches("^[A-Za-z0-9_]+$") || code.length() < 3 || code.length() > 20) {
             errorMessages.append("Mã giảm giá chỉ chứa chữ cái, số, dấu gạch dưới và có độ dài từ 3-20 ký tự.<br>");
             isValid = false;
@@ -154,17 +142,14 @@ public class EditCouponServlet extends HttpServlet {
             isValid = false;
         }
 
-        // Kiểm tra loại giảm giá
         if (!"percentage".equals(discountType) && !"fixed".equals(discountType)) {
             errorMessages.append("Loại giảm giá không hợp lệ.<br>");
             isValid = false;
         }
 
         try {
-            // Parse và kiểm tra giá trị
             BigDecimal discountValue = new BigDecimal(discountValueStr);
             BigDecimal minOrderAmount = new BigDecimal(minOrderAmountStr);
-            int usageLimit = Integer.parseInt(usageLimitStr);
             BigDecimal maxDiscount = "percentage".equals(discountType) ? new BigDecimal(maxDiscountStr) : BigDecimal.ZERO;
 
             if ("percentage".equals(discountType)) {
@@ -191,9 +176,12 @@ public class EditCouponServlet extends HttpServlet {
                 isValid = false;
             }
 
-            if (usageLimit <= 0 || usageLimit > MAX_USAGE_LIMIT) {
-                errorMessages.append("Số lần sử dụng tối đa phải từ 1 đến 1.000.000 lần.<br>");
-                isValid = false;
+            if (usageLimitStr != null && !usageLimitStr.trim().isEmpty()) {
+                int usageLimit = Integer.parseInt(usageLimitStr);
+                if (usageLimit < 0 || usageLimit > MAX_USAGE_LIMIT) {
+                    errorMessages.append("Số lần sử dụng tối đa phải từ 1 đến 1.000.000 lần.<br>");
+                    isValid = false;
+                }
             }
 
             java.sql.Date expiryDate = java.sql.Date.valueOf(expiryDateStr);
@@ -227,14 +215,8 @@ public class EditCouponServlet extends HttpServlet {
         request.setAttribute("status", status);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

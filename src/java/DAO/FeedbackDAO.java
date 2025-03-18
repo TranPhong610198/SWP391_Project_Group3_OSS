@@ -22,7 +22,7 @@ public class FeedbackDAO extends DBContext {
     public List<Feedback> getFeedbacks(String searchKeyword, String filterRating, String filterStatus,
             String sortField, String sortOrder, int productId, int page, int recordsPerPage) {
         List<Feedback> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT f.*, u.full_name, p.title, p.thumbnail, oi.product_id ");
+        StringBuilder sql = new StringBuilder("SELECT f.*, u.full_name, u.username, p.title, p.thumbnail, oi.product_id ");
         sql.append("FROM feedback f ");
         sql.append("JOIN users u ON f.user_id = u.id ");
         sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
@@ -34,7 +34,7 @@ public class FeedbackDAO extends DBContext {
             sql.append(" AND p.id = ?");
         }
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            sql.append(" AND (f.comment LIKE ? OR u.full_name LIKE ?)");
+            sql.append(" AND (f.comment LIKE ? OR u.username LIKE ?)");
         }
         if (filterRating != null && !filterRating.isEmpty()) {
             sql.append(" AND f.rating = ?");
@@ -85,9 +85,10 @@ public class FeedbackDAO extends DBContext {
                 feedback.setCreatedAt(rs.getDate("created_at"));
                 feedback.setUpdatedAt(rs.getDate("updated_at"));
                 feedback.setUserFullName(rs.getString("full_name"));
+                feedback.setUserName(rs.getString("username"));
                 feedback.setProductTitle(rs.getString("title"));
                 feedback.setProductThumbnail(rs.getString("thumbnail"));
-                feedback.setProductId(rs.getInt("product_id")); // Set productId
+                feedback.setProductId(rs.getInt("product_id"));
                 list.add(feedback);
             }
         } catch (SQLException e) {
@@ -144,7 +145,7 @@ public class FeedbackDAO extends DBContext {
     }
 
     public Feedback getFeedbackById(int id) {
-        String sql = "SELECT f.*, u.full_name, p.title, p.thumbnail, oi.product_id FROM feedback f "
+        String sql = "SELECT f.*, u.full_name, u.username, p.title, p.thumbnail, oi.product_id FROM feedback f "
                 + "JOIN users u ON f.user_id = u.id "
                 + "JOIN order_items oi ON f.order_item_id = oi.id "
                 + "JOIN products p ON oi.product_id = p.id "
@@ -163,9 +164,10 @@ public class FeedbackDAO extends DBContext {
                 feedback.setCreatedAt(rs.getDate("created_at"));
                 feedback.setUpdatedAt(rs.getDate("updated_at"));
                 feedback.setUserFullName(rs.getString("full_name"));
+                feedback.setUserName(rs.getString("username"));
                 feedback.setProductTitle(rs.getString("title"));
                 feedback.setProductThumbnail(rs.getString("thumbnail"));
-                feedback.setProductId(rs.getInt("product_id")); // Set productId
+                feedback.setProductId(rs.getInt("product_id")); 
                 return feedback;
             }
         } catch (SQLException e) {
@@ -187,10 +189,10 @@ public class FeedbackDAO extends DBContext {
         }
     }
 
- /*--------- Không in sản phẩm trùng lặp ----------*/
- /*--------- Không in sản phẩm trùng lặp ----------*/
- /*--------- Không in sản phẩm trùng lặp ----------*/
- /*--------- Không in sản phẩm trùng lặp ----------*/
+/*--------- Không in sản phẩm trùng lặp ----------*/
+/*--------- Không in sản phẩm trùng lặp ----------*/
+/*--------- Không in sản phẩm trùng lặp ----------*/
+/*--------- Không in sản phẩm trùng lặp ----------*/
     public List<Feedback> getFeedbacksGroupedByProduct(String searchKeyword, String filterRating,
             String sortField, String sortOrder, int page, int recordsPerPage) {
         List<Feedback> list = new ArrayList<>();
@@ -280,25 +282,20 @@ public class FeedbackDAO extends DBContext {
         }
         return 0;
     }
-    
-        public List<FeedbackImage> getImagesByFeedbackId(int feedbackId) {
-        List<FeedbackImage> list = new ArrayList<>();
-        String sql = "SELECT * FROM feedback_images WHERE feedback_id = ?";
+
+    public List<String> getImagesByFeedbackId(int feedbackId) {
+        List<String> images = new ArrayList<>();
+        String sql = "SELECT image_url FROM feedback_images WHERE feedback_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, feedbackId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                FeedbackImage image = new FeedbackImage();
-                image.setId(rs.getInt("id"));
-                image.setFeedbackId(rs.getInt("feedback_id"));
-                image.setImageUrl(rs.getString("image_url"));
-                image.setCreatedAt(rs.getDate("created_at"));
-                list.add(image);
+                images.add(rs.getString("image_url"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return images;
     }
 
     public boolean deleteFeedback(int feedbackId) {

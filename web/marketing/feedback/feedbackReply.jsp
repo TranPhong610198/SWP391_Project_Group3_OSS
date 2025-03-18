@@ -30,23 +30,7 @@
 
             body {
                 background-color: #f8f9fa;
-            }
-
-            .sort-link {
-                text-decoration: none;
-                color: var(--primary-color);
-                font-weight: 600;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .sort-link:hover {
-                color: var(--accent-color);
-            }
-
-            .sort-icons {
-                margin-left: 5px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
 
             /* Main content styles */
@@ -62,6 +46,7 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 border: 1px solid var(--border-color);
                 margin-bottom: 20px;
+                overflow: hidden;
             }
 
             .card-header {
@@ -69,63 +54,14 @@
                 border-bottom: 1px solid var(--border-color);
                 padding: 15px 20px;
                 font-weight: 600;
+                display: flex;
+                align-items: center;
+                color: var(--primary-color);
             }
 
-            .table {
-                margin-bottom: 0;
-            }
-
-            .table th {
-                font-weight: 600;
-                border-top: none;
-                background-color: rgba(52, 152, 219, 0.05);
-                vertical-align: middle;
-            }
-
-            .table td {
-                vertical-align: middle;
-            }
-
-            .table tbody tr:hover {
-                background-color: var(--hover-color);
-            }
-
-            .action-btn {
-                padding: 5px 15px;
-                border-radius: 4px;
-                transition: all 0.3s;
-            }
-
-            .action-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
-
-            .btn-view {
-                background-color: var(--accent-color);
-                color: white;
-            }
-
-            .btn-view:hover {
-                background-color: #2980b9;
-                color: white;
-            }
-
-            .search-box {
-                border-radius: 50px;
-                padding-left: 15px;
-                border: 1px solid var(--border-color);
-            }
-
-            .search-btn {
-                border-radius: 50px;
-                padding: 8px 20px;
-            }
-
-            .filter-card {
-                background-color: white;
-                border-radius: 8px;
-                margin-bottom: 20px;
+            .card-header i {
+                margin-right: 10px;
+                color: var(--accent-color);
             }
 
             .page-title {
@@ -134,12 +70,7 @@
                 padding-bottom: 10px;
                 border-bottom: 2px solid var(--accent-color);
                 display: inline-block;
-            }
-
-            .empty-state {
-                padding: 40px;
-                text-align: center;
-                color: #6c757d;
+                font-weight: 600;
             }
 
             /* Badge Styles */
@@ -181,38 +112,132 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
 
-            /* Pagination styling */
-            .pagination .page-item .page-link {
-                color: var(--primary-color);
+            /* Image gallery */
+            .feedback-images {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .feedback-images img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 6px;
                 border: 1px solid var(--border-color);
-                min-width: 40px;
-                text-align: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                transition: transform 0.2s;
             }
 
-            .pagination .page-item.active .page-link {
-                background-color: var(--accent-color);
-                border-color: var(--accent-color);
-                color: white;
+            .feedback-images img:hover {
+                transform: scale(1.05);
             }
 
-            .pagination .page-item .page-link:hover {
-                background-color: var(--hover-color);
+            /* Reply history section */
+            .reply-item {
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 15px;
+                background-color: white;
+                position: relative;
             }
 
-            .badge-vip {
-                background-color: #ffd700; /* Màu vàng kim cho VIP */
-                color: #2c3e50; /* Màu chữ tối để tương phản */
+            .reply-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 6px;
+                color: var(--primary-color);
                 font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
             }
 
-            .badge-normal {
-                background-color: #6c757d; /* Màu xám cho Normal */
-                color: white; /* Màu chữ trắng để tương phản */
+            .reply-timestamp {
+                color: #6c757d;
+                font-size: 0.85rem;
+                font-weight: normal;
+            }
+
+            .reply-content {
+                margin-bottom: 15px;
+                color: var(--secondary-color);
+                line-height: 1.5;
+            }
+
+            .reply-actions {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                display: flex;
+                gap: 5px;
+            }
+
+            .reply-actions .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            /* Edit form styling */
+            .edit-form {
+                background-color: #f8f9fa;
+                border-radius: 6px;
+                padding: 15px;
+                margin-top: 10px;
+                border: 1px solid var(--border-color);
+            }
+
+            .edit-form textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            .edit-form-buttons {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 10px;
+                gap: 10px;
+            }
+
+            /* New reply form */
+            .new-reply-form textarea {
+                resize: vertical;
+                min-height: 100px;
+                border-radius: 6px;
+            }
+
+            .form-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            /* Delete confirmation modal */
+            .modal-content {
+                border-radius: 8px;
+                border: none;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+            .modal-header {
+                background-color: #f8f9fa;
+                border-bottom: 1px solid var(--border-color);
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }
+
+            .modal-title {
+                color: var(--primary-color);
                 font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
+            }
+
+            .modal-body {
+                padding: 20px;
+                color: var(--secondary-color);
+            }
+
+            .modal-footer {
+                border-top: 1px solid var(--border-color);
+                padding: 15px;
             }
 
             /* Responsive */
@@ -226,14 +251,27 @@
                 .sidebar-toggle {
                     display: block;
                 }
+                .feedback-images img {
+                    width: 100px;
+                    height: 100px;
+                }
+                .reply-actions {
+                    position: static;
+                    justify-content: flex-end;
+                    margin-top: 10px;
+                }
             }
 
-            /* Table responsiveness */
-            @media (max-width: 768px) {
-                .table-responsive {
-                    display: block;
-                    width: 100%;
-                    overflow-x: auto;
+            @media (max-width: 576px) {
+                .feedback-images img {
+                    width: 80px;
+                    height: 80px;
+                }
+                .reply-header {
+                    flex-direction: column;
+                }
+                .card-body {
+                    padding: 15px 10px;
                 }
             }
         </style>
@@ -259,7 +297,6 @@
                     </div>
                 </c:if>
 
-
                 <c:if test="${param.success == 'delete_reply'}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         Xóa phản hồi thành công!
@@ -272,7 +309,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
-
 
                 <c:if test="${param.success == 'update_reply'}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
@@ -293,13 +329,14 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <i class="fas fa-info-circle me-2"></i>Thông tin phản hồi
+                        <i class="fas fa-info-circle"></i>Thông tin phản hồi
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <p><strong>Sản phẩm:</strong> ${feedback.productTitle}</p>
-                                <p><strong>Người dùng:</strong> ${feedback.userFullName}</p>
+                                <p><strong>Tài khoản:</strong> ${feedback.userName}</p>
+                                <p><strong>Tên người dùng:</strong> ${feedback.userFullName}</p>
                                 <p><strong>Đánh giá:</strong> ${feedback.rating} sao</p>
                                 <p><strong>Nội dung:</strong> ${feedback.comment}</p>
                                 <p><strong>Trạng thái:</strong>
@@ -318,10 +355,18 @@
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Hình ảnh:</strong></p>
-                                <c:set var="images" value="${requestScope['images_'.concat(feedback.id)]}" />
-                                <c:forEach items="${images}" var="image">
-                                    <img src="${image.imageUrl}" alt="Feedback Image" style="width: 100px; height: 100px; object-fit: cover; margin-right: 10px;">
-                                </c:forEach>
+                                <div class="feedback-images">
+                                    <c:choose>
+                                        <c:when test="${not empty feedbackImages}">
+                                            <c:forEach items="${feedbackImages}" var="image">
+                                                <img src="${image}" alt="Feedback Image" class="img-thumbnail">
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span>Không có ảnh.</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -329,45 +374,77 @@
 
                 <div class="card mt-3">
                     <div class="card-header">
-                        <i class="fas fa-history me-2"></i>Lịch sử phản hồi
+                        <i class="fas fa-history"></i>Lịch sử phản hồi
                     </div>
                     <div class="card-body">
                         <c:choose>
                             <c:when test="${not empty replies}">
                                 <c:forEach items="${replies}" var="reply">
-                                    <div class="border-bottom pb-2 mb-2" id="reply-${reply.id}">
-                                        <p><strong>${reply.userFullName}:</strong> <span id="reply-comment-${reply.id}">${reply.comment}</span></p>
-                                        <p class="text-muted small">
-                                            <fmt:formatDate value="${reply.updatedAt}" pattern="dd/MM/yyyy HH:mm:ss"/>
-                                            <!-- Nút Sửa -->
-                                            <button type="button" class="btn btn-warning btn-sm ms-2" onclick="editReply(${reply.id}, '${reply.comment}')">
+                                    <div class="reply-item" id="reply-${reply.id}">
+                                        <div class="reply-header">
+                                            <div>
+                                                <span>${reply.userFullName}</span>
+                                                <span class="reply-timestamp">
+                                                    <fmt:formatDate value="${reply.updatedAt}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="reply-actions">
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="editReply(${reply.id}, '${reply.comment}')">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </button>
-                                            <!-- Form sửa reply (ẩn mặc định) -->
-                                        <form action="feedbackreply" method="POST" id="edit-form-${reply.id}" style="display: none;" onsubmit="return confirm('Bạn có chắc chắn muốn lưu thay đổi?');">
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal${reply.id}">
+                                                <i class="fas fa-trash"></i> Xóa
+                                            </button>
+                                        </div>
+                                        <div class="reply-content" id="reply-comment-${reply.id}">
+                                            ${reply.comment}
+                                        </div>
+                                        
+                                        <form action="feedbackreply" method="POST" id="edit-form-${reply.id}" class="edit-form" style="display: none;">
                                             <input type="hidden" name="action" value="updateReply">
                                             <input type="hidden" name="feedbackId" value="${feedback.id}">
                                             <input type="hidden" name="replyId" value="${reply.id}">
-                                            <div class="input-group mt-2">
-                                                <textarea name="comment" class="form-control" rows="2" required>${reply.comment}</textarea>
-                                                <button type="submit" class="btn btn-success">Lưu</button>
+                                            <div class="form-group">
+                                                <textarea name="comment" class="form-control" rows="3" required>${reply.comment}</textarea>
+                                            </div>
+                                            <div class="edit-form-buttons">
                                                 <button type="button" class="btn btn-secondary" onclick="cancelEdit(${reply.id})">Hủy</button>
+                                                <button type="submit" class="btn btn-success">Lưu</button>
                                             </div>
                                         </form>
-                                        <!-- Nút Xóa -->
-                                        <form action="feedbackreply" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?');">
-                                            <input type="hidden" name="action" value="deleteReply">
-                                            <input type="hidden" name="feedbackId" value="${feedback.id}">
-                                            <input type="hidden" name="replyId" value="${reply.id}">
-                                            <button type="submit" class="btn btn-danger btn-sm ms-2">
-                                                <i class="fas fa-trash"></i> Xóa
-                                            </button>
-                                        </form>
+                                    </div>
+                                    
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal${reply.id}" tabindex="-1" aria-labelledby="deleteModalLabel${reply.id}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel${reply.id}">Xác nhận xóa</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn xóa phản hồi này?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <form action="feedbackreply" method="POST">
+                                                        <input type="hidden" name="action" value="deleteReply">
+                                                        <input type="hidden" name="feedbackId" value="${feedback.id}">
+                                                        <input type="hidden" name="replyId" value="${reply.id}">
+                                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
-                                <p class="text-muted">Chưa có phản hồi nào.</p>
+                                <div class="text-center py-4">
+                                    <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Chưa có phản hồi nào.</p>
+                                </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -375,21 +452,23 @@
 
                 <div class="card mt-3">
                     <div class="card-header">
-                        <i class="fas fa-reply me-2"></i>Thêm phản hồi mới
+                        <i class="fas fa-reply"></i>Thêm phản hồi mới
                     </div>
                     <div class="card-body">
-                        <form action="feedbackreply" method="POST">
+                        <form action="feedbackreply" method="POST" class="new-reply-form">
                             <input type="hidden" name="feedbackId" value="${feedback.id}">
                             <div class="mb-3">
                                 <label for="comment" class="form-label">Nội dung phản hồi</label>
                                 <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-reply me-2"></i>Gửi phản hồi
-                            </button>
-                            <a href="feedbackdetail?productId=${feedback.productId}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Quay lại
-                            </a>
+                            <div class="form-buttons">
+                                <a href="feedbackdetail?productId=${feedback.productId}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-reply me-2"></i>Gửi phản hồi
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -400,21 +479,20 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             $(document).ready(function () {
-                if ($('#successAlert').length) {
+                // Auto close alerts after 3 seconds
+                if ($('#successAlert, #errorAlert').length) {
                     setTimeout(function () {
-                        $('#successAlert').alert('close');
+                        $('.alert').alert('close');
                     }, 3000);
                 }
-                if ($('#errorAlert').length) {
-                    setTimeout(function () {
-                        $('#errorAlert').alert('close');
-                    }, 3000);
-                }
+                
+                // Sidebar toggle for mobile
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
                     $('.main-content').toggleClass('active');
                     $(this).hide();
                 });
+                
                 $(document).on('click', function (e) {
                     if ($(window).width() <= 768) {
                         if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
@@ -425,17 +503,17 @@
                     }
                 });
             });
-        </script>
-        <script>
-    function editReply(replyId, comment) {
-        document.getElementById('reply-comment-' + replyId).style.display = 'none';
-        document.getElementById('edit-form-' + replyId).style.display = 'block';
-    }
+            
+            // Edit reply functions
+            function editReply(replyId) {
+                document.getElementById('reply-comment-' + replyId).style.display = 'none';
+                document.getElementById('edit-form-' + replyId).style.display = 'block';
+            }
 
-    function cancelEdit(replyId) {
-        document.getElementById('reply-comment-' + replyId).style.display = 'inline';
-        document.getElementById('edit-form-' + replyId).style.display = 'none';
-    }
+            function cancelEdit(replyId) {
+                document.getElementById('reply-comment-' + replyId).style.display = 'block';
+                document.getElementById('edit-form-' + replyId).style.display = 'none';
+            }
         </script>
     </body>
 </html>

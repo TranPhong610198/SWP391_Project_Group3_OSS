@@ -30,11 +30,16 @@ public class FeedbackReplyServlet extends HttpServlet {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         Feedback feedback = feedbackDAO.getFeedbackById(feedbackId);
+
         FeedbackReplyDAO replyDAO = new FeedbackReplyDAO();
         List<FeedbackReply> replies = replyDAO.getRepliesByFeedbackId(feedbackId);
 
+        // Lấy danh sách ảnh cho feedback
+        List<String> feedbackImages = feedbackDAO.getImagesByFeedbackId(feedbackId);
+
         request.setAttribute("feedback", feedback);
         request.setAttribute("replies", replies);
+        request.setAttribute("feedbackImages", feedbackImages); // Truyền danh sách ảnh vào request
         request.getRequestDispatcher("/marketing/feedback/feedbackReply.jsp").forward(request, response);
     }
 
