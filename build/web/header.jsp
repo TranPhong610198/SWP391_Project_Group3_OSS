@@ -160,7 +160,7 @@
                                                 <c:when test="${sessionScope.acc.role == 'admin'}">
                                                     <a href="${pageContext.request.contextPath}/admin/userlists">Trang quản trị</a>
                                                     <a href="${pageContext.request.contextPath}/marketing/productlist">Trang tiếp thị</a>
-                                                    <a href="${pageContext.request.contextPath}/sale/dashboard">Trang bán hàng</a>
+                                                    <a href="${pageContext.request.contextPath}/saledashboard">Trang bán hàng</a>
                                                 </c:when>
                                                 <c:when test="${sessionScope.acc.role == 'marketing'}">
                                                     <a href="${pageContext.request.contextPath}/marketing/productlist">Trang tiếp thị</a>
