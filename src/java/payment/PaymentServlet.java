@@ -44,16 +44,13 @@ public class PaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Display payment options page or process payment return
         String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
 
         if (vnp_ResponseCode != null) {
-            // This is a return from VNPay
             processVNPayReturn(request, response);
             return;
         }
 
-        // Get order from session to display on payment page
         HttpSession session = request.getSession();
         Order order = (Order) session.getAttribute("pending_order");
 
@@ -62,17 +59,13 @@ public class PaymentServlet extends HttpServlet {
             return;
         }
 
-        // Pass the order to the JSP
         request.setAttribute("order", order);
-
-        // Show payment page with options
         request.getRequestDispatcher("payment.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Get order from session
         HttpSession session = request.getSession();
         Order order = (Order) session.getAttribute("pending_order");
 
@@ -84,10 +77,8 @@ public class PaymentServlet extends HttpServlet {
         String paymentMethod = request.getParameter("payment_method");
 
         if ("vnpay".equals(paymentMethod)) {
-            // Process VNPay payment
             processVNPayPayment(request, response, order);
         } else {
-            // Redirect to other payment methods or show error
             request.setAttribute("errorMessage", "Phương thức thanh toán không được hỗ trợ");
             request.getRequestDispatcher("payment.jsp").forward(request, response);
         }
@@ -96,68 +87,45 @@ public class PaymentServlet extends HttpServlet {
     private void processVNPayPayment(HttpServletRequest request, HttpServletResponse response, Order order)
             throws IOException, ServletException {
         try {
-            // Validate the order has a valid order code
             if (order.getOrderCode() == null || order.getOrderCode().isEmpty()) {
-                // Generate a temporary order code if needed
                 order.setOrderCode("ORD" + System.currentTimeMillis());
             }
 
-            // Clean the order code to ensure it contains only alphanumeric characters
             String cleanOrderCode = order.getOrderCode().replaceAll("[^a-zA-Z0-9]", "");
-
-            // Create the order information for VNPay
             String vnp_OrderInfo = "Thanh toan don hang " + order.getOrderCode();
             String vnp_TxnRef = cleanOrderCode;
             String vnp_IpAddr = getClientIpAddress(request);
 
-            // Amount in VND, needs to be multiplied by 100 (no decimal points)
             long amount = (long) (order.getTotal() * 100);
             String vnp_Amount = String.valueOf(amount);
 
-            // Add parameters to VNPay request
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", VNP_VERSION);
             vnp_Params.put("vnp_Command", VNP_COMMAND);
             vnp_Params.put("vnp_TmnCode", VNP_TMN_CODE);
             vnp_Params.put("vnp_Amount", vnp_Amount);
             vnp_Params.put("vnp_CurrCode", VNP_CURR_CODE);
-
-            // Set locale for language: vn or en
             vnp_Params.put("vnp_Locale", "vn");
-
-            // Set order information
             vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
             vnp_Params.put("vnp_OrderType", ORDER_TYPE);
 
-            // Add return URL - the user will be redirected here after payment
             String returnUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + request.getContextPath() + "/payment";
             vnp_Params.put("vnp_ReturnUrl", returnUrl);
-
-            // Set IP address
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-
-            // Set transaction reference
             vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
 
-            // Create date string for VNPay format (GMT+7)
             Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
             String vnp_CreateDate = formatter.format(cld.getTime());
             vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
-            // Set expiry date for the payment (15 minutes)
             cld.add(Calendar.MINUTE, 15);
             String vnp_ExpireDate = formatter.format(cld.getTime());
             vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-            // Build VNPay payment URL
             String paymentUrl = buildVNPayUrl(vnp_Params);
-
-            // Log the URL for debugging
             System.out.println("Redirecting to VNPay URL: " + paymentUrl);
-
-            // Redirect to VNPay payment gateway
             response.sendRedirect(paymentUrl);
         } catch (Exception e) {
             System.out.println("Error processing VNPay payment: " + e.getMessage());
@@ -167,26 +135,21 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
-    // Replace the current processVNPayReturn method with this version:
     private void processVNPayReturn(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Get parameters from VNPay
             Map<String, String> vnp_Params = getParameterMap(request);
             String vnp_SecureHash = request.getParameter("vnp_SecureHash");
 
-            // Log received parameters for debugging
             System.out.println("VNPay Response Parameters: " + vnp_Params);
 
             if (vnp_SecureHash == null) {
                 throw new Exception("Missing secure hash from VNPay response");
             }
 
-            // Remove hash params
             vnp_Params.remove("vnp_SecureHash");
             vnp_Params.remove("vnp_SecureHashType");
 
-            // Get transaction details
             String vnp_TxnRef = request.getParameter("vnp_TxnRef");
             String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
             String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
@@ -196,7 +159,6 @@ public class PaymentServlet extends HttpServlet {
             HttpSession session = request.getSession();
             Order order = (Order) session.getAttribute("pending_order");
 
-            // Verify transaction with our records
             boolean isValidHash = validateVNPayHash(vnp_Params, vnp_SecureHash);
             boolean isValidTransaction = false;
             if (order != null) {
@@ -204,14 +166,11 @@ public class PaymentServlet extends HttpServlet {
                 isValidTransaction = cleanOrderCode.equals(vnp_TxnRef)
                         && String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
             } else {
-                // If order is not in session, try to find it by order code
                 String orderCode = null;
                 if (vnp_OrderInfo != null && vnp_OrderInfo.contains("Thanh toan don hang ")) {
                     orderCode = vnp_OrderInfo.replace("Thanh toan don hang ", "");
                 }
-
                 if (orderCode != null) {
-                    // Find order by order code
                     List<Order> orders = orderDAO.getAllOrders();
                     for (Order o : orders) {
                         if (orderCode.equals(o.getOrderCode())) {
@@ -219,93 +178,77 @@ public class PaymentServlet extends HttpServlet {
                             break;
                         }
                     }
-
                     if (order != null) {
                         isValidTransaction = String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
                     }
                 }
             }
 
-            // Check if payment is successful
-            if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
-                // Payment successful - process order
-                if (order != null) {
-                    // Update payment status - DIRECT DATABASE ACCESS
-                    try (java.sql.Connection conn = new Context.DBContext().connection; java.sql.PreparedStatement stmt = conn.prepareStatement(
-                            "UPDATE payments SET payment_status = 'completed' WHERE order_id = ?")) {
-
-                        stmt.setInt(1, order.getId());
-                        int updateResult = stmt.executeUpdate();
-                        System.out.println("Updated payment status result: " + updateResult + " rows affected");
-                    } catch (Exception e) {
-                        System.out.println("Error updating payment status: " + e.getMessage());
-                    }
-
-                    // Update order status
-                    orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
-
-                    // Update the in-memory order object
-                    order.setPaymentStatus("completed");
-
-                    request.setAttribute("orderId", order.getId());
-
-                    // Clear cart
-                    Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
-                    DAO.CartDAO cartDAO = new DAO.CartDAO();
-
-                    if (userId != null) {
-                        for (CartItem item : order.getItems()) {
-                            cartDAO.deleteCartItem(request, response, item.getId(), userId);
-                        }
-                    } else {
-                        Cart emptyCart = new Cart();
-                        emptyCart.setItems(new ArrayList<>());
-                        cartDAO.saveCartToCookies(response, emptyCart);
-                    }
-                }
-
-                // Store completed order in session for display
-                session.setAttribute("completed_order", order);
-                session.removeAttribute("pending_order");
-
-                // Redirect to completion page
-                response.sendRedirect("cartcompletion");
-            } else {
-                // Payment failed or validation failed
-                String errorMessage = "Thanh toán không thành công. ";
-
-                if ("24".equals(vnp_ResponseCode)) {
-                    errorMessage += "Giao dịch đã bị hủy bởi khách hàng.";
-                } else if ("51".equals(vnp_ResponseCode)) {
-                    errorMessage += "Giao dịch đang xử lý hoặc đã được xử lý.";
-                } else if ("01".equals(vnp_ResponseCode) || "02".equals(vnp_ResponseCode)) {
-                    errorMessage += "Giao dịch không thành công do: Quỹ không đủ/Thẻ/Tài khoản bị khóa/Vượt hạn mức thanh toán.";
-                } else if ("07".equals(vnp_ResponseCode) || "09".equals(vnp_ResponseCode)) {
-                    errorMessage += "Giao dịch bị nghi ngờ gian lận hoặc không đúng.";
-                } else if (!isValidHash) {
-                    errorMessage += "Thông tin không hợp lệ. Hash không khớp.";
-                } else if (!isValidTransaction) {
-                    errorMessage += "Thông tin giao dịch không khớp với dữ liệu đơn hàng.";
-                } else {
-                    errorMessage += "Lỗi không xác định. Mã lỗi: " + vnp_ResponseCode;
-                }
-
-                request.setAttribute("paymentSuccess", false);
-                request.setAttribute("errorMessage", errorMessage);
-                request.getRequestDispatcher("payment_failed.jsp").forward(request, response);
+            if (order == null) {
+                throw new Exception("Không tìm thấy đơn hàng trong session hoặc database");
             }
+
+            // Kiểm tra xem đơn hàng đã được tạo trong database chưa
+            if (order.getId() == 0) { // Giả sử id = 0 nghĩa là chưa tạo
+                order = orderDAO.createOrder(order);
+            }
+
+            if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
+                // Thanh toán thành công
+                try (java.sql.Connection conn = new Context.DBContext().connection;
+                     java.sql.PreparedStatement stmt = conn.prepareStatement(
+                             "UPDATE payments SET payment_status = 'completed' WHERE order_id = ?")) {
+                    stmt.setInt(1, order.getId());
+                    int updateResult = stmt.executeUpdate();
+                    System.out.println("Updated payment status result: " + updateResult + " rows affected");
+                } catch (Exception e) {
+                    System.out.println("Error updating payment status: " + e.getMessage());
+                }
+
+                orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
+                order.setPaymentStatus("completed");
+
+                Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
+                DAO.CartDAO cartDAO = new DAO.CartDAO();
+                if (userId != null) {
+                    for (CartItem item : order.getItems()) {
+                        cartDAO.deleteCartItem(request, response, item.getId(), userId);
+                    }
+                } else {
+                    Cart emptyCart = new Cart();
+                    emptyCart.setItems(new ArrayList<>());
+                    cartDAO.saveCartToCookies(response, emptyCart);
+                }
+            } else {
+                // Thanh toán thất bại hoặc bị hủy
+                try (java.sql.Connection conn = new Context.DBContext().connection;
+                     java.sql.PreparedStatement stmt = conn.prepareStatement(
+                             "UPDATE payments SET payment_status = 'pending' WHERE order_id = ?")) {
+                    stmt.setInt(1, order.getId());
+                    int updateResult = stmt.executeUpdate();
+                    System.out.println("Updated payment status to pending: " + updateResult + " rows affected");
+                } catch (Exception e) {
+                    System.out.println("Error updating payment status to pending: " + e.getMessage());
+                }
+
+                orderDAO.updateOrderStatus(order.getId(), "pending", order.getUserId());
+                order.setPaymentStatus("pending");
+            }
+
+            // Luôn chuyển hướng đến cartcompletion.jsp
+            session.setAttribute("completed_order", order);
+            session.removeAttribute("pending_order");
+            response.sendRedirect("cartcompletion");
+
         } catch (Exception e) {
             System.out.println("Exception in processVNPayReturn: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("paymentSuccess", false);
             request.setAttribute("errorMessage", "Đã xảy ra lỗi khi xử lý kết quả thanh toán: " + e.getMessage());
             request.getRequestDispatcher("payment_failed.jsp").forward(request, response);
         }
     }
 
-    // Helper method to build VNPay URL
     private String buildVNPayUrl(Map<String, String> vnp_Params) throws Exception {
-        // Add sorting for VNPay params
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
 
@@ -317,15 +260,11 @@ public class PaymentServlet extends HttpServlet {
             String fieldName = itr.next();
             String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                // Build hash data
                 hashData.append(fieldName).append('=');
                 hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-
-                // Build query
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
                 query.append('=');
                 query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-
                 if (itr.hasNext()) {
                     hashData.append('&');
                     query.append('&');
@@ -333,18 +272,13 @@ public class PaymentServlet extends HttpServlet {
             }
         }
 
-        // Add secure hash
         String vnp_SecureHash = calculateHMAC(hashData.toString(), VNP_HASH_SECRET);
         query.append("&vnp_SecureHash=").append(vnp_SecureHash);
 
-        // Build the full URL
         String queryUrl = query.toString();
-        String paymentUrl = VNP_API_URL + "?" + queryUrl;
-
-        return paymentUrl;
+        return VNP_API_URL + "?" + queryUrl;
     }
 
-    // Helper method to calculate HMAC hash
     private String calculateHMAC(String data, String key) throws Exception {
         Mac hmac = Mac.getInstance("HmacSHA512");
         SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "HmacSHA512");
@@ -353,7 +287,6 @@ public class PaymentServlet extends HttpServlet {
         return bytesToHex(hmacBytes);
     }
 
-    // Helper method to convert bytes to hex string
     private String bytesToHex(byte[] bytes) {
         StringBuilder result = new StringBuilder();
         for (byte b : bytes) {
@@ -362,35 +295,26 @@ public class PaymentServlet extends HttpServlet {
         return result.toString();
     }
 
-    // Helper method to validate VNPay hash
     private boolean validateVNPayHash(Map<String, String> params, String secureHash) {
         try {
-            // Sort field names
             List<String> fieldNames = new ArrayList<>(params.keySet());
             Collections.sort(fieldNames);
 
-            // Create hash data
             StringBuilder hashData = new StringBuilder();
-
             Iterator<String> itr = fieldNames.iterator();
             while (itr.hasNext()) {
                 String fieldName = itr.next();
                 String fieldValue = params.get(fieldName);
                 if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                    // Build hash data
                     hashData.append(fieldName).append('=');
                     hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-
                     if (itr.hasNext()) {
                         hashData.append('&');
                     }
                 }
             }
 
-            // Calculate HMAC hash
             String calculatedHash = calculateHMAC(hashData.toString(), VNP_HASH_SECRET);
-
-            // Compare calculated hash with received hash
             return calculatedHash.equalsIgnoreCase(secureHash);
         } catch (Exception e) {
             System.out.println("Error validating VNPay hash: " + e.getMessage());
@@ -399,7 +323,6 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
-    // Helper method to get client IP address
     private String getClientIpAddress(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-FORWARDED-FOR");
         if (ipAddress == null || ipAddress.isEmpty()) {
@@ -408,11 +331,9 @@ public class PaymentServlet extends HttpServlet {
         return ipAddress;
     }
 
-    // Helper method to convert request parameters to map
     private Map<String, String> getParameterMap(HttpServletRequest request) {
         Map<String, String> params = new HashMap<>();
         Map<String, String[]> requestParams = request.getParameterMap();
-
         for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
             String key = entry.getKey();
             String[] values = entry.getValue();
@@ -420,7 +341,6 @@ public class PaymentServlet extends HttpServlet {
                 params.put(key, values[0]);
             }
         }
-
         return params;
     }
 }

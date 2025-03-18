@@ -87,27 +87,40 @@ public class MyOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Kiểm tra xem có action từ request không
         String action = request.getParameter("action");
+
+    if (action != null && action.equals("cancel")) {
+        int orderId = Integer.parseInt(request.getParameter("id"));
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acc");
         
-        if (action != null && action.equals("cancel")) {
-            // Xử lý hủy đơn hàng
-            int orderId = Integer.parseInt(request.getParameter("id"));
-            HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("acc");
-            
-            if (user != null) {
-                boolean success = orderDAO.cancelOrder(orderId, user.getId());
-                if (success) {
-                    request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công");
-                } else {
-                    request.setAttribute("errorMessage", "Không thể hủy đơn hàng");
-                }
+        if (user != null) {
+            boolean success = orderDAO.cancelOrder(orderId, user.getId());
+            if (success) {
+                request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công");
+            } else {
+                request.setAttribute("errorMessage", "Không thể hủy đơn hàng");
             }
         }
+    } else if (action != null && action.equals("retry_payment")) {
+        int orderId = Integer.parseInt(request.getParameter("id"));
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acc");
         
-        processRequest(request, response);
+        if (user != null) {
+            Order order = orderDAO.getOrderById(orderId);
+            if (order != null && order.getUserId() == user.getId() && "pending".equals(order.getPaymentStatus())) {
+                session.setAttribute("pending_order", order);
+                response.sendRedirect("payment");
+                return;
+            } else {
+                request.setAttribute("errorMessage", "Không thể thanh toán lại đơn hàng này");
+            }
+        }
     }
+    
+    processRequest(request, response);
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.
