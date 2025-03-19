@@ -271,12 +271,10 @@
                 position: absolute;
                 top: 15px;
                 right: 15px;
-                color: var(--warning-color);
                 font-weight: 600;
             }
 
             .feedback-rating i {
-                color: var(--warning-color);
                 margin-left: 2px;
             }
 
@@ -475,8 +473,18 @@
                                 <p><strong>Nội dung:</strong></p>
                                 <div class="feedback-content">
                                     <div class="feedback-rating">
-                                        ${feedback.rating} <i class="fas fa-star"></i>
+                                        <c:forEach begin="1" end="5" var="i">
+                                            <c:choose>
+                                                <c:when test="${i <= feedback.rating}">
+                                                    <i class="fas fa-star" style="color: #f39c12;"></i>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <i class="far fa-star" style="color: #ccc;"></i>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
                                     </div>
+                                    <br>
                                     <p>${feedback.comment}</p>
                                     <span class="feedback-timestamp">
                                         <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/>

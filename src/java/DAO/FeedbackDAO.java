@@ -397,8 +397,8 @@ public class FeedbackDAO extends DBContext {
     public int getTotalProductsWithFeedback(String searchKeyword, String filterRating) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.id) ");
         sql.append("FROM products p ");
-        sql.append("INNER JOIN order_items oi ON p.id = oi.product_id "); 
-        sql.append("INNER JOIN feedback f ON oi.id = f.order_item_id "); 
+        sql.append("INNER JOIN order_items oi ON p.id = oi.product_id ");
+        sql.append("INNER JOIN feedback f ON oi.id = f.order_item_id ");
         sql.append("WHERE 1=1");
 
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
@@ -484,5 +484,73 @@ public class FeedbackDAO extends DBContext {
                 e.printStackTrace();
             }
         }
+    }
+
+    public int[] getRatingCounts(String searchKeyword) {
+        int[] ratingCounts = new int[5]; // Mảng lưu số lượng đánh giá từ 1 đến 5 sao
+        StringBuilder sql = new StringBuilder("SELECT rating, COUNT(*) as count ");
+        sql.append("FROM feedback f ");
+        sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
+        sql.append("JOIN products p ON oi.product_id = p.id ");
+        sql.append("WHERE 1=1");
+
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            sql.append(" AND p.title LIKE ?");
+        }
+
+        sql.append(" GROUP BY rating");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int rating = rs.getInt("rating");
+                if (rating >= 1 && rating <= 5) {
+                    ratingCounts[rating - 1] = rs.getInt("count"); // rating 1 -> index 0, rating 5 -> index 4
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ratingCounts;
+    }
+
+    public int[] getRatingCountsByProduct(String searchKeyword, int productId) {
+        int[] ratingCounts = new int[5]; // Mảng lưu số lượng đánh giá từ 1 đến 5 sao
+        StringBuilder sql = new StringBuilder("SELECT rating, COUNT(*) as count ");
+        sql.append("FROM feedback f ");
+        sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
+        sql.append("JOIN products p ON oi.product_id = p.id ");
+        sql.append("WHERE p.id = ?");
+
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            sql.append(" AND (f.comment LIKE ? OR p.title LIKE ?)");
+        }
+
+        sql.append(" GROUP BY rating");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, productId);
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int rating = rs.getInt("rating");
+                if (rating >= 1 && rating <= 5) {
+                    ratingCounts[rating - 1] = rs.getInt("count"); // rating 1 -> index 0, rating 5 -> index 4
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ratingCounts;
     }
 }

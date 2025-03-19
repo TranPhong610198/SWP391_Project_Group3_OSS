@@ -53,6 +53,8 @@ public class FeedbackAllServlet extends HttpServlet {
                 sortField, sortOrder, 0, page, recordsPerPage);
         int totalRecords = feedbackDAO.getTotalFeedbacks(searchKeyword, filterRating, filterStatus, 0);
         int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+        
+        int[] ratingCounts = feedbackDAO.getRatingCounts(searchKeyword);
 
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("searchKeyword", searchKeyword);
@@ -63,6 +65,7 @@ public class FeedbackAllServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalItems", totalRecords);
+        request.setAttribute("ratingCounts", ratingCounts); // Truyền mảng ratingCounts vào request
 
         request.getRequestDispatcher("/marketing/feedback/feedbackAll.jsp").forward(request, response);
     }

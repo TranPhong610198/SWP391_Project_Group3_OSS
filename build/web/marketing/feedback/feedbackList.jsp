@@ -280,8 +280,13 @@
                             <div class="col-md-3">
                                 <select class="form-select" id="filterRating" name="filterRating">
                                     <option value="">Tất cả đánh giá</option>
-                                    <c:forEach begin="1" end="5" var="i">
-                                        <option value="${i}" ${filterRating == i ? 'selected' : ''}>${i} sao</option>
+                                    <c:forEach begin="0" end="4" var="i">
+                                        <c:set var="rating" value="${5 - i}" />
+                                        <option value="${rating}" ${filterRating == rating ? 'selected' : ''}>
+                                            <c:forEach begin="1" end="${rating}">
+                                                ★
+                                            </c:forEach>
+                                        </option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -349,9 +354,18 @@
                                                         <img src="${feedback.productThumbnail}" alt="Thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                                                         ${feedback.productTitle}
                                                     </td>
-                                                    <td><span class="rating">
-                                                            <c:forEach begin="1" end="${feedback.rating}">⭐</c:forEach>
-                                                            <span class="hidden">${feedback.rating}</span>
+                                                    <td>
+                                                        <span class="rating">
+                                                            <c:forEach begin="1" end="5" var="i">
+                                                                <c:choose>
+                                                                    <c:when test="${i <= feedback.rating}">
+                                                                        <i class="fas fa-star" style="color: #f39c12;"></i>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <i class="far fa-star" style="color: #ccc;"></i>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </c:forEach>
                                                         </span>
                                                     </td>
                                                     <td>${feedback.comment}</td> <!-- feedback_count lưu trong comment -->

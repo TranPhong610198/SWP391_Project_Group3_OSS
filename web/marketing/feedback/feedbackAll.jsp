@@ -7,6 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -290,10 +291,16 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" name="filterRating">
+                            <select class="form-select" id="filterRating" name="filterRating">
                                 <option value="">Tất cả đánh giá</option>
-                                <c:forEach begin="1" end="5" var="i">
-                                    <option value="${i}" ${filterRating == i ? 'selected' : ''}>${i} sao</option>
+                                <c:forEach begin="0" end="4" var="i">
+                                    <c:set var="rating" value="${5 - i}" />
+                                    <option value="${rating}" ${filterRating == rating ? 'selected' : ''}>
+                                        <c:forEach begin="1" end="${rating}">
+                                            ★
+                                        </c:forEach>
+                                        ${ratingCounts[5 - i - 1]}
+                                    </option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -389,8 +396,31 @@
                                                     ${feedback.productTitle}
                                                 </td>
                                                 <td>${feedback.userName}</td>
-                                                <td>${feedback.rating} sao</td>
-                                                <td>${feedback.comment}</td>
+                                                <td>
+                                                    <span class="rating">
+                                                        <c:forEach begin="1" end="5" var="i">
+                                                            <c:choose>
+                                                                <c:when test="${i <= feedback.rating}">
+                                                                    <i class="fas fa-star" style="color: #f39c12;"></i>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <i class="far fa-star" style="color: #ccc;"></i>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:forEach>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${fn:length(feedback.comment) > 25}">
+                                                            ${fn:substring(feedback.comment, 0, 25)}...
+                                                            <span class="full-comment" style="display: none;">${feedback.comment}</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${feedback.comment}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
                                                 <td class="time-display">
                                                     <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy" />
                                                     <br/>
