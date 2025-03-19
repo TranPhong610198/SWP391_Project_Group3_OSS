@@ -185,10 +185,60 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="link" class="form-label fw-bold">Liên kết ngược</label>
-                                        <input type="url" class="form-control" id="link" name="link" 
-                                               value="${slider.getLink()}" required>
-                                    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="postSelect" class="form-label fw-bold">Chọn bài đăng đã xuất bản:</label>
+            <select id="postSelect" name="selectedPost" class="form-select" onchange="toggleSelection('post')">
+                <option value="">-- Chọn bài đăng --</option>
+                <c:forEach var="post" items="${publishedPosts}">
+                    <option value="${post.id}" ${slider.postId == post.id ? 'selected' : ''}>${post.title}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="productSelect" class="form-label fw-bold">Chọn sản phẩm đang bán:</label>
+            <select id="productSelect" name="selectedProduct" class="form-select" onchange="toggleSelection('product')">
+                <option value="">-- Chọn sản phẩm --</option>
+                <c:forEach var="product" items="${activeProducts}">
+                    <option value="${product.id}" ${slider.productId == product.id ? 'selected' : ''}>${product.title}</option>
+                </c:forEach>
+            </select>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+function toggleSelection(selected) {
+    if (selected === 'post') {
+        // If post is selected with a valid value, clear product
+        if (document.getElementById('postSelect').value !== '') {
+            document.getElementById('productSelect').value = '';
+        }
+    } else if (selected === 'product') {
+        // If product is selected with a valid value, clear post
+        if (document.getElementById('productSelect').value !== '') {
+            document.getElementById('postSelect').value = '';
+        }
+    }
+}
+
+function resetSelections() {
+    // Reset both dropdown selections
+    document.getElementById('postSelect').value = '';
+    document.getElementById('productSelect').value = '';
+}
+
+// Initialize the form to handle the existing state
+document.addEventListener("DOMContentLoaded", function() {
+    // If either dropdown has a value on page load, make sure the other is empty
+    if (document.getElementById('postSelect').value !== '') {
+        document.getElementById('productSelect').value = '';
+    } else if (document.getElementById('productSelect').value !== '') {
+        document.getElementById('postSelect').value = '';
+    }
+});
+</script>
 
                                                <div class="mb-3">
                                                    <label for="display_order" class="form-label fw-bold">Thứ tự hiển thị</label>
@@ -240,47 +290,101 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // Replace the complex form validation script in sliderdetail.jsp with this one
-            document.addEventListener("DOMContentLoaded", function () {
-                const titleInput = document.getElementById("title");
-                const titleCharCount = document.getElementById("title-char-count");
+            document.addEventListener("DOMContentLoaded", function() {
+    // Initialize CKEditor
+    var editor = CKEDITOR.replace('notes', {
+        filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+        filebrowserUploadMethod: 'form',
+        height: 400
+    });
+    
+    // Store original values when page loads
+    const originalValues = {
+        title: document.getElementById("title").value,
+        display_order: document.getElementById("display_order").value,
+        status: document.getElementById("status").value,
+        postId: document.getElementById("postSelect").value,
+        productId: document.getElementById("productSelect").value
+    };
+    
+    // Need to wait for CKEditor to be ready before getting its content
+    editor.on('instanceReady', function() {
+        // Store the original notes content
+        originalValues.notes = editor.getData();
+        
+        // Add submit event listener to the form
+        document.getElementById("sliderForm").addEventListener("submit", function(event) {
+            // Get current values
+            const currentValues = {
+                title: document.getElementById("title").value,
+                display_order: document.getElementById("display_order").value,
+                status: document.getElementById("status").value,
+                postId: document.getElementById("postSelect").value,
+                productId: document.getElementById("productSelect").value,
+                notes: editor.getData()
+            };
+            
+            // Check if image was changed
+            const imageInput = document.getElementById("image");
+            const imageChanged = imageInput.files && imageInput.files.length > 0;
+            
+            // Check if any value has changed
+            const hasChanges = 
+                originalValues.title !== currentValues.title ||
+                originalValues.display_order !== currentValues.display_order ||
+                originalValues.status !== currentValues.status ||
+                originalValues.postId !== currentValues.postId ||
+                originalValues.productId !== currentValues.productId ||
+                originalValues.notes !== currentValues.notes ||
+                imageChanged;
+            
+            // If nothing changed, prevent form submission and redirect
+            if (!hasChanges) {
+                event.preventDefault();
+                window.location.href = "${pageContext.request.contextPath}/marketing/sliderList";
+            }
+        });
+    });
+    
+    // Character counter for title field
+    const titleInput = document.getElementById("title");
+    const titleCharCount = document.getElementById("title-char-count");
 
-                // Display initial character count
-                titleCharCount.textContent = titleInput.value.length;
+    // Display initial character count
+    titleCharCount.textContent = titleInput.value.length;
 
-                // Update character count when typing
-                titleInput.addEventListener("input", function () {
-                    titleCharCount.textContent = titleInput.value.length;
-                });
+    // Update character count when typing
+    titleInput.addEventListener("input", function() {
+        titleCharCount.textContent = titleInput.value.length;
+    });
+    
+    // Display order warning
+    const displayOrderInput = document.getElementById("display_order");
+    const existingOrders = [
+        <c:forEach items="${existingOrders}" var="order" varStatus="status">
+            ${order}<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
 
-
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && 
-                            !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
-                
-                // Form validation
-                (function () {
-                    'use strict'
-                    var forms = document.querySelectorAll('.needs-validation')
-                    Array.prototype.slice.call(forms)
-                        .forEach(function (form) {
-                            form.addEventListener('submit', function (event) {
-                                if (!form.checkValidity()) {
-                                    event.preventDefault()
-                                    event.stopPropagation()
-                                }
-                                form.classList.add('was-validated')
-                            }, false)
-                        })
-                })()
-            });
+    displayOrderInput.addEventListener("input", function() {
+        const value = parseInt(this.value);
+        const warningElement = document.getElementById("display-order-warning") || 
+                            document.createElement("small");
+        
+        if (!warningElement.id) {
+            warningElement.id = "display-order-warning";
+            warningElement.classList.add("text-danger", "d-block", "mt-1");
+            this.parentNode.appendChild(warningElement);
+        }
+        
+        if (existingOrders.includes(value)) {
+            warningElement.textContent = "Cảnh báo: Thứ tự này đã tồn tại!";
+            warningElement.style.display = "block";
+        } else {
+            warningElement.style.display = "none";
+        }
+    });
+});
 
 // Initialize CKEditor
             var editor = CKEDITOR.replace('notes', {

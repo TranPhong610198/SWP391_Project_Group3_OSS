@@ -745,6 +745,25 @@ public class ProductDAO extends DBContext {
         }
         return products;
     }
+    
+    public List<Product> getActiveProductTitles() {
+    List<Product> products = new ArrayList<>();
+    String sql = "SELECT id, title FROM products WHERE status = 'active' ORDER BY updated_at DESC";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setTitle(rs.getString("title"));
+                products.add(product);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return products;
+}
+
 
     ////////////////////////////////////////////////////////////////////////////
 }

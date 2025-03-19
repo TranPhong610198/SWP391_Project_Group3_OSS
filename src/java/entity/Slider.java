@@ -9,13 +9,16 @@ public class Slider {
     private String link;     // Changed from link
     private String status;
     private int display_order;    // Already matches
-    private String notes;         // Changed from notes
+    private String notes; 
+    private int postId;     // Bài đăng liên kết với slider
+    private int productId;
+    // Changed from notes
 
     public Slider() {
     }
 
     public Slider(int id, String title, String image_url, String link, String status, 
-                 int display_order, String notes) {
+                 int display_order, String notes, int postId, int productId) {
         this.id = id;
         this.title = title;
         this.image_url = image_url;
@@ -23,6 +26,8 @@ public class Slider {
         this.status = status;
         this.display_order = display_order;
         this.notes = notes;
+         this.postId = postId;
+        this.productId = productId;
     }
 
     // Getters and Setters
@@ -81,6 +86,22 @@ public class Slider {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
       
 }

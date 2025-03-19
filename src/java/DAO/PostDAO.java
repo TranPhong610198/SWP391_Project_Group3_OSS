@@ -338,6 +338,25 @@ public class PostDAO extends DBContext {
         }
         return posts;
     }
+    
+    public List<Post> getPublishedPostTitles() {
+    List<Post> posts = new ArrayList<>();
+    String sql = "SELECT id, title FROM posts WHERE status = 'published' ORDER BY updated_at DESC";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Post post = new Post();
+                post.setId(rs.getInt("id"));
+                post.setTitle(rs.getString("title"));
+                posts.add(post);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return posts;
+}
+
 
     public static void main(String[] args) {
         PostDAO postDAO = new PostDAO();

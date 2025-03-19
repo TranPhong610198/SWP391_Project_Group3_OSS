@@ -1,6 +1,10 @@
 package marketing;
 
+import DAO.PostDAO;
+import DAO.ProductDAO;
 import DAO.SliderDAO;
+import entity.Post;
+import entity.Product;
 import entity.Slider;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -23,13 +27,20 @@ import java.util.List;
 public class AddSliderServlet extends HttpServlet {
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Get all existing display orders by passing -1 as an ID that doesn't exist
-    SliderDAO sliderDAO = new SliderDAO();
-    List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
-    request.setAttribute("existingOrders", existingOrders);
-        // Forward to the slider form page
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        SliderDAO sliderDAO = new SliderDAO();
+        PostDAO postDAO = new PostDAO();
+        ProductDAO productDAO = new ProductDAO();
+
+        List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+        List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+        List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+        request.setAttribute("existingOrders", existingOrders);
+        request.setAttribute("publishedPosts", publishedPosts);
+        request.setAttribute("activeProducts", activeProducts);
+
         request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
     }
 
@@ -44,11 +55,44 @@ public class AddSliderServlet extends HttpServlet {
             String link = request.getParameter("link");
             String status = request.getParameter("status");
             String notes = request.getParameter("notes");
-            int display_order = 0;
-            
-            if (title == null || title.isEmpty() || link == null || link.isEmpty()
-                    || status == null || status.isEmpty()
-                    || notes == null || notes.isEmpty()) {
+            int display_order = Integer.parseInt(request.getParameter("display_order"));
+            String postIdStr = request.getParameter("selectedPost");
+            String productIdStr = request.getParameter("selectedProduct");
+
+            // Khởi tạo DAO để dùng cho nhiều mục đích
+            SliderDAO sliderDAO = new SliderDAO();
+            PostDAO postDAO = new PostDAO();
+            ProductDAO productDAO = new ProductDAO();
+
+            int selectedPost = (postIdStr != null && !postIdStr.trim().isEmpty()) ? Integer.parseInt(postIdStr) : 0;
+            int selectedProduct = (productIdStr != null && !productIdStr.trim().isEmpty()) ? Integer.parseInt(productIdStr) : 0;
+
+            // Kiểm tra xem người dùng đã chọn post hoặc product chưa
+            if ((selectedPost == 0 && selectedProduct == 0)) {
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
+                request.setAttribute("error", "Vui lòng chọn một trong hai: Bài đăng hoặc Sản phẩm.");
+                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
+                return;
+            }
+        
+            // Kiểm tra các trường bắt buộc khác
+            if (title == null || title.trim().isEmpty() ||
+                status == null || status.trim().isEmpty() ||
+                notes == null || notes.trim().isEmpty()) {
+                
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
                 request.setAttribute("error", "Tất cả các trường không được để trống.");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
                 return;
@@ -57,13 +101,26 @@ public class AddSliderServlet extends HttpServlet {
             try {
                 display_order = Integer.parseInt(request.getParameter("display_order"));
             } catch (NumberFormatException e) {
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
                 request.setAttribute("error", "Thứ tự hiển thị không hợp lệ!");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
                 return;
             }
             
-            SliderDAO sliderDAO = new SliderDAO();
             if (sliderDAO.isDisplayOrderExists(display_order, -1)) { // Pass -1 as id since this is a new slider
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
                 request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
                 return;
@@ -86,16 +143,40 @@ public class AddSliderServlet extends HttpServlet {
                     filePart.write(filePath);
                     image_url = "uploads/" + fileName;
                 } else {
+                    List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                    List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                    List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                    request.setAttribute("existingOrders", existingOrders);
+                    request.setAttribute("publishedPosts", publishedPosts);
+                    request.setAttribute("activeProducts", activeProducts);
                     request.setAttribute("error", "Vui lòng chọn hình ảnh cho slider!");
                     request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
                     return;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
                 request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
                 return;
             }
+
+            if (link == null || link.trim().isEmpty()) {
+    if (selectedPost > 0) {
+        // Change to absolute URL with correct format
+        link = "http://localhost:9999/fashionshop/post?id=" + selectedPost;
+    } else if (selectedProduct > 0) {
+        // Change to absolute URL with correct format
+        link = "http://localhost:9999/fashionshop/productdetail?id=" + selectedProduct;
+    }
+}
 
             // Create and save slider
             Slider slider = new Slider();
@@ -105,7 +186,8 @@ public class AddSliderServlet extends HttpServlet {
             slider.setDisplay_order(display_order);
             slider.setStatus(status);
             slider.setNotes(notes);
-
+            slider.setPostId(selectedPost);
+            slider.setProductId(selectedProduct);
             
             boolean isAdded = sliderDAO.addSlider(slider);
 
@@ -115,15 +197,45 @@ public class AddSliderServlet extends HttpServlet {
                 // Redirect to sliderList page
                 response.sendRedirect(request.getContextPath() + "/marketing/sliderList");
             } else {
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
                 request.setAttribute("error", "Thêm thanh trượt thất bại!");
                 request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
             }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Lỗi: " + e.getMessage());
-            request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
-        }
+              } catch (NumberFormatException e) {
+                SliderDAO sliderDAO = new SliderDAO();
+                PostDAO postDAO = new PostDAO();
+                ProductDAO productDAO = new ProductDAO();
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
+                request.setAttribute("error", "Lỗi: Giá trị nhập vào không hợp lệ!");
+                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
+        
+            } catch (Exception e) {
+                e.printStackTrace();
+                SliderDAO sliderDAO = new SliderDAO();
+                PostDAO postDAO = new PostDAO();
+                ProductDAO productDAO = new ProductDAO();
+                List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(-1);
+                List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+                List<Product> activeProducts = productDAO.getActiveProductTitles();
+
+                request.setAttribute("existingOrders", existingOrders);
+                request.setAttribute("publishedPosts", publishedPosts);
+                request.setAttribute("activeProducts", activeProducts);
+                request.setAttribute("error", "Lỗi: " + e.getMessage());
+                request.getRequestDispatcher("/marketing/slider/sliderform.jsp").forward(request, response);
+            }
     }
 
     @Override

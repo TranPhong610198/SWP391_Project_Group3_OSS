@@ -181,10 +181,30 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label for="link" class="form-label">Liên kết ngược</label>
-                                <input type="url" class="form-control" id="link" name="link" 
-                                       placeholder="https://example.com" required>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="postSelect" class="form-label">Chọn bài đăng đã xuất bản:</label>
+                                        <select id="postSelect" name="selectedPost" class="form-select" onchange="toggleSelection('post')">
+                                            <option value="">-- Chọn bài đăng --</option>
+                                            <c:forEach var="post" items="${publishedPosts}">
+                                                <option value="${post.id}">${post.title}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="productSelect" class="form-label">Chọn sản phẩm đang bán:</label>
+                                        <select id="productSelect" name="selectedProduct" class="form-select" onchange="toggleSelection('product')">
+                                            <option value="">-- Chọn sản phẩm --</option>
+                                            <c:forEach var="product" items="${activeProducts}">
+                                                <option value="${product.id}">${product.title}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                
                             </div>
+
+                            
 
                             <div class="col-md-6">
                                 <label for="display_order" class="form-label">Thứ tự hiển thị</label>
@@ -282,10 +302,29 @@
             }
             // Initialize CKEditor
             CKEDITOR.replace('notes', {
-    filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
-    filebrowserUploadMethod: 'form',
-    height: 400
-});
+                filebrowserUploadUrl: '${pageContext.request.contextPath}/upload',
+                filebrowserUploadMethod: 'form',
+                height: 400
+            });
+            
+            // Function to toggle selection between post and product
+            function toggleSelection(selected) {
+                if (selected === 'post') {
+                    if (document.getElementById('postSelect').value !== '') {
+                        document.getElementById('productSelect').value = '';
+                    }
+                } else if (selected === 'product') {
+                    if (document.getElementById('productSelect').value !== '') {
+                        document.getElementById('postSelect').value = '';
+                    }
+                }
+            }
+            
+            // Function to reset both selections
+            function resetSelections() {
+                document.getElementById('postSelect').value = '';
+                document.getElementById('productSelect').value = '';
+            }
         </script>
         <script>
     $(document).ready(function() {
@@ -296,6 +335,17 @@
         if (notes === '') {
             alert('Vui lòng nhập ghi chú.'); // Hiển thị cảnh báo giống HTML mặc định
             event.preventDefault(); // Ngăn form gửi đi
+            return;
+        }
+        
+        // Kiểm tra xem đã chọn post hoặc product chưa
+        var postSelected = $('#postSelect').val();
+        var productSelected = $('#productSelect').val();
+        
+        if (postSelected === '' && productSelected === '') {
+            alert('Vui lòng chọn một trong hai: Bài đăng hoặc Sản phẩm.');
+            event.preventDefault();
+            return;
         }
     });
 });
