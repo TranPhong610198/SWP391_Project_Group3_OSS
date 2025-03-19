@@ -737,9 +737,12 @@
                                             </c:if>
                                         </c:if>
                                         <c:if test="${order.status == 'completed'}">
-                                            <a href="productdetail?id=${product.id}" class="btn-reorder">
-                                                <i class="fas fa-redo"></i> Mua lại
-                                            </a>
+                                            <c:if test="${not empty order.items}">
+                                                <c:set var="firstItem" value="${order.items[0]}" />
+                                                <a href="productdetail?id=${firstItem.productId}" class="btn-reorder">
+                                                    <i class="fas fa-redo"></i> Mua lại
+                                                </a>
+                                            </c:if>
                                         </c:if>
                                     </div>
                                 </div>
@@ -779,14 +782,14 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                    // Ẩn thông báo sau 5 giây
-                    window.setTimeout(function () {
-                        var alerts = document.querySelectorAll('.alert');
-                        alerts.forEach(function (alert) {
-                            var bsAlert = new bootstrap.Alert(alert);
-                            bsAlert.close();
-                        });
-                    }, 5000);
+                                                // Ẩn thông báo sau 5 giây
+                                                window.setTimeout(function () {
+                                                    var alerts = document.querySelectorAll('.alert');
+                                                    alerts.forEach(function (alert) {
+                                                        var bsAlert = new bootstrap.Alert(alert);
+                                                        bsAlert.close();
+                                                    });
+                                                }, 5000);
         </script>
     </body>
 </html>
