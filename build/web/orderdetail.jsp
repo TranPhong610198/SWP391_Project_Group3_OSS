@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -162,55 +163,66 @@
                 color: #721c24;
             }
 
-            .timeline {
+            /* CSS cho timeline ngang */
+            .horizontal-timeline {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 position: relative;
                 padding: 20px 0;
             }
 
-            .timeline-line {
-                position: absolute;
-                left: 15px;
-                top: 0;
-                bottom: 0;
-                width: 2px;
-                background-color: #e9ecef;
-            }
-
-            .timeline-item {
+            .horizontal-timeline .timeline-step {
+                text-align: center;
                 position: relative;
-                padding-left: 40px;
-                padding-bottom: 20px;
+                flex: 1;
             }
 
-            .timeline-item:last-child {
-                padding-bottom: 0;
-            }
-
-            .timeline-dot {
+            .horizontal-timeline .timeline-step:not(:last-child)::after {
+                content: '';
                 position: absolute;
-                left: 10px;
-                top: 0;
-                width: 12px;
-                height: 12px;
-                border-radius: 50%;
-                background-color: #0d6efd;
+                top: 30px;
+                left: 50%;
+                width: 100%;
+                height: 2px;
+                background-color: #e9ecef; /* Màu xám mặc định */
+                z-index: 1;
             }
 
-            .timeline-content {
-                position: relative;
-                padding: 15px;
-                background-color: #f8f9fa;
-                border-radius: 5px;
+            .horizontal-timeline .timeline-step.active:not(:last-child)::after {
+                background-color: #28a745; /* Màu xanh cho các bước đã hoàn thành */
             }
 
-            .timeline-date {
-                font-size: 0.85rem;
+            .horizontal-timeline .timeline-step .timeline-icon {
+                width: 40px;
+                height: 40px;
+                background-color: #e9ecef; /* Màu xám mặc định */
                 color: #6c757d;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 10px;
+                border: 2px solid #e9ecef;
+                z-index: 2;
+                position: relative;
+            }
+
+            .horizontal-timeline .timeline-step.active .timeline-icon {
+                background-color: #28a745; /* Màu xanh cho các bước đã hoàn thành */
+                color: white;
+                border: 2px solid #28a745;
+            }
+
+            .horizontal-timeline .timeline-step .timeline-text {
+                font-size: 0.9rem;
+                font-weight: 500;
                 margin-bottom: 5px;
             }
 
-            .timeline-text {
-                margin-bottom: 0;
+            .horizontal-timeline .timeline-step .timeline-date {
+                font-size: 0.85rem;
+                color: #6c757d;
             }
 
             .action-buttons {
@@ -257,6 +269,31 @@
                     margin-bottom: 10px;
                     margin-right: 0;
                 }
+
+                .horizontal-timeline {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .horizontal-timeline .timeline-step:not(:last-child)::after {
+                    display: none;
+                }
+
+                .horizontal-timeline .timeline-step {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    text-align: left;
+                }
+
+                .horizontal-timeline .timeline-step .timeline-icon {
+                    margin: 0 10px 0 0;
+                }
+
+                .horizontal-timeline .timeline-step .timeline-text,
+                .horizontal-timeline .timeline-step .timeline-date {
+                    margin: 0;
+                }
             }
         </style>
     </head>
@@ -286,8 +323,132 @@
                 </div>
             </c:if>
 
+            <div class="card order-section">
+                <div class="card-header">
+                    <h5 class="card-title">Lịch sử đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="horizontal-timeline">
+                        <!-- Định nghĩa các bước trong timeline -->
+                        <c:set var="steps" value="created,pending,shipped,waiting,completed" />
+                        <c:set var="stepsArray" value="${fn:split(steps, ',')}" />
+                        <c:set var="currentStepIndex" value="0" />
+
+                        <!-- Xác định bước hiện tại dựa trên trạng thái đơn hàng -->
+                        <c:choose>
+                            <c:when test="${order.status eq 'pending'}">
+                                <c:set var="currentStepIndex" value="1" />
+                            </c:when>
+                            <c:when test="${order.status eq 'shipped'}">
+                                <c:set var="currentStepIndex" value="2" />
+                            </c:when>
+                            <c:when test="${order.status eq 'waiting'}">
+                                <c:set var="currentStepIndex" value="3" />
+                            </c:when>
+                            <c:when test="${order.status eq 'completed'}">
+                                <c:set var="currentStepIndex" value="4" />
+                            </c:when>
+                            <c:when test="${order.status eq 'cancelled'}">
+                                <c:set var="currentStepIndex" value="0" />
+                            </c:when>
+                        </c:choose>
+
+                        <!-- Bước 1: Đơn Hàng Đã Đặt -->
+                        <div class="timeline-step ${currentStepIndex >= 0 ? 'active' : ''}">
+                            <div class="timeline-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="timeline-text">Đơn Hàng Đã Đặt</div>
+                            <div class="timeline-date">
+                                <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
+                            </div>
+                        </div>
+
+                        <!-- Bước 2: Đã Xác Nhận Thông Tin Thanh Toán -->
+                        <div class="timeline-step ${currentStepIndex >= 1 ? 'active' : ''}">
+                            <div class="timeline-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="timeline-text">Đơn Hàng Đã Xác Nhận</div>
+                            <div class="timeline-date">
+                                <c:forEach items="${orderHistory}" var="history">
+                                    <c:if test="${history.status eq 'pending'}">
+                                        <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </div>
+
+                        <!-- Bước 3: Đã Giao Cho ĐVVC -->
+                        <div class="timeline-step ${currentStepIndex >= 2 ? 'active' : ''}">
+                            <div class="timeline-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="timeline-text">Đã Giao Cho ĐVVC</div>
+                            <div class="timeline-date">
+                                <c:forEach items="${orderHistory}" var="history">
+                                    <c:if test="${history.status eq 'shipped'}">
+                                        <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </div>
+
+                        <!-- Bước 4: Chờ Giao Hàng -->
+                        <div class="timeline-step ${currentStepIndex >= 3 ? 'active' : ''}">
+                            <div class="timeline-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="timeline-text">Chờ Giao Hàng</div>
+                            <div class="timeline-date">
+                                <c:forEach items="${orderHistory}" var="history">
+                                    <c:if test="${history.status eq 'waiting'}">
+                                        <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </div>
+
+                        <!-- Bước 5: Đã Giao -->
+                        <div class="timeline-step ${currentStepIndex >= 4 ? 'active' : ''}">
+                            <div class="timeline-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="timeline-text">Đã Giao</div>
+                            <div class="timeline-date">
+                                <c:forEach items="${orderHistory}" var="history">
+                                    <c:if test="${history.status eq 'completed'}">
+                                        <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin giao hàng (Di chuyển xuống dưới) -->
+            <div class="card order-section">
+                <div class="card-header">
+                    <h5 class="card-title">Thông tin giao hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-label">Người nhận:</div>
+                        <div class="info-value">${order.recipientName}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Số điện thoại:</div>
+                        <div class="info-value">${order.phone}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Địa chỉ:</div>
+                        <div class="info-value">${order.address}</div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-12">
                     <!-- Thông tin đơn hàng -->
                     <div class="card order-section">
                         <div class="card-header d-flex justify-content-between align-items-center">
@@ -412,10 +573,10 @@
                                             <div class="product-name">${item.productTitle}</div>
                                             <div class="product-variant">Size: ${item.size} | Màu: ${item.color}</div>
                                         </div>
-                                        <div class="col-md-2 text-center d-none d-md-block">
+                                        <div class="col-md-2 text-center">
                                             <div class="quantity">x${item.quantity}</div>
                                         </div>
-                                        <div class="col-md-3 text-end d-none d-md-block">
+                                        <div class="col-md-3 text-end">
                                             <div class="price">
                                                 <fmt:formatNumber value="${item.productPrice * item.quantity}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                             </div>
@@ -479,79 +640,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <!-- Thông tin giao hàng -->
-                    <div class="card order-section">
-                        <div class="card-header">
-                            <h5 class="card-title">Thông tin giao hàng</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="info-item">
-                                <div class="info-label">Người nhận:</div>
-                                <div class="info-value">${order.recipientName}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Số điện thoại:</div>
-                                <div class="info-value">${order.phone}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Địa chỉ:</div>
-                                <div class="info-value">${order.address}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lịch sử đơn hàng -->
-                    <div class="card order-section">
-                        <div class="card-header">
-                            <h5 class="card-title">Lịch sử đơn hàng</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="timeline">
-                                <div class="timeline-line"></div>
-
-                                <!-- Sự kiện đặt hàng -->
-                                <div class="timeline-item">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-content">
-                                        <div class="timeline-date">
-                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
-                                        </div>
-                                        <p class="timeline-text">
-                                            <strong>Đơn hàng đã được tạo</strong><br>
-                                            Mã đơn hàng: ${order.orderCode}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Lịch sử cập nhật trạng thái -->
-                                <c:forEach items="${orderHistory}" var="history">
-                                    <div class="timeline-item">
-                                        <div class="timeline-dot"></div>
-                                        <div class="timeline-content">
-                                            <div class="timeline-date">
-                                                <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
-                                            </div>
-                                            <p class="timeline-text">
-                                                <strong>
-                                                    <c:choose>
-                                                        <c:when test="${history.status eq 'pending'}">Chờ xử lý</c:when>
-                                                        <c:when test="${history.status eq 'processing'}">Đơn hàng đang được xử lý</c:when>
-                                                        <c:when test="${history.status eq 'shipped'}">Đơn hàng đang được giao</c:when>
-                                                        <c:when test="${history.status eq 'completed'}">Đơn hàng đã hoàn thành</c:when>
-                                                        <c:when test="${history.status eq 'cancelled'}">Đơn hàng đã bị hủy</c:when>
-                                                        <c:otherwise>${history.status}</c:otherwise>
-                                                    </c:choose>
-                                                </strong><br> 
-                                            </p>
-                                        </div>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -559,14 +647,14 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            // Ẩn thông báo sau 5 giây
-            window.setTimeout(function () {
-                var alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function (alert) {
-                    var bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
-            }, 5000);
+                                        // Ẩn thông báo sau 5 giây
+                                        window.setTimeout(function () {
+                                            var alerts = document.querySelectorAll('.alert');
+                                            alerts.forEach(function (alert) {
+                                                var bsAlert = new bootstrap.Alert(alert);
+                                                bsAlert.close();
+                                            });
+                                        }, 5000);
         </script>
     </body>
 </html>
