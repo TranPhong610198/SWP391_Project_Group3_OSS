@@ -343,8 +343,8 @@ public class FeedbackDAO extends DBContext {
         StringBuilder sql = new StringBuilder("SELECT p.id AS product_id, p.title, p.thumbnail, ");
         sql.append("AVG(f.rating) AS avg_rating, COUNT(f.id) AS feedback_count ");
         sql.append("FROM products p ");
-        sql.append("LEFT JOIN order_items oi ON p.id = oi.product_id ");
-        sql.append("LEFT JOIN feedback f ON oi.id = f.order_item_id ");
+        sql.append("INNER JOIN order_items oi ON p.id = oi.product_id "); // Thay LEFT JOIN bằng INNER JOIN
+        sql.append("INNER JOIN feedback f ON oi.id = f.order_item_id "); // Thay LEFT JOIN bằng INNER JOIN
         sql.append("WHERE 1=1");
 
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
@@ -355,6 +355,7 @@ public class FeedbackDAO extends DBContext {
         }
 
         sql.append(" GROUP BY p.id, p.title, p.thumbnail ");
+        sql.append(" HAVING COUNT(f.id) > 0 "); // Thêm điều kiện để đảm bảo có ít nhất 1 phản hồi
 
         if (sortField != null && !sortField.isEmpty()) {
             sql.append(" ORDER BY ").append(sortField).append(" ").append(sortOrder != null && sortOrder.equals("desc") ? "DESC" : "ASC");
@@ -383,8 +384,8 @@ public class FeedbackDAO extends DBContext {
                 feedback.setProductId(rs.getInt("product_id"));
                 feedback.setProductTitle(rs.getString("title"));
                 feedback.setProductThumbnail(rs.getString("thumbnail"));
-                feedback.setRating(rs.getInt("avg_rating"));
-                feedback.setComment(rs.getString("feedback_count"));
+                feedback.setRating(rs.getInt("avg_rating")); // Lấy giá trị trung bình rating
+                feedback.setComment(rs.getString("feedback_count")); // Số lượng feedback lưu trong comment
                 list.add(feedback);
             }
         } catch (SQLException e) {
@@ -396,8 +397,8 @@ public class FeedbackDAO extends DBContext {
     public int getTotalProductsWithFeedback(String searchKeyword, String filterRating) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.id) ");
         sql.append("FROM products p ");
-        sql.append("LEFT JOIN order_items oi ON p.id = oi.product_id ");
-        sql.append("LEFT JOIN feedback f ON oi.id = f.order_item_id ");
+        sql.append("INNER JOIN order_items oi ON p.id = oi.product_id "); 
+        sql.append("INNER JOIN feedback f ON oi.id = f.order_item_id "); 
         sql.append("WHERE 1=1");
 
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
