@@ -243,7 +243,7 @@
                         </form>
 
                         <!-- Phần ảnh phụ -->
-                        <div class="col-12 mt-3">
+                        <div class="col-12 mt-3" id="subimagepart">
                             <label class="form-label">Ảnh phụ</label>
                             <div class="sub-images-container">
                                 <c:forEach var="subImage" items="${product.subImages}" varStatus="loop">

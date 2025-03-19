@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "EditProductServlet", urlPatterns = {"/marketing/editproduct"})
 @MultipartConfig(
@@ -72,7 +74,7 @@ public class EditProductServlet extends HttpServlet {
 
             // Xử lý upload ảnh từ Summernote
             if ("uploadImage".equals(action)) {
-                Part filePart = request.getPart("file"); // Summernote gửi file dưới tên "file"
+                Part filePart = request.getPart("file");
                 if (filePart != null && filePart.getSize() > 0) {
                     if (!isValidImage(filePart)) {
                         response.setContentType("application/json");
@@ -120,7 +122,17 @@ public class EditProductServlet extends HttpServlet {
                 String status = request.getParameter("status");
                 String title = request.getParameter("title");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-                String description = request.getParameter("description");
+                String newDescription = request.getParameter("description");
+
+                // So sánh ảnh cũ và mới trong description để xóa ảnh không còn sử dụng
+                String oldDescription = product.getDescription();
+                List<String> oldImageUrls = extractImageUrls(oldDescription);
+                List<String> newImageUrls = extractImageUrls(newDescription);
+                for (String oldImageUrl : oldImageUrls) {
+                    if (!newImageUrls.contains(oldImageUrl)) {
+                        deleteImage(oldImageUrl, uploadPath);
+                    }
+                }
 
                 if (productDAO.isProductExists(title, categoryId) && !product.getTitle().equals(title) && product.getCategoryId() != categoryId) {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ER_dp");
@@ -182,7 +194,7 @@ public class EditProductServlet extends HttpServlet {
                 product.setStatus(status);
                 product.setTitle(title);
                 product.setCategoryId(categoryId);
-                product.setDescription(description); // Lưu mô tả từ Summernote
+                product.setDescription(newDescription);
                 product.setOriginalPrice(originalPrice);
                 product.setSalePrice(salePrice);
                 product.setThumbnail(thumbnail);
@@ -208,7 +220,7 @@ public class EditProductServlet extends HttpServlet {
                     String newImageUrl = saveImage(subImagePart, request);
                     if (newImageUrl != null) {
                         productDAO.replaceProductImage(imageId, newImageUrl, uploadPath);
-                        response.sendRedirect("editproduct?id=" + productId);
+                        response.sendRedirect("editproduct?id=" + productId + "#subimagepart");
                     } else {
                         response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                     }
@@ -217,7 +229,7 @@ public class EditProductServlet extends HttpServlet {
                 String oldImg = request.getParameter("oldSubImg");
                 int imageId = productDAO.getImageIdByUrl(oldImg);
                 if (productDAO.deleteProductImage(imageId, uploadPath)) {
-                    response.sendRedirect("editproduct?id=" + productId);
+                    response.sendRedirect("editproduct?id=" + productId + "#subimagepart");
                 } else {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                 }
@@ -245,7 +257,7 @@ public class EditProductServlet extends HttpServlet {
                         }
                     }
                 }
-                response.sendRedirect("editproduct?id=" + productId);
+                response.sendRedirect("editproduct?id=" + productId + "#subimagepart");
             }
 
         } catch (Exception e) {
@@ -285,11 +297,30 @@ public class EditProductServlet extends HttpServlet {
     }
 
     private void deleteImage(String imagePath, String uploadPath) {
-        imagePath = imagePath.replace("uploads/productImages/", "");
+        imagePath = imagePath.replace(UPLOAD_DIR + "/", "");
         File file = new File(uploadPath + File.separator + imagePath);
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    // Trích xuất URL ảnh từ nội dung HTML
+    private List<String> extractImageUrls(String htmlContent) {
+        List<String> imageUrls = new ArrayList<>();
+        if (htmlContent == null) {
+            return imageUrls;
+        }
+
+        Pattern pattern = Pattern.compile("<img[^>]+src=\"(.*?)\"");
+        Matcher matcher = pattern.matcher(htmlContent);
+        while (matcher.find()) {
+            String src = matcher.group(1);
+            if (src.contains(UPLOAD_DIR)) {
+                String relativePath = src.substring(src.indexOf(UPLOAD_DIR));
+                imageUrls.add(relativePath);
+            }
+        }
+        return imageUrls;
     }
 
     @Override
