@@ -142,7 +142,7 @@ public class OrderSaleDAO extends DBContext {
         }
         
         // Get total revenue
-        String revenueSql = "SELECT SUM(total_amount) as total_revenue FROM orders WHERE status != 'cancelled'";
+        String revenueSql = "SELECT SUM(total_amount) as total_revenue FROM orders WHERE status = 'completed'";
         try {
             PreparedStatement st = connection.prepareStatement(revenueSql);
             ResultSet rs = st.executeQuery();
