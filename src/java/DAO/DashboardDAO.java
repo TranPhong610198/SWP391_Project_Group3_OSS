@@ -84,10 +84,12 @@ public class DashboardDAO extends DBContext {
     private Map<String, Integer> getProductsByCategory() {
         Map<String, Integer> productsByCategory = new HashMap<>();
         try {
-            String sql = "SELECT c.name, COUNT(p.id) as product_count " +
-                         "FROM products p " +
-                         "JOIN categories c ON p.category_id = c.id " +
-                         "GROUP BY c.name";
+            String sql = "SELECT c.name, COUNT(p.id) AS product_count \n" +
+             "FROM products p \n" +
+             "JOIN categories c ON p.category_id = c.id \n" +
+             "GROUP BY c.name";
+
+
             
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
