@@ -72,7 +72,6 @@ public class EditProductServlet extends HttpServlet {
             Product product = productDAO.getProductById(productId);
             String action = request.getParameter("action");
 
-            // Xử lý upload ảnh từ Summernote
             if ("uploadImage".equals(action)) {
                 Part filePart = request.getPart("file");
                 if (filePart != null && filePart.getSize() > 0) {
@@ -124,7 +123,6 @@ public class EditProductServlet extends HttpServlet {
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 String newDescription = request.getParameter("description");
 
-                // So sánh ảnh cũ và mới trong description để xóa ảnh không còn sử dụng
                 String oldDescription = product.getDescription();
                 List<String> oldImageUrls = extractImageUrls(oldDescription);
                 List<String> newImageUrls = extractImageUrls(newDescription);
@@ -220,7 +218,7 @@ public class EditProductServlet extends HttpServlet {
                     String newImageUrl = saveImage(subImagePart, request);
                     if (newImageUrl != null) {
                         productDAO.replaceProductImage(imageId, newImageUrl, uploadPath);
-                        response.sendRedirect("editproduct?id=" + productId + "#subimagepart");
+                        response.sendRedirect("editproduct?id=" + productId);
                     } else {
                         response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                     }
@@ -229,7 +227,7 @@ public class EditProductServlet extends HttpServlet {
                 String oldImg = request.getParameter("oldSubImg");
                 int imageId = productDAO.getImageIdByUrl(oldImg);
                 if (productDAO.deleteProductImage(imageId, uploadPath)) {
-                    response.sendRedirect("editproduct?id=" + productId + "#subimagepart");
+                    response.sendRedirect("editproduct?id=" + productId);
                 } else {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                 }
@@ -238,15 +236,24 @@ public class EditProductServlet extends HttpServlet {
                 if (currentImages == null) {
                     currentImages = new ArrayList<>();
                 }
-                if (currentImages.size() >= 5) {
+
+                // Đếm số file người dùng upload
+                int newImageCount = 0;
+                for (Part part : request.getParts()) {
+                    if (part.getName().equals("newSubImage") && part.getSize() > 0) {
+                        newImageCount++;
+                    }
+                }
+
+                // Kiểm tra tổng số ảnh sau khi thêm có vượt quá 5 không
+                if (currentImages.size() + newImageCount > 5) {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_FULL");
                     return;
                 }
+
+                // Nếu không vượt quá, tiến hành thêm ảnh
                 for (Part part : request.getParts()) {
                     if (part.getName().equals("newSubImage") && part.getSize() > 0) {
-                        if (currentImages.size() >= 5) {
-                            break;
-                        }
                         String newImageUrl = saveImage(part, request);
                         if (newImageUrl != null) {
                             productDAO.addSingleProductImage(productId, newImageUrl);
@@ -304,7 +311,6 @@ public class EditProductServlet extends HttpServlet {
         }
     }
 
-    // Trích xuất URL ảnh từ nội dung HTML
     private List<String> extractImageUrls(String htmlContent) {
         List<String> imageUrls = new ArrayList<>();
         if (htmlContent == null) {

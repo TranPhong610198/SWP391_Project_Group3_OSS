@@ -271,7 +271,7 @@
                                     <input type="hidden" name="action" value="addNewSubImage">
                                     <input type="hidden" name="productId" value="${product.id}">
                                     <input type="file" class="form-control" name="newSubImage" accept="image/*" multiple onchange="this.form.submit();">
-                                    <div class="form-text">Thêm ảnh phụ mới (tối đa 5 ảnh)</div>
+                                    <div class="form-text">Thêm ảnh phụ mới (tổng cũ và mới tối đa 5 ảnh)</div>
                                 </form>
                             </div>
                         </div>
