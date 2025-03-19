@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package marketing;
 
 import DAO.CartDAO;
@@ -23,10 +19,6 @@ import jakarta.servlet.http.Part;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 
-/**
- *
- * @author tphon
- */
 @WebServlet(name = "EditProductServlet", urlPatterns = {"/marketing/editproduct"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -40,20 +32,10 @@ public class EditProductServlet extends HttpServlet {
     private CartDAO cartDAO = new CartDAO();
     private static final String UPLOAD_DIR = "uploads/productImages";
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -66,59 +48,65 @@ public class EditProductServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int productId = Integer.parseInt(request.getParameter("id"));
-//        System.out.println(productId);
         Product product = productDAO.getProductById(productId);
         product.setSubImages(productDAO.getProductImages(productId));
 
         request.setAttribute("product", product);
-        request.setAttribute("categories", categoryDAO.getThirdLevelCategories()); // Giả sử có CategoryDAO
-//        System.out.println(categoryDAO.getThirdLevelCategories().toString());
+        request.setAttribute("categories", categoryDAO.getThirdLevelCategories());
         request.setAttribute("comboProducts", productDAO.getComboProducts());
         request.setAttribute("alert", request.getParameter("alert"));
         request.getRequestDispatcher("/marketing/product/editProduct.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             Product product = productDAO.getProductById(productId);
+            String action = request.getParameter("action");
+
+            // Xử lý upload ảnh từ Summernote
+            if ("uploadImage".equals(action)) {
+                Part filePart = request.getPart("file"); // Summernote gửi file dưới tên "file"
+                if (filePart != null && filePart.getSize() > 0) {
+                    if (!isValidImage(filePart)) {
+                        response.setContentType("application/json");
+                        response.getWriter().write("{ \"error\": \"Invalid image format\" }");
+                        return;
+                    }
+
+                    String imageUrl = saveImage(filePart, request);
+                    if (imageUrl != null) {
+                        response.setContentType("application/json");
+                        String fullUrl = request.getContextPath() + "/" + imageUrl;
+                        response.getWriter().write("{ \"url\": \"" + fullUrl + "\" }");
+                    } else {
+                        response.setContentType("application/json");
+                        response.getWriter().write("{ \"error\": \"Upload failed\" }");
+                    }
+                } else {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{ \"error\": \"No file uploaded\" }");
+                }
+                return;
+            }
 
             if (productDAO.hasProcessOrders(productId)) {
                 response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_OP");
                 return;
             }
 
-            String action = request.getParameter("action");
             String uploadPath = request.getServletContext().getRealPath("/" + UPLOAD_DIR);
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
-                uploadDir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+                uploadDir.mkdirs();
             }
 
-            // Kiểm tra định dạng file trước khi xử lý
             for (Part part : request.getParts()) {
                 if ((part.getName().equals("thumbnail") || part.getName().equals("subImage") || part.getName().equals("newSubImage")) && part.getSize() > 0) {
                     if (!isValidImage(part)) {
@@ -129,13 +117,12 @@ public class EditProductServlet extends HttpServlet {
             }
 
             if ("updateProduct".equals(action)) {
-                // Xử lý cập nhật sản phẩm
                 String status = request.getParameter("status");
                 String title = request.getParameter("title");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 String description = request.getParameter("description");
 
-                if (productDAO.isProductExists(title, categoryId) && !product.getTitle().equals(title) && product.getCategoryId()!=categoryId) {
+                if (productDAO.isProductExists(title, categoryId) && !product.getTitle().equals(title) && product.getCategoryId() != categoryId) {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ER_dp");
                     return;
                 }
@@ -146,59 +133,56 @@ public class EditProductServlet extends HttpServlet {
                 }
                 BigDecimal salePrice = new BigDecimal(request.getParameter("salePrice").replace(".", ""));
 
-                // xử lý phần combo
                 boolean isCombo = request.getParameter("isCombo") != null;
                 int comboGroupId = 0;
 
-                if (product.isIsCombo() == isCombo && isCombo) {                //ban đầu hay lúc sau update nó vẫn là sản phẩm chính của combo
-                    comboGroupId = product.getComboGroupId();                   // thì giữ nguyên group, không được chuyển
-                } else if (product.isIsCombo() != isCombo && isCombo) {         // ban đầu ko phải sản phầm chính, lúc sau là sản phẩm chính
-                    comboGroupId = productDAO.getMaxComboGroupId() + 1;         // thì tạo ra 1 group mới cho nó
-                } else if (product.isIsCombo() == isCombo && !isCombo) {        // ban đầu không là chính nhưng lúc sau cũng không là chính
-                    String groupRaw = request.getParameter("comboGroupId"); // thì kiểm tra xem nó có đổi sang combo khác không
+                if (product.isIsCombo() == isCombo && isCombo) {
+                    comboGroupId = product.getComboGroupId();
+                } else if (product.isIsCombo() != isCombo && isCombo) {
+                    comboGroupId = productDAO.getMaxComboGroupId() + 1;
+                } else if (product.isIsCombo() == isCombo && !isCombo) {
+                    String groupRaw = request.getParameter("comboGroupId");
                     if (groupRaw != null && !groupRaw.isEmpty()) {
                         comboGroupId = Integer.parseInt(groupRaw);
                     }
-                } else {                                                        // ban đầu là chính nhưng lúc sau là phụ
+                } else {
                     String groupRaw = request.getParameter("comboGroupId");
-                    if (groupRaw != null && !groupRaw.isEmpty()) {              // kiểm tra xem nó thuộc combo mói hay combo cũ
-                        if (product.getComboGroupId() == Integer.parseInt(groupRaw)) { // nếu vần là combo cũ 
+                    if (groupRaw != null && !groupRaw.isEmpty()) {
+                        if (product.getComboGroupId() == Integer.parseInt(groupRaw)) {
                             List<Product> comboList = productDAO.getComboProduct(product.getComboGroupId());
-                            if (comboList.size() >= 2) {                        //và trong combo có 2 sản phẩm 
+                            if (comboList.size() >= 2) {
                                 int upProductId = comboList.get(comboList.size() - 2).getId();
-                                productDAO.setIsComboByProductId(upProductId, true); //thì chuyển chính vè thằng gần nhất
+                                productDAO.setIsComboByProductId(upProductId, true);
                             } else {
-                                comboGroupId = 0;                               // còn dưới 2 sản phẩm thì xóa combo
+                                comboGroupId = 0;
                             }
-                        } else {                                                // nếu là combo mới
-                            comboGroupId = Integer.parseInt(groupRaw);        // thì chuyển sang combo mới
+                        } else {
+                            comboGroupId = Integer.parseInt(groupRaw);
                         }
                     }
                 }
-//                System.out.println(comboGroupId);
-//                System.out.println(isCombo + "Dòng 168 EDIT");
-                // Xử lý ảnh chính (thumbnail)
+
                 Part thumbnailPart = request.getPart("thumbnail");
-                String thumbnail = product.getThumbnail(); // Giữ nguyên nếu không upload ảnh mới
+                String thumbnail = product.getThumbnail();
                 if (thumbnailPart != null && thumbnailPart.getSize() > 0) {
-                    // Xóa ảnh cũ nếu có
                     if (thumbnail != null && !thumbnail.isEmpty()) {
                         deleteImage(thumbnail, uploadPath);
                     }
                     thumbnail = saveImage(thumbnailPart, request);
                 }
+
                 if ("EOStock".equals(product.getStatus())) {
                     status = "EOStock";
                 } else {
-                    // Chỉ chấp nhận "active" hoặc "inactive"
                     if (!"active".equals(status) && !"inactive".equals(status)) {
-                        status = "inactive"; // Nếu không hợp lệ, đặt mặc định là "inactive"
+                        status = "inactive";
                     }
                 }
+
                 product.setStatus(status);
                 product.setTitle(title);
                 product.setCategoryId(categoryId);
-                product.setDescription(description);
+                product.setDescription(description); // Lưu mô tả từ Summernote
                 product.setOriginalPrice(originalPrice);
                 product.setSalePrice(salePrice);
                 product.setThumbnail(thumbnail);
@@ -217,7 +201,6 @@ public class EditProductServlet extends HttpServlet {
                 }
 
             } else if ("replaceSubImage".equals(action)) {
-                // Xử lý thay thế ảnh phụ
                 String oldImg = request.getParameter("oldSubImg");
                 int imageId = productDAO.getImageIdByUrl(oldImg);
                 Part subImagePart = request.getPart("subImage");
@@ -228,30 +211,25 @@ public class EditProductServlet extends HttpServlet {
                         response.sendRedirect("editproduct?id=" + productId);
                     } else {
                         response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
-                        return;
                     }
                 }
             } else if ("deleteSubImage".equals(action)) {
-                // Xử lý xóa ảnh phụ
                 String oldImg = request.getParameter("oldSubImg");
                 int imageId = productDAO.getImageIdByUrl(oldImg);
                 if (productDAO.deleteProductImage(imageId, uploadPath)) {
                     response.sendRedirect("editproduct?id=" + productId);
                 } else {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
-                    return;
                 }
             } else if ("addNewSubImage".equals(action)) {
-                // Xử lý thêm ảnh phụ mới
                 List<String> currentImages = productDAO.getProductImages(productId);
                 if (currentImages == null) {
-                    currentImages = new ArrayList<>(); // Khởi tạo danh sách rỗng nếu null
+                    currentImages = new ArrayList<>();
                 }
                 if (currentImages.size() >= 5) {
                     response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_FULL");
                     return;
                 }
-                // Xử lý từng ảnh trong danh sách
                 for (Part part : request.getParts()) {
                     if (part.getName().equals("newSubImage") && part.getSize() > 0) {
                         if (currentImages.size() >= 5) {
@@ -260,7 +238,7 @@ public class EditProductServlet extends HttpServlet {
                         String newImageUrl = saveImage(part, request);
                         if (newImageUrl != null) {
                             productDAO.addSingleProductImage(productId, newImageUrl);
-                            currentImages.add(newImageUrl); // Cập nhật danh sách ảnh
+                            currentImages.add(newImageUrl);
                         } else {
                             response.sendRedirect("editproduct?id=" + productId + "&alert=ERR");
                             return;
@@ -268,7 +246,6 @@ public class EditProductServlet extends HttpServlet {
                     }
                 }
                 response.sendRedirect("editproduct?id=" + productId);
-
             }
 
         } catch (Exception e) {
@@ -276,30 +253,28 @@ public class EditProductServlet extends HttpServlet {
             response.sendRedirect("productlist?alert=ERR");
         }
     }
-    // Hàm lưu ảnh vào thư mục uploads/productImages (giống AddProductServlet)
 
     private String saveImage(Part part, HttpServletRequest request) {
         try {
             String oldFileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
             String fileExtension = oldFileName.substring(oldFileName.lastIndexOf("."));
-            String fileName = "img_" + System.currentTimeMillis() + fileExtension; // Tạo tên file duy nhất
+            String fileName = "img_" + System.currentTimeMillis() + fileExtension;
             String uploadPath = request.getServletContext().getRealPath("/" + UPLOAD_DIR);
 
             File uploadFolder = new File(uploadPath);
             if (!uploadFolder.exists()) {
-                uploadFolder.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+                uploadFolder.mkdirs();
             }
 
             String filePath = uploadPath + File.separator + fileName;
-            part.write(filePath); // Lưu ảnh vào thư mục trên server
-            return UPLOAD_DIR + "/" + fileName; // Trả về đường dẫn tương đối
+            part.write(filePath);
+            return UPLOAD_DIR + "/" + fileName;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    // Hàm kiểm tra định dạng file ảnh (giống AddProductServlet)
     private boolean isValidImage(Part part) {
         String contentType = part.getContentType();
         return contentType != null && (contentType.equals("image/jpeg")
@@ -314,20 +289,11 @@ public class EditProductServlet extends HttpServlet {
         File file = new File(uploadPath + File.separator + imagePath);
         if (file.exists()) {
             file.delete();
-//            System.out.println("Đã xóa ảnh cũ: " + file.getAbsolutePath());
-        } else {
-//            System.out.println("Ảnh cũ không tồn tại: " + file.getAbsolutePath());
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

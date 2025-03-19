@@ -9,6 +9,7 @@
         <title>Chỉnh sửa sản phẩm</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
         <style>
             :root {
                 --primary-color: #2c3e50;
@@ -127,7 +128,6 @@
                 }
             }
         </style>
-        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
         <jsp:include page="../sidebar.jsp" />
@@ -225,18 +225,15 @@
                                 </select>
                             </div>
 
-                            <!-- Tạm ẩn chức năng mô tả sản phẩm tại vì đang bi lỗi ckeditor                            
-                                                            <div class="col-12">
-                                                            <label for="description" class="form-label">Mô tả sản phẩm</label>
-                                                            <textarea class="form-control" id="description" name="description">${product.description}</textarea>
-                                                        </div>-->
+                            <div class="col-12">
+                                <label for="description" class="form-label">Mô tả sản phẩm</label>
+                                <textarea class="form-control" id="description" name="description">${product.description}</textarea>
+                            </div>
 
-
-                            <!-- Phần ảnh chính -->
                             <div class="col-md-6 mt-3">
                                 <label for="thumbnail" class="form-label">Ảnh chính</label>
                                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewThumbnail(this)" />
-                                <img src="${product.thumbnail.contains('https')? product.thumbnail : pageContext.request.contextPath.concat('/').concat(product.thumbnail)}" class="preview-image" alt="Current Thumbnail">
+                                <img src="${product.thumbnail.contains('https') ? product.thumbnail : pageContext.request.contextPath.concat('/').concat(product.thumbnail)}" class="preview-image" alt="Current Thumbnail">
                             </div>
 
                             <div class="col-12 mt-4">
@@ -244,6 +241,7 @@
                                 <a href="productlist" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
                             </div>
                         </form>
+
                         <!-- Phần ảnh phụ -->
                         <div class="col-12 mt-3">
                             <label class="form-label">Ảnh phụ</label>
@@ -280,14 +278,13 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+            <script>
                                         function formatNumberInput(input) {
                                             let value = input.value.replace(/\D/g, '');
-                                            console.log(value);
                                             if (value) {
                                                 value = parseInt(value, 10).toLocaleString('vi-VN');
                                                 input.value = value;
@@ -296,7 +293,6 @@
                                             }
                                         }
 
-                                        // Chạy sau khi trang đã tải
                                         document.addEventListener('DOMContentLoaded', function () {
                                             const originalPriceInput = document.getElementById('originalPrice');
                                             const salePriceInput = document.getElementById('salePrice');
@@ -312,7 +308,6 @@
                                                 }
                                             });
 
-
                                             salePriceInput.addEventListener('input', function () {
                                                 formatNumberInput(this);
                                                 if (salePriceInput.value.replace(/\./g, '') > 99999999) {
@@ -322,10 +317,6 @@
                                             });
                                         });
 
-                                        // In đậm vị trí trang trên sidebar
-                                        $('.menu-item').removeClass('active');
-                                        $('.menu-item a[href="addproduct"]').closest('.menu-item').addClass('active');
-                                        $('#productSubmenu').addClass('show');
                                         $(document).ready(function () {
                                             $('.sidebar-toggle').on('click', function () {
                                                 $('.sidebar').toggleClass('active');
@@ -343,16 +334,73 @@
                                                 }
                                             });
 
-                                            // Kiểm tra tính hợp lệ của giá
+                                            $('.menu-item').removeClass('active');
+                                            $('.menu-item a[href="editproduct"]').closest('.menu-item').addClass('active');
+                                            $('#productSubmenu').addClass('show');
+
                                             $('#salePrice').on('change', function () {
                                                 const originalPrice = parseInt($('#originalPrice').val().replace(/\./g, '')) || 0;
                                                 const salePrice = parseInt($('#salePrice').val().replace(/\./g, '')) || 0;
-
                                                 if (salePrice < originalPrice) {
                                                     alert('Giá khuyến mãi không được nhỏ hơn giá gốc!');
                                                     $('#salePrice').val(parseInt(originalPrice, 10).toLocaleString('vi-VN'));
                                                 }
                                             });
+
+                                            // Cấu hình Summernote với đầy đủ chức năng
+                                            $('#description').summernote({
+                                                height: 300,
+                                                placeholder: 'Nhập mô tả chi tiết về sản phẩm...',
+                                                toolbar: [
+                                                    ['style', ['style']],
+                                                    ['font', ['bold', 'underline', 'italic', 'clear']],
+                                                    ['color', ['color']],
+                                                    ['para', ['ul', 'ol', 'paragraph']],
+                                                    ['table', ['table']],
+                                                    ['insert', ['link', 'picture', 'video']],
+                                                    ['view', ['fullscreen', 'codeview', 'help']]
+                                                ],
+                                                callbacks: {
+                                                    onImageUpload: function (files) {
+                                                        let data = new FormData();
+                                                        data.append("file", files[0]);
+                                                        $.ajax({
+                                                            url: '${pageContext.request.contextPath}/marketing/editproduct?productId='+${product.id}+'&action=uploadImage',
+                                                            method: 'POST',
+                                                            data: data,
+                                                            contentType: false,
+                                                            processData: false,
+                                                            success: function (response) {
+                                                                if (response.url) {
+                                                                    $('#description').summernote('insertImage', response.url);
+                                                                } else {
+                                                                    alert('Lỗi khi upload ảnh: ' + (response.error || 'Unknown error'));
+                                                                }
+                                                            },
+                                                            error: function () {
+                                                                alert('Lỗi khi gửi yêu cầu upload ảnh');
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+
+                                            updateComboGroupIdVisibility();
+                                            $('#isCombo').change(function () {
+                                                updateComboGroupIdVisibility();
+                                            });
+
+                                            function updateComboGroupIdVisibility() {
+                                                const isCombo = $('#isCombo').is(':checked');
+                                                const comboBoxElement = $("#comboGroupId");
+                                                if (isCombo) {
+                                                    comboBoxElement.prop("disabled", true);
+                                                    comboBoxElement.val(${requestScope.product.getComboGroupId()});
+                                                } else {
+                                                    comboBoxElement.val(${requestScope.product.getComboGroupId()});
+                                                    comboBoxElement.prop("disabled", false);
+                                                }
+                                            }
                                         });
 
                                         function isValidImage(file) {
@@ -362,19 +410,13 @@
 
                                         function previewThumbnail(input) {
                                             const previewImg = input.closest('.col-md-6').querySelector('.preview-image');
-
                                             if (input.files && input.files[0]) {
                                                 const file = input.files[0];
-
-                                                // Kiểm tra xem có phải file ảnh hợp lệ không
-                                                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-                                                if (!allowedTypes.includes(file.type)) {
+                                                if (!isValidImage(file)) {
                                                     alert('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP).');
-                                                    input.value = ''; // Xóa file nếu không hợp lệ
+                                                    input.value = '';
                                                     return;
                                                 }
-
-                                                // Hiển thị ảnh mới trong preview
                                                 const reader = new FileReader();
                                                 reader.onload = function (e) {
                                                     previewImg.src = e.target.result;
@@ -386,35 +428,6 @@
                                         function previewSubImage(imageUrl) {
                                             window.open(imageUrl, '_blank');
                                         }
-
-                                        $(document).ready(function () {
-                                            // Xử lý khi checkbox isCombo thay đổi
-                                            updateComboGroupIdVisibility();
-                                            $('#isCombo').change(function () {
-                                                updateComboGroupIdVisibility();
-                                            });
-
-                                            function updateComboGroupIdVisibility() {
-                                                const isCombo = $('#isCombo').is(':checked'); // Kiểm tra trạng thái checkbox
-                                                const comboBoxElement = $("#comboGroupId");
-
-                                                if (isCombo) {
-                                                    // Nếu checkbox được chọn, vô hiệu hóa select và xóa giá trị
-                                                    comboBoxElement.prop("disabled", true);
-                                                    comboBoxElement.val(${requestScope.product.getComboGroupId()}); // Đặt về option mặc định
-                                                } else {
-                                                    // Nếu checkbox không được chọn, kích hoạt lại select
-                                                    comboBoxElement.val(${requestScope.product.getComboGroupId()});
-                                                    comboBoxElement.prop("disabled", false);
-                                                }
-                                            }
-                                        });
-                                        $('.menu-item a[href="editproduct"]').closest('.menu-item').addClass('active');
-                                        CKEDITOR.replace('description');
-
-
-
-        </script>
-
+            </script>
     </body>
 </html>

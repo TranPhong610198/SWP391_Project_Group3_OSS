@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package marketing;
 
 import DAO.CategoryDAO;
@@ -23,10 +19,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author tphon
- */
 @WebServlet(name = "AddProductServlet", urlPatterns = {"/marketing/addproduct"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -35,20 +27,10 @@ import java.util.List;
 )
 public class AddProductServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -61,50 +43,56 @@ public class AddProductServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //Lấy listcategory
         CategoryDAO cateDao = new CategoryDAO();
         List<Category> listCate = cateDao.getThirdLevelCategories();
         request.setAttribute("categories", listCate);
 
-        // Lấy danh sách sản phẩm combo
         ProductDAO productDao = new ProductDAO();
         List<Product> comboProducts = productDao.getComboProducts();
         request.setAttribute("comboProducts", comboProducts);
         request.setAttribute("alert", request.getParameter("alert"));
 
         request.getRequestDispatcher("/marketing/product/addProduct.jsp").forward(request, response);
-
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     ProductDAO productDAO = new ProductDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        processRequest(request, response);
+        String action = request.getParameter("action");
 
+        // Xử lý upload ảnh từ Summernote
+        if ("uploadImage".equals(action)) {
+            Part filePart = request.getPart("file"); // Summernote gửi file dưới tên "file"
+            if (filePart != null && filePart.getSize() > 0) {
+                if (!isValidImage(filePart)) {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{ \"error\": \"Invalid image format\" }");
+                    return;
+                }
+
+                String imageUrl = saveImage(filePart, request);
+                if (imageUrl != null) {
+                    response.setContentType("application/json");
+                    String fullUrl = request.getContextPath() + "/" + imageUrl;
+                    response.getWriter().write("{ \"url\": \"" + fullUrl + "\" }"); // Summernote chỉ cần "url"
+                } else {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{ \"error\": \"Upload failed\" }");
+                }
+            } else {
+                response.setContentType("application/json");
+                response.getWriter().write("{ \"error\": \"No file uploaded\" }");
+            }
+            return;
+        }
+
+        // Xử lý thêm sản phẩm
         try {
-            // Lấy dữ liệu từ form
             String title = request.getParameter("title");
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
             String description = request.getParameter("description");
@@ -124,15 +112,12 @@ public class AddProductServlet extends HttpServlet {
             String comboGroupId = null;
 
             if (isCombo) {
-                // Nếu là combo, tạo comboGroupId mới
                 int newComboGroupId = productDAO.getMaxComboGroupId() + 1;
                 comboGroupId = String.valueOf(newComboGroupId);
             } else {
-                // Nếu không phải combo, lấy comboGroupId được chọn
                 comboGroupId = request.getParameter("comboGroupId");
             }
 
-            // Kiểm tra đuôi file
             for (Part part : request.getParts()) {
                 if ((part.getName().equals("subImages") || part.getName().equals("thumbnail")) && part.getSize() > 0) {
                     if (!isValidImage(part)) {
@@ -142,12 +127,9 @@ public class AddProductServlet extends HttpServlet {
                 }
             }
 
-            //Xử lý ảnh chính (thumbnail)
             Part thumbnailPart = request.getPart("thumbnail");
             String thumbnail = saveImage(thumbnailPart, request);
-//            System.out.println("Dòng 126 AddProductServlet: kiểm tra thumbnail: " + thumbnail);
 
-            //Xử lý ảnh phụ (tối đa 5 ảnh)
             List<String> subImages = new ArrayList<>();
             for (Part part : request.getParts()) {
                 if (part.getName().equals("subImages") && part.getSize() > 0) {
@@ -156,11 +138,8 @@ public class AddProductServlet extends HttpServlet {
                         subImages.add(imageUrl);
                     }
                 }
-//                System.out.println("Dòng 137 AddProductServlet: kiểm tra Part: " + part.getName());
             }
-//            System.out.println("Dòng 139 AddProductServlet: kiểm tra subImages" + subImages.toString());
 
-            //Tạo đối tượng sản phẩm
             Product product = new Product();
             product.setTitle(title);
             product.setCategoryId(categoryId);
@@ -170,9 +149,7 @@ public class AddProductServlet extends HttpServlet {
             product.setThumbnail(thumbnail);
             product.setIsCombo(isCombo);
             product.setComboGroupId(comboGroupId != null && !comboGroupId.isEmpty() ? Integer.parseInt(comboGroupId) : 0);
-//            product.setStatus(status);
 
-            //Thêm sản phẩm vào database
             if (productDAO.addProduct(product, subImages)) {
                 response.sendRedirect("productlist?alert=SSA");
             } else {
@@ -182,32 +159,29 @@ public class AddProductServlet extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect("addproduct?alert=ERR");
         }
-
     }
 
-    // Hàm lưu ảnh vào thư mục uploads/productImages
     private String saveImage(Part part, HttpServletRequest request) {
         try {
             String oldFName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
             String fileExtension = oldFName.substring(oldFName.lastIndexOf("."));
-            String fileName = "img_" + System.currentTimeMillis() + fileExtension; // Tạo tên file mới
-            String uploadDir = request.getServletContext().getRealPath("/uploads/productImages"); // Đường dẫn thư mục
+            String fileName = "img_" + System.currentTimeMillis() + fileExtension;
+            String uploadDir = request.getServletContext().getRealPath("/uploads/productImages");
 
             File uploadFolder = new File(uploadDir);
             if (!uploadFolder.exists()) {
-                uploadFolder.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+                uploadFolder.mkdirs();
             }
 
             String filePath = uploadDir + File.separator + fileName;
-            part.write(filePath); // Lưu ảnh vào thư mục trên server
-            return "uploads/productImages/" + fileName; // Trả về đường dẫn ảnh
+            part.write(filePath);
+            return "uploads/productImages/" + fileName;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    //Hàm kiểm tra đuôi file
     private boolean isValidImage(Part part) {
         String contentType = part.getContentType();
         return contentType.equals("image/jpeg")
@@ -217,14 +191,8 @@ public class AddProductServlet extends HttpServlet {
                 || contentType.equals("image/webp");
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }
