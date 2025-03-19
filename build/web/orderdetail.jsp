@@ -330,19 +330,19 @@
                 <div class="card-body">
                     <div class="horizontal-timeline">
                         <!-- Định nghĩa các bước trong timeline -->
-                        <c:set var="steps" value="created,pending,shipped,waiting,completed" />
+                        <c:set var="steps" value="pending,processing,shipped,completed" />
                         <c:set var="stepsArray" value="${fn:split(steps, ',')}" />
                         <c:set var="currentStepIndex" value="0" />
-
+                        <c:set var="isCancelled" value="${order.status eq 'cancelled'}" />
                         <!-- Xác định bước hiện tại dựa trên trạng thái đơn hàng -->
                         <c:choose>
                             <c:when test="${order.status eq 'pending'}">
                                 <c:set var="currentStepIndex" value="1" />
                             </c:when>
-                            <c:when test="${order.status eq 'shipped'}">
+                            <c:when test="${order.status eq 'processing'}">
                                 <c:set var="currentStepIndex" value="2" />
                             </c:when>
-                            <c:when test="${order.status eq 'waiting'}">
+                            <c:when test="${order.status eq 'shipped'}">
                                 <c:set var="currentStepIndex" value="3" />
                             </c:when>
                             <c:when test="${order.status eq 'completed'}">
@@ -369,7 +369,7 @@
                             <div class="timeline-icon">
                                 <i class="fas fa-dollar-sign"></i>
                             </div>
-                            <div class="timeline-text">Đơn Hàng Đã Xác Nhận</div>
+                            <div class="timeline-text">Chờ xác nhận</div>
                             <div class="timeline-date">
                                 <c:forEach items="${orderHistory}" var="history">
                                     <c:if test="${history.status eq 'pending'}">
@@ -384,10 +384,10 @@
                             <div class="timeline-icon">
                                 <i class="fas fa-truck"></i>
                             </div>
-                            <div class="timeline-text">Đã Giao Cho ĐVVC</div>
+                            <div class="timeline-text">Đã xác nhận</div>
                             <div class="timeline-date">
                                 <c:forEach items="${orderHistory}" var="history">
-                                    <c:if test="${history.status eq 'shipped'}">
+                                    <c:if test="${history.status eq 'processing'}">
                                         <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
                                     </c:if>
                                 </c:forEach>
@@ -402,7 +402,7 @@
                             <div class="timeline-text">Chờ Giao Hàng</div>
                             <div class="timeline-date">
                                 <c:forEach items="${orderHistory}" var="history">
-                                    <c:if test="${history.status eq 'waiting'}">
+                                    <c:if test="${history.status eq 'shipped'}">
                                         <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
                                     </c:if>
                                 </c:forEach>
@@ -534,11 +534,15 @@
                             </div>
 
                             <!-- Nút hành động -->
-                            <c:if test="${order.status eq 'pending' && order.paymentStatus eq 'pending' && order.paymentMethod eq 'bank_transfer'}">
+                            <c:if test="${order.status eq 'pending' && order.paymentStatus eq 'pending' && (order.paymentMethod eq 'bank_transfer' || order.paymentMethod eq 'cod')}">
                                 <div class="action-buttons">
-                                    <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
-                                        <i class="fas fa-money-check-alt"></i> Thanh toán lại
-                                    </a>
+                                    <!-- Nút "Thanh toán lại" chỉ hiển thị cho bank_transfer -->
+                                    <c:if test="${order.paymentMethod eq 'bank_transfer'}">
+                                        <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
+                                            <i class="fas fa-money-check-alt"></i> Thanh toán lại
+                                        </a>
+                                    </c:if>
+                                    <!-- Nút "Hủy đơn hàng" hiển thị cho cả bank_transfer và cod -->
                                     <a href="orderdetail?action=cancel&id=${order.id}" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
                                         <i class="fas fa-times"></i> Hủy đơn hàng
                                     </a>
@@ -650,14 +654,14 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                        // Ẩn thông báo sau 5 giây
-                                        window.setTimeout(function () {
-                                            var alerts = document.querySelectorAll('.alert');
-                                            alerts.forEach(function (alert) {
-                                                var bsAlert = new bootstrap.Alert(alert);
-                                                bsAlert.close();
-                                            });
-                                        }, 5000);
+            // Ẩn thông báo sau 5 giây
+            window.setTimeout(function () {
+                var alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function (alert) {
+                    var bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
         </script>
     </body>
 </html>
