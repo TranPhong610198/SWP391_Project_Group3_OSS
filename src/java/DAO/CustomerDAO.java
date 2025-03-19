@@ -130,7 +130,7 @@ public class CustomerDAO extends DBContext {
     public boolean addCustomer(Customer customer) {
         String sql = "INSERT INTO customer_contact_history (user_id, customer_type, email, full_name, gender, " +
                     "mobile, address, total_purchases, total_spend, updated_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
         
         try {
             PreparedStatement st = connection.prepareStatement(sql);
