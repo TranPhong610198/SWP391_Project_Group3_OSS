@@ -267,7 +267,7 @@
                 font-style: italic;
             }
 
-            .feedback-rating {
+/*            .feedback-rating {
                 position: absolute;
                 top: 15px;
                 right: 15px;
@@ -276,7 +276,7 @@
 
             .feedback-rating i {
                 margin-left: 2px;
-            }
+            }*/
 
             /* Lightbox styles */
             .lightbox-modal {
@@ -542,7 +542,7 @@
                                             </div>
                                         </div>
                                         <div class="reply-actions">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="editReply(${reply.id}, '${reply.comment}')">
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="editReply(${reply.id})">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </button>
                                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal${reply.id}">
@@ -552,11 +552,13 @@
                                         <div class="reply-content" id="reply-comment-${reply.id}">
                                             ${reply.comment}
                                         </div>
-                                        
+
                                         <form action="feedbackreply" method="POST" id="edit-form-${reply.id}" class="edit-form" style="display: none;">
                                             <input type="hidden" name="action" value="updateReply">
                                             <input type="hidden" name="feedbackId" value="${feedback.id}">
                                             <input type="hidden" name="replyId" value="${reply.id}">
+                                            <input type="hidden" name="returnUrl" value="${returnUrl}"> <!-- Gửi returnUrl -->
+                                            <input type="hidden" name="productId" value="${productId}"> <!-- Gửi productId nếu có -->
                                             <div class="form-group">
                                                 <textarea name="comment" class="form-control" rows="3" required>${reply.comment}</textarea>
                                             </div>
@@ -566,7 +568,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                    
+
                                     <!-- Delete Modal -->
                                     <div class="modal fade" id="deleteModal${reply.id}" tabindex="-1" aria-labelledby="deleteModalLabel${reply.id}" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -584,6 +586,8 @@
                                                         <input type="hidden" name="action" value="deleteReply">
                                                         <input type="hidden" name="feedbackId" value="${feedback.id}">
                                                         <input type="hidden" name="replyId" value="${reply.id}">
+                                                        <input type="hidden" name="returnUrl" value="${returnUrl}"> <!-- Gửi returnUrl -->
+                                                        <input type="hidden" name="productId" value="${productId}"> <!-- Gửi productId nếu có -->
                                                         <button type="submit" class="btn btn-danger">Xóa</button>
                                                     </form>
                                                 </div>
@@ -609,14 +613,30 @@
                     <div class="card-body">
                         <form action="feedbackreply" method="POST" class="new-reply-form">
                             <input type="hidden" name="feedbackId" value="${feedback.id}">
+                            <input type="hidden" name="returnUrl" value="${returnUrl}"> <!-- Gửi returnUrl -->
+                            <input type="hidden" name="productId" value="${productId}"> <!-- Gửi productId nếu có -->
                             <div class="mb-3">
                                 <label for="comment" class="form-label">Nội dung phản hồi</label>
                                 <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
                             </div>
                             <div class="form-buttons">
-                                <a href="feedbackdetail?productId=${feedback.productId}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                </a>
+                                <c:choose>
+                                    <c:when test="${returnUrl == 'feedbackdetail' && not empty productId}">
+                                        <a href="feedbackdetail?productId=${productId}" class="btn btn-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                        </a>
+                                    </c:when>
+                                    <c:when test="${returnUrl == 'feedbackall'}">
+                                        <a href="feedbackall" class="btn btn-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="feedbackall" class="btn btn-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-reply me-2"></i>Gửi phản hồi
                                 </button>
@@ -624,8 +644,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
-        </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

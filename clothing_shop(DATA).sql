@@ -1404,23 +1404,23 @@ INSERT INTO feedback (id, order_item_id, user_id, rating, comment, status, creat
 VALUES 
 -- Sản phẩm 1 (5 feedback)
 (1, 1, 2, 5, N'Chất vải mềm, thiết kế đẹp. Rất đáng tiền, rất thoáng mát. Đẹp hơn mong đợi. Quá tuyệt vời!', N'approved', GETDATE(), GETDATE()),
-(2, 1, 3, 4, N'Rất đáng tiền.', N'approved', GETDATE(), GETDATE()),
+(2, 1, 4, 4, N'Rất đáng tiền.', N'approved', GETDATE(), GETDATE()),
 (3, 1, 4, 3, N'Áo rất thoáng mát.', N'approved', GETDATE(), GETDATE()),
-(4, 1, 5, 3, N'Đẹp hơn mong đợi.', N'approved', GETDATE(), GETDATE()),
+(4, 1, 6, 3, N'Đẹp hơn mong đợi.', N'approved', GETDATE(), GETDATE()),
 (5, 1, 6, 2, N'Tốt nhưng giao hơi chậm.', N'approved', GETDATE(), GETDATE()),
 
 -- Sản phẩm 2 (5 feedback)
 (6, 2, 2, 3, N'Quần chất lượng tốt.', N'approved', GETDATE(), GETDATE()),
-(7, 2, 3, 4, N'Đáng giá từng xu.', N'approved', GETDATE(), GETDATE()),
+(7, 2, 4, 4, N'Đáng giá từng xu.', N'approved', GETDATE(), GETDATE()),
 (8, 2, 4, 2, N'Chất lượng tạm ổn.', N'approved', GETDATE(), GETDATE()),
-(9, 2, 5, 5, N'Quá tuyệt vời!', N'approved', GETDATE(), GETDATE()),
+(9, 2, 7, 5, N'Quá tuyệt vời!', N'approved', GETDATE(), GETDATE()),
 (10, 2, 6, 1, N'Form hơi rộng.', N'approved', GETDATE(), GETDATE()),
 
 -- 2 sản phẩm có 3 feedback mỗi sản phẩm
 (11, 3, 2, 5, N'Chân váy rất đẹp.', N'approved', GETDATE(), GETDATE()),
-(12, 3, 3, 3, N'Chất lượng khá ổn.', N'approved', GETDATE(), GETDATE()),
+(12, 3, 4, 3, N'Chất lượng khá ổn.', N'approved', GETDATE(), GETDATE()),
 (13, 3, 4, 4, N'Váy rất nữ tính.', N'approved', GETDATE(), GETDATE()),
-(14, 4, 5, 5, N'Rất hợp thời trang.', N'approved', GETDATE(), GETDATE()),
+(14, 4, 8, 5, N'Rất hợp thời trang.', N'approved', GETDATE(), GETDATE()),
 (15, 4, 6, 1, N'Giao hàng quá chậm.', N'approved', GETDATE(), GETDATE()),
 (16, 4, 7, 2, N'Chỉ ở mức tạm ổn!', N'approved', GETDATE(), GETDATE()),
 
@@ -1447,16 +1447,16 @@ SET IDENTITY_INSERT feedback_images OFF;
 SET IDENTITY_INSERT feedback_reply ON;
 INSERT INTO feedback_reply (id, feedback_id, user_id, comment, created_at, updated_at)
 VALUES 
-(1, 1, 2, N'Cảm ơn bạn đã mua hàng!', GETDATE(), GETDATE()),
-(2, 2, 2, N'Rất vui vì bạn hài lòng.', GETDATE(), GETDATE()),
+(1, 1, 3, N'Cảm ơn bạn đã mua hàng!', GETDATE(), GETDATE()),
+(2, 2, 3, N'Rất vui vì bạn hài lòng.', GETDATE(), GETDATE()),
 (3, 3, 3, N'Cảm ơn phản hồi của bạn.', GETDATE(), GETDATE()),
-(4, 4, 4, N'Mong bạn sẽ tiếp tục ủng hộ!', GETDATE(), GETDATE()),
-(5, 5, 5, N'Chúng tôi sẽ tiếp tục cải thiện.', GETDATE(), GETDATE()),
-(6, 6, 6, N'Cảm ơn bạn đã tin tưởng.', GETDATE(), GETDATE()),
-(7, 7, 7, N'Chúng tôi sẽ cập nhật thêm mẫu mới.', GETDATE(), GETDATE()),
-(8, 8, 8, N'Rất vui khi bạn thích sản phẩm!', GETDATE(), GETDATE()),
-(9, 9, 9, N'Cảm ơn bạn đã góp ý.', GETDATE(), GETDATE()),
-(10, 10, 10, N'Chúng tôi rất trân trọng phản hồi của bạn.', GETDATE(), GETDATE());
+(4, 4, 3, N'Mong bạn sẽ tiếp tục ủng hộ!', GETDATE(), GETDATE()),
+(5, 5, 3, N'Chúng tôi sẽ tiếp tục cải thiện.', GETDATE(), GETDATE()),
+(6, 6, 3, N'Cảm ơn bạn đã tin tưởng.', GETDATE(), GETDATE()),
+(7, 7, 3, N'Chúng tôi sẽ cập nhật thêm mẫu mới.', GETDATE(), GETDATE()),
+(8, 8, 3, N'Rất vui khi bạn thích sản phẩm!', GETDATE(), GETDATE()),
+(9, 9, 3, N'Cảm ơn bạn đã góp ý.', GETDATE(), GETDATE()),
+(10, 10, 3, N'Chúng tôi rất trân trọng phản hồi của bạn.', GETDATE(), GETDATE());
 SET IDENTITY_INSERT feedback_reply OFF;
 
 SET IDENTITY_INSERT customer_contact_history ON;

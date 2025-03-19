@@ -454,7 +454,7 @@
                                                     <button type="button" class="btn btn-outline-danger btn-sm ms-1" title="Xóa feedback" data-bs-toggle="modal" data-bs-target="#deleteModal${feedback.id}">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
-                                                    <a href="feedbackreply?feedbackId=${feedback.id}" class="btn btn-outline-primary btn-sm ms-1" title="Phản hồi">
+                                                    <a href="feedbackreply?feedbackId=${feedback.id}&returnUrl=feedbackall" class="btn btn-outline-primary btn-sm ms-1" title="Phản hồi">
                                                         <i class="fas fa-reply"></i>
                                                     </a>
                                                 </td>
