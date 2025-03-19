@@ -215,7 +215,7 @@
                 border-radius: 50px;
             }
             
-                        select[name="status"] {
+            select[name="status"] {
                 width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của container */
                 padding: 5px; /* Tăng khoảng cách bên trong */
                 border: 1px solid var(--border-color); /* Đồng bộ với màu viền */
@@ -234,7 +234,8 @@
                 outline: none; /* Loại bỏ viền mặc định khi focus */
                 border-color: var(--accent-color); /* Đổi màu viền khi focus */
                 box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Hiệu ứng ánh sáng viền */
-            }            select[name="status"] {
+            }            
+            select[name="status"] {
                 width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của container */
                 padding: 5px; /* Tăng khoảng cách bên trong */
                 border: 1px solid var(--border-color); /* Đồng bộ với màu viền */
@@ -378,10 +379,39 @@
                                 <thead>
                                     <tr class="bg-light">
                                         <th class="text-center" style="width: 60px;">STT</th>
-                                        <th>Người dùng</th>
-                                        <th>Đánh giá</th>
+                                        <th>
+                                            <a href="feedbackdetail?productId=${productId}&searchKeywordfeedbackdetail?productId=${productId}&searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=username&sortOrder=${sortField == 'username' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Tài khoản
+                                                <span class="sort-icons">
+                                                    ${sortField == 'username' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="feedbackdetail?productId=${productId}&searchKeywordfeedbackdetail?productId=${productId}&searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=rating&sortOrder=${sortField == 'rating' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Đánh giá
+                                                <span class="sort-icons">
+                                                    ${sortField == 'rating' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th>Nội dung</th>
-                                        <th>Trạng thái</th>
+                                        <th>
+                                        <a href="feedbackdetail?productId=${productId}&searchKeywordfeedbackdetail?productId=${productId}&searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=created_at&sortOrder=${sortField == 'created_at' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            Ngày tạo
+                                            <span class="sort-icons">
+                                                ${sortField == 'created_at' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>
+                                        <th>
+                                            <a href="feedbackdetail?productId=${productId}&searchKeywordfeedbackdetail?productId=${productId}&searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=status&sortOrder=${sortField == 'status' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Trạng thái
+                                                <span class="sort-icons">
+                                                    ${sortField == 'status' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
                                         <th class="text-center">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -394,6 +424,11 @@
                                                     <td>${feedback.userName}</td>
                                                     <td>${feedback.rating} sao</td>
                                                     <td>${feedback.comment}</td>
+                                                    <td class="time-display">
+                                                    <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy" />
+                                                    <br/>
+                                                    <fmt:formatDate value="${feedback.createdAt}" pattern="HH:mm:ss" />
+                                                </td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${feedback.status == 'approved'}">

@@ -6,7 +6,6 @@ package DAO;
 
 import Context.DBContext;
 import entity.Feedback;
-import entity.FeedbackImage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,8 +81,8 @@ public class FeedbackDAO extends DBContext {
                 feedback.setRating(rs.getInt("rating"));
                 feedback.setComment(rs.getString("comment"));
                 feedback.setStatus(rs.getString("status"));
-                feedback.setCreatedAt(rs.getDate("created_at"));
-                feedback.setUpdatedAt(rs.getDate("updated_at"));
+                feedback.setCreatedAt(rs.getTimestamp("created_at"));
+                feedback.setUpdatedAt(rs.getTimestamp("updated_at"));
                 feedback.setUserFullName(rs.getString("full_name"));
                 feedback.setUserName(rs.getString("username"));
                 feedback.setProductTitle(rs.getString("title"));
@@ -161,13 +160,13 @@ public class FeedbackDAO extends DBContext {
                 feedback.setRating(rs.getInt("rating"));
                 feedback.setComment(rs.getString("comment"));
                 feedback.setStatus(rs.getString("status"));
-                feedback.setCreatedAt(rs.getDate("created_at"));
-                feedback.setUpdatedAt(rs.getDate("updated_at"));
+                feedback.setCreatedAt(rs.getTimestamp("created_at"));
+                feedback.setUpdatedAt(rs.getTimestamp("updated_at"));
                 feedback.setUserFullName(rs.getString("full_name"));
                 feedback.setUserName(rs.getString("username"));
                 feedback.setProductTitle(rs.getString("title"));
                 feedback.setProductThumbnail(rs.getString("thumbnail"));
-                feedback.setProductId(rs.getInt("product_id")); 
+                feedback.setProductId(rs.getInt("product_id"));
                 return feedback;
             }
         } catch (SQLException e) {
@@ -189,10 +188,155 @@ public class FeedbackDAO extends DBContext {
         }
     }
 
-/*--------- Không in sản phẩm trùng lặp ----------*/
-/*--------- Không in sản phẩm trùng lặp ----------*/
-/*--------- Không in sản phẩm trùng lặp ----------*/
-/*--------- Không in sản phẩm trùng lặp ----------*/
+    /*--------- cho feedbackdetail có gửi productId  ----------*/
+ /*--------- --------------------------- ----------*/
+ /*--------- --------------------------- ----------*/
+    public List<Feedback> getFeedbacksByProduct(String searchKeyword, String filterRating, String filterStatus,
+            String sortField, String sortOrder, int productId, int page, int recordsPerPage) {
+        List<Feedback> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT f.*, u.full_name, u.username, p.title, p.thumbnail, oi.product_id ");
+        sql.append("FROM feedback f ");
+        sql.append("JOIN users u ON f.user_id = u.id ");
+        sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
+        sql.append("JOIN products p ON oi.product_id = p.id ");
+        sql.append("WHERE 1=1");
+
+        // Điều kiện tìm kiếm và lọc
+        if (productId > 0) {
+            sql.append(" AND p.id = ?");
+        }
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            sql.append(" AND (f.comment LIKE ? OR u.username LIKE ?)");
+        }
+        if (filterRating != null && !filterRating.isEmpty()) {
+            sql.append(" AND f.rating = ?");
+        }
+        if (filterStatus != null && !filterStatus.isEmpty()) {
+            sql.append(" AND f.status = ?");
+        }
+
+        // Sắp xếp với bí danh rõ ràng
+        if (sortField != null && !sortField.isEmpty()) {
+            String orderColumn;
+            switch (sortField) {
+                case "username":
+                    orderColumn = "u.username";
+                    break;
+                case "rating":
+                    orderColumn = "f.rating";
+                    break;
+                case "created_at":
+                    orderColumn = "f.created_at";
+                    break;
+                case "status":
+                    orderColumn = "f.status";
+                    break;
+                default:
+                    orderColumn = "f.created_at"; // Mặc định
+            }
+            sql.append(" ORDER BY ").append(orderColumn)
+                    .append(" ").append(sortOrder.equals("desc") ? "DESC" : "ASC");
+        } else {
+            sql.append(" ORDER BY f.created_at DESC");
+        }
+
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (productId > 0) {
+                ps.setInt(paramIndex++, productId);
+            }
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
+            if (filterRating != null && !filterRating.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(filterRating));
+            }
+            if (filterStatus != null && !filterStatus.isEmpty()) {
+                ps.setString(paramIndex++, filterStatus);
+            }
+
+            ps.setInt(paramIndex++, (page - 1) * recordsPerPage);
+            ps.setInt(paramIndex++, recordsPerPage);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setId(rs.getInt("id"));
+                feedback.setOrderItemId(rs.getInt("order_item_id"));
+                feedback.setUserId(rs.getInt("user_id"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setComment(rs.getString("comment"));
+                feedback.setStatus(rs.getString("status"));
+                feedback.setCreatedAt(rs.getTimestamp("created_at"));
+                feedback.setUpdatedAt(rs.getTimestamp("updated_at"));
+                feedback.setUserFullName(rs.getString("full_name"));
+                feedback.setUserName(rs.getString("username"));
+                feedback.setProductTitle(rs.getString("title"));
+                feedback.setProductThumbnail(rs.getString("thumbnail"));
+                feedback.setProductId(rs.getInt("product_id"));
+                list.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int getTotalFeedbacksByProduct(String searchKeyword, String filterRating, String filterStatus, int productId) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM feedback f ");
+        sql.append("JOIN users u ON f.user_id = u.id ");
+        sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
+        sql.append("JOIN products p ON oi.product_id = p.id ");
+        sql.append("WHERE 1=1");
+
+        if (productId > 0) {
+            sql.append(" AND p.id = ?");
+        }
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            sql.append(" AND (f.comment LIKE ? OR u.username LIKE ?)");
+        }
+        if (filterRating != null && !filterRating.isEmpty()) {
+            sql.append(" AND f.rating = ?");
+        }
+        if (filterStatus != null && !filterStatus.isEmpty()) {
+            sql.append(" AND f.status = ?");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (productId > 0) {
+                ps.setInt(paramIndex++, productId);
+            }
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
+            if (filterRating != null && !filterRating.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(filterRating));
+            }
+            if (filterStatus != null && !filterStatus.isEmpty()) {
+                ps.setString(paramIndex++, filterStatus);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
+ /*--------- Không in sản phẩm trùng lặp ----------*/
     public List<Feedback> getFeedbacksGroupedByProduct(String searchKeyword, String filterRating,
             String sortField, String sortOrder, int page, int recordsPerPage) {
         List<Feedback> list = new ArrayList<>();

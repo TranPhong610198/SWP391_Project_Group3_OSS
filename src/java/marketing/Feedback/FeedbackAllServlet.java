@@ -6,9 +6,7 @@ package marketing.Feedback;
 
 import DAO.FeedbackDAO;
 import entity.Feedback;
-import entity.FeedbackImage;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,33 +21,6 @@ import java.util.List;
 @WebServlet(name = "FeedbackAllServlet", urlPatterns = {"/marketing/feedbackall"})
 public class FeedbackAllServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet FeedbackAllServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet FeedbackAllServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -68,7 +39,13 @@ public class FeedbackAllServlet extends HttpServlet {
         String sortOrder = request.getParameter("sortOrder");
         String pageStr = request.getParameter("page");
 
-        int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
+        // Mặc định sắp xếp theo created_at giảm dần nếu không có sortField
+        if (sortField == null || sortField.isEmpty()) {
+            sortField = "created_at";
+            sortOrder = "desc";
+        }
+
+        int page = (pageStr == null || pageStr.isEmpty()) ? 1 : Integer.parseInt(pageStr);
         int recordsPerPage = 10;
 
         FeedbackDAO feedbackDAO = new FeedbackDAO();
@@ -76,13 +53,6 @@ public class FeedbackAllServlet extends HttpServlet {
                 sortField, sortOrder, 0, page, recordsPerPage);
         int totalRecords = feedbackDAO.getTotalFeedbacks(searchKeyword, filterRating, filterStatus, 0);
         int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
-
-        // Lấy danh sách hình ảnh feedback
-//        FeedbackImageDAO imageDAO = new FeedbackImageDAO();
-//        for (Feedback feedback : feedbackList) {
-//            List<FeedbackImage> images = imageDAO.getImagesByFeedbackId(feedback.getId());
-//            request.setAttribute("images_" + feedback.getId(), images);
-//        }
 
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("searchKeyword", searchKeyword);
@@ -148,7 +118,6 @@ public class FeedbackAllServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet to handle all feedback operations";
+    }
 }

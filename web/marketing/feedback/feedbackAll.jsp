@@ -16,248 +16,225 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-            :root {
-                --primary-color: #2c3e50;
-                --secondary-color: #34495e;
-                --accent-color: #3498db;
-                --light-color: #ecf0f1;
-                --border-color: #dee2e6;
-                --hover-color: #f8f9fa;
-                --danger-color: #e74c3c;
-                --success-color: #2ecc71;
-                --warning-color: #f39c12;
-            }
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --border-color: #dee2e6;
+            --hover-color: #f8f9fa;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
 
-            body {
-                background-color: #f8f9fa;
-            }
+        body {
+            background-color: #f8f9fa;
+        }
 
-            .sort-link {
-                text-decoration: none;
-                color: var(--primary-color);
-                font-weight: 600;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
+        .sort-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-            .sort-link:hover {
-                color: var(--accent-color);
-            }
+        .sort-link:hover {
+            color: var(--accent-color);
+        }
 
-            .sort-icons {
-                margin-left: 5px;
-            }
+        .sort-icons {
+            margin-left: 5px;
+        }
 
-            /* Main content styles */
+        .main-content {
+            margin-left: 250px;
+            transition: all 0.3s;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            font-weight: 600;
+            border-top: none;
+            background-color: rgba(52, 152, 219, 0.05);
+            vertical-align: middle;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .action-btn {
+            padding: 5px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-view {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .search-box {
+            border-radius: 50px;
+            padding-left: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-btn {
+            border-radius: 50px;
+            padding: 8px 20px;
+        }
+
+        .filter-card {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+        }
+
+        .empty-state {
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .badge-status {
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 50px;
+        }
+
+        .badge-active {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .badge-expired {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .badge-discount-type {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: var(--accent-color);
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            z-index: 1001;
+            display: none;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .pagination .page-item .page-link {
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .pagination .page-item .page-link:hover {
+            background-color: var(--hover-color);
+        }
+
+        select[name="status"] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            font-size: 14px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        select[name="status"]:hover {
+            background-color: var(--hover-color);
+        }
+
+        select[name="status"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        @media (max-width: 768px) {
             .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
                 margin-left: 250px;
-                transition: all 0.3s;
-                padding: 20px;
-                min-height: 100vh;
             }
-
-            .card {
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                border: 1px solid var(--border-color);
-                margin-bottom: 20px;
-            }
-
-            .card-header {
-                background-color: #fff;
-                border-bottom: 1px solid var(--border-color);
-                padding: 15px 20px;
-                font-weight: 600;
-            }
-
-            .table {
-                margin-bottom: 0;
-            }
-
-            .table th {
-                font-weight: 600;
-                border-top: none;
-                background-color: rgba(52, 152, 219, 0.05);
-                vertical-align: middle;
-            }
-
-            .table td {
-                vertical-align: middle;
-            }
-
-            .table tbody tr:hover {
-                background-color: var(--hover-color);
-            }
-
-            .action-btn {
-                padding: 5px 15px;
-                border-radius: 4px;
-                transition: all 0.3s;
-            }
-
-            .action-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
-
-            .btn-view {
-                background-color: var(--accent-color);
-                color: white;
-            }
-
-            .btn-view:hover {
-                background-color: #2980b9;
-                color: white;
-            }
-
-            .search-box {
-                border-radius: 50px;
-                padding-left: 15px;
-                border: 1px solid var(--border-color);
-            }
-
-            .search-btn {
-                border-radius: 50px;
-                padding: 8px 20px;
-            }
-
-            .filter-card {
-                background-color: white;
-                border-radius: 8px;
-                margin-bottom: 20px;
-            }
-
-            .page-title {
-                color: var(--primary-color);
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid var(--accent-color);
-                display: inline-block;
-            }
-
-            .empty-state {
-                padding: 40px;
-                text-align: center;
-                color: #6c757d;
-            }
-
-            /* Badge Styles */
-            .badge-status {
-                font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
-            }
-
-            .badge-active {
-                background-color: var(--success-color);
-                color: white;
-            }
-
-            .badge-expired {
-                background-color: var(--danger-color);
-                color: white;
-            }
-
-            .badge-discount-type {
-                background-color: rgba(52, 152, 219, 0.2);
-                color: var(--accent-color);
-                font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
-                white-space: nowrap;
-            }
-
-            /* Toggle button */
             .sidebar-toggle {
-                position: fixed;
-                left: 10px;
-                top: 10px;
-                z-index: 1001;
-                display: none;
-                border-radius: 50%;
-                width: 42px;
-                height: 42px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                display: block;
             }
+        }
 
-            /* Pagination styling */
-            .pagination .page-item .page-link {
-                color: var(--primary-color);
-                border: 1px solid var(--border-color);
-                min-width: 40px;
-                text-align: center;
+        @media (max-width: 768px) {
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
             }
-
-            .pagination .page-item.active .page-link {
-                background-color: var(--accent-color);
-                border-color: var(--accent-color);
-                color: white;
-            }
-
-            .pagination .page-item .page-link:hover {
-                background-color: var(--hover-color);
-            }
-
-            .badge-vip {
-                background-color: #ffd700; /* Màu vàng kim cho VIP */
-                color: #2c3e50; /* Màu chữ tối để tương phản */
-                font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
-            }
-
-            .badge-normal {
-                background-color: #6c757d; /* Màu xám cho Normal */
-                color: white; /* Màu chữ trắng để tương phản */
-                font-weight: 600;
-                padding: 5px 10px;
-                border-radius: 50px;
-            }
-            
-            select[name="status"] {
-                width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của container */
-                padding: 5px; /* Tăng khoảng cách bên trong */
-                border: 1px solid var(--border-color); /* Đồng bộ với màu viền */
-                border-radius: 5px; /* Bo tròn góc */
-                background-color: var(--light-color); /* Màu nền nhẹ nhàng */
-                color: var(--primary-color); /* Màu chữ chính */
-                font-size: 14px; /* Kích thước chữ */
-                transition: all 0.3s ease-in-out; /* Hiệu ứng mượt khi hover hoặc focus */
-            }
-
-            select[name="status"]:hover {
-                background-color: var(--hover-color); /* Màu nền khi hover */
-            }
-
-            select[name="status"]:focus {
-                outline: none; /* Loại bỏ viền mặc định khi focus */
-                border-color: var(--accent-color); /* Đổi màu viền khi focus */
-                box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Hiệu ứng ánh sáng viền */
-            }
-
-
-            /* Responsive */
-            @media (max-width: 768px) {
-                .main-content {
-                    margin-left: 0;
-                }
-                .main-content.active {
-                    margin-left: 250px;
-                }
-                .sidebar-toggle {
-                    display: block;
-                }
-            }
-
-            /* Table responsiveness */
-            @media (max-width: 768px) {
-                .table-responsive {
-                    display: block;
-                    width: 100%;
-                    overflow-x: auto;
-                }
-            }
+        }
     </style>
 </head>
 <body>
@@ -268,7 +245,7 @@
 
     <div class="main-content">
         <div class="container-fluid p-4">
-            <!-- Thông báo thành công -->
+            <!-- Thông báo -->
             <c:if test="${param.success eq 'update'}">
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                     Cập nhật trạng thái phản hồi thành công!
@@ -281,7 +258,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </c:if>
-
             <c:if test="${param.success == 'delete_feedback'}">
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                     Xóa feedback thành công!
@@ -358,11 +334,47 @@
                             <thead>
                                 <tr class="bg-light">
                                     <th class="text-center" style="width: 60px;">STT</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Tài khoản</th>
-                                    <th>Đánh giá</th>
+                                    <th>
+                                        <a href="feedbackall?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=title&sortOrder=${sortField == 'title' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            Sản phẩm
+                                            <span class="sort-icons">
+                                                ${sortField == 'title' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="feedbackall?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=username&sortOrder=${sortField == 'username' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            Tài khoản
+                                            <span class="sort-icons">
+                                                ${sortField == 'username' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="feedbackall?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=rating&sortOrder=${sortField == 'rating' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            Đánh giá
+                                            <span class="sort-icons">
+                                                ${sortField == 'rating' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>
                                     <th>Nội dung</th>
-                                    <th>Trạng thái</th>
+                                    <th>
+                                        <a href="feedbackall?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=created_at&sortOrder=${sortField == 'created_at' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            Ngày tạo
+                                            <span class="sort-icons">
+                                                ${sortField == 'created_at' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="feedbackall?searchKeyword=${searchKeyword}&filterRating=${filterRating}&filterStatus=${filterStatus}&sortField=status&sortOrder=${sortField == 'status' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                            Trạng thái
+                                            <span class="sort-icons">
+                                                ${sortField == 'status' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>
                                     <th class="text-center">Thao tác</th>
                                 </tr>
                             </thead>
@@ -379,6 +391,11 @@
                                                 <td>${feedback.userName}</td>
                                                 <td>${feedback.rating} sao</td>
                                                 <td>${feedback.comment}</td>
+                                                <td class="time-display">
+                                                    <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy" />
+                                                    <br/>
+                                                    <fmt:formatDate value="${feedback.createdAt}" pattern="HH:mm:ss" />
+                                                </td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${feedback.status == 'approved'}">
@@ -413,29 +430,29 @@
                                                 </td>
                                             </tr>
                                             <!-- Delete Modal -->
-                                        <div class="modal fade" id="deleteModal${feedback.id}" tabindex="-1" aria-labelledby="deleteModalLabel${feedback.id}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel${feedback.id}">Xác nhận xóa</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Bạn có chắc chắn muốn xóa đánh giá này?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                        <form action="feedbackall" method="POST">
-                                                            <input type="hidden" name="action" value="deleteFeedback">
-                                                            <input type="hidden" name="id" value="${feedback.id}">
-                                                            <input type="hidden" name="productId" value="${feedback.productId}">
-                                                            <button type="submit" class="btn btn-danger">Xóa</button>
-                                                        </form>
+                                            <div class="modal fade" id="deleteModal${feedback.id}" tabindex="-1" aria-labelledby="deleteModalLabel${feedback.id}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deleteModalLabel${feedback.id}">Xác nhận xóa</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc chắn muốn xóa đánh giá này?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                            <form action="feedbackall" method="POST">
+                                                                <input type="hidden" name="action" value="deleteFeedback">
+                                                                <input type="hidden" name="id" value="${feedback.id}">
+                                                                <input type="hidden" name="productId" value="${feedback.productId}">
+                                                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </c:forEach>
+                                        </c:forEach>
                                     </c:when>
                                     <c:otherwise>
                                         <tr>
@@ -497,15 +514,15 @@
     <script>
         $(document).ready(function () {
             if ($('#successAlert').length) {
-                    setTimeout(function () {
-                        $('#successAlert').alert('close');
-                    }, 3000);
-                }
-                if ($('#errorAlert').length) {
-                    setTimeout(function () {
-                        $('#errorAlert').alert('close');
-                    }, 3000);
-                }
+                setTimeout(function () {
+                    $('#successAlert').alert('close');
+                }, 3000);
+            }
+            if ($('#errorAlert').length) {
+                setTimeout(function () {
+                    $('#errorAlert').alert('close');
+                }, 3000);
+            }
             
             $('.sidebar-toggle').on('click', function () {
                 $('.sidebar').toggleClass('active');

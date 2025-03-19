@@ -240,6 +240,141 @@
                 padding: 15px;
             }
 
+            /* Nội dung phản hồi - styling */
+            .feedback-content {
+                background-color: #f8f9fa;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 15px;
+                margin-top: 5px;
+                margin-bottom: 10px;
+                position: relative;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+
+            .feedback-content p {
+                margin-bottom: 0;
+                line-height: 1.6;
+                color: var(--secondary-color);
+            }
+
+            .feedback-timestamp {
+                display: block;
+                margin-top: 10px;
+                font-size: 0.85rem;
+                color: #6c757d;
+                text-align: right;
+                font-style: italic;
+            }
+
+            .feedback-rating {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                color: var(--warning-color);
+                font-weight: 600;
+            }
+
+            .feedback-rating i {
+                color: var(--warning-color);
+                margin-left: 2px;
+            }
+
+            /* Lightbox styles */
+            .lightbox-modal {
+                display: none;
+                position: fixed;
+                z-index: 1050;
+                padding-top: 50px;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.9);
+            }
+
+            .lightbox-content {
+                margin: auto;
+                display: block;
+                max-width: 90%;
+                max-height: 90%;
+                object-fit: contain;
+            }
+
+            .lightbox-close {
+                position: absolute;
+                top: 15px;
+                right: 35px;
+                color: #f1f1f1;
+                font-size: 40px;
+                font-weight: bold;
+                transition: 0.3s;
+                z-index: 1051;
+            }
+
+            .lightbox-close:hover,
+            .lightbox-close:focus {
+                color: #bbb;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            /* Caption styling */
+            .lightbox-caption {
+                margin: auto;
+                display: block;
+                width: 80%;
+                max-width: 700px;
+                text-align: center;
+                color: #ccc;
+                padding: 10px 0;
+                height: 150px;
+            }
+
+            /* Add animation */
+            .lightbox-content, .lightbox-caption {
+                animation-name: zoom;
+                animation-duration: 0.6s;
+            }
+
+            @keyframes zoom {
+                from {
+                    transform: scale(0.1)
+                }
+                to {
+                    transform: scale(1)
+                }
+            }
+
+            /* Navigation buttons */
+            .lightbox-prev,
+            .lightbox-next {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                width: auto;
+                padding: 16px;
+                margin-top: -50px;
+                color: white;
+                font-weight: bold;
+                font-size: 30px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+                background-color: rgba(0,0,0,0.3);
+            }
+
+            .lightbox-next {
+                right: 0;
+                border-radius: 3px 0 0 3px;
+            }
+
+            .lightbox-prev:hover,
+            .lightbox-next:hover {
+                background-color: rgba(0,0,0,0.8);
+            }
+
             /* Responsive */
             @media (max-width: 768px) {
                 .main-content {
@@ -324,12 +459,12 @@
                 </c:if>
 
                 <h2 class="page-title">
-                    <i class="fas fa-reply me-2"></i>Phản hồi phản hồi khách hàng
+                    <i class="fas fa-reply me-2"></i>Phản hồi khách hàng
                 </h2>
 
                 <div class="card">
                     <div class="card-header">
-                        <i class="fas fa-info-circle"></i>Thông tin phản hồi
+                        <i class="fas fa-info-circle"></i>Thông tin phản hồi 
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -337,8 +472,16 @@
                                 <p><strong>Sản phẩm:</strong> ${feedback.productTitle}</p>
                                 <p><strong>Tài khoản:</strong> ${feedback.userName}</p>
                                 <p><strong>Tên người dùng:</strong> ${feedback.userFullName}</p>
-                                <p><strong>Đánh giá:</strong> ${feedback.rating} sao</p>
-                                <p><strong>Nội dung:</strong> ${feedback.comment}</p>
+                                <p><strong>Nội dung:</strong></p>
+                                <div class="feedback-content">
+                                    <div class="feedback-rating">
+                                        ${feedback.rating} <i class="fas fa-star"></i>
+                                    </div>
+                                    <p>${feedback.comment}</p>
+                                    <span class="feedback-timestamp">
+                                        <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                    </span>
+                                </div>
                                 <p><strong>Trạng thái:</strong>
                                     <c:choose>
                                         <c:when test="${feedback.status == 'approved'}">
@@ -358,8 +501,9 @@
                                 <div class="feedback-images">
                                     <c:choose>
                                         <c:when test="${not empty feedbackImages}">
-                                            <c:forEach items="${feedbackImages}" var="image">
-                                                <img src="${image}" alt="Feedback Image" class="img-thumbnail">
+                                            <c:forEach items="${feedbackImages}" var="image" varStatus="status">
+                                                <img src="${image}" alt="Feedback Image ${status.index + 1}" class="img-thumbnail feedback-image" 
+                                                     onclick="openLightbox('${image}', ${status.index}, 'Feedback Image ${status.index + 1}')">
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
@@ -514,6 +658,99 @@
                 document.getElementById('reply-comment-' + replyId).style.display = 'block';
                 document.getElementById('edit-form-' + replyId).style.display = 'none';
             }
+        </script>
+        
+        <!-- Lightbox Modal -->
+        <div id="lightboxModal" class="lightbox-modal">
+            <span class="lightbox-close">&times;</span>
+            <a class="lightbox-prev">&#10094;</a>
+            <img class="lightbox-content" id="lightboxImg">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
+            <a class="lightbox-next">&#10095;</a>
+        </div>
+        <script>
+            // Lightbox functionality
+            let lightboxImages = [];
+            let currentImageIndex = 0;
+
+            function openLightbox(imgSrc, index, caption) {
+            // Collect all images
+            lightboxImages = [];
+            document.querySelectorAll('.feedback-image').forEach(img => {
+            lightboxImages.push({
+            src: img.src,
+            alt: img.alt
+           });
+        });
+    
+            currentImageIndex = index;
+    
+            // Show the lightbox
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImg');
+            const captionText = document.getElementById('lightboxCaption');
+    
+            modal.style.display = "block";
+            img.src = imgSrc;
+            captionText.innerHTML = caption;
+        }
+
+            function closeLightbox() {
+            document.getElementById('lightboxModal').style.display = "none";
+        }
+
+            function changeImage(step) {
+            currentImageIndex += step;
+    
+            // Loop around if we go past the end or beginning
+            if (currentImageIndex >= lightboxImages.length) {
+            currentImageIndex = 0;
+        } else if (currentImageIndex < 0) {
+            currentImageIndex = lightboxImages.length - 1;
+        }
+    
+            const img = document.getElementById('lightboxImg');
+            const captionText = document.getElementById('lightboxCaption');
+    
+            img.src = lightboxImages[currentImageIndex].src;
+            captionText.innerHTML = lightboxImages[currentImageIndex].alt;
+        }
+
+            // Set up event listeners
+            document.addEventListener('DOMContentLoaded', function() {
+            // Close lightbox when clicking the close button
+            document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    
+            // Close lightbox when clicking outside the image
+            document.getElementById('lightboxModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+            closeLightbox();
+            }
+        });
+    
+            // Next image
+            document.querySelector('.lightbox-next').addEventListener('click', function() {
+            changeImage(1);
+        });
+    
+            // Previous image
+            document.querySelector('.lightbox-prev').addEventListener('click', function() {
+            changeImage(-1);
+        });
+    
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+            if (document.getElementById('lightboxModal').style.display === "block") {
+            if (e.key === "ArrowRight") {
+                changeImage(1);
+            } else if (e.key === "ArrowLeft") {
+                changeImage(-1);
+            } else if (e.key === "Escape") {
+                closeLightbox();
+            }
+        }
+    });
+});
         </script>
     </body>
 </html>
