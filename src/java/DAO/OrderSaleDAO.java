@@ -273,34 +273,53 @@ public class OrderSaleDAO extends DBContext {
      * @return List of CategorySales objects
      */
     public List<CategorySales> getSalesByCategory() {
-        List<CategorySales> categorySales = new ArrayList<>();
+    List<CategorySales> categorySales = new ArrayList<>();
+    
+    String sql = "WITH CategoryHierarchy AS ("
+                + " SELECT c1.id, c1.name, c1.parent_id,"
+                + " CASE"
+                + "     WHEN c1.level = 1 THEN c1.id"
+                + "     WHEN c2.level = 1 THEN c2.id"
+                + "     WHEN c3.level = 1 THEN c3.id"
+                + "     ELSE NULL"
+                + " END AS top_level_id"
+                + " FROM categories c1"
+                + " LEFT JOIN categories c2 ON c1.parent_id = c2.id"
+                + " LEFT JOIN categories c3 ON c2.parent_id = c3.id"
+                + ")"
+                + " SELECT c.name AS category_name,"
+                + " COUNT(oi.id) AS total_items,"
+                + " SUM(oi.quantity * oi.unit_price) AS total_amount"
+                + " FROM order_items oi"
+                + " JOIN products p ON oi.product_id = p.id"
+                + " JOIN CategoryHierarchy ch ON p.category_id = ch.id"
+                + " JOIN categories c ON ch.top_level_id = c.id"
+                + " JOIN orders o ON oi.order_id = o.id"
+                + " WHERE o.status = 'completed'"
+                + " AND c.id IN (1, 2, 3, 4, 5)"
+                + " GROUP BY c.name"
+                + " ORDER BY total_amount DESC";
+    
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        ResultSet rs = st.executeQuery();
         
-        String sql = "SELECT pc.name as category_name, COUNT(oi.id) as total_items, SUM(oi.quantity * oi.unit_price) as total_amount " +
-                     "FROM order_items oi " +
-                     "JOIN products p ON oi.product_id = p.id " +
-                     "JOIN product_categories pc ON p.category_id = pc.id " +
-                     "JOIN orders o ON oi.order_id = o.id " +
-                     "WHERE o.status = 'completed' " +
-                     "GROUP BY pc.name " +
-                     "ORDER BY total_amount DESC";
-        
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            
-            while (rs.next()) {
-                CategorySales category = new CategorySales();
-                category.setCategoryName(rs.getString("category_name"));
-                category.setTotalItems(rs.getInt("total_items"));
-                category.setTotalAmount(rs.getBigDecimal("total_amount"));
-                categorySales.add(category);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            CategorySales category = new CategorySales();
+            category.setCategoryName(rs.getString("category_name"));
+            category.setTotalItems(rs.getInt("total_items"));
+            category.setTotalAmount(rs.getBigDecimal("total_amount"));
+            categorySales.add(category);
         }
-        
-        return categorySales;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    
+    return categorySales;
+}
+
+
+
     
     /**
      * Get daily sales data for a date range
