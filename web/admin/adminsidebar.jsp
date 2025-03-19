@@ -75,7 +75,7 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="analytics.jsp" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/saledashboard" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-arrow-right me-2"></i>
                 Bán hàng
             </a>
