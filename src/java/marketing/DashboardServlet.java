@@ -29,12 +29,14 @@ public class DashboardServlet extends HttpServlet {
         DashboardDAO dashboardDAO = new DashboardDAO();
         DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
          stats.setProductsByCategory(dashboardDAO.getProductsByCategory());
+          stats.setFeedbackByRating(dashboardDAO.getFeedbackByRating());
 
         // Set attributes for JSP
         request.setAttribute("stats", stats);
         request.setAttribute("startDateStr", formatDate(startDate));
         request.setAttribute("endDateStr", formatDate(endDate));
          request.setAttribute("productsByCategory", dashboardDAO.getProductsByCategory());
+         request.setAttribute("feedbackByRating", dashboardDAO.getFeedbackByRating());
         
         // Forward to JSP
         request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);

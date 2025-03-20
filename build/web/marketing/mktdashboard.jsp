@@ -49,38 +49,49 @@
         <!-- Summary stats cards -->
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Products</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-box-seam fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total Products</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
+                    <div class="mt-2 small">
+                        <div class="text-xs text-gray-600">Active: ${stats.activeProducts}</div>
+                        <div class="text-xs text-gray-600">Out of Stock: ${stats.outOfStockProducts}</div>
+                        <div class="text-xs text-gray-600">Inactive: ${stats.totalProducts - stats.activeProducts - stats.outOfStockProducts}</div>
                     </div>
                 </div>
+                <div class="col-auto">
+                    <i class="bi bi-box-seam fa-2x text-gray-300"></i>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
             
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Active Customers</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.activeCustomers}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-people fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total Customers</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalCustomers}</div>
+                    <div class="mt-2 small">
+                        <div class="text-xs text-gray-600">Active: ${stats.activeCustomers}</div>
+                        <div class="text-xs text-gray-600">Inactive: ${stats.inactiveCustomers}</div>
+                        <div class="text-xs text-gray-600">Pending: ${stats.pendingCustomers}</div>
                     </div>
                 </div>
+                <div class="col-auto">
+                    <i class="bi bi-people fa-2x text-gray-300"></i>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
             
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
@@ -135,35 +146,25 @@
             </div>
             
             <!-- Customer feedback pie chart -->
-            <div class="col-xl-4 col-lg-5">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Feedback Distribution</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-pie pt-4 pb-2">
-                            <canvas id="feedbackChart"></canvas>
-                        </div>
-                        <div class="mt-4 text-center small">
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-danger"></i> 1 Star
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-warning"></i> 2 Stars
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-info"></i> 3 Stars
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-primary"></i> 4 Stars
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-success"></i> 5 Stars
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="col-xl-4 col-lg-5"> 
+    <div class="card shadow mb-4"> 
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"> 
+            <h6 class="m-0 font-weight-bold text-primary">Feedback Distribution</h6> 
+        </div> 
+        <div class="card-body"> 
+            <div class="chart-pie pt-4 pb-2"> 
+                <canvas id="feedbackChart"></canvas> 
+            </div> 
+            <div class="mt-4 text-center small"> 
+                <span class="mr-2"> <i class="fas fa-circle text-danger"></i> 1 Star </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-warning"></i> 2 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-info"></i> 3 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-primary"></i> 4 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-success"></i> 5 Stars </span> 
+            </div> 
+        </div> 
+    </div> 
+</div>
         </div>
         
         <!-- Products & Inventory stats -->
@@ -484,45 +485,47 @@
         });
         
         // Feedback Distribution Chart
-        var feedbackChartContext = document.getElementById('feedbackChart').getContext('2d');
-        var feedbackChart = new Chart(feedbackChartContext, {
-            type: 'pie',
-            data: {
-                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
-                datasets: [{
-                    data: [
-                        ${stats.feedbackByRating[1] != null ? stats.feedbackByRating[1] : 0},
-                        ${stats.feedbackByRating[2] != null ? stats.feedbackByRating[2] : 0},
-                        ${stats.feedbackByRating[3] != null ? stats.feedbackByRating[3] : 0},
-                        ${stats.feedbackByRating[4] != null ? stats.feedbackByRating[4] : 0},
-                        ${stats.feedbackByRating[5] != null ? stats.feedbackByRating[5] : 0}
-                    ],
-                    backgroundColor: [
-                        '#e74a3b', // Red - 1 Star
-                        '#f6c23e', // Yellow - 2 Stars
-                        '#36b9cc', // Info - 3 Stars
-                        '#4e73df', // Primary - 4 Stars
-                        '#1cc88a'  // Success - 5 Stars
-                    ],
-                    hoverBackgroundColor: [
-                        '#be3d30',
-                        '#dda20a',
-                        '#2c9faf',
-                        '#2e59d9',
-                        '#17a673'
-                    ],
-                    hoverBorderColor: 'rgba(234, 236, 244, 1)'
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+    var feedbackChartContext = document.getElementById('feedbackChart').getContext('2d'); 
+    var feedbackChart = new Chart(feedbackChartContext, { 
+        type: 'pie', 
+        data: { 
+            labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'], 
+            datasets: [{ 
+                data: [ 
+                    ${stats.feedbackByRating[1] != null ? stats.feedbackByRating[1] : 0}, 
+                    ${stats.feedbackByRating[2] != null ? stats.feedbackByRating[2] : 0}, 
+                    ${stats.feedbackByRating[3] != null ? stats.feedbackByRating[3] : 0}, 
+                    ${stats.feedbackByRating[4] != null ? stats.feedbackByRating[4] : 0}, 
+                    ${stats.feedbackByRating[5] != null ? stats.feedbackByRating[5] : 0} 
+                ], 
+                backgroundColor: [ 
+                    '#e74a3b', // Red - 1 Star 
+                    '#f6c23e', // Yellow - 2 Stars 
+                    '#36b9cc', // Info - 3 Stars 
+                    '#4e73df', // Primary - 4 Stars 
+                    '#1cc88a'  // Success - 5 Stars 
+                ], 
+                hoverBackgroundColor: [ 
+                    '#be3d30', 
+                    '#dda20a', 
+                    '#2c9faf', 
+                    '#2e59d9', 
+                    '#17a673' 
+                ], 
+                hoverBorderColor: 'rgba(234, 236, 244, 1)' 
+            }] 
+        }, 
+        options: { 
+            maintainAspectRatio: false, 
+            plugins: { 
+                legend: { 
+                    position: 'bottom' 
+                } 
+            } 
+        } 
+    });
+});
         
         // Products by Category Chart
         // Products by Category Chart - Fix rendering issues
