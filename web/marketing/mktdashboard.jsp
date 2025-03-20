@@ -389,14 +389,14 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="${pageContext.request.contextPath}/posts/new" class="btn btn-primary btn-lg">
+                            <a href="${pageContext.request.contextPath}/marketing/addPost" class="btn btn-primary btn-lg">
                                 <i class="bi bi-file-earmark-plus"></i> Create New Post
                             </a>
-                            <a href="${pageContext.request.contextPath}/coupons/new" class="btn btn-success btn-lg">
+                            <a href="${pageContext.request.contextPath}/marketing/addCoupon" class="btn btn-success btn-lg">
                                 <i class="bi bi-ticket-perforated"></i> Create New Coupon
                             </a>
-                            <a href="${pageContext.request.contextPath}/sliders/manage" class="btn btn-info btn-lg">
-                                <i class="bi bi-images"></i> Manage Sliders
+                            <a href="${pageContext.request.contextPath}/marketing/addSlider" class="btn btn-info btn-lg">
+                                <i class="bi bi-images"></i> Add New Slider
                             </a>
                             <a href="${pageContext.request.contextPath}/reports/export" class="btn btn-secondary btn-lg">
                                 <i class="bi bi-file-earmark-excel"></i> Export Reports
