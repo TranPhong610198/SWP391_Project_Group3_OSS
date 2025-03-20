@@ -1,416 +1,527 @@
-<%-- 
-    Document   : dashboard
-    Created on : Mar 11, 2025, 2:49:26 PM
-    Author     : VuxD4t
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-    }
-    .dashboard-container {
-      display: flex;
-      min-height: 100vh;
-    }
-    .sidebar {
-      width: 250px;
-      background-color: #333;
-      color: white;
-      padding: 20px 0;
-    }
-    .sidebar-header {
-      padding: 0 20px;
-      margin-bottom: 20px;
-    }
-    .sidebar-menu {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .sidebar-menu li {
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-    .sidebar-menu li:hover {
-      background-color: #444;
-    }
-    .sidebar-menu li.active {
-      background-color: #555;
-      border-left: 4px solid #4CAF50;
-    }
-    .main-content {
-      flex: 1;
-      padding: 20px;
-    }
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .stats-container {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    .stat-card {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .stat-card h3 {
-      margin-top: 0;
-      color: #666;
-      font-size: 14px;
-    }
-    .stat-card .value {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .stat-card .change {
-      font-size: 12px;
-      color: #4CAF50;
-    }
-    .chart-container {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    .chart-card {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .table-container {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #f9f9f9;
-    }
-    .status {
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    .status-pending {
-      background-color: #FFF3CD;
-      color: #856404;
-    }
-    .status-processing {
-      background-color: #D1ECF1;
-      color: #0C5460;
-    }
-    .status-shipped {
-      background-color: #D4EDDA;
-      color: #155724;
-    }
-    .status-completed {
-      background-color: #C3E6CB;
-      color: #155724;
-    }
-    .status-cancelled {
-      background-color: #F8D7DA;
-      color: #721C24;
-    }
-    .action-buttons {
-      display: flex;
-      gap: 5px;
-    }
-    .btn {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .btn-view {
-      background-color: #007BFF;
-      color: white;
-    }
-    .btn-edit {
-      background-color: #FFC107;
-      color: #212529;
-    }
-    .low-stock {
-      color: #dc3545;
-      font-weight: bold;
-    }
-    .pagination {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 20px;
-    }
-    .pagination button {
-      margin: 0 5px;
-      padding: 5px 10px;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      cursor: pointer;
-    }
-    .pagination button.active {
-      background-color: #007BFF;
-      color: white;
-      border-color: #007BFF;
-    }
-  </style>
-</head>
-<body>
-  <div class="dashboard-container">
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <h2>My Shop Admin</h2>
-      </div>
-      <ul class="sidebar-menu">
-        <li class="active">Tổng quan</li>
-        <li>Quản lý đơn hàng</li>
-        <li>Quản lý sản phẩm</li>
-        <li>Quản lý người dùng</li>
-        <li>Quản lý khuyến mãi</li>
-        <li>Quản lý đánh giá</li>
-        <li>Quản lý nội dung</li>
-        <li>Cài đặt</li>
-      </ul>
-    </div>
-    
-    <div class="main-content">
-      <div class="dashboard-header">
-        <h1>Tổng quan</h1>
-        <div>
-          <select>
-            <option>Hôm nay</option>
-            <option>7 ngày qua</option>
-            <option>30 ngày qua</option>
-            <option>Năm nay</option>
-          </select>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .dashboard-card {
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+            }
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+            }
+            .icon-bg {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .stat-title {
+                font-size: 14px;
+                color: #6c757d;
+            }
+            .stat-value {
+                font-size: 24px;
+                font-weight: bold;
+            }
+            .chart-container {
+                position: relative;
+                height: 300px;
+                margin-bottom: 20px;
+            }
+            .table-container {
+                max-height: 400px;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+    <body class="bg-light">
+        <!-- Include header, navigation here -->
+
+        <div class="container-fluid py-4">
+            <h2 class="mb-4">Bảng điều khiển quản trị</h2>
+
+            <!-- Stats Cards -->
+            <div class="row g-3 mb-4">
+                <!-- User Stats -->
+                <div class="col-md-3">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="stat-title mb-1">Số lượng người dùng</p>
+                                <h3 class="stat-value">${userStatusCount.totalUsers}</h3>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">${userStatusCount.activeCount} Hoạt động</span>
+                                    <span class="badge bg-danger">${userStatusCount.inactiveCount} Không hoạt động</span>
+                                    <span class="badge bg-warning">${userStatusCount.pendingCount} Đang chờ</span>
+                                </div>
+                            </div>
+                            <div class="icon-bg bg-primary bg-opacity-10">
+                                <i class="fas fa-users text-primary fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Stats -->
+                <div class="col-md-3">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="stat-title mb-1">Số lượng thể loại</p>
+                                <h3 class="stat-value">${totalCategories}</h3>
+                                <div class="mt-2">
+                                    <c:forEach var="category" items="${categoryData}" varStatus="loop">
+                                        <c:if test="${loop.index < 3}">
+                                            <span class="badge bg-info">${category.name}</span>
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:if test="${categoryData.size() > 3}">
+                                        <span class="badge bg-secondary">+${categoryData.size() - 3} thêm</span>
+                                    </c:if>
+                                </div>
+                            </div>
+                            <div class="icon-bg bg-success bg-opacity-10">
+                                <i class="fas fa-tags text-success fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Stats -->
+                <div class="col-md-3">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="stat-title mb-1">Số lượng sản phẩm</p>
+                                <h3 class="stat-value">${productStatusCount.totalProducts}</h3>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">${productStatusCount.activeCount} Hoạt động</span>
+                                    <span class="badge bg-danger">${productStatusCount.inactiveCount} Không hoạt động</span>
+                                    <span class="badge bg-warning">${productStatusCount.eoStockCount} Hết hàng</span>
+                                </div>
+                            </div>
+                            <div class="icon-bg bg-warning bg-opacity-10">
+                                <i class="fas fa-box text-warning fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Stats -->
+                <div class="col-md-3">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="stat-title mb-1">Doanh thu</p>
+                                <h3 class="stat-value">
+                                    <fmt:formatNumber value="${totalCustomerStats.totalSpend}" type="number" groupingUsed="true" /> VNĐ
+                                </h3>
+
+                                <div class="mt-2">
+                                    <span class="badge bg-primary">Doanh số: ${totalCustomerStats.totalPurchases}</span>
+                                </div>
+                            </div>
+                            <div class="icon-bg bg-danger bg-opacity-10">
+                                <i class="fas fa-dollar-sign text-danger fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <!-- User Status Chart -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Biểu đồ phân phối trạng thái người dùng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="userStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Distribution Chart -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Biểu đồ phân phối số lượng sản phẩm theo từng thể loại</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Status & Customer Table Row -->
+            <div class="row mb-4">
+                <!-- Product Status Chart -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Biểu đồ phân phối trạng thái sản phẩm</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="productStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Customers Table -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Top 5 vị khách quý của cửa hàng</h5>
+                        </div>
+                        <div class="card-body table-container">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Quý danh</th>
+                                        <th>Số đơn hàng</th>
+                                        <th>Số tiền đã chi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="customer" items="${topCustomers}">
+                                        <tr>
+                                            <td>${customer.fullName}</td>
+                                            <td>${customer.totalPurchases}</td>
+                                            <td>
+                                                <fmt:formatNumber value="${customer.totalSpend}" type="number" groupingUsed="true" /> VNĐ
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time-based Charts Row -->
+            <div class="row mb-4">
+                <!-- Monthly Product Additions Chart -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Biểu đồ phân phối sản phẩm mới</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="monthlyProductChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Orders Chart -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Biều đồ phân phối đơn hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="monthlyOrderChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div class="stats-container">
-        <div class="stat-card">
-          <h3>TỔNG DOANH THU</h3>
-          <div class="value">15,689,000đ</div>
-          <div class="change">+12% so với kỳ trước</div>
-        </div>
-        <div class="stat-card">
-          <h3>SỐ ĐƠN HÀNG</h3>
-          <div class="value">123</div>
-          <div class="change">+5% so với kỳ trước</div>
-        </div>
-        <div class="stat-card">
-          <h3>KHÁCH HÀNG MỚI</h3>
-          <div class="value">48</div>
-          <div class="change">+15% so với kỳ trước</div>
-        </div>
-        <div class="stat-card">
-          <h3>TỶ LỆ HOÀN THÀNH</h3>
-          <div class="value">95%</div>
-          <div class="change">+2% so với kỳ trước</div>
-        </div>
-      </div>
-      
-      <div class="chart-container">
-        <div class="chart-card">
-          <h2>Doanh thu theo thời gian</h2>
-          <div style="height: 300px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
-            [Biểu đồ doanh thu]
-          </div>
-        </div>
-        <div class="chart-card">
-          <h2>Top sản phẩm bán chạy</h2>
-          <div style="height: 300px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
-            [Biểu đồ sản phẩm]
-          </div>
-        </div>
-      </div>
-      
-      <div class="table-container">
-        <h2>Đơn hàng gần đây</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Mã đơn</th>
-              <th>Khách hàng</th>
-              <th>Ngày đặt</th>
-              <th>Tổng tiền</th>
-              <th>Trạng thái</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#ORD001</td>
-              <td>Nguyễn Văn A</td>
-              <td>18/03/2025</td>
-              <td>1,250,000đ</td>
-              <td><span class="status status-processing">Đang xử lý</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Sửa</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#ORD002</td>
-              <td>Trần Thị B</td>
-              <td>17/03/2025</td>
-              <td>850,000đ</td>
-              <td><span class="status status-shipped">Đã giao hàng</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Sửa</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#ORD003</td>
-              <td>Phạm Văn C</td>
-              <td>16/03/2025</td>
-              <td>2,450,000đ</td>
-              <td><span class="status status-pending">Chờ xác nhận</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Sửa</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#ORD004</td>
-              <td>Lê Thị D</td>
-              <td>15/03/2025</td>
-              <td>1,750,000đ</td>
-              <td><span class="status status-completed">Hoàn thành</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Sửa</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#ORD005</td>
-              <td>Hoàng Văn E</td>
-              <td>14/03/2025</td>
-              <td>950,000đ</td>
-              <td><span class="status status-cancelled">Đã hủy</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Sửa</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="pagination">
-          <button>Trước</button>
-          <button class="active">1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>Sau</button>
-        </div>
-      </div>
-      
-      <div class="table-container">
-        <h2>Sản phẩm sắp hết hàng</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Mã SP</th>
-              <th>Tên sản phẩm</th>
-              <th>Màu sắc</th>
-              <th>Kích thước</th>
-              <th>Tồn kho</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#PRD001</td>
-              <td>Áo phông nam cổ tròn</td>
-              <td>Đen</td>
-              <td>L</td>
-              <td><span class="low-stock">5</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Nhập hàng</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#PRD002</td>
-              <td>Quần jean nữ ống rộng</td>
-              <td>Xanh nhạt</td>
-              <td>M</td>
-              <td><span class="low-stock">3</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Nhập hàng</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#PRD003</td>
-              <td>Áo khoác denim unisex</td>
-              <td>Xanh đậm</td>
-              <td>XL</td>
-              <td><span class="low-stock">8</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Nhập hàng</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#PRD004</td>
-              <td>Váy liền thân hoa nhí</td>
-              <td>Vàng</td>
-              <td>S</td>
-              <td><span class="low-stock">2</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-view">Xem</button>
-                  <button class="btn btn-edit">Nhập hàng</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</body>
+
+        <!-- JavaScript for Charts -->
+        <script>
+            // User Status Chart
+            const userStatusCtx = document.getElementById('userStatusChart').getContext('2d');
+            const userStatusChart = new Chart(userStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Hoạt động', 'Không hoạt động', 'Đang chờ'],
+                    datasets: [{
+                            data: [
+            ${userStatusCount.activeCount},
+            ${userStatusCount.inactiveCount},
+            ${userStatusCount.pendingCount}
+                            ],
+                            backgroundColor: [
+                                'rgba(40, 167, 69, 0.7)',
+                                'rgba(220, 53, 69, 0.7)',
+                                'rgba(255, 193, 7, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(40, 167, 69, 1)',
+                                'rgba(220, 53, 69, 1)',
+                                'rgba(255, 193, 7, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Category Chart - Enhanced to better show product distribution
+            const categoryData = ${categoryDataJson};
+            const categoryNames = categoryData.map(item => item.name);
+            const categoryProductCounts = categoryData.map(item => item.productCount);
+
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            const categoryChart = new Chart(categoryCtx, {
+                type: 'bar', // Changed from pie to bar for better product count visualization
+                data: {
+                    labels: categoryNames,
+                    datasets: [{
+                            label: 'Số lượng sản phẩm',
+                            data: categoryProductCounts,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)',
+                                'rgba(255, 159, 64, 0.7)',
+                                'rgba(199, 199, 199, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(199, 199, 199, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số lượng sản phẩm'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Thể loại'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.parsed.y} products`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Product Status Chart
+            const productStatusCtx = document.getElementById('productStatusChart').getContext('2d');
+            const productStatusChart = new Chart(productStatusCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Hoạt động', 'Không hoạt động', 'Hết hàng'],
+                    datasets: [{
+                            label: 'Số lượng sản phẩm',
+                            data: [
+            ${productStatusCount.activeCount},
+            ${productStatusCount.inactiveCount},
+            ${productStatusCount.eoStockCount}
+                            ],
+                            backgroundColor: [
+                                'rgba(40, 167, 69, 0.7)',
+                                'rgba(220, 53, 69, 0.7)',
+                                'rgba(255, 193, 7, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(40, 167, 69, 1)',
+                                'rgba(220, 53, 69, 1)',
+                                'rgba(255, 193, 7, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Monthly Product Additions Chart
+            const monthlyProductData = ${monthlyProductAdditionsJson};
+            const monthlyProductLabels = monthlyProductData.map(item => item.period);
+            const monthlyProductCounts = monthlyProductData.map(item => item.count);
+
+            const monthlyProductCtx = document.getElementById('monthlyProductChart').getContext('2d');
+            const monthlyProductChart = new Chart(monthlyProductCtx, {
+                type: 'line',
+                data: {
+                    labels: monthlyProductLabels,
+                    datasets: [{
+                            label: 'Sản phẩm mới',
+                            data: monthlyProductCounts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            fill: true
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số lượng sản phẩm'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tháng'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.parsed.y} products added`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Monthly Orders Chart
+            const monthlyOrderData = ${monthlyOrderCountsJson};
+            const monthlyOrderLabels = monthlyOrderData.map(item => item.period);
+            const monthlyOrderCounts = monthlyOrderData.map(item => item.count);
+
+            const monthlyOrderCtx = document.getElementById('monthlyOrderChart').getContext('2d');
+            const monthlyOrderChart = new Chart(monthlyOrderCtx, {
+                type: 'line',
+                data: {
+                    labels: monthlyOrderLabels,
+                    datasets: [{
+                            label: 'Số lượng đơn hàng',
+                            data: monthlyOrderCounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            fill: true
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số đơn hàng'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tháng'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.parsed.y} orders`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+
+        <!-- Bootstrap JS Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>
