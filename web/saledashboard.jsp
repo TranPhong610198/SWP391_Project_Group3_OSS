@@ -58,24 +58,26 @@
         .bg-gradient-warning { background: linear-gradient(to right, #f6c23e, #dda20a); }
     </style>
 </head>
+
 <body class="bg-light">
+    <jsp:include page="header.jsp" />
     <div class="container-fluid py-4">
         <div class="row mb-4">
             <div class="col-md-8">
-                <h1 class="h3 mb-0 text-gray-800">Sales Dashboard</h1>
-                <p class="text-muted">View your sales performance and statistics</p>
+                <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển bán hàng</h1>
+                <p class="text-muted">Xem hiệu suất bán hàng và số liệu thống kê của bạn</p>
             </div>
             <div class="col-md-4">
                 <form action="saledashboard" method="GET" class="d-flex">
                     <div class="input-group me-2">
-                        <span class="input-group-text">From</span>
+                        <span class="input-group-text">Từ</span>
                         <input type="date" name="startDate" class="form-control" value="${param.startDate != null ? param.startDate : sevenDaysAgo}">
                     </div>
                     <div class="input-group me-2">
-                        <span class="input-group-text">To</span>
+                        <span class="input-group-text">Đến</span>
                         <input type="date" name="endDate" class="form-control" value="${param.endDate != null ? param.endDate : today}">
                     </div>
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
                 </form>
             </div>
         </div>
@@ -90,7 +92,7 @@
                                 <i class="fas fa-coins fa-lg"></i>
                             </div>
                             <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Total Revenue</div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng doanh thu</div>
                                 <div class="h5 mb-0 fw-bold">
                                     <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="$" />
                                 </div>
@@ -108,7 +110,7 @@
                                 <i class="fas fa-shopping-cart fa-lg"></i>
                             </div>
                             <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Total Sales</div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng đơn hàng</div>
                                 <div class="h5 mb-0 fw-bold">${salesOverview.totalSales}</div>
                             </div>
                         </div>
@@ -124,7 +126,7 @@
                                 <i class="fas fa-user-crown fa-lg"></i>
                             </div>
                             <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">VIP Customers</div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng VIP</div>
                                 <div class="h5 mb-0 fw-bold">${salesOverview.vipCustomers}</div>
                             </div>
                         </div>
@@ -140,7 +142,7 @@
                                 <i class="fas fa-users fa-lg"></i>
                             </div>
                             <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Normal Customers</div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng thông thường</div>
                                 <div class="h5 mb-0 fw-bold">${salesOverview.normalCustomers}</div>
                             </div>
                         </div>
@@ -154,37 +156,37 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Order Status</h5>
+                        <h5 class="mb-0">Trạng thái đơn hàng</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col text-center">
                                 <div class="status-badge bg-pending mb-2">
-                                    <i class="fas fa-clock me-1"></i> Pending
+                                    <i class="fas fa-clock me-1"></i> Đang phê duyệt
                                 </div>
                                 <h4>${salesOverview.pendingOrders}</h4>
                             </div>
                             <div class="col text-center">
                                 <div class="status-badge bg-processing mb-2">
-                                    <i class="fas fa-spinner me-1"></i> Processing
+                                    <i class="fas fa-spinner me-1"></i> Đang xử lí
                                 </div>
                                 <h4>${salesOverview.processingOrders}</h4>
                             </div>
                             <div class="col text-center">
                                 <div class="status-badge bg-shipped mb-2">
-                                    <i class="fas fa-shipping-fast me-1"></i> Shipped
+                                    <i class="fas fa-shipping-fast me-1"></i> Đã giao
                                 </div>
                                 <h4>${salesOverview.shippedOrders}</h4>
                             </div>
                             <div class="col text-center">
                                 <div class="status-badge bg-completed mb-2">
-                                    <i class="fas fa-check-circle me-1"></i> Completed
+                                    <i class="fas fa-check-circle me-1"></i> Đã hoàn thành
                                 </div>
                                 <h4>${salesOverview.completedOrders}</h4>
                             </div>
                             <div class="col text-center">
                                 <div class="status-badge bg-cancelled mb-2">
-                                    <i class="fas fa-times-circle me-1"></i> Cancelled
+                                    <i class="fas fa-times-circle me-1"></i> Đã hủy
                                 </div>
                                 <h4>${salesOverview.cancelledOrders}</h4>
                             </div>
@@ -199,7 +201,7 @@
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Daily Order Trend</h5>
+                        <h5 class="mb-0">Xu hướng đơn hàng hằng ngày</h5>
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -212,7 +214,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Sales by Category</h5>
+                        <h5 class="mb-0">Đơn hàng theo danh mục</h5>
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -227,7 +229,7 @@
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Daily Sales Revenue</h5>
+                        <h5 class="mb-0">Doanh thu đơn hàng hằng ngày</h5>
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -240,7 +242,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Order Status Distribution</h5>
+                        <h5 class="mb-0">Phân phối trạng thái đơn hàng</h5>
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -256,17 +258,17 @@
             <div class="col-md-12">
                 <div class="card mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Sales by Category</h5>
+                        <h5 class="mb-0">Đơn hàng theo danh mục (D)</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Category</th>
-                                        <th>Items Sold</th>
-                                        <th>Revenue</th>
-                                        <th>% of Total</th>
+                                        <th>Danh mục</th>
+                                        <th>Các mặt hàng đã bán</th>
+                                        <th>Doanh thu</th>
+                                        <th>% Tổng số</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -296,7 +298,7 @@
             </div>
         </div>
     </div>
-
+    <jsp:include page="footer.jsp" />
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -314,7 +316,7 @@
                         </c:forEach>
                     ],
                     datasets: [{
-                        label: 'Pending',
+                        label: 'Đang phê duyệt',
                         data: [
                             <c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">
                                 ${status.pendingCount}${!loop.last ? ',' : ''}
@@ -325,7 +327,7 @@
                         tension: 0.3,
                         fill: true
                     }, {
-                        label: 'Processing',
+                        label: 'Đang xử lí',
                         data: [
                             <c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">
                                 ${status.processingCount}${!loop.last ? ',' : ''}
@@ -336,7 +338,7 @@
                         tension: 0.3,
                         fill: true
                     }, {
-                        label: 'Shipped',
+                        label: 'Đã giao',
                         data: [
                             <c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">
                                 ${status.shippedCount}${!loop.last ? ',' : ''}
@@ -347,7 +349,7 @@
                         tension: 0.3,
                         fill: true
                     }, {
-                        label: 'Completed',
+                        label: 'Đã hoàn thành',
                         data: [
                             <c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">
                                 ${status.completedCount}${!loop.last ? ',' : ''}
@@ -358,7 +360,7 @@
                         tension: 0.3,
                         fill: true
                     }, {
-                        label: 'Cancelled',
+                        label: 'Đã hủy',
                         data: [
                             <c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">
                                 ${status.cancelledCount}${!loop.last ? ',' : ''}
@@ -396,7 +398,7 @@
                         </c:forEach>
                     ],
                     datasets: [{
-                        label: 'Revenue',
+                        label: 'Doanh thu',
                         data: [
                             <c:forEach items="${dailySalesData}" var="data" varStatus="loop">
                                 ${data.totalAmount}${!loop.last ? ',' : ''}
@@ -404,7 +406,7 @@
                         ],
                         backgroundColor: 'rgba(78, 115, 223, 0.8)'
                     }, {
-                        label: 'Orders',
+                        label: 'Đơn hàng',
                         data: [
                             <c:forEach items="${dailySalesData}" var="data" varStatus="loop">
                                 ${data.orderCount}${!loop.last ? ',' : ''}
@@ -422,7 +424,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Revenue ($)'
+                                text: 'Doanh thu ($)'
                             }
                         },
                         y1: {
@@ -433,7 +435,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Order Count'
+                                text: 'Đơn hàng'
                             }
                         }
                     }
@@ -481,7 +483,7 @@
             const statusDistChart = new Chart(statusDistCtx, {
                 type: 'pie',
                 data: {
-                    labels: ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled'],
+                    labels: ['Đang phê duyệt', 'Đang xử lí', 'Đã giao', 'Đã hoàn thành', 'Đã hủy'],
                     datasets: [{
                         data: [
                             ${salesOverview.pendingOrders},

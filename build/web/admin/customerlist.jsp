@@ -196,15 +196,15 @@
                             <div class="col-md-3">
                                 <select name="gender" class="form-select">
                                     <option value="">Tất cả giới tính</option>
-                                    <option value="Male" ${gender == 'Male' ? 'selected' : ''}>Nam</option>
-                                    <option value="Female" ${gender == 'Female' ? 'selected' : ''}>Nữ</option>
+                                    <option value="male" ${gender == 'male' ? 'selected' : ''}>Nam</option>
+                                    <option value="female" ${gender == 'female' ? 'selected' : ''}>Nữ</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <select name="customerType" class="form-select">
                                     <option value="">Tất cả loại khách hàng</option>
-                                    <option value="vip" ${customerType == 'VIP' ? 'selected' : ''}>VIP</option>
-                                    <option value="normal" ${customerType == 'Regular' ? 'selected' : ''}>Thường xuyên</option>
+                                    <option value="vip" ${customerType == 'vip' ? 'selected' : ''}>VIP</option>
+                                    <option value="normal" ${customerType == 'normal' ? 'selected' : ''}>Thường xuyên</option>
                                     
                                 </select>
                             </div>
@@ -224,13 +224,7 @@
                         <div>
                             <i class="fas fa-list me-2"></i>Danh sách khách hàng
                         </div>
-                        <div class="d-flex">
-                            <a href="exporttoexcel" class="btn btn-success btn-sm me-2">
-                                <i class="fas fa-file-excel me-1"></i>Excel
-                            </a>
-                            <a href="exporttopdf" class="btn btn-danger btn-sm me-2">
-                                <i class="fas fa-file-pdf me-1"></i>PDF
-                            </a>
+                        <div class="d-flex">                        
                             <a href="addCustomer" class="btn btn-primary btn-sm">
                                 <i class="fas fa-user-plus me-1"></i>Thêm mới
                             </a>
@@ -289,7 +283,7 @@
                                                         </span>
                                                     </a>
                                                 </th>
-                                                <th>
+                                                <th class="text-center" style="width: 100px;">
                                                     <a href="customerlist?sortField=customer_type&sortDir=${sortField == 'customer_type' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
                                                        class="sort-link">
                                                         Loại KH
@@ -298,7 +292,7 @@
                                                         </span>
                                                     </a>
                                                 </th>
-                                                <th>
+                                                <th class="text-center" style="width: 100px;">
                                                     <a href="customerlist?sortField=total_purchases&sortDir=${sortField == 'total_purchases' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
                                                        class="sort-link">
                                                         Đơn hàng
@@ -307,10 +301,10 @@
                                                         </span>
                                                     </a>
                                                 </th>
-                                                <th>
+                                                <th class="text-center" style="width: 100px;">
                                                     <a href="customerlist?sortField=total_spend&sortDir=${sortField == 'total_spend' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
                                                        class="sort-link">
-                                                        Tổng chi tiêu
+                                                        Tổng chi
                                                         <span class="sort-icons">
                                                             ${sortField == 'total_spend' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                         </span>
@@ -335,7 +329,7 @@
                                                     <td>${customer.mobile}</td>
                                                     <td>${customer.address}</td>
                                                     <td>
-                                                        <span class="badge ${customer.customerType == 'VIP' ? 'bg-warning text-dark' : (customer.customerType == 'Regular' ? 'bg-success' : 'bg-info')}">
+                                                        <span class="badge ${customer.customerType == 'vip' ? 'bg-warning text-dark' : (customer.customerType == 'normal' ? 'bg-success' : 'bg-info')}">
                                                             ${customer.customerType}
                                                         </span>
                                                     </td>
@@ -344,13 +338,11 @@
                                                         <fmt:formatNumber value="${customer.totalSpend}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="customerdetail?id=${customer.id}" class="btn btn-info btn-sm btn-action" title="Xem chi tiết">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <a href="editcustomer?id=${customer.id}" class="btn btn-primary btn-sm btn-action" title="Chỉnh sửa">
+                                                        
+                                                        <a href="customerdetail/edit?id=${customer.id}" class="btn btn-primary btn-sm btn-action" title="Chỉnh sửa">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="deletecustomer?id=${customer.id}" class="btn btn-danger btn-sm btn-action" title="Xóa"
+                                                        <a href="customerdetail/delete?id=${customer.id}" class="btn btn-danger btn-sm btn-action" title="Xóa"
                                                            onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
