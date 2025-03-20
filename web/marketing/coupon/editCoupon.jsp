@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -152,136 +153,127 @@
         </style>
     </head>
     <body>
-        <jsp:include page="../sidebar.jsp" />
+    <jsp:include page="../sidebar.jsp" />
+    <button class="btn btn-primary sidebar-toggle"><i class="fas fa-bars"></i></button>
 
-        <button class="btn btn-primary sidebar-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
+    <div class="main-content">
+        <div class="container-fluid p-4">
+            <h2 class="page-title"><i class="fas fa-edit me-2"></i>Chỉnh sửa mã giảm giá</h2>
+            <div class="card form-card">
+                <div class="card-header"><i class="fas fa-pen-square me-2"></i>Thông tin mã giảm giá</div>
+                <div class="card-body">
+                    <form action="editCoupon" method="POST" id="couponForm" onsubmit="return prepareFormSubmission()">
+                        <input type="hidden" name="id" value="${coupon.id}">
+                        <c:if test="${not empty error}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                ${error}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:if>
 
-        <div class="main-content">
-            <div class="container-fluid p-4">
-                <h2 class="page-title">
-                    <i class="fas fa-edit me-2"></i>Chỉnh sửa mã giảm giá
-                </h2>
-
-                <div class="card form-card">
-                    <div class="card-header">
-                        <i class="fas fa-pen-square me-2"></i>Thông tin mã giảm giá
-                    </div>
-                    <div class="card-body">
-                        <form action="editCoupon" method="POST" id="couponForm" onsubmit="return prepareFormSubmission()">
-                            <input type="hidden" name="id" value="${coupon.id}">
-                            <c:if test="${not empty error}">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    ${error}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            </c:if>
-
-                            <div class="mb-3">
-                                <label for="code" class="form-label required-field">Mã giảm giá</label>
+                        <div class="mb-3">
+                            <label for="code" class="form-label required-field">Mã giảm giá</label>
+                            <div class="input-group">
                                 <input type="text" class="form-control" id="code" name="code" value="${param.code != null ? param.code : coupon.code}" required maxlength="20">
-                                <div class="form-text">Nhập mã giảm giá không quá 20 ký tự, chỉ sử dụng chữ cái, số và dấu gạch dưới.</div>
+                                <button type="button" class="btn btn-outline-secondary" onclick="generateRandomCode()">Random</button>
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="discount_type" class="form-label required-field">Loại giảm giá</label>
-                                <select class="form-select" id="discount_type" name="discount_type" required>
-                                    <option value="percentage" ${param.discount_type == 'percentage' || (param.discount_type == null && coupon.discount_type == 'percentage') ? 'selected' : ''}>Phần trăm (%)</option>
-                                    <option value="fixed" ${param.discount_type == 'fixed' || (param.discount_type == null && coupon.discount_type == 'fixed') ? 'selected' : ''}>Cố định (VNĐ)</option>
-                                </select>
-                            </div>
+                        <div class="mb-3">
+                            <label for="discount_type" class="form-label required-field">Loại giảm giá</label>
+                            <select class="form-select" id="discount_type" name="discount_type" required>
+                                <option value="percentage" ${param.discount_type == 'percentage' || (param.discount_type == null && coupon.discount_type == 'percentage') ? 'selected' : ''}>Phần trăm (%)</option>
+                                <option value="fixed" ${param.discount_type == 'fixed' || (param.discount_type == null && coupon.discount_type == 'fixed') ? 'selected' : ''}>Cố định (VNĐ)</option>
+                            </select>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="discount_value" class="form-label required-field">Giá trị giảm</label>
-                                <div class="input-group">
-                                    <fmt:formatNumber var="formattedDiscountValue" value="${coupon.discount_value}" pattern="#,##0" />
-                                    <input type="text" class="form-control currency-input" id="discount_value" name="discount_value" 
-                                           value="${param.discount_value != null ? param.discount_value : formattedDiscountValue}" 
-                                           required oninput="formatCurrency(this)">
-                                    <span class="input-group-text" id="discountSymbol">₫</span>
-                                </div>
-                                <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
+                        <div class="mb-3">
+                            <label for="discount_value" class="form-label required-field">Giá trị giảm</label>
+                            <div class="input-group">
+                                <fmt:formatNumber var="formattedDiscountValue" value="${coupon.discount_value}" pattern="#,##0" />
+                                <input type="text" class="form-control currency-input" id="discount_value" name="discount_value" 
+                                       value="${param.discount_value != null ? param.discount_value : formattedDiscountValue}" 
+                                       required oninput="formatCurrency(this)">
+                                <span class="input-group-text" id="discountSymbol">₫</span>
                             </div>
+                            <div class="form-text" id="discountValueText">Nhập giá trị giảm giá.</div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="min_order_amount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
-                                <div class="input-group">
-                                    <fmt:formatNumber var="formattedMinOrderAmount" value="${coupon.min_order_amount}" pattern="#,##0" />
-                                    <input type="text" class="form-control currency-input" id="min_order_amount" name="min_order_amount" 
-                                           value="${param.min_order_amount != null ? param.min_order_amount : formattedMinOrderAmount}" 
-                                           min="0" oninput="formatCurrency(this)">
-                                    <span class="input-group-text">₫</span>
-                                </div>
+                        <div class="mb-3">
+                            <label for="min_order_amount" class="form-label required-field">Giá trị đơn hàng tối thiểu</label>
+                            <div class="input-group">
+                                <fmt:formatNumber var="formattedMinOrderAmount" value="${coupon.min_order_amount}" pattern="#,##0" />
+                                <input type="text" class="form-control currency-input" id="min_order_amount" name="min_order_amount" 
+                                       value="${param.min_order_amount != null ? param.min_order_amount : formattedMinOrderAmount}" 
+                                       min="0" oninput="formatCurrency(this)">
+                                <span class="input-group-text">₫</span>
                             </div>
+                        </div>
 
-                            <div class="mb-3" id="maxDiscountContainer">
-                                <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
-                                <div class="input-group">
-                                    <fmt:formatNumber var="formattedMaxDiscount" value="${coupon.max_discount}" pattern="#,##0" />
-                                    <input type="text" class="form-control currency-input" id="max_discount" name="max_discount" 
-                                           value="${param.max_discount != null ? param.max_discount : formattedMaxDiscount}" 
-                                           min="0" oninput="formatCurrency(this)">
-                                    <span class="input-group-text">₫</span>
-                                </div>
+                        <div class="mb-3" id="maxDiscountContainer">
+                            <label for="max_discount" class="form-label required-field">Giảm tối đa</label>
+                            <div class="input-group">
+                                <fmt:formatNumber var="formattedMaxDiscount" value="${coupon.max_discount}" pattern="#,##0" />
+                                <input type="text" class="form-control currency-input" id="max_discount" name="max_discount" 
+                                       value="${param.max_discount != null ? param.max_discount : formattedMaxDiscount}" 
+                                       min="0" oninput="formatCurrency(this)">
+                                <span class="input-group-text">₫</span>
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="usage_limit" class="form-label">Số lần sử dụng tối đa</label>
-                                <input type="number" class="form-control" id="usage_limit" name="usage_limit" value="${param.usage_limit != null ? param.usage_limit : coupon.usage_limit}" min="0">
-                                <div class="form-text">Để trống nếu không giới hạn số lần sử dụng.</div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="usage_limit" class="form-label">Số lần sử dụng tối đa</label>
+                            <input type="number" class="form-control" id="usage_limit" name="usage_limit" value="${param.usage_limit != null ? param.usage_limit : coupon.usage_limit}" min="0">
+                            <div class="form-text">Để trống nếu không giới hạn số lần sử dụng.</div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="expiry_date" class="form-label required-field">Ngày hết hạn</label>
-                                <input type="date" class="form-control" id="expiry_date" name="expiry_date" value="${param.expiry_date != null ? param.expiry_date : coupon.expiry_date}" required>
-                            </div>
+                        <div class="mb-3">
+    <label for="expiry_date" class="form-label required-field">Ngày hết hạn</label>
+    <input type="datetime-local" class="form-control" id="expiry_date" name="expiry_date" 
+           value="${param.expiry_date != null ? param.expiry_date : (coupon.expiry_date != null ? fn:substring(coupon.expiry_date.toString(), 0, 16) : '')}" required>
+</div>
 
-                            <div class="mb-3">
-                                <label class="form-label required-field">Loại mã giảm giá</label>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="coupon_type" id="normalRadio" 
-                                           value="normal" ${param.coupon_type == 'normal' || (param.coupon_type == null && coupon.couponType == 'normal') ? 'checked' : ''} required>
-                                    <label class="form-check-label" for="normalRadio">Thường</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="coupon_type" id="vipRadio" 
-                                           value="vip" ${param.coupon_type == 'vip' || (param.coupon_type == null && coupon.couponType == 'vip') ? 'checked' : ''}>
-                                    <label class="form-check-label" for="vipRadio">VIP</label>
-                                </div>
-                                <div class="form-text">Chọn "VIP" nếu mã chỉ dành cho thành viên VIP.</div>
+                        <div class="mb-3">
+                            <label class="form-label required-field">Loại mã giảm giá</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="coupon_type" id="normalRadio" 
+                                       value="normal" ${param.coupon_type == 'normal' || (param.coupon_type == null && coupon.couponType == 'normal') ? 'checked' : ''} required>
+                                <label class="form-check-label" for="normalRadio">Thường</label>
                             </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="coupon_type" id="vipRadio" 
+                                       value="vip" ${param.coupon_type == 'vip' || (param.coupon_type == null && coupon.couponType == 'vip') ? 'checked' : ''}>
+                                <label class="form-check-label" for="vipRadio">VIP</label>
+                            </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="statusSwitch" name="status" value="active" ${param.status == 'active' || (param.status == null && coupon.status == 'active') ? 'checked' : ''}>
-                                </div>
-                                <div class="form-text">Bật để kích hoạt mã giảm giá.</div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Kích hoạt</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="statusSwitch" name="status" value="active" ${param.status == 'active' || (param.status == null && coupon.status == 'active') ? 'checked' : ''} onchange="toggleActivationDate()">
                             </div>
+                        </div>
 
-                            <div class="d-flex justify-content-end mt-4">
-                                <a href="couponlist" class="btn btn-cancel me-2">
-                                    <i class="fas fa-times me-2"></i>Hủy
-                                </a>
-                                <button type="submit" class="btn btn-submit">
-                                    <i class="fas fa-save me-2"></i>Cập nhật
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="mb-3" id="activationDateContainer" style="display:none;">
+                            <label for="activation_date" class="form-label">Đặt lịch kích hoạt</label>
+                            <input type="datetime-local" class="form-control" id="activation_date" name="activation_date" value="${param.activation_date != null ? param.activation_date : coupon.activation_date}">
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="couponlist" class="btn btn-cancel me-2"><i class="fas fa-times me-2"></i>Hủy</a>
+                            <button type="submit" class="btn btn-submit"><i class="fas fa-save me-2"></i>Cập nhật</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
             $(document).ready(function () {
-                const today = new Date();
-                const formattedDate = today.toISOString().split('T')[0];
-                $('#expiry_date').attr('min', formattedDate);
-
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
                     $('.main-content').toggleClass('active');
@@ -301,41 +293,67 @@
                 $('.currency-input').each(function () {
                     formatCurrency(this);
                 });
-
-                function updateDiscountType() {
-                    const selectedType = $('#discount_type').val();
-                    if (selectedType === 'percentage') {
-                        $('#discountSymbol').text('%');
-                        $('#maxDiscountContainer').show();
-                        $('#discountValueText').text('Nhập phần trăm giảm giá (1-50%).');
-                    } else {
-                        $('#discountSymbol').text('₫');
-                        $('#maxDiscountContainer').hide();
-                        $('#discountValueText').text('Nhập số tiền giảm giá cố định.');
-                    }
-                }
-
-                $('#discount_type').on('change', updateDiscountType);
-                updateDiscountType();
             });
-
-            function formatCurrency(input) {
-                if (!input.value) return;
-                let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
-                if (value.length > 0) {
-                    value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
-                }
-                input.value = value;
-                input.dataset.rawValue = value.replace(/\./g, '');
-            }
-
-            function prepareFormSubmission() {
-                const formattedInputs = document.querySelectorAll('.currency-input');
-                formattedInputs.forEach(input => {
-                    input.value = input.dataset.rawValue || input.value.replace(/\./g, '');
-                });
-                return true;
-            }
         </script>
+        
+        <script>
+        $(document).ready(function () {
+            const today = new Date();
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            const minDate = today.toISOString().slice(0, 16);
+            $('#expiry_date').attr('min', minDate);
+            $('#activation_date').attr('min', minDate);
+
+            toggleActivationDate();
+            $('#statusSwitch').on('change', toggleActivationDate);
+
+            $('#discount_type').on('change', function () {
+                const type = $(this).val();
+                $('#discountSymbol').text(type === 'percentage' ? '%' : '₫');
+                $('#maxDiscountContainer').toggle(type === 'percentage');
+                $('#discountValueText').text(type === 'percentage' ? 'Nhập phần trăm giảm giá (1-50%).' : 'Nhập số tiền giảm giá cố định.');
+            }).trigger('change');
+
+            $('.currency-input').each(function () { formatCurrency(this); });
+        });
+
+        function toggleActivationDate() {
+            const isActive = $('#statusSwitch').is(':checked');
+            $('#activationDateContainer').toggle(!isActive);
+            if (isActive) $('#activation_date').val('');
+        }
+
+        function formatCurrency(input) {
+            if (!input.value) return;
+            let value = input.value.replace(/\./g, '').replace(/[^\d]/g, '');
+            if (value.length > 0) {
+                value = parseInt(value, 10).toLocaleString('vi-VN').replace(/,/g, '.');
+            }
+            input.value = value;
+            input.dataset.rawValue = value.replace(/\./g, '');
+        }
+
+        function prepareFormSubmission() {
+            $('.currency-input').each(function () {
+                this.value = this.dataset.rawValue || this.value.replace(/\./g, '');
+            });
+            const expiryDate = $('#expiry_date').val();
+            const activationDate = $('#activation_date').val();
+            if (activationDate && new Date(activationDate) > new Date(expiryDate)) {
+                alert('Ngày kích hoạt phải sớm hơn ngày hết hạn.');
+                return false;
+            }
+            return true;
+        }
+
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 9; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            $('#code').val(code);
+        }
+    </script>
     </body>
 </html>

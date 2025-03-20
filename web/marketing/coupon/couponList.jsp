@@ -7,6 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN" />
 <!DOCTYPE html>
 <html>
     <head>
@@ -239,55 +240,39 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
-        <button class="btn btn-primary sidebar-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
+        <button class="btn btn-primary sidebar-toggle"><i class="fas fa-bars"></i></button>
 
         <div class="main-content">
             <div class="container-fluid p-4">
-                <!-- Thông báo thành công -->
+                <h2 class="page-title"><i class="fas fa-tags me-2"></i>Quản lý mã giảm giá</h2>
+
                 <c:if test="${not empty param.success}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         <c:choose>
-                            <c:when test="${param.success eq 'add'}">
-                                Thêm mã giảm giá thành công!
-                            </c:when>
-                            <c:when test="${param.success eq 'edit'}">
-                                Chỉnh sửa mã giảm giá thành công!
-                            </c:when>
-                            <c:when test="${param.success eq 'delete'}">
-                                Xóa mã giảm giá thành công!
-                            </c:when>
+                            <c:when test="${param.success eq 'add'}">Thêm mã giảm giá thành công!</c:when>
+                            <c:when test="${param.success eq 'edit'}">Chỉnh sửa mã giảm giá thành công!</c:when>
+                            <c:when test="${param.success eq 'delete'}">Xóa mã giảm giá thành công!</c:when>
                         </c:choose>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
 
-                <!-- Thông báo lỗi -->
                 <c:if test="${param.error eq 'delete'}">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         Không thể xóa mã giảm giá. Vui lòng thử lại!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
-                <h2 class="page-title">
-                    <i class="fas fa-tags me-2"></i>Quản lý mã giảm giá
-                </h2>
 
                 <!-- Filter Section -->
                 <div class="card filter-card">
-                    <div class="card-header">
-                        <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
-                    </div>
+                    <div class="card-header"><i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm</div>
                     <div class="card-body">
                         <form action="couponlist" method="GET" class="row g-3">
                             <div class="col-md-4">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-white">
-                                        <i class="fas fa-search text-muted"></i>
-                                    </span>
+                                    <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
                                     <input type="text" name="searchCode" value="${searchCode}" class="form-control search-box" placeholder="Tìm kiếm mã giảm giá...">
                                 </div>
                             </div>
@@ -315,12 +300,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="d-grid gap-2 d-md-flex">
-                                    <button type="submit" class="btn btn-primary me-md-2">
-                                        <i class="fas fa-filter me-2"></i>Lọc
-                                    </button>
-                                    <a href="couponlist" class="btn btn-secondary">
-                                        <i class="fas fa-eraser me-2"></i>Xóa bộ lọc
-                                    </a>
+                                    <button type="submit" class="btn btn-primary me-md-2"><i class="fas fa-filter me-2"></i>Lọc</button>
+                                    <a href="couponlist" class="btn btn-secondary"><i class="fas fa-eraser me-2"></i>Xóa bộ lọc</a>
                                 </div>
                             </div>
                         </form>
@@ -330,14 +311,8 @@
                 <!-- Coupon List Table -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="fas fa-ticket-alt me-2"></i>Danh sách mã giảm giá
-                        </div>
-                        <div>
-                            <a href="addCoupon" class="btn btn-success btn-sx">
-                                <i class="fas fa-plus me-2"></i>Thêm mã mới
-                            </a>
-                        </div>
+                        <div><i class="fas fa-ticket-alt me-2"></i>Danh sách mã giảm giá</div>
+                        <div><a href="addCoupon" class="btn btn-success btn-sx"><i class="fas fa-plus me-2"></i>Thêm mã mới</a></div>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -345,61 +320,45 @@
                                 <thead>
                                     <tr class="bg-light">
                                         <th class="text-center" style="width: 60px;">STT</th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=code&sortOrder=${sortField == 'code' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                        <th><a href="couponlist?sortField=code&sortOrder=${sortField == 'code' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Mã giảm giá
-                                                <span class="sort-icons">
-                                                    ${sortField == 'code' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                                <span class="sort-icons">${sortField == 'code' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=discount_type&sortOrder=${sortField == 'discount_type' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                        <th><a href="couponlist?sortField=discount_type&sortOrder=${sortField == 'discount_type' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Loại giảm giá
-                                                <span class="sort-icons">
-                                                    ${sortField == 'discount_type' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                                <span class="sort-icons">${sortField == 'discount_type' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=coupon_type&sortOrder=${sortField == 'coupon_type' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                        <th><a href="couponlist?sortField=coupon_type&sortOrder=${sortField == 'coupon_type' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Loại mã
-                                                <span class="sort-icons">
-                                                    ${sortField == 'coupon_type' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                                <span class="sort-icons">${sortField == 'coupon_type' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=discount_value&sortOrder=${sortField == 'discount_value' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                        <th><a href="couponlist?sortField=discount_value&sortOrder=${sortField == 'discount_value' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Giá trị
-                                                <span class="sort-icons">
-                                                    ${sortField == 'discount_value' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                                <span class="sort-icons">${sortField == 'discount_value' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=min_order_amount&sortOrder=${sortField == 'min_order_amount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
-                                                Tối thiểu
-                                                <span class="sort-icons">
-                                                    ${sortField == 'min_order_amount' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                        <th><a href="couponlist?sortField=min_order_amount&sortOrder=${sortField == 'min_order_amount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Đơn hàng tối thiểu
+                                                <span class="sort-icons">${sortField == 'min_order_amount' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=max_discount&sortOrder=${sortField == 'max_discount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                        <th><a href="couponlist?sortField=max_discount&sortOrder=${sortField == 'max_discount' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Giảm tối đa
-                                                <span class="sort-icons">
-                                                    ${sortField == 'max_discount' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                                <span class="sort-icons">${sortField == 'max_discount' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
-                                        <th>Số lượng</th> <!-- Merged column -->
-                                        <th>
-                                            <a href="couponlist?searchCode=${searchCode}&filterType=${filterType}&filterStatus=${filterStatus}&sortField=expiry_date&sortOrder=${sortField == 'expiry_date' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                        <th>Số lượng</th>
+                                        <th><a href="couponlist?sortField=activation_date&sortOrder=${sortField == 'activation_date' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
+                                                Ngày kích hoạt
+                                                <span class="sort-icons">${sortField == 'activation_date' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
+                                            </a>
+                                        </th>
+                                        <th><a href="couponlist?sortField=expiry_date&sortOrder=${sortField == 'expiry_date' && sortOrder == 'asc' ? 'desc' : 'asc'}" class="sort-link">
                                                 Ngày hết hạn
-                                                <span class="sort-icons">
-                                                    ${sortField == 'expiry_date' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                </span>
+                                                <span class="sort-icons">${sortField == 'expiry_date' ? (sortOrder == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}</span>
                                             </a>
                                         </th>
                                         <th>Trạng thái</th>
@@ -413,143 +372,79 @@
                                                 <tr>
                                                     <td class="text-center">${status.index + 1 + (currentPage - 1)*10}</td>
                                                     <td><strong>${coupon.code}</strong></td>
-                                                    <td>
-                                                        <span class="badge-discount-type">
-                                                            ${coupon.discount_type == 'percentage' ? 'Phần trăm' : 'Cố định'}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge ${coupon.couponType == 'vip' ? 'badge-vip' : 'badge-normal'}">
-                                                            ${coupon.couponType == 'vip' ? 'VIP' : 'Thường'}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${coupon.discount_type == 'percentage'}">
-                                                                <fmt:formatNumber value="${coupon.discount_value}" maxFractionDigits="0"/>%
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <fmt:formatNumber value="${coupon.discount_value}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
+                                                    <td><span class="badge-discount-type">${coupon.discount_type == 'percentage' ? 'Phần trăm' : 'Cố định'}</span></td>
+                                                    <td><span class="badge ${coupon.couponType == 'vip' ? 'badge-vip' : 'badge-normal'}">${coupon.couponType == 'vip' ? 'VIP' : 'Thường'}</span></td>
+                                                    <td><c:choose><c:when test="${coupon.discount_type == 'percentage'}"><fmt:formatNumber value="${coupon.discount_value}" maxFractionDigits="0"/>%</c:when><c:otherwise><fmt:formatNumber value="${coupon.discount_value}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></c:otherwise></c:choose></td>
                                                     <td><fmt:formatNumber value="${coupon.min_order_amount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                                    <td><c:choose><c:when test="${coupon.max_discount > 0}"><fmt:formatNumber value="${coupon.max_discount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></c:when><c:otherwise>Không giới hạn</c:otherwise></c:choose></td>
+                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? 'Không giới hạn' : coupon.usage_limit}</td>
                                                     <td>
                                                         <c:choose>
-                                                            <c:when test="${coupon.max_discount > 0}">
-                                                                <fmt:formatNumber value="${coupon.max_discount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                            <c:when test="${coupon.activation_date != null}">
+                                                                <fmt:formatDate value="${coupon.activation_date}" pattern="dd/MM/yyyy hh:mm a" />
                                                             </c:when>
                                                             <c:otherwise>
-                                                                Không giới hạn
+                                                                Chưa kích hoạt
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? 'Không giới hạn' : coupon.usage_limit}</td> <!-- Merged column content -->
-                                                    <td><fmt:formatDate value="${coupon.expiry_date}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${coupon.status == 'active'}">
-                                                                <span class="badge badge-status badge-active">Hoạt động</span>
-                                                            </c:when>
-                                                            <c:when test="${coupon.status == 'inactive'}">
-                                                                <span class="badge badge-status badge-discount-type">Chưa kích hoạt</span>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="badge badge-status badge-expired">Hết hạn</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="btn-group" role="group">
-                                                            <a href="editCoupon?id=${coupon.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
-                                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#couponlist${coupon.id}" title="Xóa">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
+                                                    <td><fmt:formatDate value="${coupon.expiry_date}" pattern="dd/MM/yyyy hh:mm a" /></td>
+                                                    <td><c:choose><c:when test="${coupon.status == 'active'}"><span class="badge badge-status badge-active">Hoạt động</span></c:when><c:when test="${coupon.status == 'inactive'}"><span class="badge badge-status badge-discount-type">Chưa kích hoạt</span></c:when><c:otherwise><span class="badge badge-status badge-expired">Hết hạn</span></c:otherwise></c:choose></td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group" role="group">
+                                                                            <a href="editCoupon?id=${coupon.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#couponlist${coupon.id}" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                                                         </div>
                                                     </td>
                                                 </tr>
-
-                                                <!-- Delete Confirmation Modal -->
-                                                <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="couponlist?action=delete&id=${coupon.id}">Xác nhận xóa</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Bạn có chắc chắn muốn xóa mã giảm giá <strong>${coupon.code}</strong>?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                                <form action="couponlist" method="POST" style="display: inline;">
-                                                                    <input type="hidden" name="action" value="delete">
-                                                                    <input type="hidden" name="id" value="${coupon.id}">
-                                                                    <button type="submit" class="btn btn-danger">Xóa</button>
-                                                                </form>
-                                                            </div>
+                                                <!-- Giữ nguyên phần modal xác nhận xóa -->
+                                            <div class="modal fade" id="couponlist${coupon.id}" tabindex="-1" aria-labelledby="couponlist${coupon.id}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Xác nhận xóa</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">Bạn có chắc chắn muốn xóa mã giảm giá <strong>${coupon.code}</strong>?</div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                            <form action="couponlist" method="POST" style="display: inline;">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="id" value="${coupon.id}">
+                                                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <tr>
-                                                <td colspan="10" class="empty-state">
-                                                    <i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
-                                                    <p>Không tìm thấy mã giảm giá nào. Vui lòng thử lại với điều kiện tìm kiếm khác hoặc tạo mã giảm giá mới.</p>
-                                                    <a href="addCoupon" class="btn btn-primary mt-3">
-                                                        <i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </c:otherwise>
-                                    </c:choose>
+                                            </div>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr><td colspan="12" class="empty-state"><i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i><p>Không tìm thấy mã giảm giá nào.</p><a href="addCoupon" class="btn btn-primary mt-3"><i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới</a></td></tr>
+                                                </c:otherwise>
+                                            </c:choose>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div class="text-muted small">
-                        Hiển thị ${couponList.size()} / ${totalItems} mã giảm giá
-                    </div>
+                    <div class="text-muted small">Hiển thị ${couponList.size()} / ${totalItems} mã giảm giá</div>
                     <nav>
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="couponlist?page=${currentPage-1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}" aria-label="Previous">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                </li>
-                            </c:if>
-
-                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                <c:choose>
-                                    <c:when test="${i == currentPage}">
-                                        <li class="page-item active">
-                                            <span class="page-link">${i}</span>
-                                        </li>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li class="page-item">
-                                            <a class="page-link" href="couponlist?page=${i}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}">${i}</a>
-                                        </li>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-
-                            <c:if test="${currentPage < totalPages}">
-                                <li class="page-item">
-                                    <a class="page-link" href="couponlist?page=${currentPage+1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}" aria-label="Next">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </c:if>
+                                <li class="page-item"><a class="page-link" href="couponlist?page=${currentPage-1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}" aria-label="Previous"><i class="fas fa-chevron-left"></i></a></li>
+                                    </c:if>
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <c:choose>
+                                            <c:when test="${i == currentPage}"><li class="page-item active"><span class="page-link">${i}</span></li></c:when>
+                                    <c:otherwise><li class="page-item"><a class="page-link" href="couponlist?page=${i}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}">${i}</a></li></c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                                <c:if test="${currentPage < totalPages}">
+                                <li class="page-item"><a class="page-link" href="couponlist?page=${currentPage+1}&sortField=${sortField}&sortOrder=${sortOrder}&searchCode=${searchCode}&filterType=${filterType}&filterCouponType=${filterCouponType}&filterStatus=${filterStatus}" aria-label="Next"><i class="fas fa-chevron-right"></i></a></li>
+                                    </c:if>
                         </ul>
                     </nav>
                 </div>
