@@ -14,14 +14,38 @@
         <!-- Chart.js -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #34495e;
+                --accent-color: #3498db;
+                --light-color: #ecf0f1;
+                --border-color: #dee2e6;
+                --hover-color: #f8f9fa;
+            }
+
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                transition: all 0.3s;
+                padding: 20px;
+                min-height: 100vh;
+            }
+
             .dashboard-card {
-                border-radius: 10px;
+                border-radius: 8px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease;
+                border: 1px solid var(--border-color);
+                margin-bottom: 20px;
             }
+            
             .dashboard-card:hover {
                 transform: translateY(-5px);
             }
+            
             .icon-bg {
                 width: 60px;
                 height: 60px;
@@ -30,231 +54,280 @@
                 align-items: center;
                 justify-content: center;
             }
+            
             .stat-title {
                 font-size: 14px;
                 color: #6c757d;
             }
+            
             .stat-value {
                 font-size: 24px;
                 font-weight: bold;
             }
+            
             .chart-container {
                 position: relative;
                 height: 300px;
                 margin-bottom: 20px;
             }
+            
             .table-container {
                 max-height: 400px;
                 overflow-y: auto;
             }
+
+            .page-title {
+                color: var(--primary-color);
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid var(--accent-color);
+                display: inline-block;
+            }
+
+            .card-header {
+                background-color: #fff;
+                border-bottom: 1px solid var(--border-color);
+                padding: 15px 20px;
+                font-weight: 600;
+            }
+
+            .sidebar-toggle {
+                position: fixed;
+                left: 10px;
+                top: 10px;
+                z-index: 1001;
+                display: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            @media (max-width: 768px) {
+                .main-content {
+                    margin-left: 0;
+                }
+                .sidebar-toggle {
+                    display: block;
+                }
+            }
         </style>
     </head>
     <body class="bg-light">
-        <!-- Include header, navigation here -->
+        <!-- Include the sidebar -->
+        <jsp:include page="/admin/adminsidebar.jsp" />
 
-        <div class="container-fluid py-4">
-            <h2 class="mb-4">Bảng điều khiển quản trị</h2>
+        <button class="btn btn-primary sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
 
-            <!-- Stats Cards -->
-            <div class="row g-3 mb-4">
-                <!-- User Stats -->
-                <div class="col-md-3">
-                    <div class="card dashboard-card h-100">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="stat-title mb-1">Số lượng người dùng</p>
-                                <h3 class="stat-value">${userStatusCount.totalUsers}</h3>
-                                <div class="mt-2">
-                                    <span class="badge bg-success">${userStatusCount.activeCount} Hoạt động</span>
-                                    <span class="badge bg-danger">${userStatusCount.inactiveCount} Không hoạt động</span>
-                                    <span class="badge bg-warning">${userStatusCount.pendingCount} Đang chờ</span>
+        <div class="main-content">
+            <div class="container-fluid p-4">
+                <h2 class="page-title">
+                    <i class="fas fa-chart-line me-2"></i>Bảng điều khiển quản trị
+                </h2>
+
+                <!-- Stats Cards -->
+                <div class="row g-3 mb-4">
+                    <!-- User Stats -->
+                    <div class="col-md-3">
+                        <div class="card dashboard-card h-100">
+                            <div class="card-body d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="stat-title mb-1">Số lượng người dùng</p>
+                                    <h3 class="stat-value">${userStatusCount.totalUsers}</h3>
+                                    <div class="mt-2">
+                                        <span class="badge bg-success">${userStatusCount.activeCount} Hoạt động</span>
+                                        <span class="badge bg-danger">${userStatusCount.inactiveCount} Không hoạt động</span>
+                                        <span class="badge bg-warning">${userStatusCount.pendingCount} Đang chờ</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="icon-bg bg-primary bg-opacity-10">
-                                <i class="fas fa-users text-primary fa-2x"></i>
+                                <div class="icon-bg bg-primary bg-opacity-10">
+                                    <i class="fas fa-users text-primary fa-2x"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Category Stats -->
-                <div class="col-md-3">
-                    <div class="card dashboard-card h-100">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="stat-title mb-1">Số lượng thể loại</p>
-                                <h3 class="stat-value">${totalCategories}</h3>
-                                <div class="mt-2">
-                                    <c:forEach var="category" items="${categoryData}" varStatus="loop">
-                                        <c:if test="${loop.index < 3}">
-                                            <span class="badge bg-info">${category.name}</span>
+                    <!-- Category Stats -->
+                    <div class="col-md-3">
+                        <div class="card dashboard-card h-100">
+                            <div class="card-body d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="stat-title mb-1">Số lượng thể loại</p>
+                                    <h3 class="stat-value">${totalCategories}</h3>
+                                    <div class="mt-2">
+                                        <c:forEach var="category" items="${categoryData}" varStatus="loop">
+                                            <c:if test="${loop.index < 3}">
+                                                <span class="badge bg-info">${category.name}</span>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${categoryData.size() > 3}">
+                                            <span class="badge bg-secondary">+${categoryData.size() - 3} thêm</span>
                                         </c:if>
-                                    </c:forEach>
-                                    <c:if test="${categoryData.size() > 3}">
-                                        <span class="badge bg-secondary">+${categoryData.size() - 3} thêm</span>
-                                    </c:if>
+                                    </div>
+                                </div>
+                                <div class="icon-bg bg-success bg-opacity-10">
+                                    <i class="fas fa-tags text-success fa-2x"></i>
                                 </div>
                             </div>
-                            <div class="icon-bg bg-success bg-opacity-10">
-                                <i class="fas fa-tags text-success fa-2x"></i>
-                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Product Stats -->
-                <div class="col-md-3">
-                    <div class="card dashboard-card h-100">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="stat-title mb-1">Số lượng sản phẩm</p>
-                                <h3 class="stat-value">${productStatusCount.totalProducts}</h3>
-                                <div class="mt-2">
-                                    <span class="badge bg-success">${productStatusCount.activeCount} Hoạt động</span>
-                                    <span class="badge bg-danger">${productStatusCount.inactiveCount} Không hoạt động</span>
-                                    <span class="badge bg-warning">${productStatusCount.eoStockCount} Hết hàng</span>
+                    <!-- Product Stats -->
+                    <div class="col-md-3">
+                        <div class="card dashboard-card h-100">
+                            <div class="card-body d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="stat-title mb-1">Số lượng sản phẩm</p>
+                                    <h3 class="stat-value">${productStatusCount.totalProducts}</h3>
+                                    <div class="mt-2">
+                                        <span class="badge bg-success">${productStatusCount.activeCount} Hoạt động</span>
+                                        <span class="badge bg-danger">${productStatusCount.inactiveCount} Không hoạt động</span>
+                                        <span class="badge bg-warning">${productStatusCount.eoStockCount} Hết hàng</span>
+                                    </div>
+                                </div>
+                                <div class="icon-bg bg-warning bg-opacity-10">
+                                    <i class="fas fa-box text-warning fa-2x"></i>
                                 </div>
                             </div>
-                            <div class="icon-bg bg-warning bg-opacity-10">
-                                <i class="fas fa-box text-warning fa-2x"></i>
-                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Customer Stats -->
-                <div class="col-md-3">
-                    <div class="card dashboard-card h-100">
-                        <div class="card-body d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="stat-title mb-1">Doanh thu</p>
-                                <h3 class="stat-value">
-                                    <fmt:formatNumber value="${totalCustomerStats.totalSpend}" type="number" groupingUsed="true" /> VNĐ
-                                </h3>
+                    <!-- Customer Stats -->
+                    <div class="col-md-3">
+                        <div class="card dashboard-card h-100">
+                            <div class="card-body d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="stat-title mb-1">Doanh thu</p>
+                                    <h3 class="stat-value">
+                                        <fmt:formatNumber value="${totalCustomerStats.totalSpend}" type="number" groupingUsed="true" /> VNĐ
+                                    </h3>
 
-                                <div class="mt-2">
-                                    <span class="badge bg-primary">Doanh số: ${totalCustomerStats.totalPurchases}</span>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">Doanh số: ${totalCustomerStats.totalPurchases}</span>
+                                    </div>
+                                </div>
+                                <div class="icon-bg bg-danger bg-opacity-10">
+                                    <i class="fas fa-dollar-sign text-danger fa-2x"></i>
                                 </div>
                             </div>
-                            <div class="icon-bg bg-danger bg-opacity-10">
-                                <i class="fas fa-dollar-sign text-danger fa-2x"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Row -->
-            <div class="row mb-4">
-                <!-- User Status Chart -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card">
-                        <div class="card-header bg-white">
-                            <h5 class="card-title mb-0">Biểu đồ phân phối trạng thái người dùng</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="userStatusChart"></canvas>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category Distribution Chart -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card">
-                        <div class="card-header bg-white">
-                            <h5 class="card-title mb-0">Biểu đồ phân phối số lượng sản phẩm theo từng thể loại</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="categoryChart"></canvas>
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <!-- User Status Chart -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">Biểu đồ phân phối trạng thái người dùng</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="userStatusChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Product Status & Customer Table Row -->
-            <div class="row mb-4">
-                <!-- Product Status Chart -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card">
-                        <div class="card-header bg-white">
-                            <h5 class="card-title mb-0">Biểu đồ phân phối trạng thái sản phẩm</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="productStatusChart"></canvas>
+                    <!-- Category Distribution Chart -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">Biểu đồ phân phối số lượng sản phẩm theo từng thể loại</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Top Customers Table -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card">
-                        <div class="card-header bg-white">
-                            <h5 class="card-title mb-0">Top 5 vị khách quý của cửa hàng</h5>
+                <!-- Product Status & Customer Table Row -->
+                <div class="row mb-4">
+                    <!-- Product Status Chart -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">Biểu đồ phân phối trạng thái sản phẩm</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="productStatusChart"></canvas>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body table-container">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Quý danh</th>
-                                        <th>Số đơn hàng</th>
-                                        <th>Số tiền đã chi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="customer" items="${topCustomers}">
+                    </div>
+
+                    <!-- Top Customers Table -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">Top 5 vị khách quý của cửa hàng</h5>
+                            </div>
+                            <div class="card-body table-container">
+                                <table class="table table-hover">
+                                    <thead>
                                         <tr>
-                                            <td>${customer.fullName}</td>
-                                            <td>${customer.totalPurchases}</td>
-                                            <td>
-                                                <fmt:formatNumber value="${customer.totalSpend}" type="number" groupingUsed="true" /> VNĐ
-                                            </td>
+                                            <th>Quý danh</th>
+                                            <th>Số đơn hàng</th>
+                                            <th>Số tiền đã chi</th>
                                         </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Time-based Charts Row -->
-            <div class="row mb-4">
-                <!-- Monthly Product Additions Chart -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card">
-                        <div class="card-header bg-white">
-                            <h5 class="card-title mb-0">Biểu đồ phân phối sản phẩm mới</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="monthlyProductChart"></canvas>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="customer" items="${topCustomers}">
+                                            <tr>
+                                                <td>${customer.fullName}</td>
+                                                <td>${customer.totalPurchases}</td>
+                                                <td>
+                                                    <fmt:formatNumber value="${customer.totalSpend}" type="number" groupingUsed="true" /> VNĐ
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Monthly Orders Chart -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card">
-                        <div class="card-header bg-white">
-                            <h5 class="card-title mb-0">Biều đồ phân phối đơn hàng</h5>
+                <!-- Time-based Charts Row -->
+                <div class="row mb-4">
+                    <!-- Monthly Product Additions Chart -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">Biểu đồ phân phối sản phẩm mới</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="monthlyProductChart"></canvas>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="monthlyOrderChart"></canvas>
+                    </div>
+
+                    <!-- Monthly Orders Chart -->
+                    <div class="col-md-6">
+                        <div class="card dashboard-card">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">Biều đồ phân phối đơn hàng</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="monthlyOrderChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+        </div>                    
+        
         <!-- JavaScript for Charts -->
         <script>
             // User Status Chart
@@ -521,7 +594,30 @@
             });
         </script>
 
-        <!-- Bootstrap JS Bundle with Popper -->
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <script>
+            $(document).ready(function () {
+                // Toggle sidebar
+                $('.sidebar-toggle').on('click', function () {
+                    $('.sidebar').toggleClass('active');
+                    $('.main-content').toggleClass('active');
+                    $(this).hide();
+                });
+
+                // Close sidebar when clicking outside on mobile
+                $(document).on('click', function (e) {
+                    if ($(window).width() <= 768) {
+                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                            $('.sidebar').removeClass('active');
+                            $('.main-content').removeClass('active');
+                            $('.sidebar-toggle').show();
+                        }
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
