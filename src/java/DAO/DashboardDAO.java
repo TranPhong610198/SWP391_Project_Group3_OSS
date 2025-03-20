@@ -81,27 +81,45 @@ public class DashboardDAO extends DBContext {
     }
     
     // Get products by category
-    private Map<String, Integer> getProductsByCategory() {
-        Map<String, Integer> productsByCategory = new HashMap<>();
-        try {
-            String sql = "SELECT c.name, COUNT(p.id) AS product_count \n" +
-             "FROM products p \n" +
-             "JOIN categories c ON p.category_id = c.id \n" +
-             "GROUP BY c.name";
+    public Map<String, Integer> getProductsByCategory() {
+    Map<String, Integer> productsByCategory = new LinkedHashMap<>();
+    String sql = "WITH CategoryHierarchy AS ( " +
+                 "    SELECT c1.id, c1.name, c1.parent_id, " +
+                 "        CASE " +
+                 "            WHEN c1.level = 1 THEN c1.id " +
+                 "            WHEN c2.level = 1 THEN c2.id " +
+                 "            WHEN c3.level = 1 THEN c3.id " +
+                 "            ELSE NULL " +
+                 "        END AS top_level_id " +
+                 "    FROM categories c1 " +
+                 "    LEFT JOIN categories c2 ON c1.parent_id = c2.id " +
+                 "    LEFT JOIN categories c3 ON c2.parent_id = c3.id " +
+                 ") " +
+                 "SELECT TOP 5 c.name AS category_name, COUNT(p.id) AS product_count " +
+                 "FROM products p " +
+                 "JOIN CategoryHierarchy ch ON p.category_id = ch.id " +
+                 "JOIN categories c ON ch.top_level_id = c.id " +
+                 "WHERE p.status = 'active' " +
+                 "GROUP BY c.name " +
+                 "ORDER BY product_count DESC;";
 
-
-            
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                productsByCategory.put(rs.getString("name"), rs.getInt("product_count"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        
+        while (rs.next()) {
+            productsByCategory.put(rs.getString("category_name"), rs.getInt("product_count"));
         }
-        return productsByCategory;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println("Error in getProductsByCategory: " + e.getMessage());
     }
+    
+    return productsByCategory;
+}
+
+
+
     
     // Get total inventory stock
     private int getTotalStock() {
@@ -300,7 +318,7 @@ private List<LowStockProduct> getLowStockProducts(int threshold) {
     private double getAverageRating() {
         double avgRating = 0.0;
         try {
-            String sql = "SELECT AVG(CAST(rating AS FLOAT)) FROM feedback";
+            String sql = "SELECT AVG(CAST(rating AS FLOAT)) FROM feedback WHERE status = 'approved'";
             
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();

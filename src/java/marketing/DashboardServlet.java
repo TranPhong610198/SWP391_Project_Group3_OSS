@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 @WebServlet(name = "DashboardServlet", urlPatterns = {"/marketing/mktdashboard"})
 public class DashboardServlet extends HttpServlet {
@@ -27,11 +28,13 @@ public class DashboardServlet extends HttpServlet {
         // Get dashboard statistics
         DashboardDAO dashboardDAO = new DashboardDAO();
         DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
-        
+         stats.setProductsByCategory(dashboardDAO.getProductsByCategory());
+
         // Set attributes for JSP
         request.setAttribute("stats", stats);
         request.setAttribute("startDateStr", formatDate(startDate));
         request.setAttribute("endDateStr", formatDate(endDate));
+         request.setAttribute("productsByCategory", dashboardDAO.getProductsByCategory());
         
         // Forward to JSP
         request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);

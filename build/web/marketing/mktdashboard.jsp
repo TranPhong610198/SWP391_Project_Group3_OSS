@@ -169,17 +169,33 @@
         <!-- Products & Inventory stats -->
         <div class="row mb-4">
             <div class="col-xl-6 col-lg-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Products by Category</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-bar">
-                            <canvas id="productsByCategoryChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Products by Category</h6>
+        </div>
+        <div class="card-body">
+            <div style="position: relative; height: 350px; width: 100%;">
+                <canvas id="productsByCategoryChart"></canvas>
             </div>
+            <div class="mt-4 small text-center">
+                <c:choose>
+                    <c:when test="${empty stats.productsByCategory}">
+                        <span class="text-muted">No data available</span>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${stats.productsByCategory}" var="category" varStatus="status">
+                            <span class="mr-2 mb-1 d-inline-block">
+                                <c:set var="colorIndex" value="${status.index % 7}" />
+                                <i class="fas fa-circle" style="color: ${colorIndex == 0 ? '#36b9cc' : colorIndex == 1 ? '#4e73df' : colorIndex == 2 ? '#f6c23e' : colorIndex == 3 ? '#1cc88a' : colorIndex == 4 ? '#d65b4f' : colorIndex == 5 ? '#6f42c1' : '#20c997'}"></i>
+                                ${category.key}: ${category.value}
+                            </span>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+</div>
             
             <div class="col-xl-6 col-lg-6">
                 <div class="card shadow mb-4">
@@ -397,6 +413,8 @@
 
     <!-- JavaScript for charts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // New Customers Chart
         var newCustomersChartContext = document.getElementById('newCustomersChart').getContext('2d');
@@ -507,45 +525,68 @@
         });
         
         // Products by Category Chart
-        var productsByCategoryChartContext = document.getElementById('productsByCategoryChart').getContext('2d');
-        var productsByCategoryChart = new Chart(productsByCategoryChartContext, {
-            type: 'bar',
-            data: {
-                labels: [
-                    <c:forEach items="${stats.productsByCategory}" var="entry" varStatus="status">
-                        '${entry.key}',
-                    </c:forEach>
-                ],
-                datasets: [{
-                    label: 'Products',
-                    data: [
-                        <c:forEach items="${stats.productsByCategory}" var="entry" varStatus="status">
-                            ${entry.value},
-                        </c:forEach>
-                    ],
-                    backgroundColor: 'rgba(54, 185, 204, 0.7)',
-                    borderColor: 'rgba(54, 185, 204, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
+        // Products by Category Chart - Fix rendering issues
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the canvas element
+    var ctx = document.getElementById("productsByCategoryChart");
+    
+    if (!ctx) {
+        console.error("Cannot find canvas element 'productsByCategoryChart'");
+        return;
+    }
+    
+    // Make sure we get the 2D context
+    var context = ctx.getContext("2d");
+    
+    // Data that matches what's shown in the legend
+    var labels = ["Quần áo nam", "Phụ kiện", "Quần áo nữ", "Quần áo trẻ em", "Giày dép"];
+    var data = [8, 7, 6, 5, 4];
+    var backgroundColors = ["#36b9cc", "#4e73df", "#f6c23e", "#1cc88a", "#d65b4f"];
+    
+    // Create the chart with explicit height and width settings
+    var productChart = new Chart(context, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: "#ffffff",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false // Hide default legend since we have custom legend below
                 },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Products by Category'
-                    }
+                tooltip: {
+                    enabled: true
                 }
+            },
+            animation: {
+                duration: 1000 // Add animation for better rendering visibility
             }
-        });
+        }
+    });
+    
+    // Debug information to verify chart creation
+    console.log("Chart created:", productChart);
+});
+
+// Add this to the end of your script section to ensure the container has proper height
+document.addEventListener("DOMContentLoaded", function() {
+    // Set explicit height for chart container
+    var chartContainer = document.querySelector(".card-body div[style='position: relative; height: 350px; width: 100%;']");
+    if (chartContainer) {
+        chartContainer.style.height = "350px";
+        chartContainer.style.width = "100%";
+        console.log("Chart container size set");
+    }
+});
+
     </script>
 </body>
 </html>
