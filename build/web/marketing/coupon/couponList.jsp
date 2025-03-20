@@ -279,8 +279,8 @@
                             <div class="col-md-3">
                                 <select class="form-select" id="filterType" name="filterType">
                                     <option value="">Tất cả loại giảm giá</option>
-                                    <option value="percentage" ${filterType == 'percentage' ? 'selected' : ''}>Phần trăm</option>
-                                    <option value="fixed" ${filterType == 'fixed' ? 'selected' : ''}>Cố định</option>
+                                    <option value="percentage" ${filterType == 'percentage' ? 'selected' : ''}>Phần trăm (%)</option>
+                                    <option value="fixed" ${filterType == 'fixed' ? 'selected' : ''}>Cố định (VNĐ)</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -390,7 +390,7 @@
                                                             </c:when>
                                                             <c:otherwise>Không hạn chế</c:otherwise>
                                                         </c:choose></td>
-                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? '∞' : coupon.usage_limit}</td>
+                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? '♾️' : coupon.usage_limit}</td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${coupon.activation_date != null}">
