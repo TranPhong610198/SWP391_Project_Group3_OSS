@@ -374,10 +374,23 @@
                                                     <td><strong>${coupon.code}</strong></td>
                                                     <td><span class="badge-discount-type">${coupon.discount_type == 'percentage' ? 'Phần trăm' : 'Cố định'}</span></td>
                                                     <td><span class="badge ${coupon.couponType == 'vip' ? 'badge-vip' : 'badge-normal'}">${coupon.couponType == 'vip' ? 'VIP' : 'Thường'}</span></td>
-                                                    <td><c:choose><c:when test="${coupon.discount_type == 'percentage'}"><fmt:formatNumber value="${coupon.discount_value}" maxFractionDigits="0"/>%</c:when><c:otherwise><fmt:formatNumber value="${coupon.discount_value}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></c:otherwise></c:choose></td>
+                                                    <td><c:choose>
+                                                            <c:when test="${coupon.discount_type == 'percentage'}">
+                                                                <fmt:formatNumber value="${coupon.discount_value}" maxFractionDigits="0"/>
+                                                                %
+                                                            </c:when>
+                                                                <c:otherwise>
+                                                                    <fmt:formatNumber value="${coupon.discount_value}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                                </c:otherwise>
+                                                        </c:choose></td>
                                                     <td><fmt:formatNumber value="${coupon.min_order_amount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                                    <td><c:choose><c:when test="${coupon.max_discount > 0}"><fmt:formatNumber value="${coupon.max_discount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></c:when><c:otherwise>Không giới hạn</c:otherwise></c:choose></td>
-                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? 'Không giới hạn' : coupon.usage_limit}</td>
+                                                    <td><c:choose>
+                                                            <c:when test="${coupon.max_discount > 0}">
+                                                                <fmt:formatNumber value="${coupon.max_discount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                            </c:when>
+                                                            <c:otherwise>Không hạn chế</c:otherwise>
+                                                        </c:choose></td>
+                                                    <td>${coupon.used_count}/${coupon.usage_limit == 0 ? '∞' : coupon.usage_limit}</td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${coupon.activation_date != null}">
@@ -389,10 +402,26 @@
                                                         </c:choose>
                                                     </td>
                                                     <td><fmt:formatDate value="${coupon.expiry_date}" pattern="dd/MM/yyyy hh:mm a" /></td>
-                                                    <td><c:choose><c:when test="${coupon.status == 'active'}"><span class="badge badge-status badge-active">Hoạt động</span></c:when><c:when test="${coupon.status == 'inactive'}"><span class="badge badge-status badge-discount-type">Chưa kích hoạt</span></c:when><c:otherwise><span class="badge badge-status badge-expired">Hết hạn</span></c:otherwise></c:choose></td>
-                                                            <td class="text-center">
-                                                                <div class="btn-group" role="group">
-                                                                            <a href="editCoupon?id=${coupon.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                                                    <td><c:choose>
+                                                            <c:when test="${coupon.status == 'active'}">
+                                                                <span class="badge badge-status badge-active">
+                                                                    Hoạt động
+                                                                </span>
+                                                            </c:when>
+                                                            <c:when test="${coupon.status == 'inactive'}">
+                                                                <span class="badge badge-status badge-discount-type">
+                                                                    Chưa kích hoạt
+                                                                </span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="badge badge-status badge-expired">
+                                                                    Hết hạn
+                                                                </span>
+                                                            </c:otherwise>
+                                                        </c:choose></td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group" role="group">
+                                                            <a href="editCoupon?id=${coupon.id}" class="btn btn-outline-primary btn-sm" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
                                                             <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#couponlist${coupon.id}" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                                                         </div>
                                                     </td>
@@ -420,9 +449,13 @@
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
-                                        <tr><td colspan="12" class="empty-state"><i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i><p>Không tìm thấy mã giảm giá nào.</p><a href="addCoupon" class="btn btn-primary mt-3"><i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới</a></td></tr>
-                                                </c:otherwise>
-                                            </c:choose>
+                                        <tr><td colspan="12" class="empty-state"><i class="fas fa-ticket-alt fa-3x mb-3" style="opacity: 0.5;"></i>
+                                                <p>Không tìm thấy mã giảm giá nào.</p>
+                                                <a href="addCoupon" class="btn btn-primary mt-3">
+                                                    <i class="fas fa-plus me-2"></i>Thêm mã giảm giá mới
+                                                </a></td></tr>
+                                    </c:otherwise>
+                                    </c:choose>
                                 </tbody>
                             </table>
                         </div>

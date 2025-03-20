@@ -224,14 +224,14 @@
                         <div class="mb-3">
                             <label for="usage_limit" class="form-label">Số lần sử dụng tối đa</label>
                             <input type="number" class="form-control" id="usage_limit" name="usage_limit" value="${param.usage_limit != null ? param.usage_limit : coupon.usage_limit}" min="0">
-                            <div class="form-text">Để trống nếu không giới hạn số lần sử dụng.</div>
+                            <div class="form-text">Nhập 0 hoặc để trống nếu không giới hạn số lần sử dụng.</div>
                         </div>
 
                         <div class="mb-3">
-    <label for="expiry_date" class="form-label required-field">Ngày hết hạn</label>
-    <input type="datetime-local" class="form-control" id="expiry_date" name="expiry_date" 
-           value="${param.expiry_date != null ? param.expiry_date : (coupon.expiry_date != null ? fn:substring(coupon.expiry_date.toString(), 0, 16) : '')}" required>
-</div>
+                            <label for="expiry_date" class="form-label required-field">Ngày hết hạn</label>
+                            <input type="datetime-local" class="form-control" id="expiry_date" name="expiry_date" 
+                                   value="${param.expiry_date != null ? param.expiry_date : (coupon.expiry_date != null ? fn:substring(coupon.expiry_date.toString(), 0, 16) : '')}" required>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label required-field">Loại mã giảm giá</label>
