@@ -455,6 +455,9 @@
                             <h5 class="card-title">Thông tin đơn hàng</h5>
                             <c:choose>
                                 <c:when test="${order.status eq 'pending_pay'}">
+                                    <span class="order-status status-pending">Chờ thanh toán</span>
+                                </c:when>
+                                <c:when test="${order.status eq 'pending'}">
                                     <span class="order-status status-pending">Chờ xử lý</span>
                                 </c:when>
                                 <c:when test="${order.status eq 'processing'}">
@@ -574,22 +577,19 @@
                                 <div class="product-item">
                                     <div class="row align-items-center">
                                         <div class="col-2 col-md-1">
-                                            <img src="${item.productThumbnail}" alt="${item.productTitle}" class="product-img">
+                                            <img src="${item.productImage}" alt="${item.productName}" class="product-img">
                                         </div>
                                         <div class="col-10 col-md-6">
-                                            <div class="product-name">${item.productTitle}</div>
-                                            <div class="product-variant">Size: ${item.size} | Màu: ${item.color}</div>
+                                            <div class="product-name">${item.productName}</div>
+                                            <div class="product-variant">${item.variantName}</div>
                                         </div>
                                         <div class="col-md-2 text-center">
                                             <div class="quantity">x${item.quantity}</div>
                                         </div>
                                         <div class="col-md-3 text-end">
                                             <div class="price">
-                                                <fmt:formatNumber value="${item.productPrice * item.quantity}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                <fmt:formatNumber value="${item.unitPriceAtOrder * item.quantity}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                             </div>
-                                            <small class="text-muted">
-                                                <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/> / sản phẩm
-                                            </small>
                                         </div>
                                     </div>
                                 </div>

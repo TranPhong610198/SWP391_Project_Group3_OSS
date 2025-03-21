@@ -109,7 +109,8 @@ public class MyOrderServlet extends HttpServlet {
         
         if (user != null) {
             Order order = orderDAO.getOrderById(orderId);
-            if (order != null && order.getUserId() == user.getId() && "pending".equals(order.getPaymentStatus())) {
+            if (order != null && order.getUserId() == user.getId() && 
+                ("pending".equals(order.getPaymentStatus()) || "pending_pay".equals(order.getStatus()))) {
                 session.setAttribute("pending_order", order);
                 response.sendRedirect("payment");
                 return;
@@ -118,7 +119,6 @@ public class MyOrderServlet extends HttpServlet {
             }
         }
     }
-    
     processRequest(request, response);
 }
 

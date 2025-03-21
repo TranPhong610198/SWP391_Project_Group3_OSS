@@ -231,7 +231,7 @@ public class PaymentServlet extends HttpServlet {
                     System.out.println("Error updating payment status to pending: " + e.getMessage());
                 }
 
-                orderDAO.updateOrderStatus(order.getId(), "pending", order.getUserId());
+                orderDAO.updateOrderStatus(order.getId(), "pending_pay", order.getUserId());
                 order.setPaymentStatus("pending");
             }
 

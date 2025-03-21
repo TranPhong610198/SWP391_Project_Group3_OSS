@@ -656,6 +656,9 @@
                                 <div>
                                     <c:choose>
                                         <c:when test="${order.status == 'pending_pay'}">
+                                            <span class="order-status status-pending">Chờ thanh toán</span>
+                                        </c:when>
+                                        <c:when test="${order.status == 'pending'}">
                                             <span class="order-status status-pending">Chờ xác nhận</span>
                                         </c:when>
                                         <c:when test="${order.status == 'processing'}">

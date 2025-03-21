@@ -29,104 +29,77 @@ public class OrderDAO extends DBContext {
             conn = connection;
             conn.setAutoCommit(false);
 
-            // Bước 1: Thêm đơn hàng vào bảng orders
+            // Thêm đơn hàng vào bảng orders
             String sqlOrder = "INSERT INTO orders (user_id, status, total_amount, recipient_name, recipient_email, "
                     + "recipient_phone, recipient_address, notes, created_at, updated_at) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), GETDATE())";
 
             stmtOrder = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS);
-
-            // Nếu đây là đơn hàng của khách vãng lai, user_id sẽ là null
             if (order.getUserId() > 0) {
                 stmtOrder.setInt(1, order.getUserId());
             } else {
                 stmtOrder.setNull(1, java.sql.Types.INTEGER);
             }
-
             stmtOrder.setString(2, order.getStatus() != null ? order.getStatus() : "pending");
             stmtOrder.setDouble(3, order.getTotal());
             stmtOrder.setString(4, order.getRecipientName());
             stmtOrder.setString(5, order.getRecipientEmail());
             stmtOrder.setString(6, order.getPhone());
             stmtOrder.setString(7, order.getAddress());
-
-            // Tạo mã đơn hàng
-           String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
-            stmtOrder.setString(8, orderCode);
+            stmtOrder.setString(8, order.getOrderCode());
             stmtOrder.executeUpdate();
 
-            // Lấy ID của đơn hàng vừa tạo
             rs = stmtOrder.getGeneratedKeys();
             int orderId = 0;
             if (rs.next()) {
                 orderId = rs.getInt(1);
                 order.setId(orderId);
-                order.setOrderCode(orderCode);
             }
 
-            // Bước 2: Thêm các sản phẩm vào bảng order_items
+            // Thêm các sản phẩm vào bảng order_items (dữ liệu cứng từ cart_items)
             if (orderId > 0 && order.getItems() != null && !order.getItems().isEmpty()) {
-                String sqlItems = "INSERT INTO order_items (order_id, product_id, variant_id, quantity, unit_price) "
-                        + "VALUES (?, ?, ?, ?, ?)";
+                String sqlItems = "INSERT INTO order_items (order_id, product_id, product_name, product_image, variant_id, variant_name, quantity, unit_price_at_order) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
                 stmtItems = conn.prepareStatement(sqlItems);
-
                 for (CartItem item : order.getItems()) {
                     stmtItems.setInt(1, orderId);
                     stmtItems.setInt(2, item.getProductId());
-                    stmtItems.setInt(3, item.getVariantId());
-                    stmtItems.setInt(4, item.getQuantity());
-                    stmtItems.setDouble(5, item.getProductPrice());
+                    stmtItems.setString(3, item.getProductTitle());
+                    stmtItems.setString(4, item.getProductThumbnail());
+                    stmtItems.setInt(5, item.getVariantId());
+                    stmtItems.setString(6, item.getSize() + " - " + item.getColor()); // Lưu thông tin biến thể
+                    stmtItems.setInt(7, item.getQuantity());
+                    stmtItems.setDouble(8, item.getProductPrice());
                     stmtItems.addBatch();
                 }
-
                 stmtItems.executeBatch();
             }
 
-            // Bước 3: Thêm thông tin thanh toán vào bảng payments
+            // Thêm thông tin thanh toán
             String sqlPayment = "INSERT INTO payments (order_id, payment_method, payment_status, created_at) "
                     + "VALUES (?, ?, ?, GETDATE())";
-
             stmtPayment = conn.prepareStatement(sqlPayment);
             stmtPayment.setInt(1, orderId);
-
-            // Chuyển đổi phương thức thanh toán thành định dạng phù hợp với cột payment_method
-            String paymentMethodValue;
-            switch (order.getPaymentMethod().toLowerCase()) {
-                case "bank":
-                    paymentMethodValue = "bank_transfer";
-                    break;
-                case "cod":
-                    paymentMethodValue = "cod";
-                    break;
-                default:
-                    paymentMethodValue = "cod";
-            }
-
+            String paymentMethodValue = "bank".equals(order.getPaymentMethod()) ? "bank_transfer" : "cod";
             stmtPayment.setString(2, paymentMethodValue);
-
-            // Đặt trạng thái thanh toán ban đầu
-            String paymentStatus = "cod".equals(paymentMethodValue) ? "pending" : "pending";
-            stmtPayment.setString(3, paymentStatus);
-
+            stmtPayment.setString(3, "pending");
             stmtPayment.executeUpdate();
 
-            // Bước 4: Nếu có sử dụng mã giảm giá, lưu thông tin sử dụng mã giảm giá
+            // Thêm mã giảm giá nếu có
             if (order.getCouponCode() != null && !order.getCouponCode().isEmpty() && order.getDiscountAmount() > 0) {
                 applyCouponToOrder(conn, orderId, order.getCouponCode(), order.getDiscountAmount(), order.getRecipientEmail());
             }
 
-            // Bước 5: Thêm thông tin vận chuyển
+            // Thêm thông tin vận chuyển
             if (order.getShippingMethod() != null && !order.getShippingMethod().isEmpty()) {
                 addShippingInfo(conn, orderId, order.getShippingMethod());
             }
 
-            // Bước 6: Thêm lịch sử đơn hàng
-            addOrderHistory(conn, orderId, order.getUserId(), "pending", "Đơn hàng mới được tạo");
+            // Thêm lịch sử đơn hàng
+            addOrderHistory(conn, orderId, order.getUserId() > 0 ? order.getUserId() : 1, order.getStatus(), "Đơn hàng mới được tạo");
 
-            // Commit giao dịch
             conn.commit();
-
             return order;
 
         } catch (SQLException e) {
@@ -135,7 +108,7 @@ public class OrderDAO extends DBContext {
                     conn.rollback();
                 }
             } catch (SQLException ex) {
-                System.out.println("Error rolling back transaction: " + ex.getMessage());
+                System.out.println("Error rolling back: " + ex.getMessage());
             }
             System.out.println("Error creating order: " + e.getMessage());
             e.printStackTrace();
@@ -530,105 +503,105 @@ public class OrderDAO extends DBContext {
     }
 
     public boolean updateOrderStatus(int orderId, String status, int updatedBy) {
-    // Validate status
-    String[] validStatuses = {"pending_pay", "pending", "processing", "shipped", "completed", "cancelled"};
-    boolean isValidStatus = false;
-    for (String validStatus : validStatuses) {
-        if (validStatus.equals(status)) {
-            isValidStatus = true;
-            break;
+        // Validate status
+        String[] validStatuses = {"pending_pay", "pending", "processing", "shipped", "completed", "cancelled"};
+        boolean isValidStatus = false;
+        for (String validStatus : validStatuses) {
+            if (validStatus.equals(status)) {
+                isValidStatus = true;
+                break;
+            }
         }
-    }
-    if (!isValidStatus) {
-        System.out.println("Invalid status value: " + status);
-        return false;
-    }
-
-    try {
-        // Update order status
-        String sqlUpdateOrder = "UPDATE orders SET status = ?, updated_at = GETDATE() WHERE id = ?";
-        PreparedStatement stmtUpdateOrder = connection.prepareStatement(sqlUpdateOrder);
-        stmtUpdateOrder.setString(1, status);
-        stmtUpdateOrder.setInt(2, orderId);
-        stmtUpdateOrder.executeUpdate();
-
-        // Add to order history
-        String sqlOrderHistory = "INSERT INTO order_history (order_id, updated_by, status, updated_at) "
-                + "VALUES (?, ?, ?, GETDATE())";
-        PreparedStatement stmtOrderHistory = connection.prepareStatement(sqlOrderHistory);
-        stmtOrderHistory.setInt(1, orderId);
-        stmtOrderHistory.setInt(2, updatedBy);
-        stmtOrderHistory.setString(3, status);
-        stmtOrderHistory.executeUpdate();
-
-        stmtUpdateOrder.close();
-        stmtOrderHistory.close();
-
-        return true;
-    } catch (SQLException e) {
-        System.out.println("Error updating order status: " + e.getMessage());
-        return false;
-    }
-}
-
-public boolean cancelOrder(int orderId, int userId) {
-    try {
-        // Kiểm tra đơn hàng có thuộc về người dùng này không
-        String sqlCheckOrder = "SELECT id FROM orders WHERE id = ? AND user_id = ?";
-        PreparedStatement stmtCheckOrder = connection.prepareStatement(sqlCheckOrder);
-        stmtCheckOrder.setInt(1, orderId);
-        stmtCheckOrder.setInt(2, userId);
-        ResultSet rs = stmtCheckOrder.executeQuery();
-
-        if (!rs.next()) {
-            rs.close();
-            stmtCheckOrder.close();
-            return false; // Đơn hàng không tồn tại hoặc không thuộc về người dùng này
+        if (!isValidStatus) {
+            System.out.println("Invalid status value: " + status);
+            return false;
         }
 
-        rs.close();
-        stmtCheckOrder.close();
+        try {
+            // Update order status
+            String sqlUpdateOrder = "UPDATE orders SET status = ?, updated_at = GETDATE() WHERE id = ?";
+            PreparedStatement stmtUpdateOrder = connection.prepareStatement(sqlUpdateOrder);
+            stmtUpdateOrder.setString(1, status);
+            stmtUpdateOrder.setInt(2, orderId);
+            stmtUpdateOrder.executeUpdate();
 
-        // Lấy thông tin đơn hàng để hoàn trả tồn kho
-        List<CartItem> orderItems = getOrderItems(orderId);
+            // Add to order history
+            String sqlOrderHistory = "INSERT INTO order_history (order_id, updated_by, status, updated_at) "
+                    + "VALUES (?, ?, ?, GETDATE())";
+            PreparedStatement stmtOrderHistory = connection.prepareStatement(sqlOrderHistory);
+            stmtOrderHistory.setInt(1, orderId);
+            stmtOrderHistory.setInt(2, updatedBy);
+            stmtOrderHistory.setString(3, status);
+            stmtOrderHistory.executeUpdate();
 
-        // Cập nhật trạng thái đơn hàng thành "cancelled"
-        if (updateOrderStatus(orderId, "cancelled", userId)) {
-            // Hoàn trả số lượng sản phẩm về kho
-            InventoryDAO inventoryDAO = new InventoryDAO();
-            for (CartItem item : orderItems) {
-                inventoryDAO.updateVariantQuantity(item.getVariantId(), item.getQuantity());
-            }
-
-            // Kiểm tra và cập nhật số lượt dùng của mã giảm giá
-            String sqlGetCoupon = "SELECT oc.coupon_id FROM order_coupons oc WHERE oc.order_id = ?";
-            PreparedStatement stmtGetCoupon = connection.prepareStatement(sqlGetCoupon);
-            stmtGetCoupon.setInt(1, orderId);
-            ResultSet rsCoupon = stmtGetCoupon.executeQuery();
-
-            if (rsCoupon.next()) {
-                int couponId = rsCoupon.getInt("coupon_id");
-                // Giảm số lần sử dụng của mã giảm giá
-                String sqlUpdateCoupon = "UPDATE coupons SET used_count = used_count - 1 WHERE id = ? AND used_count > 0";
-                PreparedStatement stmtUpdateCoupon = connection.prepareStatement(sqlUpdateCoupon);
-                stmtUpdateCoupon.setInt(1, couponId);
-                stmtUpdateCoupon.executeUpdate();
-
-                stmtUpdateCoupon.close();
-            }
-
-            rsCoupon.close();
-            stmtGetCoupon.close();
+            stmtUpdateOrder.close();
+            stmtOrderHistory.close();
 
             return true;
+        } catch (SQLException e) {
+            System.out.println("Error updating order status: " + e.getMessage());
+            return false;
         }
-
-        return false;
-    } catch (SQLException e) {
-        System.out.println("Error cancelling order: " + e.getMessage());
-        return false;
     }
-}
+
+    public boolean cancelOrder(int orderId, int userId) {
+        try {
+            // Kiểm tra đơn hàng có thuộc về người dùng này không
+            String sqlCheckOrder = "SELECT id FROM orders WHERE id = ? AND user_id = ?";
+            PreparedStatement stmtCheckOrder = connection.prepareStatement(sqlCheckOrder);
+            stmtCheckOrder.setInt(1, orderId);
+            stmtCheckOrder.setInt(2, userId);
+            ResultSet rs = stmtCheckOrder.executeQuery();
+
+            if (!rs.next()) {
+                rs.close();
+                stmtCheckOrder.close();
+                return false; // Đơn hàng không tồn tại hoặc không thuộc về người dùng này
+            }
+
+            rs.close();
+            stmtCheckOrder.close();
+
+            // Lấy thông tin đơn hàng để hoàn trả tồn kho
+            List<CartItem> orderItems = getOrderItems(orderId);
+
+            // Cập nhật trạng thái đơn hàng thành "cancelled"
+            if (updateOrderStatus(orderId, "cancelled", userId)) {
+                // Hoàn trả số lượng sản phẩm về kho
+                InventoryDAO inventoryDAO = new InventoryDAO();
+                for (CartItem item : orderItems) {
+                    inventoryDAO.updateVariantQuantity(item.getVariantId(), item.getQuantity());
+                }
+
+                // Kiểm tra và cập nhật số lượt dùng của mã giảm giá
+                String sqlGetCoupon = "SELECT oc.coupon_id FROM order_coupons oc WHERE oc.order_id = ?";
+                PreparedStatement stmtGetCoupon = connection.prepareStatement(sqlGetCoupon);
+                stmtGetCoupon.setInt(1, orderId);
+                ResultSet rsCoupon = stmtGetCoupon.executeQuery();
+
+                if (rsCoupon.next()) {
+                    int couponId = rsCoupon.getInt("coupon_id");
+                    // Giảm số lần sử dụng của mã giảm giá
+                    String sqlUpdateCoupon = "UPDATE coupons SET used_count = used_count - 1 WHERE id = ? AND used_count > 0";
+                    PreparedStatement stmtUpdateCoupon = connection.prepareStatement(sqlUpdateCoupon);
+                    stmtUpdateCoupon.setInt(1, couponId);
+                    stmtUpdateCoupon.executeUpdate();
+
+                    stmtUpdateCoupon.close();
+                }
+
+                rsCoupon.close();
+                stmtGetCoupon.close();
+
+                return true;
+            }
+
+            return false;
+        } catch (SQLException e) {
+            System.out.println("Error cancelling order: " + e.getMessage());
+            return false;
+        }
+    }
 
     public List<Order> getOrdersByUserId(int userId) {
         return getUserOrders(userId, null, null, 1, Integer.MAX_VALUE);
@@ -745,5 +718,5 @@ public boolean cancelOrder(int orderId, int userId) {
 
         return orders;
     }
-    
+
 }

@@ -59,14 +59,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     // Kiểm tra đơn hàng đã hoàn tất từ PaymentServlet
     Order completedOrder = (Order) session.getAttribute("completed_order");
     if (completedOrder != null) {
-        // Hiển thị trang xác nhận đơn hàng thành công
         prepareOrderAttributes(request, completedOrder);
         session.removeAttribute("completed_order");
         request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
         return;
     }
 
-    // Lấy thông tin đơn hàng từ session
+    // Lấy thông tin từ session
     String addressId = (String) session.getAttribute("shipping_address_id");
     String shippingMethod = (String) session.getAttribute("shipping_method");
     Double shippingFee = (Double) session.getAttribute("shipping_fee");
@@ -118,7 +117,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     String appliedCoupon = (String) session.getAttribute("appliedCoupon");
     double total = subtotal - (discountAmount != null ? discountAmount : 0) + shippingFee;
 
-    // Tạo đối tượng Order nhưng chưa lưu vào database
+    // Tạo đối tượng Order
     Order order = new Order();
     if (user != null) {
         order.setUserId(user.getId());
@@ -129,12 +128,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
     String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
     order.setOrderCode(orderCode);
-    order.setStatus("pending_pay");
+    order.setStatus("bank".equals(paymentMethod) ? "pending_pay" : "pending"); // Cập nhật trạng thái
     order.setTotal(total);
     order.setRecipientName(shippingAddress.getRecipientName());
     order.setPhone(shippingAddress.getPhone());
     order.setAddress(shippingAddress.getAddress());
-    order.setItems(selectedItems);
+    order.setItems(selectedItems); // Gán danh sách sản phẩm từ cart_items
     order.setShippingMethod(shippingMethod);
     order.setPaymentMethod(paymentMethod);
     order.setShippingFee(shippingFee);
@@ -144,13 +143,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         order.setCouponCode(appliedCoupon);
     }
 
+    // Xử lý theo phương thức thanh toán
     if ("bank".equals(paymentMethod)) {
-        // Lưu đơn hàng tạm thời vào session thay vì database
         session.setAttribute("pending_order", order);
         response.sendRedirect("payment");
         return;
     } else if ("cod".equals(paymentMethod)) {
-        // Với COD, lưu đơn hàng vào database ngay
         Order savedOrder = orderDAO.createOrder(order);
         if (savedOrder != null) {
             prepareOrderAttributes(request, savedOrder);
