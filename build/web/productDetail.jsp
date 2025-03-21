@@ -520,32 +520,31 @@
             <!-- Feedback Section -->
             <div id="feedback_section" class="feedback-section">
                 <h2 class="feedback-title">Đánh Giá (${feedbacks.size()>0 ? feedbacks.size() : 0})</h2>
-                <!-- Trung Bình Sao và Nút Lọc -->
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <div class="average-rating">
-                            <h3>${averageRating} trên 5</h3>
-                            <div class="star-rating">
-                                <c:forEach begin="1" end="5" var="i">
-                                    <i class="fas fa-star ${i <= averageRating ? 'text-warning' : 'text-muted'}"></i>
-                                </c:forEach>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="filter-buttons">
-                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}#feedback_section">Tất Cả</a>
-                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=5#feedback_section">5 Sao (${fiveStarCount})</a>
-                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=4#feedback_section">4 Sao (${fourStarCount})</a>
-                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=3#feedback_section">3 Sao (${threeStarCount})</a>
-                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=2#feedback_section">2 Sao (${twoStarCount})</a>
-                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=1#feedback_section">1 Sao (${oneStarCount})</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Đánh giá -->
                 <c:choose>
                     <c:when test="${not empty feedbacks}">
+                        <!-- Trung Bình Sao và Nút Lọc -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="average-rating">
+                                    <h3> <fmt:formatNumber value="${averageRating}" type="number" maxFractionDigits="1"/> trên 5</h3>
+                                    <div class="star-rating">
+                                        <c:forEach begin="1" end="5" var="i">
+                                            <i class="fas fa-star ${i <= averageRating ? 'text-warning' : 'text-muted'}"></i>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="filter-buttons">
+                                    <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}#feedback_section">Tất Cả</a>
+                                    <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=5#feedback_section">5 Sao (${fiveStarCount})</a>
+                                    <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=4#feedback_section">4 Sao (${fourStarCount})</a>
+                                    <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=3#feedback_section">3 Sao (${threeStarCount})</a>
+                                    <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=2#feedback_section">2 Sao (${twoStarCount})</a>
+                                    <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=1#feedback_section">1 Sao (${oneStarCount})</a>
+                                </div>
+                            </div>
+                        </div>
                         <c:forEach items="${feedbacks}" var="feedback">
                             <div class="feedback-item">
                                 <div class="feedback-avatar">
