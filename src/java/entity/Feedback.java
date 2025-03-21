@@ -5,6 +5,7 @@
 package entity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -25,6 +26,20 @@ public class Feedback {
     private String productTitle;
     private String productThumbnail;
     private int productId;
+    private List<FeedbackReply> replies;
+    private List<String> feedbackImages;
+
+    public List<String> getFeedbackImages() {
+        return feedbackImages;
+    }
+
+    public void setFeedbackImages(List<String> feedbackImages) {
+        this.feedbackImages = feedbackImages;
+    }
+
+    public List<FeedbackReply> getReplies() {
+        return replies;
+    }
 
     public Feedback() {
     }
@@ -108,7 +123,6 @@ public class Feedback {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    
 
     public String getProductTitle() {
         return productTitle;
@@ -138,4 +152,9 @@ public class Feedback {
     public String toString() {
         return "Feedback{id=" + id + ", rating=" + rating + ", comment=" + comment + ", status=" + status + ", productId=" + productId + "}";
     }
+
+    public void setReplies(List<FeedbackReply> replies) {
+        this.replies = replies;
+    }
+
 }

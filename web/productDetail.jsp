@@ -230,6 +230,26 @@
                 color: #999;
                 margin-top: 5px;
             }
+            .feedback-images {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .feedback-images img {
+                border-radius: 4px;
+            }
+            .reply {
+                background-color: #f9f9f9;
+                padding: 10px;
+                border-radius: 4px;
+                margin-top: 10px;
+            }
+            .reply .feedback-author {
+                color: #2c3e50;
+                font-weight: 600;
+            }
 
             /* Similar Products Section - Matching productList.jsp */
             .similar-products-section {
@@ -423,7 +443,7 @@
                             <div class="options-row">
                                 <div class="options-col">
                                     <label for="sizeId" class="option-label">Chọn Size</label>
-                                    <select id="sizeId" name="sizeId" class="form-select" required="" onchange="this.form.submit()">
+                                    <select id="sizeId" name="sizeId" class="form-select" required="" onchange="changeSize(this.value)">
                                         <option value="">Chọn Size</option>
                                         <c:forEach items="${sizes}" var="size">
                                             <option value="${size.id}" ${sizeId == size.id ? 'selected' : ''}>${size.name}</option>
@@ -433,7 +453,7 @@
 
                                 <div class="options-col">
                                     <label for="colorId" class="option-label">Chọn Màu</label>
-                                    <select id="colorId" name="colorId" class="form-select" required="" onchange="this.form.submit()">
+                                    <select id="colorId" name="colorId" class="form-select" required="" onchange="changeColor(this.value)">
                                         <option value="">Chọn Màu</option>
                                         <c:forEach items="${colors}" var="color">
                                             <option value="${color.id}" ${colorId == color.id ? 'selected' : ''}>${color.name}</option>
@@ -495,10 +515,32 @@
 
             <!---------------------Hiển thị danh sách đánh giá sản phẩm, nhưng chưa phát triển-------------------------------------------------->
             <!-- Feedback Section -->
-            <div class="feedback-section">
+            <div id="feedback_section" class="feedback-section">
                 <h2 class="feedback-title">Đánh Giá (${feedbacks.size()>0 ? feedbacks.size() : 0})</h2>
-
-
+                <!-- Trung Bình Sao và Nút Lọc -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="average-rating">
+                            <h3>${averageRating} trên 5</h3>
+                            <div class="star-rating">
+                                <c:forEach begin="1" end="5" var="i">
+                                    <i class="fas fa-star ${i <= averageRating ? 'text-warning' : 'text-muted'}"></i>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="filter-buttons">
+                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}#feedback_section">Tất Cả</a>
+                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=5#feedback_section">5 Sao (${fiveStarCount})</a>
+                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=4#feedback_section">4 Sao (${fourStarCount})</a>
+                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=3#feedback_section">3 Sao (${threeStarCount})</a>
+                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=2#feedback_section">2 Sao (${twoStarCount})</a>
+                            <a class="btn btn-outline-secondary me-2" href="productdetail?id=${product.id}&filterStar=1#feedback_section">1 Sao (${oneStarCount})</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Đánh giá -->
                 <c:choose>
                     <c:when test="${not empty feedbacks}">
                         <c:forEach items="${feedbacks}" var="feedback">
@@ -510,15 +552,41 @@
                                     <div class="feedback-author">${feedback.userName}</div>
                                     <div class="feedback-rating">
                                         <c:forEach begin="1" end="5" var="i">
-                                            <i class="fas fa-star {
-                                                   i <= feedback.rating ? '' : 'text-muted'
-                                               }"></i>
+                                            <i class="fas fa-star ${i <= feedback.rating ? '' : 'text-muted'}"></i>
                                         </c:forEach>
                                     </div>
-                                    <div class="feedback-text">{feedback.comment}</div>
-                                    <div class="feedback-date">
-                                        <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy" />
+                                    <div class="feedback-text">${feedback.comment}</div>
+                                    <!-- Show ảnh -->
+                                    <div class="feedback-images">
+                                        <c:forEach items="${feedback.feedbackImages}" var="imageUrl">
+                                            <img src="${imageUrl}" alt="Feedback Image" style="width: 100px; height: 100px; object-fit: cover; margin-right: 10px;" onclick="showImageModal(this.src)">
+                                        </c:forEach>
                                     </div>
+                                    <!-- Modal cho ảnh -->
+                                    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <img id="modalImage" src="" alt="Large Image" style="width: 100%;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="feedback-date">
+                                        <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+                                    </div>
+                                    <!-- Hiển thị phản hồi của cửa hàng -->
+                                    <c:if test="${not empty feedback.replies}">
+                                        <c:forEach items="${feedback.replies}" var="reply">
+                                            <div class="reply" style="margin-left: 40px; margin-top: 10px;">
+                                                <div class="feedback-author">Cửa hàng (${reply.userFullName})</div>
+                                                <div class="feedback-text">${reply.comment}</div>
+                                                <div class="feedback-date">
+                                                    <fmt:formatDate value="${reply.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </c:if>
                                 </div>
                             </div>
                         </c:forEach>
@@ -530,7 +598,34 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
-                <!---------------------------------------------------------------------------------------------------------------------->
+
+                <!-- Phân trang -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <!-- Nút Previous -->
+                        <c:if test="${currentPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="productdetail?id=${product.id}&filterStar=${filterStar}&page=${currentPage - 1}#feedback_section" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        </c:if>
+                        <!-- Các trang -->
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                <a class="page-link" href="productdetail?id=${product.id}&filterStar=${filterStar}&page=${i}#feedback_section">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <!-- Nút Next -->
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="productdetail?id=${product.id}&filterStar=${filterStar}&page=${currentPage + 1}#feedback_section" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
             </div>
 
             <!-- Similar Products Section - Displays up to 4 similar products from the same category -->
@@ -563,49 +658,68 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-                                            function changeMainImage(src) {
-                                                document.getElementById('main-product-image').src = src;
+                                                function changeMainImage(src) {
+                                                    document.getElementById('main-product-image').src = src;
+                                                    // Update active thumbnail
+                                                    const thumbnails = document.querySelectorAll('.thumbnail');
+                                                    thumbnails.forEach(thumb => {
+                                                        if (thumb.src === src) {
+                                                            thumb.classList.add('active');
+                                                        } else {
+                                                            thumb.classList.remove('active');
+                                                        }
+                                                    });
+                                                }
 
-                                                // Update active thumbnail
-                                                const thumbnails = document.querySelectorAll('.thumbnail');
-                                                thumbnails.forEach(thumb => {
-                                                    if (thumb.src === src) {
-                                                        thumb.classList.add('active');
-                                                    } else {
-                                                        thumb.classList.remove('active');
+                                                function changeSize(sizeID) {
+                                                    setTimeout(() => { // Đợi một chút để đảm bảo giá trị mới được cập nhật
+                                                        const colorID = document.getElementById('colorId').value;
+                                                        window.location.href = 'productdetail?id=${product.id}&sizeId=' + sizeID + '&colorId=' + colorID;
+                                                    }, 10);
+                                                }
+
+                                                function changeColor(colorID) {
+                                                    setTimeout(() => {
+                                                        const sizeID = document.getElementById('sizeId').value;
+                                                        window.location.href = 'productdetail?id=${product.id}&sizeId=' + sizeID + '&colorId=' + colorID;
+                                                    }, 10);
+                                                }
+
+                                                function incrementQuantity() {
+                                                    const quantityInput = document.getElementById('quantity');
+                                                    const maxQuantity = ${product.stock};
+                                                    if (parseInt(quantityInput.value) < maxQuantity) {
+                                                        quantityInput.value = parseInt(quantityInput.value) + 1;
+                                                    }
+                                                }
+
+                                                function decrementQuantity() {
+                                                    const quantityInput = document.getElementById('quantity');
+                                                    if (parseInt(quantityInput.value) > 1) {
+                                                        quantityInput.value = parseInt(quantityInput.value) - 1;
+                                                    }
+                                                }
+
+                                                // Kiểm tra số lượng
+                                                document.getElementById('quantity').addEventListener('change', function () {
+                                                    const value = parseInt(this.value);
+                                                    const maxQuantity = ${product.stock};
+                                                    if (value < 1) {
+                                                        this.value = 1;
+                                                    } else if (value > maxQuantity) {
+                                                        this.value = maxQuantity;
+                                                        alert('Số lượng tối đa có sẵn là ' + maxQuantity);
                                                     }
                                                 });
-                                            }
-
-                                            function incrementQuantity() {
-                                                const quantityInput = document.getElementById('quantity');
-                                                const maxQuantity = ${product.stock};
-
-                                                if (parseInt(quantityInput.value) < maxQuantity) {
-                                                    quantityInput.value = parseInt(quantityInput.value) + 1;
+                                                // Phóng to ảnh
+                                                function showImageModal(src) {
+                                                    document.getElementById('modalImage').src = src;
+                                                    var modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                                                    modal.show();
                                                 }
-                                            }
 
-                                            function decrementQuantity() {
-                                                const quantityInput = document.getElementById('quantity');
 
-                                                if (parseInt(quantityInput.value) > 1) {
-                                                    quantityInput.value = parseInt(quantityInput.value) - 1;
-                                                }
-                                            }
-
-                                            // Validate quantity input
-                                            document.getElementById('quantity').addEventListener('change', function () {
-                                                const value = parseInt(this.value);
-                                                const maxQuantity = ${product.stock};
-
-                                                if (value < 1) {
-                                                    this.value = 1;
-                                                } else if (value > maxQuantity) {
-                                                    this.value = maxQuantity;
-                                                    alert('Số lượng tối đa có sẵn là ' + maxQuantity);
-                                                }
-                                            });
         </script>
-    </body>
+    </script>
+</body>
 </html>

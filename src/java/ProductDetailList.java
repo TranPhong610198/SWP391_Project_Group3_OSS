@@ -6,11 +6,15 @@
 import DAO.CategoryDAO;
 import DAO.ProductDAO;
 import DAO.CartDAO;
+import DAO.FeedbackDAO;
+import DAO.FeedbackReplyDAO;
 import DAO.InventoryDAO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Category;
 import entity.Color;
+import entity.Feedback;
+import entity.FeedbackReply;
 import entity.Product;
 import entity.Size;
 import entity.User;
@@ -71,9 +75,12 @@ public class ProductDetailList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+
             int productId = Integer.parseInt(request.getParameter("id"));
             ProductDAO productDAO = new ProductDAO();
             CategoryDAO categoryDAO = new CategoryDAO();
+            FeedbackDAO feedbackDAO = new FeedbackDAO();
+            FeedbackReplyDAO replyDAO = new FeedbackReplyDAO();
 
             Product product = productDAO.getProductById(productId);
             if (product == null) {
@@ -108,23 +115,51 @@ public class ProductDetailList extends HttpServlet {
             //Lấy màu
             List<Color> colors = productDAO.getColorsByProductId(productId);
 
-            //            String sizeId = request.getParameter("sizeId");
-//            String colorId = request.getParameter("colorId");
-//
-//            if (sizeId != null && !sizeId.isEmpty() && colorId != null && !colorId.isEmpty()) {
-//                stock = productDAO.getTotalStockByProductId(productId, Integer.parseInt(sizeId), Integer.parseInt(colorId));
-//                request.setAttribute("sizeId", Integer.valueOf(sizeId));
-//                request.setAttribute("colorId", Integer.valueOf(colorId));
-//            } else if (sizeId != null && !sizeId.isEmpty()) {
-//                stock = productDAO.getTotalStockByProductSize(productId, Integer.parseInt(sizeId));
-//                request.setAttribute("sizeId", Integer.parseInt(sizeId));
-//            } else if (colorId != null && !colorId.isEmpty()) {
-//                stock = productDAO.getTotalStockByProductColor(productId, Integer.parseInt(colorId));
-//                request.setAttribute("colorId", Integer.parseInt(colorId));
-//            } else {
-//            }
             //Lấy số lượng
-            int stock = productDAO.getTotalStockByProductId(productId);
+            int stock = 0;
+            String sizeId = request.getParameter("sizeId");
+            String colorId = request.getParameter("colorId");
+
+            if (sizeId != null && !sizeId.isEmpty() && colorId != null && !colorId.isEmpty()) {
+                stock = productDAO.getTotalStockByProductId(productId, Integer.parseInt(sizeId), Integer.parseInt(colorId));
+                request.setAttribute("sizeId", Integer.valueOf(sizeId));
+                request.setAttribute("colorId", Integer.valueOf(colorId));
+            } else if (sizeId != null && !sizeId.isEmpty()) {
+                stock = productDAO.getTotalStockByProductSize(productId, Integer.parseInt(sizeId));
+                request.setAttribute("sizeId", Integer.parseInt(sizeId));
+            } else if (colorId != null && !colorId.isEmpty()) {
+                stock = productDAO.getTotalStockByProductColor(productId, Integer.parseInt(colorId));
+                request.setAttribute("colorId", Integer.parseInt(colorId));
+            } else {
+                stock = productDAO.getTotalStockByProductId(productId);
+            }
+
+            int page = 1; // Trang mặc định
+            int recordsPerPage = 2; // Số đánh giá mỗi trang
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+
+            String filterStar = request.getParameter("filterStar");
+            // Lấy danh sách đánh giá đã được phê duyệt cho sản phẩm
+            List<Feedback> feedbacks = feedbackDAO.getFeedbacksByProduct(
+                    null, filterStar, "approved", "created_at", "desc", productId, page, recordsPerPage
+            );
+
+            // Lấy phản hồi của cửa hàng cho từng đánh giá
+            for (Feedback feedback : feedbacks) {
+                List<FeedbackReply> replies = replyDAO.getRepliesByFeedbackId(feedback.getId());
+                feedback.setReplies(replies); // Giả sử bạn thêm thuộc tính replies vào entity Feedback
+            }
+            // Gắn ảnh cho từng feedback
+            for (Feedback feedback : feedbacks) {
+                List<String> images = feedbackDAO.getImagesByFeedbackId(feedback.getId());
+                feedback.setFeedbackImages(images); // Đảm bảo có setter này trong class Feedback
+            }
+
+            // Tính tổng số trang
+            int totalFeedbacks = feedbackDAO.getTotalFeedbacksByProduct(null, filterStar, "approved", productId);
+            int totalPages = (int) Math.ceil(totalFeedbacks * 1.0 / recordsPerPage);
 
             product.setStock(stock);
             request.setAttribute("product", product);
@@ -134,6 +169,28 @@ public class ProductDetailList extends HttpServlet {
             request.setAttribute("sizes", sizes);
             request.setAttribute("similarProducts", relatedProducts);
             request.setAttribute("alert", request.getParameter("alert"));
+
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("feedbacks", feedbacks);
+            
+            request.setAttribute("filterStar", filterStar);
+
+            // Tính sao trung bình
+            int[] ratingCounts = feedbackDAO.getRatingCountsByProduct(null, productId);
+            double totalStar = 0;
+            int i = 1;
+            for (int star : ratingCounts) {
+                totalStar = (double) star * i + totalStar;
+                i++;
+            }
+            double averageRating = (double) totalStar / totalFeedbacks;
+            request.setAttribute("averageRating", averageRating);
+            request.setAttribute("fiveStarCount", ratingCounts[4]);
+            request.setAttribute("fourStarCount", ratingCounts[3]);
+            request.setAttribute("threeStarCount", ratingCounts[2]);
+            request.setAttribute("twoStarCount", ratingCounts[1]);
+            request.setAttribute("oneStarCount", ratingCounts[0]);
 //            request.setAttribute("comboProducts", comboProducts);
 
             // Forward to the JSP
