@@ -86,7 +86,7 @@ public class ListProductServlet extends HttpServlet {
 
             // Build base query
             StringBuilder sql = new StringBuilder("SELECT p.*, c.name as category_name FROM products p "
-                    + "JOIN categories c ON p.category_id = c.id WHERE p.status = 'active' AND c.status = 'active' AND 1=1");
+                    + "JOIN categories c ON p.category_id = c.id WHERE p.status = 'active' AND c.status != 'inactive' AND 1=1");
             List<Object> params = new ArrayList<>();
 
             // Add category filter with subcategories support

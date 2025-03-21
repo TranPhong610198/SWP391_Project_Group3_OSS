@@ -414,10 +414,7 @@
                             <!--</div>-->
                             <%--</c:if>--%>
                         </div>
-                        <!--Tạm thời ẩn phần mô tả đã do lỗi ckeditor-->
-                        <!--                        <div class="product-description">
                         ${product.description}
-                    </div>-->
 
                         <form action="productdetail" method="POST">
                             <input type="hidden" name="id" value="${product.id}">
@@ -475,14 +472,14 @@
 
                             <!-- Action Buttons -->
                             <c:if test="${sessionScope.acc.role == 'customer' || sessionScope.acc.role == null}">
-                            <div class="action-buttons">
-                                <button type="submit" name="action" value="buyNow" class="btn-buy-now">
-                                    <i class="fas fa-bolt"></i> Mua Ngay
-                                </button>
-                                <button type="submit" name="action" value="addToCart" class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ
-                                </button>
-                            </div>
+                                <div class="action-buttons">
+                                    <button type="submit" name="action" value="buyNow" class="btn-buy-now">
+                                        <i class="fas fa-bolt"></i> Mua Ngay
+                                    </button>
+                                    <button type="submit" name="action" value="addToCart" class="btn-add-cart">
+                                        <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ
+                                    </button>
+                                </div>
                             </c:if>
                         </form>
 
