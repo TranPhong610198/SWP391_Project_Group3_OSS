@@ -1,4 +1,4 @@
-package marketing;
+package sale;
 import DAO.OrderSaleDAO;
 import entity.OrderStatusCount;
 import entity.CategorySales;
@@ -16,7 +16,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.math.BigDecimal;
 
-@WebServlet(name = "SalesDashboardServlet", urlPatterns = {"/saledashboard"})
+@WebServlet(name = "SalesDashboardServlet", urlPatterns = {"/sale/dashboard"})
 public class SaleDashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

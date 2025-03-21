@@ -43,7 +43,7 @@ class CouponStatusTask implements Runnable {
     @Override
     public void run() {
         try {
-            couponDAO.updateExpiredCoupons(); // cập nhật trạng thái
+            couponDAO.updateCouponStatus(); // cập nhật trạng thái
             System.out.println("Checked and updated expired coupons at " + new java.util.Date());
         } catch (Exception e) {
             e.printStackTrace();

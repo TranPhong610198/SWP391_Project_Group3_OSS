@@ -36,7 +36,7 @@ public class Email {
         return LocalDateTime.now().isAfter(time);
     }
 
-    public boolean sendEmail(User user, String verificationToken) {
+    public boolean sendEmail(User user, String verificationToken) throws UnsupportedEncodingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
         props.put("mail.smtp.port", PORT);
@@ -54,7 +54,7 @@ public class Email {
             });
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(USERNAME));
+            message.setFrom(new InternetAddress(USERNAME, "Fasshion Shop"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
             message.setSubject("Xác Minh Tài Khoản Của Bạn");
 
@@ -112,7 +112,7 @@ public class Email {
             });
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(USERNAME));
+            message.setFrom(new InternetAddress(USERNAME, "Fasshion Shop"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
 //            message.setSubject("Đặt Lại Mật Khẩu");
             message.setSubject(MimeUtility.encodeText("Đặt Lại Mật Khẩu", "UTF-8", "B"));
@@ -161,7 +161,7 @@ public class Email {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
         Email email = new Email();
         boolean sent = email.sendEmail(
                 new User("testUser", "huyndhe186775@fpt.edu.vn", "password", "Test User", "Male", "1234567890"),

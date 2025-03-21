@@ -8,7 +8,7 @@ package entity;
  *
  * @author nguye
  */
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Coupon {
     private int id;
@@ -19,15 +19,17 @@ public class Coupon {
     private double max_discount;
     private int usage_limit;
     private int used_count;
-    private Date expiry_date;
-    private Date created_at;
+    private Timestamp expiry_date;  
+    private Timestamp activation_date;  
+    private Timestamp created_at; 
     private String couponType;
     private String status;
 
     public Coupon() {
     }
 
-    public Coupon(int id, String code, String discount_type, double discount_value, double min_order_amount, double max_discount, int usage_limit, int used_count, Date expiry_date, Date created_at, String couponType, String status) {
+    public Coupon(int id, String code, String discount_type, double discount_value, double min_order_amount, double max_discount, 
+                  int usage_limit, int used_count, Timestamp expiry_date, Timestamp activation_date, Timestamp created_at, String couponType, String status) {
         this.id = id;
         this.code = code;
         this.discount_type = discount_type;
@@ -37,12 +39,12 @@ public class Coupon {
         this.usage_limit = usage_limit;
         this.used_count = used_count;
         this.expiry_date = expiry_date;
+        this.activation_date = activation_date;
         this.created_at = created_at;
         this.couponType = couponType;
         this.status = status;
     }
 
-    // Getters and setters
     public int getId() {
         return id;
     }
@@ -107,22 +109,30 @@ public class Coupon {
         this.used_count = used_count;
     }
 
-    public Date getExpiry_date() {
+    public Timestamp getExpiry_date() {
         return expiry_date;
     }
 
-    public void setExpiry_date(Date expiry_date) {
+    public void setExpiry_date(Timestamp expiry_date) {
         this.expiry_date = expiry_date;
     }
 
-    public Date getCreated_at() {
+    public Timestamp getActivation_date() {
+        return activation_date;
+    }
+
+    public void setActivation_date(Timestamp activation_date) {
+        this.activation_date = activation_date;
+    }
+
+    public Timestamp getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
-    
+
     public String getCouponType() {
         return couponType;
     }
@@ -141,6 +151,6 @@ public class Coupon {
 
     @Override
     public String toString() {
-        return "Coupon{" + "id=" + id + ", code=" + code + ", discount_type=" + discount_type + ", discount_value=" + discount_value + ", min_order_amount=" + min_order_amount + ", max_discount=" + max_discount + ", usage_limit=" + usage_limit + ", used_count=" + used_count + ", expiry_date=" + expiry_date + ", created_at=" + created_at + ", status=" + status + '}';
-    } 
+        return "Coupon{" + "id=" + id + ", code=" + code + ", discount_type=" + discount_type + ", discount_value=" + discount_value + ", min_order_amount=" + min_order_amount + ", max_discount=" + max_discount + ", usage_limit=" + usage_limit + ", used_count=" + used_count + ", expiry_date=" + expiry_date + ", activation_date=" + activation_date + ", created_at=" + created_at + ", couponType=" + couponType + ", status=" + status + '}';
+    }
 }

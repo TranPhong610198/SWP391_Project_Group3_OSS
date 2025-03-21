@@ -82,7 +82,7 @@ public class ProductDetailList extends HttpServlet {
             }
 
             String cateStatus = categoryDAO.getCategoryById(product.getCategoryId()).getStatus();
-            if (!cateStatus.equals("active")) {
+            if (cateStatus.equals("inactive")) {
                 request.getRequestDispatcher("error/error.jsp").forward(request, response);
                 return;
             }

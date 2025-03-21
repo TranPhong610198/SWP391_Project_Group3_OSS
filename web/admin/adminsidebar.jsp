@@ -68,14 +68,14 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="${pageContext.request.contextPath}/marketing/productlist" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/marketing/dashboard" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-arrow-right me-2"></i>
                 Quản lý tiếp thị
             </a>
         </li>
 
         <li class="menu-item p-2">
-            <a href="${pageContext.request.contextPath}/saledashboard" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/sale/dashboard" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-arrow-right me-2"></i>
                 Bán hàng
             </a>

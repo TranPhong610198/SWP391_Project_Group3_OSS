@@ -125,6 +125,9 @@ public class AuthorizationFilter implements Filter {
         } else if (requestURI.startsWith(request.getContextPath() + "/marketing") && !("marketing".equals(role) || "admin".equals(role))) {
             response.sendRedirect(request.getContextPath() + "/403.jsp");
             return;
+        } else if (requestURI.startsWith(request.getContextPath() + "/sale") && !("sale".equals(role) || "admin".equals(role))) {
+            response.sendRedirect(request.getContextPath() + "/403.jsp");
+            return;
         }
 
         // Cho phép tiếp tục nếu có quyền

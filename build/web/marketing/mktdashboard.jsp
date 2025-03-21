@@ -387,8 +387,6 @@
         </div>
     </div>
 </div> <!-- End of main-content -->
-    <!-- Include footer -->
-    <jsp:include page="../common/footer.jsp" />
 
     <!-- JavaScript for charts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
