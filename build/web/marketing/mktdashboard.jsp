@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-6">
                 <!-- Date range selector -->
-                <form class="row g-3 justify-content-end" method="get" action="${pageContext.request.contextPath}/marketing/mktdashboard">
+                <form class="row g-3 justify-content-end" method="get" action="${pageContext.request.contextPath}/marketing/dashboard">
                     <div class="col-auto">
                         <label for="startDate" class="col-form-label">From:</label>
                     </div>
