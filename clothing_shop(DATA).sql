@@ -1365,41 +1365,39 @@ VALUES
 SET IDENTITY_INSERT orders OFF;
 
 
--- sample order items
 SET IDENTITY_INSERT order_items ON;
-INSERT INTO order_items (id, order_id, product_id, variant_id, quantity, unit_price)
+INSERT INTO order_items (id, order_id, product_id, product_name, product_image, variant_name, quantity, unit_price_at_order)
 VALUES 
--- Mỗi đơn hàng có 1-5 sản phẩm, tổng 30 sản phẩm
-(1, 1, 1, 1, 2, 250000),
-(2, 1, 2, 2, 1, 300000),
-(3, 1, 3, 3, 2, 220000),
-(4, 2, 4, 4, 1, 280000),
-(5, 2, 5, 5, 2, 150000),
-(6, 3, 6, 6, 1, 120000),
-(7, 3, 7, 7, 1, 200000),
-(8, 4, 8, 8, 3, 180000),
-(9, 4, 9, 9, 2, 500000),
-(10, 5, 10, 10, 1, 400000),
-(11, 5, 11, 11, 1, 550000),
-(12, 6, 12, 12, 1, 200000),
-(13, 6, 13, 13, 1, 450000),
-(14, 7, 14, 14, 2, 320000),
-(15, 7, 15, 15, 1, 280000),
-(16, 8, 16, 16, 1, 150000),
-(17, 8, 17, 17, 1, 180000),
-(18, 9, 18, 18, 1, 450000),
-(19, 9, 19, 19, 1, 350000),
-(20, 10, 20, 20, 1, 320000),
-(21, 10, 21, 21, 1, 250000),
-(22, 11, 22, 22, 1, 400000),
-(23, 11, 23, 23, 1, 350000),
-(24, 12, 24, 24, 1, 500000),
-(25, 12, 25, 25, 1, 600000),
-(26, 12, 26, 26, 1, 450000),
-(27, 12, 27, 27, 1, 400000),
-(28, 12, 28, 28, 1, 300000),
-(29, 12, 29, 29, 1, 250000),
-(30, 12, 30, 30, 1, 500000);
+(1, 1, 1, 'Áo Thun Nam', 'image1.jpg', 'Size M - Màu Đen', 2, 250000),
+(2, 1, 2, 'Áo Polo', 'image2.jpg', 'Size L - Màu Trắng', 1, 300000),
+(3, 1, 3, 'Áo Sơ Mi', 'image3.jpg', 'Size XL - Màu Xanh', 2, 220000),
+(4, 2, 4, 'Quần Jean', 'image4.jpg', 'Size 32 - Màu Xanh Đậm', 1, 280000),
+(5, 2, 5, 'Quần Short', 'image5.jpg', 'Size 30 - Màu Xám', 2, 150000),
+(6, 3, 6, 'Áo Khoác Gió', 'image6.jpg', 'Size L - Màu Đỏ', 1, 120000),
+(7, 3, 7, 'Áo Hoodie', 'image7.jpg', 'Size XL - Màu Xanh Dương', 1, 200000),
+(8, 4, 8, 'Giày Sneakers', 'image8.jpg', 'Size 42 - Màu Trắng', 3, 180000),
+(9, 4, 9, 'Giày Boots', 'image9.jpg', 'Size 41 - Màu Đen', 2, 500000),
+(10, 5, 10, 'Balo Du Lịch', 'image10.jpg', 'Màu Xanh', 1, 400000),
+(11, 5, 11, 'Túi Đeo Chéo', 'image11.jpg', 'Màu Đen', 1, 550000),
+(12, 6, 12, 'Đồng Hồ Nam', 'image12.jpg', 'Mặt Tròn - Dây Kim Loại', 1, 200000),
+(13, 6, 13, 'Đồng Hồ Nữ', 'image13.jpg', 'Mặt Vuông - Dây Da', 1, 450000),
+(14, 7, 14, 'Mắt Kính', 'image14.jpg', 'Kính Râm', 2, 320000),
+(15, 7, 15, 'Nón Lưỡi Trai', 'image15.jpg', 'Màu Xanh Rêu', 1, 280000),
+(16, 8, 16, 'Tất Thể Thao', 'image16.jpg', 'Size Free - Màu Đen', 1, 150000),
+(17, 8, 17, 'Dây Nịt Da', 'image17.jpg', 'Màu Nâu', 1, 180000),
+(18, 9, 18, 'Váy Đầm Nữ', 'image18.jpg', 'Size S - Màu Hồng', 1, 450000),
+(19, 9, 19, 'Áo Len Nam', 'image19.jpg', 'Size M - Màu Xám', 1, 350000),
+(20, 10, 20, 'Áo Vest', 'image20.jpg', 'Size 50 - Màu Đen', 1, 320000),
+(21, 10, 21, 'Quần Tây', 'image21.jpg', 'Size 34 - Màu Xanh Than', 1, 250000),
+(22, 11, 22, 'Áo Sơ Mi Nam', 'image22.jpg', 'Size L - Màu Tím', 1, 400000),
+(23, 11, 23, 'Áo Len Nữ', 'image23.jpg', 'Size M - Màu Xanh', 1, 350000),
+(24, 12, 24, 'Quần Jogger', 'image24.jpg', 'Size 30 - Màu Xám', 1, 500000),
+(25, 12, 25, 'Bốt Nữ', 'image25.jpg', 'Size 39 - Màu Nâu', 1, 600000),
+(26, 12, 26, 'Váy Maxi', 'image26.jpg', 'Size L - Màu Đỏ', 1, 450000),
+(27, 12, 27, 'Túi Tote', 'image27.jpg', 'Màu Kem', 1, 400000),
+(28, 12, 28, 'Áo Blazer', 'image28.jpg', 'Size 44 - Màu Xám', 1, 300000),
+(29, 12, 29, 'Giày Lười Nam', 'image29.jpg', 'Size 42 - Màu Đen', 1, 250000),
+(30, 12, 30, 'Đồng Hồ Thông Minh', 'image30.jpg', 'Màu Đen - Dây Silicon', 1, 500000);
 SET IDENTITY_INSERT order_items OFF;
 
 
