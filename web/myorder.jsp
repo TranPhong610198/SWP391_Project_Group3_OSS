@@ -733,11 +733,17 @@
                                             <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
                                                 <i class="fas fa-times"></i> Hủy đơn hàng
                                             </a>
-                                            <c:if test="${order.paymentStatus == 'pending_pay' && order.paymentMethod == 'bank_transfer'}">
+                                            <c:if test="${order.paymentStatus == 'pending' && order.paymentMethod == 'bank_transfer'}">
                                                 <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
                                                     <i class="fas fa-money-check-alt"></i> Thanh toán lại
                                                 </a>
                                             </c:if>
+                                        </c:if>
+                                         <c:if test="${order.status == 'pending'}">
+                                            <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
+                                                <i class="fas fa-times"></i> Hủy đơn hàng
+                                            </a>
+                                            
                                         </c:if>
                                         <c:if test="${order.status == 'completed'}">
                                             <c:if test="${not empty order.items}">

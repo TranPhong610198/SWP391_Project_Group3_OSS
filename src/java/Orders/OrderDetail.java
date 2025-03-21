@@ -60,6 +60,7 @@ public class OrderDetail extends HttpServlet {
         System.out.println("Order ID: " + order.getId());
         System.out.println("Payment Method: " + order.getPaymentMethod());
         System.out.println("Payment Status: " + order.getPaymentStatus());
+        System.out.println("Order Items Size: " + (order.getItems() != null ? order.getItems().size() : 0));
         
         // Get order history
         List<OrderHistory> orderHistory = orderDAO.getOrderHistory(orderId);
@@ -74,10 +75,13 @@ public class OrderDetail extends HttpServlet {
         
         // Calculate subtotal from order items
         double subtotal = 0;
-        if (order.getItems() != null) {
+        if (order.getItems() != null && !order.getItems().isEmpty()) {
             for (CartItem item : order.getItems()) {
                 subtotal += item.getProductPrice() * item.getQuantity();
+                System.out.println("Debug: Item - Product: " + item.getProductTitle() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
             }
+        } else {
+            System.out.println("Debug: order.items is empty in OrderDetailServlet for Order ID: " + orderId);
         }
         
         // Set attributes for JSP
@@ -93,7 +97,7 @@ public class OrderDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Check if there's an action parameter
+       // Check if there's an action parameter
         String action = request.getParameter("action");
         
         if (action != null && action.equals("cancel")) {

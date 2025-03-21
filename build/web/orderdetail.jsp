@@ -378,7 +378,22 @@
                                 </c:forEach>
                             </div>
                         </div>
+                        <c:if test="${order.status eq 'pending_pay' && order.paymentStatus eq 'pending' && (order.paymentMethod eq 'bank_transfer' || order.paymentMethod eq 'cod')}">
+                        <div class="timeline-step ${currentStepIndex >= 1 ? 'active' : ''}">
+                            <div class="timeline-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="timeline-text">Chờ thanh toán</div>
+                            <div class="timeline-date">
+                                <c:forEach items="${orderHistory}" var="history">
+                                    <c:if test="${history.status eq 'pending_pay'}">
+                                        <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </div></c:if>
 
+                            
                         <!-- Bước 3: Đã Giao Cho ĐVVC -->
                         <div class="timeline-step ${currentStepIndex >= 2 ? 'active' : ''}">
                             <div class="timeline-icon">
@@ -551,6 +566,15 @@
                                     </a>
                                 </div>
                             </c:if>
+                            <c:if test="${order.status eq 'pending'}">
+                                <div class="action-buttons">
+
+                                    <!-- Nút "Hủy đơn hàng" hiển thị cho cả bank_transfer và cod -->
+                                    <a href="orderdetail?action=cancel&id=${order.id}" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
+                                        <i class="fas fa-times"></i> Hủy đơn hàng
+                                    </a>
+                                </div>
+                            </c:if>
                             <c:if test="${order.status eq 'completed'}">
                                 <div class="action-buttons">
                                     <a href="feedback?order=${order.id}" class="btn btn-primary">
@@ -573,23 +597,29 @@
                             <h5 class="card-title">Sản phẩm đã đặt</h5>
                         </div>
                         <div class="card-body">
+                            <c:if test="${empty order.items}">
+                                <div class="text-danger">Debug: order.items is empty</div>
+                            </c:if>
                             <c:forEach items="${order.items}" var="item">
                                 <div class="product-item">
                                     <div class="row align-items-center">
                                         <div class="col-2 col-md-1">
-                                            <img src="${item.productImage}" alt="${item.productName}" class="product-img">
+                                            <img src="${item.productThumbnail}" alt="${item.productTitle}" class="product-img">
                                         </div>
                                         <div class="col-10 col-md-6">
-                                            <div class="product-name">${item.productName}</div>
-                                            <div class="product-variant">${item.variantName}</div>
+                                            <div class="product-name">${item.productTitle}</div>
+                                            <div class="product-variant">Size: ${item.size} | Màu: ${item.color}</div>
                                         </div>
                                         <div class="col-md-2 text-center">
                                             <div class="quantity">x${item.quantity}</div>
                                         </div>
                                         <div class="col-md-3 text-end">
                                             <div class="price">
-                                                <fmt:formatNumber value="${item.unitPriceAtOrder * item.quantity}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                <fmt:formatNumber value="${item.productPrice * item.quantity}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                             </div>
+                                            <small class="text-muted">
+                                                <fmt:formatNumber value="${item.productPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/> / sản phẩm
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
@@ -600,11 +630,12 @@
                                 <div class="summary-row">
                                     <span>Tổng tiền hàng:</span>
                                     <span>
-                                        <c:set var="subtotal" value="0" />
-                                        <c:forEach items="${order.items}" var="item">
-                                            <c:set var="subtotal" value="${subtotal + (item.productPrice * item.quantity)}" />
-                                        </c:forEach>
-                                        <fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        <c:if test="${empty order.items}">
+                                            <span class="text-danger">Không có sản phẩm nào</span>
+                                        </c:if>
+                                        <c:if test="${not empty order.items}">
+                                            <fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        </c:if>
                                     </span>
                                 </div>
 
@@ -634,8 +665,7 @@
                                 <div class="summary-row">
                                     <span>Phí vận chuyển:</span>
                                     <span>
-                                        <c:set var="shipping" value="${order.shippingMethod eq 'express' ? 45000 : 30000}" />
-                                        <fmt:formatNumber value="${shipping}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                     </span>
                                 </div>
 
@@ -649,11 +679,12 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div><jsp:include page="/footer.jsp" /></div>
+    <div><jsp:include page="/footer.jsp" /></div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
                                         // Ẩn thông báo sau 5 giây
                                         window.setTimeout(function () {
                                             var alerts = document.querySelectorAll('.alert');
@@ -662,6 +693,6 @@
                                                 bsAlert.close();
                                             });
                                         }, 5000);
-        </script>
-    </body>
+    </script>
+</body>
 </html>

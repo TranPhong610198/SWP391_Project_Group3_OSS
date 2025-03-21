@@ -18,123 +18,154 @@ import java.util.Random;
 
 public class OrderDAO extends DBContext {
 
-    public Order createOrder(Order order) {
-        Connection conn = null;
-        PreparedStatement stmtOrder = null;
-        PreparedStatement stmtItems = null;
-        PreparedStatement stmtPayment = null;
-        ResultSet rs = null;
+  public Order createOrder(Order order) {
+    Connection conn = null;
+    PreparedStatement stmtOrder = null;
+    PreparedStatement stmtItems = null;
+    PreparedStatement stmtPayment = null;
+    ResultSet rs = null;
 
-        try {
-            conn = connection;
-            conn.setAutoCommit(false);
+    try {
+        conn = connection;
+        conn.setAutoCommit(false);
 
-            // Thêm đơn hàng vào bảng orders
-            String sqlOrder = "INSERT INTO orders (user_id, status, total_amount, recipient_name, recipient_email, "
-                    + "recipient_phone, recipient_address, notes, created_at, updated_at) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), GETDATE())";
+        // Bước 1: Thêm đơn hàng vào bảng orders
+        String sqlOrder = "INSERT INTO orders (user_id, status, total_amount, recipient_name, recipient_email, "
+                + "recipient_phone, recipient_address, notes, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), GETDATE())";
 
-            stmtOrder = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS);
-            if (order.getUserId() > 0) {
-                stmtOrder.setInt(1, order.getUserId());
-            } else {
-                stmtOrder.setNull(1, java.sql.Types.INTEGER);
-            }
-            stmtOrder.setString(2, order.getStatus() != null ? order.getStatus() : "pending");
-            stmtOrder.setDouble(3, order.getTotal());
-            stmtOrder.setString(4, order.getRecipientName());
-            stmtOrder.setString(5, order.getRecipientEmail());
-            stmtOrder.setString(6, order.getPhone());
-            stmtOrder.setString(7, order.getAddress());
-            stmtOrder.setString(8, order.getOrderCode());
-            stmtOrder.executeUpdate();
+        stmtOrder = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS);
 
-            rs = stmtOrder.getGeneratedKeys();
-            int orderId = 0;
-            if (rs.next()) {
-                orderId = rs.getInt(1);
-                order.setId(orderId);
-            }
+        if (order.getUserId() > 0) {
+            stmtOrder.setInt(1, order.getUserId());
+        } else {
+            stmtOrder.setNull(1, java.sql.Types.INTEGER);
+        }
 
-            // Thêm các sản phẩm vào bảng order_items (dữ liệu cứng từ cart_items)
-            if (orderId > 0 && order.getItems() != null && !order.getItems().isEmpty()) {
-                String sqlItems = "INSERT INTO order_items (order_id, product_id, product_name, product_image, variant_id, variant_name, quantity, unit_price_at_order) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        stmtOrder.setString(2, order.getStatus() != null ? order.getStatus() : "pending");
+        stmtOrder.setDouble(3, order.getTotal());
+        stmtOrder.setString(4, order.getRecipientName());
+        stmtOrder.setString(5, order.getRecipientEmail());
+        stmtOrder.setString(6, order.getPhone());
+        stmtOrder.setString(7, order.getAddress());
 
+        String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
+        stmtOrder.setString(8, orderCode);
+        stmtOrder.executeUpdate();
+
+        rs = stmtOrder.getGeneratedKeys();
+        int orderId = 0;
+        if (rs.next()) {
+            orderId = rs.getInt(1);
+            order.setId(orderId);
+            order.setOrderCode(orderCode);
+        }
+
+        System.out.println("Debug: Created order with ID: " + orderId + ", Code: " + orderCode);
+
+        // Bước 2: Thêm các sản phẩm vào bảng order_items
+        if (orderId > 0) {
+            if (order.getItems() != null && !order.getItems().isEmpty()) {
+                String sqlItems = "INSERT INTO order_items (order_id, product_id, product_name, product_image, variant_name, quantity, unit_price_at_order) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
                 stmtItems = conn.prepareStatement(sqlItems);
+
                 for (CartItem item : order.getItems()) {
+                    System.out.println("Debug: Inserting order item - Order ID: " + orderId + ", Product ID: " + item.getProductId() + ", Product Name: " + item.getProductTitle() + ", Variant: " + item.getSize() + " - " + item.getColor() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
+
                     stmtItems.setInt(1, orderId);
                     stmtItems.setInt(2, item.getProductId());
                     stmtItems.setString(3, item.getProductTitle());
                     stmtItems.setString(4, item.getProductThumbnail());
-                    stmtItems.setInt(5, item.getVariantId());
-                    stmtItems.setString(6, item.getSize() + " - " + item.getColor()); // Lưu thông tin biến thể
-                    stmtItems.setInt(7, item.getQuantity());
-                    stmtItems.setDouble(8, item.getProductPrice());
+                    stmtItems.setString(5, item.getSize() + " - " + item.getColor());
+                    stmtItems.setInt(6, item.getQuantity());
+                    stmtItems.setDouble(7, item.getProductPrice());
                     stmtItems.addBatch();
                 }
-                stmtItems.executeBatch();
+
+                int[] batchResults = stmtItems.executeBatch();
+                System.out.println("Debug: Inserted " + batchResults.length + " items into order_items for Order ID: " + orderId);
+            } else {
+                System.out.println("Debug: No items to insert into order_items for Order ID: " + orderId);
+                System.out.println("Debug: order.getItems() = " + (order.getItems() != null ? order.getItems().size() : "null"));
+                throw new SQLException("Order items are empty, cannot create order without items.");
             }
+        } else {
+            throw new SQLException("Failed to create order, orderId is 0.");
+        }
 
-            // Thêm thông tin thanh toán
-            String sqlPayment = "INSERT INTO payments (order_id, payment_method, payment_status, created_at) "
-                    + "VALUES (?, ?, ?, GETDATE())";
-            stmtPayment = conn.prepareStatement(sqlPayment);
-            stmtPayment.setInt(1, orderId);
-            String paymentMethodValue = "bank".equals(order.getPaymentMethod()) ? "bank_transfer" : "cod";
-            stmtPayment.setString(2, paymentMethodValue);
-            stmtPayment.setString(3, "pending");
-            stmtPayment.executeUpdate();
+        // Bước 3: Thêm thông tin thanh toán vào bảng payments
+        String sqlPayment = "INSERT INTO payments (order_id, payment_method, payment_status, created_at) "
+                + "VALUES (?, ?, ?, GETDATE())";
+        stmtPayment = conn.prepareStatement(sqlPayment);
+        stmtPayment.setInt(1, orderId);
 
-            // Thêm mã giảm giá nếu có
-            if (order.getCouponCode() != null && !order.getCouponCode().isEmpty() && order.getDiscountAmount() > 0) {
-                applyCouponToOrder(conn, orderId, order.getCouponCode(), order.getDiscountAmount(), order.getRecipientEmail());
+        String paymentMethodValue;
+        switch (order.getPaymentMethod().toLowerCase()) {
+            case "bank":
+                paymentMethodValue = "bank_transfer";
+                break;
+            case "cod":
+                paymentMethodValue = "cod";
+                break;
+            default:
+                paymentMethodValue = "cod";
+        }
+
+        stmtPayment.setString(2, paymentMethodValue);
+        String paymentStatus = "cod".equals(paymentMethodValue) ? "pending" : "pending";
+        stmtPayment.setString(3, paymentStatus);
+        stmtPayment.executeUpdate();
+
+        // Bước 4: Nếu có sử dụng mã giảm giá, lưu thông tin sử dụng mã giảm giá
+        if (order.getCouponCode() != null && !order.getCouponCode().isEmpty() && order.getDiscountAmount() > 0) {
+            applyCouponToOrder(conn, orderId, order.getCouponCode(), order.getDiscountAmount(), order.getRecipientEmail());
+        }
+
+        // Bước 5: Thêm thông tin vận chuyển
+        if (order.getShippingMethod() != null && !order.getShippingMethod().isEmpty()) {
+            addShippingInfo(conn, orderId, order.getShippingMethod());
+        }
+
+        // Bước 6: Thêm lịch sử đơn hàng
+        addOrderHistory(conn, orderId, order.getUserId(), "pending", "Đơn hàng mới được tạo");
+
+        conn.commit();
+        return order;
+
+    } catch (SQLException e) {
+        try {
+            if (conn != null) {
+                conn.rollback();
             }
-
-            // Thêm thông tin vận chuyển
-            if (order.getShippingMethod() != null && !order.getShippingMethod().isEmpty()) {
-                addShippingInfo(conn, orderId, order.getShippingMethod());
+        } catch (SQLException ex) {
+            System.out.println("Error rolling back transaction: " + ex.getMessage());
+        }
+        System.out.println("Error creating order: " + e.getMessage());
+        e.printStackTrace();
+        return null;
+    } finally {
+        try {
+            if (rs != null) {
+                rs.close();
             }
-
-            // Thêm lịch sử đơn hàng
-            addOrderHistory(conn, orderId, order.getUserId() > 0 ? order.getUserId() : 1, order.getStatus(), "Đơn hàng mới được tạo");
-
-            conn.commit();
-            return order;
-
+            if (stmtOrder != null) {
+                stmtOrder.close();
+            }
+            if (stmtItems != null) {
+                stmtItems.close();
+            }
+            if (stmtPayment != null) {
+                stmtPayment.close();
+            }
+            if (conn != null) {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) {
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException ex) {
-                System.out.println("Error rolling back: " + ex.getMessage());
-            }
-            System.out.println("Error creating order: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmtOrder != null) {
-                    stmtOrder.close();
-                }
-                if (stmtItems != null) {
-                    stmtItems.close();
-                }
-                if (stmtPayment != null) {
-                    stmtPayment.close();
-                }
-                if (conn != null) {
-                    conn.setAutoCommit(true);
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing resources: " + e.getMessage());
-            }
+            System.out.println("Error closing resources: " + e.getMessage());
         }
     }
+}
 
     private void applyCouponToOrder(Connection conn, int orderId, String couponCode, double discountAmount, String userEmail) throws SQLException {
         PreparedStatement stmtCoupon = null;
@@ -236,6 +267,8 @@ public class OrderDAO extends DBContext {
 
     public List<Order> getUserOrders(int userId, String keyword, String status, int page, int recordsPerPage) {
         List<Order> orders = new ArrayList<>();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
         try {
             // Tính vị trí bắt đầu
@@ -274,12 +307,12 @@ public class OrderDAO extends DBContext {
             params.add(recordsPerPage);
 
             // Thực thi truy vấn
-            PreparedStatement stmt = connection.prepareStatement(sql.toString());
+            stmt = connection.prepareStatement(sql.toString());
             for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Order order = new Order();
@@ -297,15 +330,29 @@ public class OrderDAO extends DBContext {
                 order.setPaymentStatus(rs.getString("payment_status"));
 
                 // Lấy thông tin các sản phẩm trong đơn hàng
-                order.setItems(getOrderItems(order.getId()));
+                List<CartItem> items = getOrderItems(order.getId());
+                order.setItems(items);
+
+                // Debug: Kiểm tra số lượng items
+                System.out.println("Debug: Loaded " + (items != null ? items.size() : 0) + " items for order " + order.getId() + " in getUserOrders");
 
                 orders.add(order);
             }
 
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println("Error getting user orders: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing resources: " + e.getMessage());
+            }
         }
 
         return orders;
@@ -360,112 +407,151 @@ public class OrderDAO extends DBContext {
         return count;
     }
 
-    public List<CartItem> getOrderItems(int orderId) {
-        List<CartItem> items = new ArrayList<>();
+   public List<CartItem> getOrderItems(int orderId) {
+    List<CartItem> items = new ArrayList<>();
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
 
-        try {
-            String sql = "SELECT oi.*, p.title, p.thumbnail, ps.size, pc.color "
-                    + "FROM order_items oi "
-                    + "INNER JOIN products p ON oi.product_id = p.id "
-                    + "INNER JOIN product_variants pv ON oi.variant_id = pv.id "
-                    + "INNER JOIN product_sizes ps ON pv.size_id = ps.id "
-                    + "INNER JOIN product_colors pc ON pv.color_id = pc.id "
-                    + "WHERE oi.order_id = ?";
+    try {
+        String sql = "SELECT oi.*, p.title, p.thumbnail "
+                + "FROM order_items oi "
+                + "LEFT JOIN products p ON oi.product_id = p.id "
+                + "WHERE oi.order_id = ?";
 
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, orderId);
-            ResultSet rs = stmt.executeQuery();
+        stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, orderId);
+        rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                CartItem item = new CartItem();
-                item.setId(rs.getInt("id"));
-                item.setProductId(rs.getInt("product_id"));
-                item.setVariantId(rs.getInt("variant_id"));
-                item.setQuantity(rs.getInt("quantity"));
-                item.setProductPrice(rs.getDouble("unit_price"));
-                item.setProductTitle(rs.getString("title"));
-                item.setProductThumbnail(rs.getString("thumbnail"));
-                item.setSize(rs.getString("size"));
-                item.setColor(rs.getString("color"));
+        while (rs.next()) {
+            CartItem item = new CartItem();
+            item.setId(rs.getInt("id"));
+            item.setProductId(rs.getInt("product_id"));
+            item.setQuantity(rs.getInt("quantity"));
+            // Sử dụng cột unit_price_at_order thay vì unit_price
+            item.setProductPrice(rs.getDouble("unit_price_at_order"));
+            item.setProductTitle(rs.getString("product_name"));
+            item.setProductThumbnail(rs.getString("product_image"));
 
-                items.add(item);
+            // Lấy variant_name và tách thành size và color
+            String variantName = rs.getString("variant_name");
+            if (variantName != null && variantName.contains(" - ")) {
+                String[] variantParts = variantName.split(" - ");
+                item.setSize(variantParts.length > 0 ? variantParts[0] : "");
+                item.setColor(variantParts.length > 1 ? variantParts[1] : "");
+            } else {
+                item.setSize("");
+                item.setColor("");
             }
 
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println("Error getting order items: " + e.getMessage());
+            items.add(item);
+
+            System.out.println("Debug: Loaded item for Order ID: " + orderId + ", Product ID: " + item.getProductId() + ", Title: " + item.getProductTitle() + ", Variant: " + item.getSize() + " - " + item.getColor() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
         }
 
-        return items;
+        if (items.isEmpty()) {
+            System.out.println("Debug: No items found in order_items for Order ID: " + orderId);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error getting order items: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error closing resources: " + e.getMessage());
+        }
     }
 
+    return items;
+}
     // Add these methods to your existing OrderDAO.java class
-    public Order getOrderById(int orderId) {
-        Order order = null;
+  public Order getOrderById(int orderId) {
+    Order order = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
 
-        try {
-            // Modified query to include shipping and coupon information
-            String sql = "SELECT o.*, p.payment_method, p.payment_status, "
-                    + "s.shipping_provider, s.tracking_number, s.estimated_delivery, "
-                    + "oc.coupon_id, oc.discount_applied, c.code AS coupon_code "
-                    + "FROM orders o "
-                    + "LEFT JOIN payments p ON o.id = p.order_id "
-                    + "LEFT JOIN shipping s ON o.id = s.order_id "
-                    + "LEFT JOIN order_coupons oc ON o.id = oc.order_id "
-                    + "LEFT JOIN coupons c ON oc.coupon_id = c.id "
-                    + "WHERE o.id = ?";
+    try {
+        String sql = "SELECT o.*, p.payment_method, p.payment_status, "
+                + "s.shipping_provider, s.tracking_number, s.estimated_delivery, "
+                + "oc.coupon_id, oc.discount_applied, c.code AS coupon_code "
+                + "FROM orders o "
+                + "LEFT JOIN payments p ON o.id = p.order_id "
+                + "LEFT JOIN shipping s ON o.id = s.order_id "
+                + "LEFT JOIN order_coupons oc ON o.id = oc.order_id "
+                + "LEFT JOIN coupons c ON oc.coupon_id = c.id "
+                + "WHERE o.id = ?";
 
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, orderId);
-            ResultSet rs = stmt.executeQuery();
+        stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, orderId);
+        rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                order = new Order();
-                order.setId(rs.getInt("id"));
-                order.setUserId(rs.getInt("user_id"));
-                order.setOrderCode(rs.getString("notes")); // Order code is stored in notes field
-                order.setStatus(rs.getString("status"));
-                order.setTotal(rs.getDouble("total_amount"));
-                order.setRecipientName(rs.getString("recipient_name"));
-                order.setRecipientEmail(rs.getString("recipient_email"));
-                order.setPhone(rs.getString("recipient_phone"));
-                order.setAddress(rs.getString("recipient_address"));
-                order.setOrderDate(rs.getTimestamp("created_at"));
-                order.setPaymentMethod(rs.getString("payment_method"));
-                order.setPaymentStatus(rs.getString("payment_status"));
+        if (rs.next()) {
+            order = new Order();
+            order.setId(rs.getInt("id"));
+            order.setUserId(rs.getInt("user_id"));
+            order.setOrderCode(rs.getString("notes"));
+            order.setStatus(rs.getString("status"));
+            order.setTotal(rs.getDouble("total_amount"));
+            order.setRecipientName(rs.getString("recipient_name"));
+            order.setRecipientEmail(rs.getString("recipient_email"));
+            order.setPhone(rs.getString("recipient_phone"));
+            order.setAddress(rs.getString("recipient_address"));
+            order.setOrderDate(rs.getTimestamp("created_at"));
+            order.setPaymentMethod(rs.getString("payment_method"));
+            order.setPaymentStatus(rs.getString("payment_status"));
 
-                // Get shipping method from shipping provider
-                String shippingProvider = rs.getString("shipping_provider");
-                if (shippingProvider != null) {
-                    // Determine shipping method based on provider name
-                    if (shippingProvider.toLowerCase().contains("express")) {
-                        order.setShippingMethod("express");
-                    } else {
-                        order.setShippingMethod("standard");
-                    }
+            String shippingProvider = rs.getString("shipping_provider");
+            if (shippingProvider != null) {
+                if (shippingProvider.toLowerCase().contains("express")) {
+                    order.setShippingMethod("express");
+                } else {
+                    order.setShippingMethod("standard");
                 }
-
-                // Get coupon information if available
-                double discountAmount = rs.getDouble("discount_applied");
-                if (discountAmount > 0) {
-                    order.setDiscountAmount(discountAmount);
-                    order.setCouponCode(rs.getString("coupon_code"));
-                }
-
-                // Get items in the order
-                order.setItems(getOrderItems(order.getId()));
             }
 
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println("Error getting order: " + e.getMessage());
+            double discountAmount = rs.getDouble("discount_applied");
+            if (!rs.wasNull() && discountAmount > 0) {
+                order.setDiscountAmount(discountAmount);
+                order.setCouponCode(rs.getString("coupon_code"));
+            } else {
+                order.setDiscountAmount(0.0);
+                order.setCouponCode(null);
+            }
+
+            System.out.println("Debug: Loaded order - ID: " + order.getId() + ", User ID: " + order.getUserId() + ", Total: " + order.getTotal());
+
+            List<CartItem> items = getOrderItems(order.getId());
+            order.setItems(items);
+
+            System.out.println("Debug: Loaded " + (items != null ? items.size() : 0) + " items for order " + orderId);
+        } else {
+            System.out.println("Debug: No order found with ID: " + orderId);
         }
 
-        return order;
+    } catch (SQLException e) {
+        System.out.println("Error getting order: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error closing resources: " + e.getMessage());
+        }
     }
 
+    return order;
+}
     public List<OrderHistory> getOrderHistory(int orderId) {
         List<OrderHistory> history = new ArrayList<>();
 
@@ -679,6 +765,8 @@ public class OrderDAO extends DBContext {
 
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
         try {
             String sql = "SELECT o.*, p.payment_method, p.payment_status "
@@ -686,8 +774,8 @@ public class OrderDAO extends DBContext {
                     + "LEFT JOIN payments p ON o.id = p.order_id "
                     + "ORDER BY o.created_at DESC";
 
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
+            stmt = connection.prepareStatement(sql);
+            rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Order order = new Order();
@@ -705,15 +793,29 @@ public class OrderDAO extends DBContext {
                 order.setPaymentStatus(rs.getString("payment_status"));
 
                 // Get order items
-                order.setItems(getOrderItems(order.getId()));
+                List<CartItem> items = getOrderItems(order.getId());
+                order.setItems(items);
+
+                // Debug: Kiểm tra số lượng items
+                System.out.println("Debug: Loaded " + (items != null ? items.size() : 0) + " items for order " + order.getId() + " in getAllOrders");
 
                 orders.add(order);
             }
 
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println("Error getting all orders: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing resources: " + e.getMessage());
+            }
         }
 
         return orders;

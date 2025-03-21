@@ -244,7 +244,7 @@ public class PaymentServlet extends HttpServlet {
             System.out.println("Exception in processVNPayReturn: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("errorMessage", "Đã xảy ra lỗi khi xử lý kết quả thanh toán: " + e.getMessage());
-            request.getRequestDispatcher("payment_failed.jsp").forward(request, response);
+            request.getRequestDispatcher("cartcompletion").forward(request, response);
         }
     }
 

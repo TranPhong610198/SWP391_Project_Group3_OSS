@@ -74,86 +74,97 @@ public class CartContact extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-        List<CartItem> selectedItems = new ArrayList<>();
-        List<UserAddress> addresses = new ArrayList<>();
-        Cart cart;
+   HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("acc");
+    List<CartItem> selectedItems = new ArrayList<>();
+    List<UserAddress> addresses = new ArrayList<>();
+    Cart cart;
 
-        if (user != null) {
-            // Người dùng đã đăng nhập
-            cart = cartDAO.getCartByUserId(user.getId());
-            
-            // Lấy địa chỉ từ database
-            addresses = userDAO.getUserAddresses(user.getId());
-        } else {
-            // Người dùng chưa đăng nhập
-            cart = cartDAO.getCartFromCookies(request);
-            
-            // Lấy địa chỉ từ cookie (nếu có)
-            addresses = getGuestAddressesFromCookie(request);
-        }
+    if (user != null) {
+        cart = cartDAO.getCartByUserId(user.getId());
+        addresses = userDAO.getUserAddresses(user.getId());
+    } else {
+        cart = cartDAO.getCartFromCookies(request);
+        addresses = getGuestAddressesFromCookie(request);
+    }
 
-        if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-            response.sendRedirect("cartdetail");
-            return;
-        }
+    if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
+        System.out.println("Debug: cart or cart.items is null or empty in CartContact");
+        response.sendRedirect("cartdetail");
+        return;
+    }
 
-        // Lấy các sản phẩm đã chọn từ session
-        List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
-        List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
+    // Debug: Kiểm tra cart.items
+    System.out.println("Debug: cart.items size in CartContact = " + cart.getItems().size());
+    for (CartItem item : cart.getItems()) {
+        System.out.println("Debug: CartItem in CartContact - ID = " + item.getId() + ", Product = " + item.getProductTitle() + ", Quantity = " + item.getQuantity());
+    }
 
-        if (selectedItemIds != null && selectedQuantities != null
-                && selectedItemIds.size() == selectedQuantities.size()) {
+    // Lấy các sản phẩm đã chọn từ session
+    List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
+    List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
-            for (CartItem item : cart.getItems()) {
-                for (int i = 0; i < selectedItemIds.size(); i++) {
-                    if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
-                        item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
-                        selectedItems.add(item);
-                        break;
-                    }
-                }
+    if (selectedItemIds == null || selectedQuantities == null || selectedItemIds.size() != selectedQuantities.size()) {
+        System.out.println("Debug: selectedItemIds or selectedQuantities is null or mismatched in CartContact");
+        System.out.println("Debug: selectedItemIds = " + selectedItemIds);
+        System.out.println("Debug: selectedQuantities = " + selectedQuantities);
+        response.sendRedirect("cartdetail");
+        return;
+    }
+
+    // Debug: Kiểm tra selectedItemIds và selectedQuantities
+    System.out.println("Debug: selectedItemIds in CartContact = " + selectedItemIds);
+    System.out.println("Debug: selectedQuantities in CartContact = " + selectedQuantities);
+
+    for (CartItem item : cart.getItems()) {
+        for (int i = 0; i < selectedItemIds.size(); i++) {
+            if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
+                item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
+                selectedItems.add(item);
+                System.out.println("Debug: Matched item in CartContact - ID = " + item.getId() + ", Quantity = " + item.getQuantity());
+                break;
             }
         }
-
-        if (selectedItems.isEmpty()) {
-            response.sendRedirect("cartdetail");
-            return;
-        }
-
-        // Tính tổng tiền
-        double subtotal = 0;
-        for (CartItem item : selectedItems) {
-            subtotal += item.getProductPrice() * item.getQuantity();
-        }
-
-        // Lấy giảm giá từ session
-        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
-        Double discountAmount = (Double) session.getAttribute("cartDiscount");
-
-        // Thiết lập phí vận chuyển mặc định
-        double shippingFee = 30000.0;
-
-        // Tính tổng tiền cuối cùng sau giảm giá
-        double total = subtotal;
-        if (discountAmount != null && discountAmount > 0) {
-            total -= discountAmount;
-        }
-        total += shippingFee;
-
-        // Lưu dữ liệu vào request
-        request.setAttribute("selectedItems", selectedItems);
-        request.setAttribute("addresses", addresses);
-        request.setAttribute("subtotal", subtotal);
-        request.setAttribute("discount", discountAmount);
-        request.setAttribute("appliedCoupon", appliedCoupon);
-        request.setAttribute("shippingFee", shippingFee);
-        request.setAttribute("total", total);
-        request.setAttribute("isGuest", user == null);
-
-        request.getRequestDispatcher("cartcontact.jsp").forward(request, response);
     }
+
+    if (selectedItems.isEmpty()) {
+        System.out.println("Debug: selectedItems is empty in CartContact");
+        response.sendRedirect("cartdetail");
+        return;
+    }
+
+    // Tính tổng tiền
+    double subtotal = 0;
+    for (CartItem item : selectedItems) {
+        subtotal += item.getProductPrice() * item.getQuantity();
+    }
+
+    // Lấy giảm giá từ session
+    String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+    Double discountAmount = (Double) session.getAttribute("cartDiscount");
+
+    // Thiết lập phí vận chuyển mặc định
+    double shippingFee = 30000.0;
+
+    // Tính tổng tiền cuối cùng sau giảm giá
+    double total = subtotal;
+    if (discountAmount != null && discountAmount > 0) {
+        total -= discountAmount;
+    }
+    total += shippingFee;
+
+    // Lưu dữ liệu vào request
+    request.setAttribute("selectedItems", selectedItems);
+    request.setAttribute("addresses", addresses);
+    request.setAttribute("subtotal", subtotal);
+    request.setAttribute("discount", discountAmount);
+    request.setAttribute("appliedCoupon", appliedCoupon);
+    request.setAttribute("shippingFee", shippingFee);
+    request.setAttribute("total", total);
+    request.setAttribute("isGuest", user == null);
+
+    request.getRequestDispatcher("cartcontact.jsp").forward(request, response);
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.
