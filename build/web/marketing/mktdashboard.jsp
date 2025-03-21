@@ -383,29 +383,7 @@
                 </div>
             </div>
             
-            <div class="col-xl-6 col-lg-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="${pageContext.request.contextPath}/marketing/addPost" class="btn btn-primary btn-lg">
-                                <i class="bi bi-file-earmark-plus"></i> Create New Post
-                            </a>
-                            <a href="${pageContext.request.contextPath}/marketing/addCoupon" class="btn btn-success btn-lg">
-                                <i class="bi bi-ticket-perforated"></i> Create New Coupon
-                            </a>
-                            <a href="${pageContext.request.contextPath}/marketing/addSlider" class="btn btn-info btn-lg">
-                                <i class="bi bi-images"></i> Add New Slider
-                            </a>
-                            <a href="${pageContext.request.contextPath}/reports/export" class="btn btn-secondary btn-lg">
-                                <i class="bi bi-file-earmark-excel"></i> Export Reports
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 </div> <!-- End of main-content -->
