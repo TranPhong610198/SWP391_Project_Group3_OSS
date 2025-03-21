@@ -68,7 +68,7 @@
                 <p class="text-muted">Xem hiệu suất bán hàng và số liệu thống kê của bạn</p>
             </div>
             <div class="col-md-4">
-                <form action="saledashboard" method="GET" class="d-flex">
+                <form action="${pageContext.request.contextPath}/sale/dashboard" method="GET" class="d-flex">
                     <div class="input-group me-2">
                         <span class="input-group-text">Từ</span>
                         <input type="date" name="startDate" class="form-control" value="${param.startDate != null ? param.startDate : sevenDaysAgo}">

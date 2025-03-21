@@ -24,6 +24,7 @@ public class DashboardDAO extends DBContext {
         stats.setTotalProducts(productCounts.getOrDefault("Total", 0));
         stats.setActiveProducts(productCounts.getOrDefault("active", 0));
         stats.setOutOfStockProducts(productCounts.getOrDefault("EOStock", 0));
+        stats.setInactiveProducts(productCounts.getOrDefault("inactive", 0));
 
         stats.setProductsByCategory(getProductsByCategory());
         stats.setTotalStock(getTotalStock());
@@ -211,13 +212,14 @@ private List<LowStockProduct> getLowStockProducts(int threshold) {
         Map<Date, Integer> newCustomersByDay = new LinkedHashMap<>(); // Use LinkedHashMap to maintain order
         
         try {
-            String sql = "SELECT CONVERT(DATE, created_at) as signup_date, COUNT(*) as customer_count " +
-                         "FROM users " +
-                         "WHERE role = 'customer' " +
-                         "AND created_at BETWEEN ? AND ? " +
-                         "GROUP BY CONVERT(DATE, created_at) " +
-                         "ORDER BY signup_date";
-            
+            String sql = "SELECT CONVERT(DATE, created_at) AS signup_date, COUNT(*) AS customer_count " +
+             "FROM users " +
+             "WHERE role = 'customer' " +
+             "AND status = 'active' " +  // Thêm điều kiện lọc theo trạng thái active
+             "AND created_at BETWEEN ? AND ? " +
+             "GROUP BY CONVERT(DATE, created_at) " +
+             "ORDER BY signup_date";
+
             ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, new java.sql.Timestamp(startDate.getTime()));
             ps.setTimestamp(2, new java.sql.Timestamp(endDate.getTime()));

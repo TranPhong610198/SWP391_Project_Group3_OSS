@@ -12,6 +12,7 @@ public class DashboardStats {
     private int totalProducts;
     private int activeProducts;
     private int outOfStockProducts;
+    private int inactiveProducts;
     private Map<String, Integer> productsByCategory;
     
     // Inventory stats
@@ -50,12 +51,13 @@ public class DashboardStats {
         // Constructor không tham số
     }
 
-    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int expiredCoupons, Map<String, Integer> couponUsage) {
+    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, int inactiveProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int expiredCoupons, Map<String, Integer> couponUsage) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalProducts = totalProducts;
     this.activeProducts = activeProducts;
     this.outOfStockProducts = outOfStockProducts;
+    this.inactiveProducts = inactiveProducts;
     this.productsByCategory = productsByCategory;
     this.totalStock = totalStock;
     this.lowStockProducts = lowStockProducts;
@@ -100,6 +102,14 @@ public class DashboardStats {
 
     public void setOutOfStockProducts(int outOfStockProducts) {
         this.outOfStockProducts = outOfStockProducts;
+    }
+    
+    public int getInactiveProducts() {
+        return inactiveProducts;
+    }
+
+    public void setInactiveProducts(int inactiveProducts) {
+        this.inactiveProducts = inactiveProducts;
     }
 
     public Map<String, Integer> getProductsByCategory() {

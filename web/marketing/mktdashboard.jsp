@@ -47,88 +47,99 @@
         </div>
         
         <!-- Summary stats cards -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Total Products</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
-                    <div class="mt-2 small">
-                        <div class="text-xs text-gray-600">Active: ${stats.activeProducts}</div>
-                        <div class="text-xs text-gray-600">Out of Stock: ${stats.outOfStockProducts}</div>
-                        <div class="text-xs text-gray-600">Inactive: ${stats.totalProducts - stats.activeProducts - stats.outOfStockProducts}</div>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <i class="bi bi-box-seam fa-2x text-gray-300"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-            
-            <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Total Customers</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalCustomers}</div>
-                    <div class="mt-2 small">
-                        <div class="text-xs text-gray-600">Active: ${stats.activeCustomers}</div>
-                        <div class="text-xs text-gray-600">Inactive: ${stats.inactiveCustomers}</div>
-                        <div class="text-xs text-gray-600">Pending: ${stats.pendingCustomers}</div>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <i class="bi bi-people fa-2x text-gray-300"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-            
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Published Posts</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.publishedPosts}</div>
+        <!-- Thay thế phần Summary stats cards hiện tại bằng code này -->
+<div class="row mb-4">
+    <!-- Total Products -->
+    <div class="col-xl-4 col-md-4 mb-4">
+        <div class="card shadow h-100 py-3" style="border-left: 4px solid #4e73df;">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-primary text-uppercase mb-2">
+                            Total Products
+                        </div>
+                        <div class="h4 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
+                        <div class="mt-3 small">
+                            <div class="text-xs text-success">
+                                <i class="fas fa-check-circle mr-1"></i>Active: ${stats.activeProducts}
                             </div>
-                            <div class="col-auto">
-                                <i class="bi bi-file-earmark-text fa-2x text-gray-300"></i>
+                            <div class="text-xs text-danger">
+                                <i class="fas fa-exclamation-circle mr-1"></i>Out of Stock: ${stats.outOfStockProducts}
+                            </div>
+                            <div class="text-xs text-secondary">
+                                <i class="fas fa-minus-circle mr-1"></i>Inactive: ${stats.totalProducts - stats.activeProducts - stats.outOfStockProducts}
                             </div>
                         </div>
                     </div>
+                    <div class="col-auto">
+                        <i class="bi bi-box-seam fa-3x text-gray-300"></i>
+                    </div>
                 </div>
             </div>
-            
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Average Rating</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <fmt:formatNumber value="${stats.averageRating}" pattern="0.0" /> / 5.0
+        </div>
+    </div>
+
+    <!-- Total Customers -->
+    <div class="col-xl-4 col-md-4 mb-4">
+        <div class="card shadow h-100 py-3" style="border-left: 4px solid #1cc88a;">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-success text-uppercase mb-2">
+                            Total Customers
+                        </div>
+                        <div class="h4 mb-0 font-weight-bold text-gray-800">${stats.totalCustomers}</div>
+                        <div class="mt-3 small">
+                            <div class="text-xs text-success">
+                                <i class="fas fa-user-check mr-1"></i>Active: ${stats.activeCustomers}
+                            </div>
+                            <div class="text-xs text-secondary">
+                                <i class="fas fa-user-slash mr-1"></i>Inactive: ${stats.inactiveCustomers}
+                            </div>
+                            <div class="text-xs text-warning">
+                                <i class="fas fa-user-clock mr-1"></i>Pending: ${stats.pendingCustomers}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-people fa-3x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Average Rating -->
+    <div class="col-xl-4 col-md-4 mb-4">
+        <div class="card shadow h-100 py-3" style="border-left: 4px solid #f6c23e;">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-warning text-uppercase mb-2">
+                            Average Rating
+                        </div>
+                        <div class="h4 mb-0 font-weight-bold text-gray-800">
+                            <fmt:formatNumber value="${stats.averageRating}" pattern="0.0" /> / 5.0
+                        </div>
+                        <div class="mt-3">
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-warning" role="progressbar" 
+                                     style="width: ${(stats.averageRating / 5) * 100}%;" 
+                                     aria-valuenow="${stats.averageRating}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="5">
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="bi bi-star-fill fa-2x text-gray-300"></i>
-                            </div>
                         </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-star-fill fa-3x text-gray-300"></i>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
         
         <!-- Customer trends chart -->
         <div class="row mb-4">
@@ -152,7 +163,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Feedback Distribution</h6> 
         </div> 
         <div class="card-body"> 
-            <div class="chart-pie pt-4 pb-2"> 
+            <div style="position: relative; height: 300px; width: 100%;">
                 <canvas id="feedbackChart"></canvas> 
             </div> 
             <div class="mt-4 text-center small"> 
@@ -199,29 +210,36 @@
 </div>
             
             <div class="col-xl-6 col-lg-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Inventory Status</h6>
-                    </div>
-                    <div class="card-body">
-                        <h4 class="small font-weight-bold">Active Products <span class="float-right">
-                            <fmt:formatNumber value="${stats.activeProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
-                        </span></h4>
-                        <div class="progress mb-4">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: ${stats.activeProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
-                        </div>
-                        
-                        <h4 class="small font-weight-bold">Out of Stock <span class="float-right">
-                            <fmt:formatNumber value="${stats.outOfStockProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
-                        </span></h4>
-                        <div class="progress mb-4">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: ${stats.outOfStockProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
-                        </div>
-                        
-                        <h4 class="small font-weight-bold">Total Inventory: ${stats.totalStock} items</h4>
-                    </div>
-                </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Inventory Status</h6>
+        </div>
+        <div class="card-body">
+            <h4 class="small font-weight-bold">Active Products <span class="float-right">
+                <fmt:formatNumber value="${stats.activeProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
+            </span></h4>
+            <div class="progress mb-4">
+                <div class="progress-bar bg-success" role="progressbar" style="width: ${stats.activeProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
             </div>
+            
+            <h4 class="small font-weight-bold">Out of Stock <span class="float-right">
+                <fmt:formatNumber value="${stats.outOfStockProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
+            </span></h4>
+            <div class="progress mb-4">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: ${stats.outOfStockProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
+            </div>
+            
+                <h4 class="small font-weight-bold">Inactive Products <span class="float-right">
+                        <fmt:formatNumber value="${stats.inactiveProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
+                    </span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-secondary" role="progressbar" style="width: ${stats.inactiveProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
+                </div>
+            
+            <h4 class="small font-weight-bold">Total Inventory: ${stats.totalStock} items</h4>
+        </div>
+    </div>
+</div>
         </div>
         
         <!-- Low stock alerts and coupon stats -->
@@ -344,47 +362,52 @@
         </div>
         
         <!-- Content Management Stats -->
-        <div class="row">
-            <div class="col-xl-6 col-lg-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Content Management</h6>
+        <div class="col-xl-6 col-lg-6">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Content Management</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Posts Chart -->
+                <div class="col-md-6">
+                    <div class="text-center mb-3">
+                        <h5 class="font-weight-bold">Posts</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Posts</h5>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: ${stats.publishedPosts / (stats.totalPosts == 0 ? 1 : stats.totalPosts) * 100}%">
-                                        <span>Published (${stats.publishedPosts})</span>
-                                    </div>
-                                </div>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: ${stats.draftPosts / (stats.totalPosts == 0 ? 1 : stats.totalPosts) * 100}%">
-                                        <span>Draft (${stats.draftPosts})</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <h5>Sliders</h5>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: ${stats.activeSliders / (stats.totalSliders == 0 ? 1 : stats.totalSliders) * 100}%">
-                                        <span>Active (${stats.activeSliders})</span>
-                                    </div>
-                                </div>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: ${(stats.totalSliders - stats.activeSliders) / (stats.totalSliders == 0 ? 1 : stats.totalSliders) * 100}%">
-                                        <span>Inactive (${stats.totalSliders - stats.activeSliders})</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div style="position: relative; height: 200px; width: 100%;">
+                        <canvas id="postsChart"></canvas>
+                    </div>
+                    <div class="mt-3 text-center small">
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i> Published: ${stats.publishedPosts}
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-warning"></i> Draft: ${stats.draftPosts}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Sliders Chart -->
+                <div class="col-md-6">
+                    <div class="text-center mb-3">
+                        <h5 class="font-weight-bold">Sliders</h5>
+                    </div>
+                    <div style="position: relative; height: 200px; width: 100%;">
+                        <canvas id="slidersChart"></canvas>
+                    </div>
+                    <div class="mt-3 text-center small">
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i> Active: ${stats.activeSliders}
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-secondary"></i> Inactive: ${stats.totalSliders - stats.activeSliders}
+                        </span>
                     </div>
                 </div>
             </div>
-            
-            
         </div>
+    </div>
+</div>
     </div>
 </div> <!-- End of main-content -->
 
@@ -460,51 +483,97 @@
             }
         });
         
-        // Feedback Distribution Chart
         document.addEventListener('DOMContentLoaded', function() {
-    var feedbackChartContext = document.getElementById('feedbackChart').getContext('2d'); 
-    var feedbackChart = new Chart(feedbackChartContext, { 
-        type: 'pie', 
-        data: { 
-            labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'], 
-            datasets: [{ 
-                data: [ 
-                    ${stats.feedbackByRating[1] != null ? stats.feedbackByRating[1] : 0}, 
-                    ${stats.feedbackByRating[2] != null ? stats.feedbackByRating[2] : 0}, 
-                    ${stats.feedbackByRating[3] != null ? stats.feedbackByRating[3] : 0}, 
-                    ${stats.feedbackByRating[4] != null ? stats.feedbackByRating[4] : 0}, 
-                    ${stats.feedbackByRating[5] != null ? stats.feedbackByRating[5] : 0} 
-                ], 
-                backgroundColor: [ 
-                    '#e74a3b', // Red - 1 Star 
-                    '#f6c23e', // Yellow - 2 Stars 
-                    '#36b9cc', // Info - 3 Stars 
-                    '#4e73df', // Primary - 4 Stars 
-                    '#1cc88a'  // Success - 5 Stars 
-                ], 
-                hoverBackgroundColor: [ 
-                    '#be3d30', 
-                    '#dda20a', 
-                    '#2c9faf', 
-                    '#2e59d9', 
-                    '#17a673' 
-                ], 
-                hoverBorderColor: 'rgba(234, 236, 244, 1)' 
-            }] 
-        }, 
-        options: { 
-            maintainAspectRatio: false, 
-            plugins: { 
-                legend: { 
-                    position: 'bottom' 
-                } 
-            } 
-        } 
-    });
+    var feedbackChartContext = document.getElementById('feedbackChart').getContext('2d');
+    
+    // Create an array of ratings from the server data
+    var feedbackData = [];
+    <c:forEach begin="1" end="5" var="rating">
+        feedbackData.push(${feedbackByRating[rating] != null ? feedbackByRating[rating] : 0});
+    </c:forEach>
+    
+    // Debug data
+    console.log("Feedback Ratings for Chart:", feedbackData);
+    
+    // Check if we have any data
+    var hasData = feedbackData.some(value => value > 0);
+    
+    if (!hasData) {
+        // Show message if no data available
+        var chartContainer = document.getElementById('feedbackChart').parentElement;
+        chartContainer.innerHTML = '<p class="text-center text-muted">No feedback data available</p>';
+    } else {
+        // Initialize bar chart
+        var feedbackChart = new Chart(feedbackChartContext, {
+            type: 'bar',
+            data: {
+                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                datasets: [{
+                    label: 'Number of Feedback',
+                    data: feedbackData,
+                    backgroundColor: [
+                        '#e74a3b', // 1 Star
+                        '#f6c23e', // 2 Stars
+                        '#36b9cc', // 3 Stars
+                        '#4e73df', // 4 Stars
+                        '#1cc88a'  // 5 Stars
+                    ],
+                    hoverBackgroundColor: [
+                        '#be3d30',
+                        '#dda20a',
+                        '#2c9faf',
+                        '#2e59d9',
+                        '#17a673'
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Feedback'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Rating'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hide default legend since we have custom one
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var value = context.raw || 0;
+                                return 'Feedback: ' + value;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
 });
+
         
         // Products by Category Chart
-        // Products by Category Chart - Fix rendering issues
 document.addEventListener("DOMContentLoaded", function() {
     // Get the canvas element
     var ctx = document.getElementById("productsByCategoryChart");
@@ -514,22 +583,29 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
     
-    // Make sure we get the 2D context
-    var context = ctx.getContext("2d");
+    // Create arrays for labels and data from server data
+    var labels = [];
+    var data = [];
     
-    // Data that matches what's shown in the legend
-    var labels = ["Quần áo nam", "Phụ kiện", "Quần áo nữ", "Quần áo trẻ em", "Giày dép"];
-    var data = [8, 7, 6, 5, 4];
-    var backgroundColors = ["#36b9cc", "#4e73df", "#f6c23e", "#1cc88a", "#d65b4f"];
+    <c:forEach items="${productsByCategory}" var="category" varStatus="status">
+        labels.push("${category.key}");
+        data.push(${category.value});
+    </c:forEach>
     
-    // Create the chart with explicit height and width settings
-    var productChart = new Chart(context, {
+    console.log("Category labels:", labels);
+    console.log("Category data:", data);
+    
+    // Color array for categories
+    var backgroundColors = ["#36b9cc", "#4e73df", "#f6c23e", "#1cc88a", "#d65b4f", "#6f42c1", "#20c997"];
+    
+    // Create the chart with dynamic data
+    var productChart = new Chart(ctx.getContext('2d'), {
         type: 'pie',
         data: {
             labels: labels,
             datasets: [{
                 data: data,
-                backgroundColor: backgroundColors,
+                backgroundColor: backgroundColors.slice(0, labels.length),
                 borderColor: "#ffffff",
                 borderWidth: 1
             }]
@@ -539,33 +615,112 @@ document.addEventListener("DOMContentLoaded", function() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: false // Hide default legend since we have custom legend below
+                    display: false // Hide default legend since we have custom one
                 },
                 tooltip: {
-                    enabled: true
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.label || '';
+                            var value = context.raw || 0;
+                            return label + ': ' + value + ' products';
+                        }
+                    }
                 }
             },
             animation: {
-                duration: 1000 // Add animation for better rendering visibility
+                duration: 1000
             }
         }
     });
     
-    // Debug information to verify chart creation
-    console.log("Chart created:", productChart);
+    console.log("Products by Category Chart created:", productChart);
 });
 
-// Add this to the end of your script section to ensure the container has proper height
+// Make sure container has proper height
 document.addEventListener("DOMContentLoaded", function() {
-    // Set explicit height for chart container
     var chartContainer = document.querySelector(".card-body div[style='position: relative; height: 350px; width: 100%;']");
     if (chartContainer) {
         chartContainer.style.height = "350px";
         chartContainer.style.width = "100%";
-        console.log("Chart container size set");
     }
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    var postsChartContext = document.getElementById('postsChart').getContext('2d');
+    var postsChart = new Chart(postsChartContext, {
+        type: 'doughnut',
+        data: {
+            labels: ['Published', 'Draft'],
+            datasets: [{
+                data: [${stats.publishedPosts}, ${stats.draftPosts}],
+                backgroundColor: ['#1cc88a', '#f6c23e'],
+                hoverBackgroundColor: ['#17a673', '#dda20a'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.label || '';
+                            var value = context.raw || 0;
+                            return label + ': ' + value;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+
+    // Sliders Chart
+    var slidersChartContext = document.getElementById('slidersChart').getContext('2d');
+    var slidersChart = new Chart(slidersChartContext, {
+        type: 'doughnut',
+        data: {
+            labels: ['Active', 'Inactive'],
+            datasets: [{
+                data: [${stats.activeSliders}, ${stats.totalSliders - stats.activeSliders}],
+                backgroundColor: ['#36b9cc', '#858796'],
+                hoverBackgroundColor: ['#2c9faf', '#6e707e'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.label || '';
+                            var value = context.raw || 0;
+                            return label + ': ' + value;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+});
     </script>
 </body>
 </html>

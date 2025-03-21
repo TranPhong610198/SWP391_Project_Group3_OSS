@@ -12,34 +12,42 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 @WebServlet(name = "DashboardServlet", urlPatterns = {"/marketing/dashboard"})
 public class DashboardServlet extends HttpServlet {
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        // Parse date range parameters, default to last 7 days if not provided
-        Date startDate = getStartDate(request);
-        Date endDate = getEndDate(request);
-        
-        // Get dashboard statistics
-        DashboardDAO dashboardDAO = new DashboardDAO();
-        DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
-         stats.setProductsByCategory(dashboardDAO.getProductsByCategory());
-          stats.setFeedbackByRating(dashboardDAO.getFeedbackByRating());
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    
+    // Parse date range parameters, default to last 7 days if not provided
+    Date startDate = getStartDate(request);
+    Date endDate = getEndDate(request);
+    
+    // Get dashboard statistics
+    DashboardDAO dashboardDAO = new DashboardDAO();
+    DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
+    
+    // Ensure these methods are called directly here, not relying on getDashboardStats
+    Map<String, Integer> productsByCategory = dashboardDAO.getProductsByCategory();
+    Map<Integer, Integer> feedbackByRating = dashboardDAO.getFeedbackByRating();
+    
+    stats.setProductsByCategory(productsByCategory);
+    stats.setFeedbackByRating(feedbackByRating);
 
-        // Set attributes for JSP
-        request.setAttribute("stats", stats);
-        request.setAttribute("startDateStr", formatDate(startDate));
-        request.setAttribute("endDateStr", formatDate(endDate));
-         request.setAttribute("productsByCategory", dashboardDAO.getProductsByCategory());
-         request.setAttribute("feedbackByRating", dashboardDAO.getFeedbackByRating());
-        
-        // Forward to JSP
-        request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);
-    }
+    // Set attributes for JSP
+    request.setAttribute("stats", stats);
+    request.setAttribute("startDateStr", formatDate(startDate));
+    request.setAttribute("endDateStr", formatDate(endDate));
+    
+    // Explicitly set these as separate attributes for easier access in JSP
+    request.setAttribute("productsByCategory", productsByCategory);
+    request.setAttribute("feedbackByRating", feedbackByRating);
+    
+    // Forward to JSP
+    request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);
+}
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
