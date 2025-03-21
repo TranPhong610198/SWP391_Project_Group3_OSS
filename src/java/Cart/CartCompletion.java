@@ -127,7 +127,6 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         order.setRecipientEmail(shippingAddress.getRecipientName() != null ? shippingAddress.getRecipientName() : "guest@example.com");
     }
 
-    Random random = new Random();
     String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
     order.setOrderCode(orderCode);
     order.setStatus("pending");

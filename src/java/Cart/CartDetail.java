@@ -26,6 +26,7 @@ import java.util.Map;
 
 @WebServlet(name = "CartDetail", urlPatterns = {"/cartdetail"})
 public class CartDetail extends HttpServlet {
+
     private ProductDAO productDAO = new ProductDAO();
     private CartDAO cartDAO = new CartDAO();
     private CouponDAO couponDAO = new CouponDAO();
@@ -52,8 +53,6 @@ public class CartDetail extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
-
-        // Clear coupon if returning to cart page - THIS IS THE FIX
         String fromPage = request.getParameter("from");
         if ("contact".equals(fromPage) || request.getParameter("clearCoupon") != null) {
             session.removeAttribute("appliedCoupon");
@@ -75,7 +74,7 @@ public class CartDetail extends HttpServlet {
             }
         }
         request.setAttribute("stockMap", stock);
-        
+
         Map<Integer, String> productStatusMap = new HashMap<>();
         for (CartItem item : cart.getItems()) {
             Product product = productDAO.getProductById(item.getProductId());
@@ -133,7 +132,6 @@ public class CartDetail extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
@@ -151,7 +149,6 @@ public class CartDetail extends HttpServlet {
             handleCheckStock(request, response);
             return;
         } else if ("clearCoupon".equals(action)) {
-            // Add clear coupon action - THIS IS PART OF THE FIX
             session.removeAttribute("appliedCoupon");
             session.removeAttribute("cartDiscount");
             response.sendRedirect("cartdetail");
@@ -183,8 +180,6 @@ public class CartDetail extends HttpServlet {
     private void handleCheckout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
-        // Lấy danh sách sản phẩm được chọn
         String[] selectedIds = request.getParameterValues("selectedItems");
 
         if (selectedIds == null || selectedIds.length == 0) {
@@ -193,56 +188,75 @@ public class CartDetail extends HttpServlet {
             return;
         }
 
-        // Tạo danh sách lưu ID và số lượng
         List<String> selectedItemIds = new ArrayList<>();
         List<String> selectedQuantities = new ArrayList<>();
+        User user = (User) session.getAttribute("acc");
+        Cart cart = user != null ? cartDAO.getCartByUserId(user.getId()) : cartDAO.getCartFromCookies(request);
+        double totalSelected = 0;
 
-        // Lấy số lượng tương ứng cho từng sản phẩm được chọn
         for (String itemId : selectedIds) {
             String quantity = request.getParameter("quantity_" + itemId);
             selectedItemIds.add(itemId);
             selectedQuantities.add(quantity);
+            for (CartItem item : cart.getItems()) {
+                if (String.valueOf(item.getId()).equals(itemId)) {
+                    totalSelected += item.getProductPrice() * Integer.parseInt(quantity);
+                    break;
+                }
+            }
         }
 
-        // Lưu vào session các sản phẩm được chọn
         session.setAttribute("selectedItemIds", selectedItemIds);
         session.setAttribute("selectedQuantities", selectedQuantities);
 
-        // Lưu thông tin giảm giá hiện tại vào session
         String currentCoupon = request.getParameter("couponCode");
         if (currentCoupon != null && !currentCoupon.isEmpty()) {
-            // Tính lại giảm giá dựa trên tổng tiền của các sản phẩm được chọn
-            User user = (User) session.getAttribute("acc");
-            Cart cart = user != null
-                    ? cartDAO.getCartByUserId(user.getId())
-                    : cartDAO.getCartFromCookies(request);
+            synchronized (this) { // Đồng bộ để xử lý tranh chấp
+                Coupon coupon = couponDAO.getCouponByCode(currentCoupon);
+                if (coupon != null) {
+                    try {
+                        // Kiểm tra và validate coupon
+                        if (!"active".equals(coupon.getStatus())) {
+                            throw new Exception("Mã giảm giá không còn hiệu lực!");
+                        }
+                        Date expiryDate = coupon.getExpiry_date();
+                        if (expiryDate != null && new Date().after(expiryDate)) { // Sửa lỗi ở đây
+                            coupon.setStatus("expired");
+                            couponDAO.updateCoupon(coupon);
+                            throw new Exception("Mã giảm giá đã hết hạn!");
+                        }
+                        int currentUsedCount = coupon.getUsed_count();
+                        if (expiryDate != null && new Date().after(expiryDate)) {
+                            throw new Exception("Mã giảm giá đã hết lượt sử dụng bởi người dùng khác!");
+                        }
 
-            double totalSelected = 0;
-            for (int i = 0; i < selectedIds.length; i++) {
-                for (CartItem item : cart.getItems()) {
-                    if (String.valueOf(item.getId()).equals(selectedIds[i])) {
-                        totalSelected += item.getProductPrice()
-                                * Integer.parseInt(request.getParameter("quantity_" + selectedIds[i]));
-                        break;
+                        double discount = validateAndCalculateCouponDiscount(currentCoupon, totalSelected);
+                        // Tăng used_count nếu áp dụng thành công
+                        coupon.setUsed_count(currentUsedCount + 1);
+                        couponDAO.updateCoupon(coupon);
+
+                        session.setAttribute("cartDiscount", discount);
+                        session.setAttribute("appliedCoupon", currentCoupon);
+                    } catch (Exception e) {
+                        session.removeAttribute("cartDiscount");
+                        session.removeAttribute("appliedCoupon");
+                        request.setAttribute("couponError", e.getMessage());
+                        doGet(request, response);
+                        return;
                     }
+                } else {
+                    session.removeAttribute("appliedCoupon");
+                    session.removeAttribute("cartDiscount");
+                    request.setAttribute("couponError", "Mã giảm giá không tồn tại!");
+                    doGet(request, response);
+                    return;
                 }
             }
-
-            try {
-                double discount = validateAndCalculateCouponDiscount(currentCoupon, totalSelected);
-                session.setAttribute("cartDiscount", discount);
-                session.setAttribute("appliedCoupon", currentCoupon);
-            } catch (Exception e) {
-                session.removeAttribute("cartDiscount");
-                session.removeAttribute("appliedCoupon");
-            }
         } else {
-            // If no coupon is selected, clear any existing coupon - THIS IS PART OF THE FIX
             session.removeAttribute("appliedCoupon");
             session.removeAttribute("cartDiscount");
         }
 
-        // Chuyển hướng sang trang contact mà không kiểm tra đăng nhập
         response.sendRedirect("cartcontact");
     }
 
@@ -274,13 +288,11 @@ public class CartDetail extends HttpServlet {
             System.out.println("Updating cart item: " + cartItemId + " with quantity: " + quantity);
 
             if (user != null) {
-
                 boolean success = cartDAO.updateCartItemQuantity(cartItemId, quantity);
                 if (!success) {
                     System.out.println("Failed to update cart item quantity in database");
                 }
             } else {
-
                 cartDAO.updateCartItemQuantityInCookie(request, response, cartItemId, quantity);
             }
 
@@ -327,7 +339,6 @@ public class CartDetail extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String couponCode = request.getParameter("couponCode");
-
         User user = (User) session.getAttribute("acc");
         Cart cart = cartDAO.getCart(request, user != null ? user.getId() : null);
 
@@ -340,8 +351,22 @@ public class CartDetail extends HttpServlet {
 
         try {
             double totalAmount = cartDAO.calculateTotalAmount(cart);
-            double discount = validateAndCalculateCouponDiscount(couponCode, totalAmount);
+            Coupon coupon = couponDAO.getCouponByCode(couponCode);
+            if (coupon == null) {
+                throw new Exception("Mã giảm giá không tồn tại!");
+            }
+            if (!"active".equals(coupon.getStatus())) {
+                throw new Exception("Mã giảm giá không còn hiệu lực!");
+            }
+            Date expiryDate = coupon.getExpiry_date();
+            if (expiryDate != null && new Date().after(expiryDate)) {
+                coupon.setStatus("expired");
+                couponDAO.updateCoupon(coupon);
+                throw new Exception("Mã giảm giá đã hết hạn!");
+            }
+            // Không kiểm tra usage_limit khi apply, chỉ kiểm tra khi checkout
 
+            double discount = validateAndCalculateCouponDiscount(couponCode, totalAmount);
             session.setAttribute("appliedCoupon", couponCode);
             session.setAttribute("cartDiscount", discount);
         } catch (Exception e) {
@@ -368,10 +393,14 @@ public class CartDetail extends HttpServlet {
         if (expiryDate != null) {
             Date currentDate = new Date(System.currentTimeMillis());
             if (currentDate.after(expiryDate)) {
+                coupon.setStatus("expired");
+                couponDAO.updateCoupon(coupon);
                 throw new Exception("Mã giảm giá đã hết hạn!");
             }
         }
 
+        // Không kiểm tra usage_limit ở đây nữa, chuyển sang handleCheckout
+        /*
         Integer usageLimit = coupon.getUsage_limit();
         if (usageLimit != null && usageLimit > 0) {
             int usedCount = coupon.getUsed_count();
@@ -379,7 +408,7 @@ public class CartDetail extends HttpServlet {
                 throw new Exception("Mã giảm giá đã hết lượt sử dụng!");
             }
         }
-
+         */
         if (totalAmount < coupon.getMin_order_amount()) {
             throw new Exception(String.format("Đơn hàng cần tối thiểu %,.0f₫ để áp dụng mã này!",
                     coupon.getMin_order_amount()));

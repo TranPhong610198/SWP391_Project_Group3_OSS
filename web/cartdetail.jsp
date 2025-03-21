@@ -334,6 +334,20 @@
                 font-size: 15px;
                 line-height: 1;
             }
+
+            /* Thông báo lỗi */
+            .alert {
+                margin-bottom: 20px;
+                padding: 10px 15px;
+                border-radius: 6px;
+                font-size: 14px;
+            }
+
+            .alert-danger {
+                background-color: rgba(220, 53, 69, 0.1);
+                color: #dc3545;
+                border: 1px solid rgba(220, 53, 69, 0.2);
+            }
         </style>
     </head>
     <body>
@@ -344,23 +358,30 @@
                 <h1 class="h3">Giỏ hàng của bạn</h1>
             </div>
 
+            <!-- Hiển thị thông báo lỗi chung nếu có -->
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>${error}
+                </div>
+            </c:if>
+
             <!-- Links -->
             <div class="card mb-4 links-card">
                 <div class="card-body py-3">
                     <div class="row text-center">
                         <div class="col-md-4 mb-2 mb-md-0">
                             <a href="contact" class="text-decoration-none d-inline-block">
-                                <i class="fas fa-envelope"></i>Liên hệ
+                                <i class="fas fa-envelope"></i> Liên hệ
                             </a>
                         </div>
                         <div class="col-md-4 mb-2 mb-md-0">
                             <a href="about" class="text-decoration-none d-inline-block">
-                                <i class="fas fa-info-circle"></i>Về chúng tôi
+                                <i class="fas fa-info-circle"></i> Về chúng tôi
                             </a>
                         </div>
                         <div class="col-md-4">
                             <a href="help" class="text-decoration-none d-inline-block">
-                                <i class="fas fa-question-circle"></i>Trợ giúp
+                                <i class="fas fa-question-circle"></i> Trợ giúp
                             </a>
                         </div>
                     </div>
@@ -379,7 +400,7 @@
                                         <h5 class="mb-3">Giỏ hàng trống</h5>
                                         <p class="text-muted mb-4">Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
                                         <a href="listproduct" class="btn btn-primary">
-                                            <i class="fas fa-shopping-bag me-2"></i>Chọn sản phẩm
+                                            <i class="fas fa-shopping-bag me-2"></i> Chọn sản phẩm
                                         </a>
                                     </div>
                                 </c:when>
@@ -491,14 +512,13 @@
 
                     <div class="text-center mb-4">
                         <a href="listproduct" class="btn btn-outline-primary">
-                            <i class="fas fa-plus me-2"></i>Tiếp tục mua sắm
+                            <i class="fas fa-plus me-2"></i> Tiếp tục mua sắm
                         </a>
                     </div>
                 </div>
 
                 <!-- Cart Summary -->
                 <div class="col-lg-4">
-
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title fw-bold mb-3">Mã giảm giá</h5>
@@ -541,14 +561,14 @@
                                     <i class="fas fa-check-circle"></i> Đang áp dụng mã: ${appliedCoupon}
                                 </div>
                             </c:if>
+                            <!-- Sửa phần hiển thị thông báo lỗi -->
                             <c:if test="${not empty couponError}">
-                                <div class="small text-danger mt-1">
-                                    <i class="fas fa-exclamation-circle"></i> ${couponError}
+                                <div class="alert mt-2 ${couponError == 'Mã giảm giá đã hết hạn!' ? 'alert-expired' : 'alert-danger'}">
+                                    <i class="fas fa-exclamation-circle me-2"></i> ${couponError}
                                 </div>
                             </c:if>
                         </div>
                     </div>
-
 
                     <div class="card">
                         <div class="card-body">
@@ -575,7 +595,7 @@
                             </div>
 
                             <button type="button" onclick="submitCheckout()" class="btn btn-primary w-100 checkout-btn" id="checkoutBtn" disabled>
-                                Thanh toán<i class="fas fa-arrow-right ms-2"></i>
+                                Thanh toán <i class="fas fa-arrow-right ms-2"></i>
                             </button>
                         </div>
                     </div>
