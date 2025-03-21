@@ -377,6 +377,9 @@
                     gap: 15px;
                 }
             }
+            #feedback_section {
+                scroll-margin-top: 100px; /* Điều chỉnh giá trị này theo chiều cao header */
+            }
         </style>
     </head>
     <body>

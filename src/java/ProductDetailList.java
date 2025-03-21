@@ -173,18 +173,19 @@ public class ProductDetailList extends HttpServlet {
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("currentPage", page);
             request.setAttribute("feedbacks", feedbacks);
-            
+
             request.setAttribute("filterStar", filterStar);
 
             // Tính sao trung bình
             int[] ratingCounts = feedbackDAO.getRatingCountsByProduct(null, productId);
+            int allFeedbacks = feedbackDAO.getTotalFeedbacksByProduct(null, null, "approved", productId);
             double totalStar = 0;
             int i = 1;
             for (int star : ratingCounts) {
                 totalStar = (double) star * i + totalStar;
                 i++;
             }
-            double averageRating = (double) totalStar / totalFeedbacks;
+            double averageRating = (double) totalStar / allFeedbacks;
             request.setAttribute("averageRating", averageRating);
             request.setAttribute("fiveStarCount", ratingCounts[4]);
             request.setAttribute("fourStarCount", ratingCounts[3]);
