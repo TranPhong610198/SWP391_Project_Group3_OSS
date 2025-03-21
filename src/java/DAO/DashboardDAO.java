@@ -13,95 +13,122 @@ public class DashboardDAO extends DBContext {
     private ResultSet rs = null;
     
     public DashboardStats getDashboardStats(Date startDate, Date endDate) {
-        DashboardStats stats = new DashboardStats();
-        stats.setStartDate(startDate);
-        stats.setEndDate(endDate);
-        
-        try {
-            // Set basic stats
-            stats.setTotalProducts(getProductCount(null));
-            stats.setActiveProducts(getProductCount("active"));
-            stats.setOutOfStockProducts(getProductCount("EOStock"));
-            stats.setProductsByCategory(getProductsByCategory());
-            
-            stats.setTotalStock(getTotalStock());
-            stats.setLowStockProducts(getLowStockProducts(10)); // Products with stock less than 10
-            
-            stats.setTotalCustomers(getCustomerCount(null));
-            stats.setActiveCustomers(getCustomerCount("active"));
-            stats.setNewCustomersByDay(getNewCustomersByDay(startDate, endDate));
-            
-            stats.setTotalPosts(getPostCount(null));
-            stats.setPublishedPosts(getPostCount("published"));
-            stats.setDraftPosts(getPostCount("draft"));
-            
-            stats.setTotalFeedback(getFeedbackCount());
-            stats.setAverageRating(getAverageRating());
-            stats.setFeedbackByRating(getFeedbackByRating());
-            
-            stats.setTotalSliders(getSliderCount(null));
-            stats.setActiveSliders(getSliderCount("active"));
-            
-            stats.setTotalCoupons(getCouponCount(null));
-            stats.setActiveCoupons(getCouponCount("active"));
-            stats.setExpiredCoupons(getCouponCount("expired"));
-            stats.setCouponUsage(getCouponUsage());
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
-        
-        return stats;
+    DashboardStats stats = new DashboardStats();
+    stats.setStartDate(startDate);
+    stats.setEndDate(endDate);
+
+    try {
+        // Lấy tất cả số lượng sản phẩm theo trạng thái
+        Map<String, Integer> productCounts = getProductCount();
+
+        stats.setTotalProducts(productCounts.getOrDefault("Total", 0));
+        stats.setActiveProducts(productCounts.getOrDefault("active", 0));
+        stats.setOutOfStockProducts(productCounts.getOrDefault("EOStock", 0));
+
+        stats.setProductsByCategory(getProductsByCategory());
+        stats.setTotalStock(getTotalStock());
+        stats.setLowStockProducts(getLowStockProducts(10));
+
+        Map<String, Integer> customerStats = getAllCustomerCounts();
+stats.setTotalCustomers(customerStats.getOrDefault("Total", 0));
+stats.setActiveCustomers(customerStats.getOrDefault("active", 0));
+stats.setInactiveCustomers(customerStats.getOrDefault("inactive", 0));
+stats.setPendingCustomers(customerStats.getOrDefault("pending", 0));
+
+        stats.setNewCustomersByDay(getNewCustomersByDay(startDate, endDate));
+
+        stats.setTotalPosts(getPostCount(null));
+        stats.setPublishedPosts(getPostCount("published"));
+        stats.setDraftPosts(getPostCount("draft"));
+
+        stats.setTotalFeedback(getFeedbackCount());
+        stats.setAverageRating(getAverageRating());
+        stats.setFeedbackByRating(getFeedbackByRating());
+
+        stats.setTotalSliders(getSliderCount(null));
+        stats.setActiveSliders(getSliderCount("active"));
+
+        stats.setTotalCoupons(getCouponCount(null));
+        stats.setActiveCoupons(getCouponCount("active"));
+        stats.setExpiredCoupons(getCouponCount("expired"));
+        stats.setCouponUsage(getCouponUsage());
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeConnection();
     }
+
+    return stats;
+}
+
     
     // Get count of products based on status
-    private int getProductCount(String status) {
-        int count = 0;
-        try {
-            String sql = "SELECT COUNT(*) FROM products";
-            if (status != null) {
-                sql += " WHERE status = ?";
-            }
-            
-            ps = connection.prepareStatement(sql);
-            if (status != null) {
-                ps.setString(1, status);
-            }
-            
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private Map<String, Integer> getProductCount() {
+    Map<String, Integer> productCounts = new HashMap<>();
+    try {
+        // Lấy tổng số sản phẩm
+        String totalSql = "SELECT COUNT(*) FROM products";
+        ps = connection.prepareStatement(totalSql);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            productCounts.put("Total", rs.getInt(1));
         }
-        return count;
+
+        // Lấy số lượng sản phẩm theo trạng thái
+        String statusSql = "SELECT status, COUNT(*) FROM products GROUP BY status";
+        ps = connection.prepareStatement(statusSql);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            productCounts.put(rs.getString(1), rs.getInt(2));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return productCounts;
+}
+
     
     // Get products by category
-    private Map<String, Integer> getProductsByCategory() {
-        Map<String, Integer> productsByCategory = new HashMap<>();
-        try {
-            String sql = "SELECT c.name, COUNT(p.id) AS product_count \n" +
-             "FROM products p \n" +
-             "JOIN categories c ON p.category_id = c.id \n" +
-             "GROUP BY c.name";
+    public Map<String, Integer> getProductsByCategory() {
+    Map<String, Integer> productsByCategory = new LinkedHashMap<>();
+    String sql = "WITH CategoryHierarchy AS ( " +
+                 "    SELECT c1.id, c1.name, c1.parent_id, " +
+                 "        CASE " +
+                 "            WHEN c1.level = 1 THEN c1.id " +
+                 "            WHEN c2.level = 1 THEN c2.id " +
+                 "            WHEN c3.level = 1 THEN c3.id " +
+                 "            ELSE NULL " +
+                 "        END AS top_level_id " +
+                 "    FROM categories c1 " +
+                 "    LEFT JOIN categories c2 ON c1.parent_id = c2.id " +
+                 "    LEFT JOIN categories c3 ON c2.parent_id = c3.id " +
+                 ") " +
+                 "SELECT TOP 5 c.name AS category_name, COUNT(p.id) AS product_count " +
+                 "FROM products p " +
+                 "JOIN CategoryHierarchy ch ON p.category_id = ch.id " +
+                 "JOIN categories c ON ch.top_level_id = c.id " +
+                 "WHERE p.status = 'active' " +
+                 "GROUP BY c.name " +
+                 "ORDER BY product_count DESC;";
 
-
-            
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                productsByCategory.put(rs.getString("name"), rs.getInt("product_count"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        
+        while (rs.next()) {
+            productsByCategory.put(rs.getString("category_name"), rs.getInt("product_count"));
         }
-        return productsByCategory;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println("Error in getProductsByCategory: " + e.getMessage());
     }
+    
+    return productsByCategory;
+}
+
+
+
     
     // Get total inventory stock
     private int getTotalStock() {
@@ -154,28 +181,30 @@ private List<LowStockProduct> getLowStockProducts(int threshold) {
 }
     
     // Get customer count based on status
-    private int getCustomerCount(String status) {
-        int count = 0;
-        try {
-            String sql = "SELECT COUNT(*) FROM users WHERE role = 'customer'";
-            if (status != null) {
-                sql += " AND status = ?";
-            }
-            
-            ps = connection.prepareStatement(sql);
-            if (status != null) {
-                ps.setString(1, status);
-            }
-            
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private Map<String, Integer> getAllCustomerCounts() {
+    Map<String, Integer> customerCounts = new HashMap<>();
+    try {
+        // Lấy tổng số khách hàng
+        String totalSql = "SELECT COUNT(*) FROM users WHERE role = 'customer'";
+        ps = connection.prepareStatement(totalSql);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            customerCounts.put("Total", rs.getInt(1));
         }
-        return count;
+
+        // Lấy số lượng khách hàng theo từng trạng thái
+        String statusSql = "SELECT status, COUNT(*) FROM users WHERE role = 'customer' GROUP BY status";
+        ps = connection.prepareStatement(statusSql);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            customerCounts.put(rs.getString(1), rs.getInt(2));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return customerCounts;
+}
+
     
     // Get new customers by day
     private Map<Date, Integer> getNewCustomersByDay(Date startDate, Date endDate) {
@@ -300,7 +329,7 @@ private List<LowStockProduct> getLowStockProducts(int threshold) {
     private double getAverageRating() {
         double avgRating = 0.0;
         try {
-            String sql = "SELECT AVG(CAST(rating AS FLOAT)) FROM feedback";
+            String sql = "SELECT AVG(CAST(rating AS FLOAT)) FROM feedback WHERE status = 'approved'";
             
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -315,10 +344,13 @@ private List<LowStockProduct> getLowStockProducts(int threshold) {
     }
     
     // Get feedback by rating
-    private Map<Integer, Integer> getFeedbackByRating() {
+    public Map<Integer, Integer> getFeedbackByRating() {
         Map<Integer, Integer> feedbackByRating = new HashMap<>();
         try {
-            String sql = "SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating";
+            String sql = "SELECT rating, COUNT(*) as count \n"
+                    + "FROM feedback \n"
+                    + "WHERE status = 'approved' \n"
+                    + "GROUP BY rating";
             
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();

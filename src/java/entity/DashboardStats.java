@@ -21,6 +21,8 @@ public class DashboardStats {
     // Customer stats
     private int totalCustomers;
     private int activeCustomers;
+    private int inactiveCustomers; // Thêm biến lưu số lượng khách hàng Inactive
+    private int pendingCustomers; 
     private Map<Date, Integer> newCustomersByDay;
     
     // Post stats
@@ -48,7 +50,7 @@ public class DashboardStats {
         // Constructor không tham số
     }
 
-    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int expiredCoupons, Map<String, Integer> couponUsage) {
+    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int expiredCoupons, Map<String, Integer> couponUsage) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalProducts = totalProducts;
@@ -59,6 +61,8 @@ public class DashboardStats {
     this.lowStockProducts = lowStockProducts;
     this.totalCustomers = totalCustomers;
     this.activeCustomers = activeCustomers;
+     this.inactiveCustomers = inactiveCustomers;
+        this.pendingCustomers = pendingCustomers;
     this.newCustomersByDay = newCustomersByDay;
     this.totalPosts = totalPosts;
     this.publishedPosts = publishedPosts;
@@ -137,6 +141,23 @@ public class DashboardStats {
     public void setActiveCustomers(int activeCustomers) {
         this.activeCustomers = activeCustomers;
     }
+    
+    public int getInactiveCustomers() {
+        return inactiveCustomers;
+    }
+
+    public void setInactiveCustomers(int inactiveCustomers) {
+        this.inactiveCustomers = inactiveCustomers;
+    }
+
+    public int getPendingCustomers() {
+        return pendingCustomers;
+    }
+
+    public void setPendingCustomers(int pendingCustomers) {
+        this.pendingCustomers = pendingCustomers;
+    }
+
 
     public Map<Date, Integer> getNewCustomersByDay() {
         return newCustomersByDay;

@@ -49,38 +49,49 @@
         <!-- Summary stats cards -->
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Products</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-box-seam fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total Products</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
+                    <div class="mt-2 small">
+                        <div class="text-xs text-gray-600">Active: ${stats.activeProducts}</div>
+                        <div class="text-xs text-gray-600">Out of Stock: ${stats.outOfStockProducts}</div>
+                        <div class="text-xs text-gray-600">Inactive: ${stats.totalProducts - stats.activeProducts - stats.outOfStockProducts}</div>
                     </div>
                 </div>
+                <div class="col-auto">
+                    <i class="bi bi-box-seam fa-2x text-gray-300"></i>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
             
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Active Customers</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.activeCustomers}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-people fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total Customers</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalCustomers}</div>
+                    <div class="mt-2 small">
+                        <div class="text-xs text-gray-600">Active: ${stats.activeCustomers}</div>
+                        <div class="text-xs text-gray-600">Inactive: ${stats.inactiveCustomers}</div>
+                        <div class="text-xs text-gray-600">Pending: ${stats.pendingCustomers}</div>
                     </div>
                 </div>
+                <div class="col-auto">
+                    <i class="bi bi-people fa-2x text-gray-300"></i>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
             
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
@@ -135,51 +146,57 @@
             </div>
             
             <!-- Customer feedback pie chart -->
-            <div class="col-xl-4 col-lg-5">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Feedback Distribution</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-pie pt-4 pb-2">
-                            <canvas id="feedbackChart"></canvas>
-                        </div>
-                        <div class="mt-4 text-center small">
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-danger"></i> 1 Star
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-warning"></i> 2 Stars
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-info"></i> 3 Stars
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-primary"></i> 4 Stars
-                            </span>
-                            <span class="mr-2">
-                                <i class="fas fa-circle text-success"></i> 5 Stars
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="col-xl-4 col-lg-5"> 
+    <div class="card shadow mb-4"> 
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"> 
+            <h6 class="m-0 font-weight-bold text-primary">Feedback Distribution</h6> 
+        </div> 
+        <div class="card-body"> 
+            <div class="chart-pie pt-4 pb-2"> 
+                <canvas id="feedbackChart"></canvas> 
+            </div> 
+            <div class="mt-4 text-center small"> 
+                <span class="mr-2"> <i class="fas fa-circle text-danger"></i> 1 Star </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-warning"></i> 2 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-info"></i> 3 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-primary"></i> 4 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-success"></i> 5 Stars </span> 
+            </div> 
+        </div> 
+    </div> 
+</div>
         </div>
         
         <!-- Products & Inventory stats -->
         <div class="row mb-4">
             <div class="col-xl-6 col-lg-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Products by Category</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-bar">
-                            <canvas id="productsByCategoryChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Products by Category</h6>
+        </div>
+        <div class="card-body">
+            <div style="position: relative; height: 350px; width: 100%;">
+                <canvas id="productsByCategoryChart"></canvas>
             </div>
+            <div class="mt-4 small text-center">
+                <c:choose>
+                    <c:when test="${empty stats.productsByCategory}">
+                        <span class="text-muted">No data available</span>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${stats.productsByCategory}" var="category" varStatus="status">
+                            <span class="mr-2 mb-1 d-inline-block">
+                                <c:set var="colorIndex" value="${status.index % 7}" />
+                                <i class="fas fa-circle" style="color: ${colorIndex == 0 ? '#36b9cc' : colorIndex == 1 ? '#4e73df' : colorIndex == 2 ? '#f6c23e' : colorIndex == 3 ? '#1cc88a' : colorIndex == 4 ? '#d65b4f' : colorIndex == 5 ? '#6f42c1' : '#20c997'}"></i>
+                                ${category.key}: ${category.value}
+                            </span>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+</div>
             
             <div class="col-xl-6 col-lg-6">
                 <div class="card shadow mb-4">
@@ -373,14 +390,14 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="${pageContext.request.contextPath}/posts/new" class="btn btn-primary btn-lg">
+                            <a href="${pageContext.request.contextPath}/marketing/addPost" class="btn btn-primary btn-lg">
                                 <i class="bi bi-file-earmark-plus"></i> Create New Post
                             </a>
-                            <a href="${pageContext.request.contextPath}/coupons/new" class="btn btn-success btn-lg">
+                            <a href="${pageContext.request.contextPath}/marketing/addCoupon" class="btn btn-success btn-lg">
                                 <i class="bi bi-ticket-perforated"></i> Create New Coupon
                             </a>
-                            <a href="${pageContext.request.contextPath}/sliders/manage" class="btn btn-info btn-lg">
-                                <i class="bi bi-images"></i> Manage Sliders
+                            <a href="${pageContext.request.contextPath}/marketing/addSlider" class="btn btn-info btn-lg">
+                                <i class="bi bi-images"></i> Add New Slider
                             </a>
                             <a href="${pageContext.request.contextPath}/reports/export" class="btn btn-secondary btn-lg">
                                 <i class="bi bi-file-earmark-excel"></i> Export Reports
@@ -392,11 +409,11 @@
         </div>
     </div>
 </div> <!-- End of main-content -->
-    <!-- Include footer -->
-    <jsp:include page="../common/footer.jsp" />
 
     <!-- JavaScript for charts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // New Customers Chart
         var newCustomersChartContext = document.getElementById('newCustomersChart').getContext('2d');
@@ -466,86 +483,111 @@
         });
         
         // Feedback Distribution Chart
-        var feedbackChartContext = document.getElementById('feedbackChart').getContext('2d');
-        var feedbackChart = new Chart(feedbackChartContext, {
-            type: 'pie',
-            data: {
-                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
-                datasets: [{
-                    data: [
-                        ${stats.feedbackByRating[1] != null ? stats.feedbackByRating[1] : 0},
-                        ${stats.feedbackByRating[2] != null ? stats.feedbackByRating[2] : 0},
-                        ${stats.feedbackByRating[3] != null ? stats.feedbackByRating[3] : 0},
-                        ${stats.feedbackByRating[4] != null ? stats.feedbackByRating[4] : 0},
-                        ${stats.feedbackByRating[5] != null ? stats.feedbackByRating[5] : 0}
-                    ],
-                    backgroundColor: [
-                        '#e74a3b', // Red - 1 Star
-                        '#f6c23e', // Yellow - 2 Stars
-                        '#36b9cc', // Info - 3 Stars
-                        '#4e73df', // Primary - 4 Stars
-                        '#1cc88a'  // Success - 5 Stars
-                    ],
-                    hoverBackgroundColor: [
-                        '#be3d30',
-                        '#dda20a',
-                        '#2c9faf',
-                        '#2e59d9',
-                        '#17a673'
-                    ],
-                    hoverBorderColor: 'rgba(234, 236, 244, 1)'
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+    var feedbackChartContext = document.getElementById('feedbackChart').getContext('2d'); 
+    var feedbackChart = new Chart(feedbackChartContext, { 
+        type: 'pie', 
+        data: { 
+            labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'], 
+            datasets: [{ 
+                data: [ 
+                    ${stats.feedbackByRating[1] != null ? stats.feedbackByRating[1] : 0}, 
+                    ${stats.feedbackByRating[2] != null ? stats.feedbackByRating[2] : 0}, 
+                    ${stats.feedbackByRating[3] != null ? stats.feedbackByRating[3] : 0}, 
+                    ${stats.feedbackByRating[4] != null ? stats.feedbackByRating[4] : 0}, 
+                    ${stats.feedbackByRating[5] != null ? stats.feedbackByRating[5] : 0} 
+                ], 
+                backgroundColor: [ 
+                    '#e74a3b', // Red - 1 Star 
+                    '#f6c23e', // Yellow - 2 Stars 
+                    '#36b9cc', // Info - 3 Stars 
+                    '#4e73df', // Primary - 4 Stars 
+                    '#1cc88a'  // Success - 5 Stars 
+                ], 
+                hoverBackgroundColor: [ 
+                    '#be3d30', 
+                    '#dda20a', 
+                    '#2c9faf', 
+                    '#2e59d9', 
+                    '#17a673' 
+                ], 
+                hoverBorderColor: 'rgba(234, 236, 244, 1)' 
+            }] 
+        }, 
+        options: { 
+            maintainAspectRatio: false, 
+            plugins: { 
+                legend: { 
+                    position: 'bottom' 
+                } 
+            } 
+        } 
+    });
+});
         
         // Products by Category Chart
-        var productsByCategoryChartContext = document.getElementById('productsByCategoryChart').getContext('2d');
-        var productsByCategoryChart = new Chart(productsByCategoryChartContext, {
-            type: 'bar',
-            data: {
-                labels: [
-                    <c:forEach items="${stats.productsByCategory}" var="entry" varStatus="status">
-                        '${entry.key}',
-                    </c:forEach>
-                ],
-                datasets: [{
-                    label: 'Products',
-                    data: [
-                        <c:forEach items="${stats.productsByCategory}" var="entry" varStatus="status">
-                            ${entry.value},
-                        </c:forEach>
-                    ],
-                    backgroundColor: 'rgba(54, 185, 204, 0.7)',
-                    borderColor: 'rgba(54, 185, 204, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
+        // Products by Category Chart - Fix rendering issues
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the canvas element
+    var ctx = document.getElementById("productsByCategoryChart");
+    
+    if (!ctx) {
+        console.error("Cannot find canvas element 'productsByCategoryChart'");
+        return;
+    }
+    
+    // Make sure we get the 2D context
+    var context = ctx.getContext("2d");
+    
+    // Data that matches what's shown in the legend
+    var labels = ["Quần áo nam", "Phụ kiện", "Quần áo nữ", "Quần áo trẻ em", "Giày dép"];
+    var data = [8, 7, 6, 5, 4];
+    var backgroundColors = ["#36b9cc", "#4e73df", "#f6c23e", "#1cc88a", "#d65b4f"];
+    
+    // Create the chart with explicit height and width settings
+    var productChart = new Chart(context, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: "#ffffff",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false // Hide default legend since we have custom legend below
                 },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Products by Category'
-                    }
+                tooltip: {
+                    enabled: true
                 }
+            },
+            animation: {
+                duration: 1000 // Add animation for better rendering visibility
             }
-        });
+        }
+    });
+    
+    // Debug information to verify chart creation
+    console.log("Chart created:", productChart);
+});
+
+// Add this to the end of your script section to ensure the container has proper height
+document.addEventListener("DOMContentLoaded", function() {
+    // Set explicit height for chart container
+    var chartContainer = document.querySelector(".card-body div[style='position: relative; height: 350px; width: 100%;']");
+    if (chartContainer) {
+        chartContainer.style.height = "350px";
+        chartContainer.style.width = "100%";
+        console.log("Chart container size set");
+    }
+});
+
     </script>
 </body>
 </html>
