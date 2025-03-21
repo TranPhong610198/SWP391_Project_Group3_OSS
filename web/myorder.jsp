@@ -618,7 +618,7 @@
                         <div class="col-md-4">
                             <select class="form-select" name="status" onchange="this.form.submit()">
                                 <option value="" ${empty status ? 'selected' : ''}>Tất cả trạng thái</option>
-                                <option value="pending" ${status == 'pending' ? 'selected' : ''}>Chờ xác nhận</option>
+                                <option value="pending_pay" ${status == 'pending_pay' ? 'selected' : ''}>Chờ xác nhận</option>
                                 <option value="processing" ${status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
                                 <option value="shipped" ${status == 'shipped' ? 'selected' : ''}>Đang vận chuyển</option>
                                 <option value="completed" ${status == 'completed' ? 'selected' : ''}>Đã hoàn thành</option>
@@ -655,7 +655,7 @@
                                 </div>
                                 <div>
                                     <c:choose>
-                                        <c:when test="${order.status == 'pending'}">
+                                        <c:when test="${order.status == 'pending_pay'}">
                                             <span class="order-status status-pending">Chờ xác nhận</span>
                                         </c:when>
                                         <c:when test="${order.status == 'processing'}">
@@ -726,11 +726,11 @@
                                         <i class="fas fa-eye"></i> Xem chi tiết
                                     </a>
                                     <div>
-                                        <c:if test="${order.status == 'pending'}">
+                                        <c:if test="${order.status == 'pending_pay'}">
                                             <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
                                                 <i class="fas fa-times"></i> Hủy đơn hàng
                                             </a>
-                                            <c:if test="${order.paymentStatus == 'pending' && order.paymentMethod == 'bank_transfer'}">
+                                            <c:if test="${order.paymentStatus == 'pending_pay' && order.paymentMethod == 'bank_transfer'}">
                                                 <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
                                                     <i class="fas fa-money-check-alt"></i> Thanh toán lại
                                                 </a>

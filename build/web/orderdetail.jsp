@@ -336,7 +336,7 @@
                         <c:set var="isCancelled" value="${order.status eq 'cancelled'}" />
                         <!-- Xác định bước hiện tại dựa trên trạng thái đơn hàng -->
                         <c:choose>
-                            <c:when test="${order.status eq 'pending'}">
+                            <c:when test="${order.status eq 'pending_pay'}">
                                 <c:set var="currentStepIndex" value="1" />
                             </c:when>
                             <c:when test="${order.status eq 'processing'}">
@@ -454,7 +454,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title">Thông tin đơn hàng</h5>
                             <c:choose>
-                                <c:when test="${order.status eq 'pending'}">
+                                <c:when test="${order.status eq 'pending_pay'}">
                                     <span class="order-status status-pending">Chờ xử lý</span>
                                 </c:when>
                                 <c:when test="${order.status eq 'processing'}">
@@ -534,7 +534,7 @@
                             </div>
 
                             <!-- Nút hành động -->
-                            <c:if test="${order.status eq 'pending' && order.paymentStatus eq 'pending' && (order.paymentMethod eq 'bank_transfer' || order.paymentMethod eq 'cod')}">
+                            <c:if test="${order.status eq 'pending_pay' && order.paymentStatus eq 'pending' && (order.paymentMethod eq 'bank_transfer' || order.paymentMethod eq 'cod')}">
                                 <div class="action-buttons">
                                     <!-- Nút "Thanh toán lại" chỉ hiển thị cho bank_transfer -->
                                     <c:if test="${order.paymentMethod eq 'bank_transfer'}">
@@ -654,14 +654,14 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            // Ẩn thông báo sau 5 giây
-            window.setTimeout(function () {
-                var alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function (alert) {
-                    var bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
-            }, 5000);
+                                        // Ẩn thông báo sau 5 giây
+                                        window.setTimeout(function () {
+                                            var alerts = document.querySelectorAll('.alert');
+                                            alerts.forEach(function (alert) {
+                                                var bsAlert = new bootstrap.Alert(alert);
+                                                bsAlert.close();
+                                            });
+                                        }, 5000);
         </script>
     </body>
 </html>

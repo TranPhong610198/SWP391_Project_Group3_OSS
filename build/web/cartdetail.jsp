@@ -561,7 +561,7 @@
                                     <i class="fas fa-check-circle"></i> Đang áp dụng mã: ${appliedCoupon}
                                 </div>
                             </c:if>
-                            <!-- Sửa phần hiển thị thông báo lỗi -->
+                            
                             <c:if test="${not empty couponError}">
                                 <div class="alert mt-2 ${couponError == 'Mã giảm giá đã hết hạn!' ? 'alert-expired' : 'alert-danger'}">
                                     <i class="fas fa-exclamation-circle me-2"></i> ${couponError}

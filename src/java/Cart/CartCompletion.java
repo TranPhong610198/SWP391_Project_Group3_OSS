@@ -129,7 +129,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
     String orderCode = "ORD" + System.currentTimeMillis() + (int)(Math.random() * 1000);
     order.setOrderCode(orderCode);
-    order.setStatus("pending");
+    order.setStatus("pending_pay");
     order.setTotal(total);
     order.setRecipientName(shippingAddress.getRecipientName());
     order.setPhone(shippingAddress.getPhone());

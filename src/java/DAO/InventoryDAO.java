@@ -659,7 +659,7 @@ public class InventoryDAO extends DBContext {
             System.out.println("Error updating product status: " + e.getMessage());
         }
     }
-// Thêm phương thức này vào InventoryDAO nếu chưa có
+
 
     public boolean increaseVariantStock(int variantId, int quantity) {
         if (quantity <= 0) {
