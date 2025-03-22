@@ -428,14 +428,7 @@
                             <table class="table table-hover table-bordered mb-0">
                                 <thead>
                                     <tr>
-                                        <!--                                        <th>
-                                                                                    <a href="productlist?sortField=id&sortDir=${sortField == 'id' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
-                                                                                        STT
-                                                                                        <span class="sort-icons">
-                                        ${sortField == 'id' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                    </span>
-                                </a>
-                            </th>--><th class="text-center" style="width: 60px;">STT</th>
+                                        <th class="text-center" style="width: 60px;">STT</th>
                                         <th>Ảnh minh họa</th>
                                         <th>
                                             <a href="productlist?sortField=title&sortDir=${sortField == 'title' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&keyword=${keyword}&categoryId=${categoryId}&status=${status}" class="sort-link">
