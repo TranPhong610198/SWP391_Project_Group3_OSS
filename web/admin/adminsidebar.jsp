@@ -77,7 +77,7 @@
         <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/sale/dashboard" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-arrow-right me-2"></i>
-                Bán hàng
+                Quản lý bán hàng
             </a>
         </li>
 

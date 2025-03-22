@@ -5,6 +5,7 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,9 +110,28 @@
         <div class="error-code">403</div>
         <h1 class="error-message">Truy cập bị từ chối</h1>
         <p class="error-description">Rất tiếc, bạn không có quyền truy cập vào trang này. Vui lòng kiểm tra lại quyền của bạn hoặc liên hệ quản trị viên.</p>
-        <a href="${pageContext.request.contextPath}/home" class="home-btn">
+<!--        <a href="${pageContext.request.contextPath}/home" class="home-btn">
             <i class="fas fa-home"></i>Quay lại trang chủ
-        </a>
+        </a>-->
+        <c:choose>
+            <c:when test="${sessionScope.acc.role == 'sale'}">
+                <a href="${pageContext.request.contextPath}/sale/dashboard" class="home-btn">
+                    <i class="fas fa-home"></i>Quay lại trang chủ
+                </a>
+            </c:when>
+            <c:when test="${sessionScope.acc.role == 'marketing'}">
+                <a href="${pageContext.request.contextPath}/marketing/dashboard" class="home-btn">
+                    <i class="fas fa-home"></i>Quay lại trang chủ
+                </a>
+            </c:when>
+            <c:when test="${sessionScope.acc.role != 'marketing' 
+                            || sessionScope.acc.role != 'sale' 
+                            || sessionScope.acc.role != 'admin'}">
+                <a href="${pageContext.request.contextPath}/home" class="home-btn">
+                    <i class="fas fa-home"></i>Quay lại trang chủ
+                </a>
+            </c:when>
+        </c:choose>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

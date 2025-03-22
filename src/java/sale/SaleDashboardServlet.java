@@ -73,6 +73,6 @@ public class SaleDashboardServlet extends HttpServlet {
         List<DailySalesData> dailySalesData = orderDAO.getDailySalesData(startDate, endDate);
         request.setAttribute("dailySalesData", dailySalesData);
         
-        request.getRequestDispatcher("/saledashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/sale/saledashboard.jsp").forward(request, response);
     }
 }

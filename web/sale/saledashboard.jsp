@@ -60,41 +60,93 @@
 </head>
 
 <body class="bg-light">
-    <jsp:include page="header.jsp" />
-    <div class="container-fluid py-4">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển bán hàng</h1>
-                <p class="text-muted">Xem hiệu suất bán hàng và số liệu thống kê của bạn</p>
-            </div>
-            <div class="col-md-4">
-                <form action="${pageContext.request.contextPath}/sale/dashboard" method="GET" class="d-flex">
-                    <div class="input-group me-2">
-                        <span class="input-group-text">Từ</span>
-                        <input type="date" name="startDate" class="form-control" value="${param.startDate != null ? param.startDate : sevenDaysAgo}">
-                    </div>
-                    <div class="input-group me-2">
-                        <span class="input-group-text">Đến</span>
-                        <input type="date" name="endDate" class="form-control" value="${param.endDate != null ? param.endDate : today}">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Lọc</button>
-                </form>
-            </div>
-        </div>
+    <!-- Include sidebar -->
+    <jsp:include page="sidebar.jsp" />
 
-        <!-- Overview Cards -->
-        <div class="row">
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-left-primary">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="icon-box bg-gradient-primary text-white">
-                                <i class="fas fa-coins fa-lg"></i>
+    <!-- Main Content -->
+    <div class="main-content" style="margin-left: 250px; padding: 20px;">
+        <div class="container-fluid py-4">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển bán hàng</h1>
+                    <p class="text-muted">Xem hiệu suất bán hàng và số liệu thống kê của bạn</p>
+                </div>
+                <div class="col-md-4">
+                    <form action="${pageContext.request.contextPath}/sale/dashboard" method="GET" class="d-flex">
+                        <div class="input-group me-2">
+                            <span class="input-group-text">Từ</span>
+                            <input type="date" name="startDate" class="form-control" 
+                                  value="${param.startDate != null ? param.startDate : sevenDaysAgo}">
+                        </div>
+                        <div class="input-group me-2">
+                            <span class="input-group-text">Đến</span>
+                            <input type="date" name="endDate" class="form-control" 
+                                  value="${param.endDate != null ? param.endDate : today}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Lọc</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Overview Cards -->
+            <div class="row">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-gradient-primary text-white">
+                                    <i class="fas fa-coins fa-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng doanh thu</div>
+                                    <div class="h5 mb-0 fw-bold">
+                                        <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="$" />
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng doanh thu</div>
-                                <div class="h5 mb-0 fw-bold">
-                                    <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="$" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-gradient-success text-white">
+                                    <i class="fas fa-shopping-cart fa-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng đơn hàng</div>
+                                    <div class="h5 mb-0 fw-bold">${salesOverview.totalSales}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-gradient-info text-white">
+                                    <i class="fas fa-user-crown fa-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng VIP</div>
+                                    <div class="h5 mb-0 fw-bold">${salesOverview.vipCustomers}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-gradient-warning text-white">
+                                    <i class="fas fa-users fa-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng thông thường</div>
+                                    <div class="h5 mb-0 fw-bold">${salesOverview.normalCustomers}</div>
                                 </div>
                             </div>
                         </div>
@@ -102,99 +154,50 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-left-success">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="icon-box bg-gradient-success text-white">
-                                <i class="fas fa-shopping-cart fa-lg"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng đơn hàng</div>
-                                <div class="h5 mb-0 fw-bold">${salesOverview.totalSales}</div>
+            <!-- Order Status Section -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Trạng thái đơn hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col text-center">
+                                    <div class="status-badge bg-pending mb-2">
+                                        <i class="fas fa-clock me-1"></i> Đang phê duyệt
+                                    </div>
+                                    <h4>${salesOverview.pendingOrders}</h4>
+                                </div>
+                                <div class="col text-center">
+                                    <div class="status-badge bg-processing mb-2">
+                                        <i class="fas fa-spinner me-1"></i> Đang xử lí
+                                    </div>
+                                    <h4>${salesOverview.processingOrders}</h4>
+                                </div>
+                                <div class="col text-center">
+                                    <div class="status-badge bg-shipped mb-2">
+                                        <i class="fas fa-shipping-fast me-1"></i> Đã giao
+                                    </div>
+                                    <h4>${salesOverview.shippedOrders}</h4>
+                                </div>
+                                <div class="col text-center">
+                                    <div class="status-badge bg-completed mb-2">
+                                        <i class="fas fa-check-circle me-1"></i> Đã hoàn thành
+                                    </div>
+                                    <h4>${salesOverview.completedOrders}</h4>
+                                </div>
+                                <div class="col text-center">
+                                    <div class="status-badge bg-cancelled mb-2">
+                                        <i class="fas fa-times-circle me-1"></i> Đã hủy
+                                    </div>
+                                    <h4>${salesOverview.cancelledOrders}</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-left-info">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="icon-box bg-gradient-info text-white">
-                                <i class="fas fa-user-crown fa-lg"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng VIP</div>
-                                <div class="h5 mb-0 fw-bold">${salesOverview.vipCustomers}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-left-warning">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="icon-box bg-gradient-warning text-white">
-                                <i class="fas fa-users fa-lg"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng thông thường</div>
-                                <div class="h5 mb-0 fw-bold">${salesOverview.normalCustomers}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Order Status Section -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Trạng thái đơn hàng</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col text-center">
-                                <div class="status-badge bg-pending mb-2">
-                                    <i class="fas fa-clock me-1"></i> Đang phê duyệt
-                                </div>
-                                <h4>${salesOverview.pendingOrders}</h4>
-                            </div>
-                            <div class="col text-center">
-                                <div class="status-badge bg-processing mb-2">
-                                    <i class="fas fa-spinner me-1"></i> Đang xử lí
-                                </div>
-                                <h4>${salesOverview.processingOrders}</h4>
-                            </div>
-                            <div class="col text-center">
-                                <div class="status-badge bg-shipped mb-2">
-                                    <i class="fas fa-shipping-fast me-1"></i> Đã giao
-                                </div>
-                                <h4>${salesOverview.shippedOrders}</h4>
-                            </div>
-                            <div class="col text-center">
-                                <div class="status-badge bg-completed mb-2">
-                                    <i class="fas fa-check-circle me-1"></i> Đã hoàn thành
-                                </div>
-                                <h4>${salesOverview.completedOrders}</h4>
-                            </div>
-                            <div class="col text-center">
-                                <div class="status-badge bg-cancelled mb-2">
-                                    <i class="fas fa-times-circle me-1"></i> Đã hủy
-                                </div>
-                                <h4>${salesOverview.cancelledOrders}</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Charts Section -->
         <div class="row">
@@ -298,7 +301,6 @@
             </div>
         </div>
     </div>
-    <jsp:include page="footer.jsp" />
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
