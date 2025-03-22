@@ -496,10 +496,14 @@
                             <!-- Action Buttons -->
                             <c:if test="${sessionScope.acc.role == 'customer' || sessionScope.acc.role == null}">
                                 <div class="action-buttons">
-                                    <button type="submit" name="action" value="buyNow" class="btn-buy-now">
+                                    <button type="submit" name="action" value="buyNow" 
+                                            class="btn-buy-now" 
+                                            ${product.stock <= 0 || !product.status.equals('active') ? 'disabled' : ''}>
                                         <i class="fas fa-bolt"></i> Mua Ngay
                                     </button>
-                                    <button type="submit" name="action" value="addToCart" class="btn-add-cart">
+                                    <button type="submit" name="action" value="addToCart" 
+                                            class="btn-add-cart" 
+                                            ${product.stock <= 0 || !product.status.equals('active') ? 'disabled' : ''}>
                                         <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ
                                     </button>
                                 </div>
@@ -660,65 +664,65 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-                                                function changeMainImage(src) {
-                                                    document.getElementById('main-product-image').src = src;
-                                                    // Update active thumbnail
-                                                    const thumbnails = document.querySelectorAll('.thumbnail');
-                                                    thumbnails.forEach(thumb => {
-                                                        if (thumb.src === src) {
-                                                            thumb.classList.add('active');
-                                                        } else {
-                                                            thumb.classList.remove('active');
-                                                        }
-                                                    });
-                                                }
-
-                                                function changeSize(sizeID) {
-                                                    setTimeout(() => { // Đợi một chút để đảm bảo giá trị mới được cập nhật
-                                                        const colorID = document.getElementById('colorId').value;
-                                                        window.location.href = 'productdetail?id=${product.id}&sizeId=' + sizeID + '&colorId=' + colorID;
-                                                    }, 10);
-                                                }
-
-                                                function changeColor(colorID) {
-                                                    setTimeout(() => {
-                                                        const sizeID = document.getElementById('sizeId').value;
-                                                        window.location.href = 'productdetail?id=${product.id}&sizeId=' + sizeID + '&colorId=' + colorID;
-                                                    }, 10);
-                                                }
-
-                                                function incrementQuantity() {
-                                                    const quantityInput = document.getElementById('quantity');
-                                                    const maxQuantity = ${product.stock};
-                                                    if (parseInt(quantityInput.value) < maxQuantity) {
-                                                        quantityInput.value = parseInt(quantityInput.value) + 1;
-                                                    }
-                                                }
-
-                                                function decrementQuantity() {
-                                                    const quantityInput = document.getElementById('quantity');
-                                                    if (parseInt(quantityInput.value) > 1) {
-                                                        quantityInput.value = parseInt(quantityInput.value) - 1;
-                                                    }
-                                                }
-
-                                                // Kiểm tra số lượng
-                                                document.getElementById('quantity').addEventListener('change', function () {
-                                                    const value = parseInt(this.value);
-                                                    const maxQuantity = ${product.stock};
-                                                    if (value < 1) {
-                                                        this.value = 1;
-                                                    } else if (value > maxQuantity) {
-                                                        this.value = maxQuantity;
-                                                        alert('Số lượng tối đa có sẵn là ' + maxQuantity);
+                                            function changeMainImage(src) {
+                                                document.getElementById('main-product-image').src = src;
+                                                // Update active thumbnail
+                                                const thumbnails = document.querySelectorAll('.thumbnail');
+                                                thumbnails.forEach(thumb => {
+                                                    if (thumb.src === src) {
+                                                        thumb.classList.add('active');
+                                                    } else {
+                                                        thumb.classList.remove('active');
                                                     }
                                                 });
-                                                // Phóng to ảnh
-                                                function showImageModal(src) {
-                                                    document.getElementById('modalImage').src = src;
-                                                    var modal = new bootstrap.Modal(document.getElementById('imageModal'));
-                                                    modal.show();
+                                            }
+
+                                            function changeSize(sizeID) {
+                                                setTimeout(() => { // Đợi một chút để đảm bảo giá trị mới được cập nhật
+                                                    const colorID = document.getElementById('colorId').value;
+                                                    window.location.href = 'productdetail?id=${product.id}&sizeId=' + sizeID + '&colorId=' + colorID;
+                                                }, 10);
+                                            }
+
+                                            function changeColor(colorID) {
+                                                setTimeout(() => {
+                                                    const sizeID = document.getElementById('sizeId').value;
+                                                    window.location.href = 'productdetail?id=${product.id}&sizeId=' + sizeID + '&colorId=' + colorID;
+                                                }, 10);
+                                            }
+
+                                            function incrementQuantity() {
+                                                const quantityInput = document.getElementById('quantity');
+                                                const maxQuantity = ${product.stock};
+                                                if (parseInt(quantityInput.value) < maxQuantity) {
+                                                    quantityInput.value = parseInt(quantityInput.value) + 1;
                                                 }
+                                            }
+
+                                            function decrementQuantity() {
+                                                const quantityInput = document.getElementById('quantity');
+                                                if (parseInt(quantityInput.value) > 1) {
+                                                    quantityInput.value = parseInt(quantityInput.value) - 1;
+                                                }
+                                            }
+
+                                            // Kiểm tra số lượng
+                                            document.getElementById('quantity').addEventListener('change', function () {
+                                                const value = parseInt(this.value);
+                                                const maxQuantity = ${product.stock};
+                                                if (value < 1) {
+                                                    this.value = 1;
+                                                } else if (value > maxQuantity) {
+                                                    this.value = maxQuantity;
+                                                    alert('Số lượng tối đa có sẵn là ' + maxQuantity);
+                                                }
+                                            });
+                                            // Phóng to ảnh
+                                            function showImageModal(src) {
+                                                document.getElementById('modalImage').src = src;
+                                                var modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                                                modal.show();
+                                            }
 
 
         </script>

@@ -367,7 +367,7 @@
                         <!-- Bước 2: Đã Xác Nhận Thông Tin Thanh Toán -->
                         <div class="timeline-step ${currentStepIndex >= 1 ? 'active' : ''}">
                             <div class="timeline-icon">
-                                <i class="fas fa-dollar-sign"></i>
+                                <i class="far fa-check-circle"></i>
                             </div>
                             <div class="timeline-text">Chờ xác nhận</div>
                             <div class="timeline-date">
@@ -381,13 +381,13 @@
                         <c:if test="${order.status eq 'pending_pay' && order.paymentStatus eq 'pending' && (order.paymentMethod eq 'bank_transfer' || order.paymentMethod eq 'cod')}">
                         <div class="timeline-step ${currentStepIndex >= 1 ? 'active' : ''}">
                             <div class="timeline-icon">
-                                <i class="fas fa-dollar-sign"></i>
+                                <i class="fas fa-money-check-alt"></i>
                             </div>
                             <div class="timeline-text">Chờ thanh toán</div>
                             <div class="timeline-date">
                                 <c:forEach items="${orderHistory}" var="history">
                                     <c:if test="${history.status eq 'pending_pay'}">
-                                        <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                      
                                     </c:if>
                                 </c:forEach>
                             </div>

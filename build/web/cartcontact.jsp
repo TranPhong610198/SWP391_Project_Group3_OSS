@@ -384,7 +384,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Navigation Buttons - Only visible on mobile -->
                         <div class="d-block d-lg-none">
                             <div class="d-flex justify-content-between">
