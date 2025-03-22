@@ -29,7 +29,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     DashboardDAO dashboardDAO = new DashboardDAO();
     DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
     
-    // Ensure these methods are called directly here, not relying on getDashboardStatss
+    // Ensure these methods are called directly here, not relying on getDashboardStatsssss
     Map<String, Integer> productsByCategory = dashboardDAO.getProductsByCategory();
     Map<Integer, Integer> feedbackByRating = dashboardDAO.getFeedbackByRating();
     
