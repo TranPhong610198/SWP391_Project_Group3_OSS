@@ -51,8 +51,10 @@ stats.setPendingCustomers(customerStats.getOrDefault("pending", 0));
 
         stats.setTotalCoupons(getCouponCount(null));
         stats.setActiveCoupons(getCouponCount("active"));
+        stats.setInactiveCoupons(getCouponCount("inactive"));
         stats.setExpiredCoupons(getCouponCount("expired"));
-        stats.setCouponUsage(getCouponUsage());
+         stats.setCouponUsage(getCouponUsage());
+    stats.setCouponExpirations(getCouponExpirations());
 
     } catch (Exception e) {
         e.printStackTrace();
@@ -422,26 +424,59 @@ private List<LowStockProduct> getLowStockProducts(int threshold) {
     }
     
     // Get coupon usage
-    private Map<String, Integer> getCouponUsage() {
-        Map<String, Integer> couponUsage = new HashMap<>();
-        try {
-            String sql = "SELECT c.code, COUNT(oc.id) as usage_count " +
-                         "FROM coupons c " +
-                         "LEFT JOIN order_coupons oc ON c.id = oc.coupon_id " +
-                         "GROUP BY c.code " +
-                         "ORDER BY usage_count DESC";
+    // Get coupon usage with limits
+private Map<String, String> getCouponUsage() {
+    Map<String, String> couponUsage = new HashMap<>();
+    try {
+        String sql = "SELECT c.code, c.used_count, c.usage_limit " +
+                     "FROM coupons c " +
+                     "WHERE (c.usage_limit IS NULL OR c.used_count < c.usage_limit) " +
+                     "AND c.used_count > 0 " +
+                     "ORDER BY c.used_count DESC";
+        
+        ps = connection.prepareStatement(sql);
+        rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            String code = rs.getString("code");
+            int usedCount = rs.getInt("used_count");
+            Integer usageLimit = rs.getObject("usage_limit") != null ? rs.getInt("usage_limit") : null;
             
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                couponUsage.put(rs.getString("code"), rs.getInt("usage_count"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            // Format as "used/limit" or "used/∞" if there's no limit
+            String usageInfo = usedCount + "/" + (usageLimit != null ? usageLimit : "∞");
+            couponUsage.put(code, usageInfo);
         }
-        return couponUsage;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return couponUsage;
+}
+
+// Get coupon expiration statistics
+private Map<String, Integer> getCouponExpirations() {
+    Map<String, Integer> expirationStats = new LinkedHashMap<>(); // Using LinkedHashMap to maintain order
+    try {
+        // Get coupons expiring in the next 7 days
+        String sql = "SELECT " +
+                    "SUM(CASE WHEN expiry_date BETWEEN GETDATE() AND DATEADD(day, 7, GETDATE()) THEN 1 ELSE 0 END) AS expiring_7_days, " +
+                    "SUM(CASE WHEN expiry_date BETWEEN DATEADD(day, 8, GETDATE()) AND DATEADD(day, 30, GETDATE()) THEN 1 ELSE 0 END) AS expiring_30_days, " +
+                    "SUM(CASE WHEN expiry_date > DATEADD(day, 30, GETDATE()) THEN 1 ELSE 0 END) AS expiring_later " +
+                    "FROM coupons " +
+                    "WHERE status = 'active'";
+        
+        ps = connection.prepareStatement(sql);
+        rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            expirationStats.put("Expiring in 7 days", rs.getInt("expiring_7_days"));
+            expirationStats.put("Expiring in 30 days", rs.getInt("expiring_30_days"));
+            expirationStats.put("Expiring later", rs.getInt("expiring_later"));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return expirationStats;
+}
     
     private void closeConnection() {
         try {

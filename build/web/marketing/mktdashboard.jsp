@@ -286,79 +286,139 @@
             </div>
             
             <div class="col-xl-6 col-lg-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Coupon Usage</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Coupon Code</th>
-                                        <th>Usage Count</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${stats.couponUsage}" var="coupon">
-                                        <tr>
-                                            <td>${coupon.key}</td>
-                                            <td>${coupon.value}</td>
-                                        </tr>
-                                    </c:forEach>
-                                    <c:if test="${empty stats.couponUsage}">
-                                        <tr>
-                                            <td colspan="2" class="text-center">No coupon usage data</td>
-                                        </tr>
-                                    </c:if>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <div class="card border-left-primary shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Total Coupons</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalCoupons}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card border-left-success shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                    Active Coupons</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.activeCoupons}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card border-left-warning shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                    Expired Coupons</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.expiredCoupons}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Coupon Usage</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Coupon Code</th>
+                            <th>Usage (Used/Limit)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${stats.couponUsage}" var="coupon">
+                            <tr>
+                                <td>${coupon.key}</td>
+                                <td>${coupon.value}</td>
+                            </tr>
+                        </c:forEach>
+                        <c:if test="${empty stats.couponUsage}">
+                            <tr>
+                                <td colspan="2" class="text-center">No coupon usage data</td>
+                            </tr>
+                        </c:if>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Coupons</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalCoupons}</div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Active Coupons</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.activeCoupons}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Expired Coupons</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.expiredCoupons}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Inactive Coupons</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.inactiveCoupons}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            
+            <!-- Coupon Expiration Chart -->
+            <div class="mt-4">
+                <h6 class="m-0 font-weight-bold text-primary mb-3">Coupon Expiration Timeline</h6>
+                <div class="chart-bar">
+                    <canvas id="couponExpirationChart"></canvas>
+                </div>
+                <script>
+                    // Create coupon expiration chart
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var ctx = document.getElementById("couponExpirationChart");
+                        var expirationLabels = [];
+                        var expirationData = [];
+                        
+                        <c:forEach items="${stats.couponExpirations}" var="expiration">
+                            expirationLabels.push("${expiration.key}");
+                            expirationData.push(${expiration.value});
+                        </c:forEach>
+                        
+                        var myBarChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: expirationLabels,
+                                datasets: [{
+                                    label: "Coupons",
+                                    backgroundColor: "#4e73df",
+                                    hoverBackgroundColor: "#2e59d9",
+                                    borderColor: "#4e73df",
+                                    data: expirationData,
+                                }],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
         
         <!-- Content Management Stats -->

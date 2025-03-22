@@ -43,15 +43,17 @@ public class DashboardStats {
     // Coupon stats
     private int totalCoupons;
     private int activeCoupons;
+    private int inactiveCoupons;
     private int expiredCoupons;
-    private Map<String, Integer> couponUsage;
+    private Map<String, String> couponUsage;
+    private Map<String, Integer> couponExpirations;
 
     // Thêm constructor không tham số
     public DashboardStats() {
         // Constructor không tham số
     }
 
-    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, int inactiveProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int expiredCoupons, Map<String, Integer> couponUsage) {
+    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, int inactiveProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int inactiveCoupons, int expiredCoupons, Map<String, String> couponUsage, Map<String, Integer> couponExpirations) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalProducts = totalProducts;
@@ -76,8 +78,10 @@ public class DashboardStats {
     this.activeSliders = activeSliders;
     this.totalCoupons = totalCoupons;
     this.activeCoupons = activeCoupons;
+    this.inactiveCoupons = inactiveCoupons;
     this.expiredCoupons = expiredCoupons;
     this.couponUsage = couponUsage;
+    this.couponExpirations = couponExpirations;
 }
     
     public int getTotalProducts() {
@@ -256,6 +260,14 @@ public class DashboardStats {
     public void setActiveCoupons(int activeCoupons) {
         this.activeCoupons = activeCoupons;
     }
+    
+    public int getInactiveCoupons() {
+    return inactiveCoupons;
+}
+
+public void setInactiveCoupons(int inactiveCoupons) {
+    this.inactiveCoupons = inactiveCoupons;
+}
 
     public int getExpiredCoupons() {
         return expiredCoupons;
@@ -265,12 +277,20 @@ public class DashboardStats {
         this.expiredCoupons = expiredCoupons;
     }
 
-    public Map<String, Integer> getCouponUsage() {
+    public Map<String, String> getCouponUsage() {
         return couponUsage;
     }
 
-    public void setCouponUsage(Map<String, Integer> couponUsage) {    
+    public void setCouponUsage(Map<String, String> couponUsage) {    
         this.couponUsage = couponUsage;
+    }
+    
+    public Map<String, Integer> getCouponExpirations() {
+        return couponExpirations;
+    }
+
+    public void setCouponExpirations(Map<String, Integer> couponExpirations) {
+        this.couponExpirations = couponExpirations;
     }
 
     public Date getStartDate() {
