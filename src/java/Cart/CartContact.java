@@ -89,15 +89,15 @@ public class CartContact extends HttpServlet {
     }
 
     if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-        System.out.println("Debug: cart or cart.items is null or empty in CartContact");
+       
         response.sendRedirect("cartdetail");
         return;
     }
 
     // Debug: Kiểm tra cart.items
-    System.out.println("Debug: cart.items size in CartContact = " + cart.getItems().size());
+    
     for (CartItem item : cart.getItems()) {
-        System.out.println("Debug: CartItem in CartContact - ID = " + item.getId() + ", Product = " + item.getProductTitle() + ", Quantity = " + item.getQuantity());
+        
     }
 
     // Lấy các sản phẩm đã chọn từ session
@@ -105,9 +105,6 @@ public class CartContact extends HttpServlet {
     List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
     if (selectedItemIds == null || selectedQuantities == null || selectedItemIds.size() != selectedQuantities.size()) {
-        System.out.println("Debug: selectedItemIds or selectedQuantities is null or mismatched in CartContact");
-        System.out.println("Debug: selectedItemIds = " + selectedItemIds);
-        System.out.println("Debug: selectedQuantities = " + selectedQuantities);
         response.sendRedirect("cartdetail");
         return;
     }
@@ -121,14 +118,13 @@ public class CartContact extends HttpServlet {
             if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
                 item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
                 selectedItems.add(item);
-                System.out.println("Debug: Matched item in CartContact - ID = " + item.getId() + ", Quantity = " + item.getQuantity());
                 break;
             }
         }
     }
 
     if (selectedItems.isEmpty()) {
-        System.out.println("Debug: selectedItems is empty in CartContact");
+        
         response.sendRedirect("cartdetail");
         return;
     }
