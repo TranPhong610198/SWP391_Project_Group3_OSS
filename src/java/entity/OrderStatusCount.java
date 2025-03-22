@@ -17,7 +17,7 @@ public class OrderStatusCount {
     private int shippedCount;
     private int completedCount;
     private int cancelledCount;
-    
+
     public OrderStatusCount() {
         this.pendingCount = 0;
         this.processingCount = 0;

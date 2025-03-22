@@ -460,7 +460,7 @@
                         <div class="swiper-wrapper">
                             <c:forEach items="${featuredProducts}" var="product">
                                 <div class="swiper-slide">
-                                    <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <a href="productdetail?id=${product.id}" class="text-decoration-none product-link">
                                         <div class="card product-card">
                                             <div class="position-relative">
                                                 <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
@@ -468,9 +468,14 @@
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="product-title">${product.title}</h5>
-
-                                                <div class="product-price">
+                                                <div class="product-price mb-3">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                                                </div>
+                                                <div class="product-buttons d-flex gap-2">
+                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1">Mua ngay</button>
+                                                    <button onclick="addToCart(${product.id}, event)" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -485,7 +490,7 @@
                 </div>
             </section>
 
-            <!-- Quần áo nam -->
+            <!-- Sản phẩm theo thể loại -->
             <c:forEach items="${level1Categories}" var="category">
                 <section class="mb-5">
                     <div class="container">
@@ -501,13 +506,19 @@
                         <div class="row g-4">
                             <c:forEach items="${productsByCategory[category.id]}" var="product">
                                 <div class="col-md-3 col-6">
-                                    <a href="productdetail?id=${product.id}" class="text-decoration-none">
+                                    <a href="productdetail?id=${product.id}" class="text-decoration-none product-link">
                                         <div class="card product-card h-100">
                                             <img src="${product.thumbnail}" class="thumbnail-img" alt="${product.title}">
                                             <div class="card-body">
                                                 <h5 class="product-title">${product.title}</h5>
-                                                <div class="product-price">
+                                                <div class="product-price mb-3">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                                                </div>
+                                                <div class="product-buttons d-flex gap-2">
+                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1">Mua ngay</button>
+                                                    <button onclick="addToCart(${product.id}, event)" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -745,5 +756,6 @@
                 });
             });
         </script>
+        
     </body>
 </html>

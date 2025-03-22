@@ -428,7 +428,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
-                                    return `${context.parsed.y} products`;
+                                    return `${context.parsed.y} sản phẩm`;
                                 }
                             }
                         }
@@ -529,7 +529,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
-                                    return `${context.parsed.y} products added`;
+                                    return `${context.parsed.y} sản phẩm được thêm`;
                                 }
                             }
                         }
