@@ -72,7 +72,7 @@ public class CartCompletion extends HttpServlet {
         String paymentMethod = (String) session.getAttribute("payment_method");
 
         if (addressId == null || shippingMethod == null || shippingFee == null || paymentMethod == null) {
-            System.out.println("Debug: Missing required session attributes (addressId, shippingMethod, shippingFee, or paymentMethod)");
+            
             response.sendRedirect("cartdetail");
             return;
         }
@@ -82,48 +82,38 @@ public class CartCompletion extends HttpServlet {
         List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
         if (selectedItemIds == null || selectedQuantities == null || selectedItemIds.isEmpty()) {
-            System.out.println("Debug: selectedItemIds or selectedQuantities is null or empty");
+            
             response.sendRedirect("cartdetail");
             return;
         }
 
         Cart cart = user != null ? cartDAO.getCartByUserId(user.getId()) : cartDAO.getCartFromCookies(request);
         if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-            System.out.println("Debug: cart or cart.items is null or empty");
+           
             response.sendRedirect("cartdetail");
             return;
         }
-
-        // Debug: Kiểm tra cart.items
-        System.out.println("Debug: cart.items size = " + cart.getItems().size());
-        for (CartItem item : cart.getItems()) {
-            System.out.println("Debug: CartItem ID = " + item.getId() + ", Product = " + item.getProductTitle());
-        }
-
-        // Debug: Kiểm tra selectedItemIds
-        System.out.println("Debug: selectedItemIds = " + selectedItemIds);
-
         List<CartItem> selectedItems = new ArrayList<>();
         for (CartItem item : cart.getItems()) {
             for (int i = 0; i < selectedItemIds.size(); i++) {
                 if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
                     item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
                     selectedItems.add(item);
-                    System.out.println("Debug: Matched item ID = " + item.getId() + ", Quantity = " + item.getQuantity());
+                    
                     break;
                 }
             }
         }
 
         if (selectedItems.isEmpty()) {
-            System.out.println("Debug: selectedItems is empty after filtering");
+
             response.sendRedirect("cartdetail");
             return;
         }
 
         UserAddress shippingAddress = getShippingAddress(user, addressId, request);
         if (shippingAddress == null) {
-            System.out.println("Debug: shippingAddress is null");
+            
             response.sendRedirect("cartcontact");
             return;
         }
@@ -161,12 +151,6 @@ public class CartCompletion extends HttpServlet {
         if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
             order.setDiscountAmount(discountAmount);
             order.setCouponCode(appliedCoupon);
-        }
-
-        // Debug: Kiểm tra order.items trước khi lưu vào session
-        System.out.println("Debug: order.items size = " + (order.getItems() != null ? order.getItems().size() : 0));
-        for (CartItem item : selectedItems) {
-            System.out.println("Debug: Order Item - Product: " + item.getProductTitle() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
         }
 
         // Xử lý theo phương thức thanh toán

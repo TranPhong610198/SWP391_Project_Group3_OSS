@@ -56,12 +56,6 @@ public class OrderDetail extends HttpServlet {
             return;
         }
         
-        // Output debug information to logs
-        System.out.println("Order ID: " + order.getId());
-        System.out.println("Payment Method: " + order.getPaymentMethod());
-        System.out.println("Payment Status: " + order.getPaymentStatus());
-        System.out.println("Order Items Size: " + (order.getItems() != null ? order.getItems().size() : 0));
-        
         // Get order history
         List<OrderHistory> orderHistory = orderDAO.getOrderHistory(orderId);
         
@@ -77,11 +71,8 @@ public class OrderDetail extends HttpServlet {
         double subtotal = 0;
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             for (CartItem item : order.getItems()) {
-                subtotal += item.getProductPrice() * item.getQuantity();
-                System.out.println("Debug: Item - Product: " + item.getProductTitle() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
+                subtotal += item.getProductPrice() * item.getQuantity();  
             }
-        } else {
-            System.out.println("Debug: order.items is empty in OrderDetailServlet for Order ID: " + orderId);
         }
         
         // Set attributes for JSP

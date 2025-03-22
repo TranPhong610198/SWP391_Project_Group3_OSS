@@ -108,11 +108,6 @@ public class CartContact extends HttpServlet {
         response.sendRedirect("cartdetail");
         return;
     }
-
-    // Debug: Kiểm tra selectedItemIds và selectedQuantities
-    System.out.println("Debug: selectedItemIds in CartContact = " + selectedItemIds);
-    System.out.println("Debug: selectedQuantities in CartContact = " + selectedQuantities);
-
     for (CartItem item : cart.getItems()) {
         for (int i = 0; i < selectedItemIds.size(); i++) {
             if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {

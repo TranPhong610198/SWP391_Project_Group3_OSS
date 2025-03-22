@@ -61,7 +61,7 @@ public class OrderDAO extends DBContext {
             order.setOrderCode(orderCode);
         }
 
-        System.out.println("Debug: Created order with ID: " + orderId + ", Code: " + orderCode);
+       
 
         // Bước 2: Thêm các sản phẩm vào bảng order_items
         if (orderId > 0) {
@@ -71,7 +71,7 @@ public class OrderDAO extends DBContext {
                 stmtItems = conn.prepareStatement(sqlItems);
 
                 for (CartItem item : order.getItems()) {
-                    System.out.println("Debug: Inserting order item - Order ID: " + orderId + ", Product ID: " + item.getProductId() + ", Product Name: " + item.getProductTitle() + ", Variant: " + item.getSize() + " - " + item.getColor() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
+                    
 
                     stmtItems.setInt(1, orderId);
                     stmtItems.setInt(2, item.getProductId());
@@ -84,10 +84,9 @@ public class OrderDAO extends DBContext {
                 }
 
                 int[] batchResults = stmtItems.executeBatch();
-                System.out.println("Debug: Inserted " + batchResults.length + " items into order_items for Order ID: " + orderId);
+
             } else {
-                System.out.println("Debug: No items to insert into order_items for Order ID: " + orderId);
-                System.out.println("Debug: order.getItems() = " + (order.getItems() != null ? order.getItems().size() : "null"));
+                
                 throw new SQLException("Order items are empty, cannot create order without items.");
             }
         } else {
@@ -333,8 +332,6 @@ public class OrderDAO extends DBContext {
                 List<CartItem> items = getOrderItems(order.getId());
                 order.setItems(items);
 
-                // Debug: Kiểm tra số lượng items
-                System.out.println("Debug: Loaded " + (items != null ? items.size() : 0) + " items for order " + order.getId() + " in getUserOrders");
 
                 orders.add(order);
             }
@@ -445,11 +442,11 @@ public class OrderDAO extends DBContext {
 
             items.add(item);
 
-            System.out.println("Debug: Loaded item for Order ID: " + orderId + ", Product ID: " + item.getProductId() + ", Title: " + item.getProductTitle() + ", Variant: " + item.getSize() + " - " + item.getColor() + ", Quantity: " + item.getQuantity() + ", Price: " + item.getProductPrice());
+            
         }
 
         if (items.isEmpty()) {
-            System.out.println("Debug: No items found in order_items for Order ID: " + orderId);
+   
         }
 
     } catch (SQLException e) {
@@ -524,14 +521,11 @@ public class OrderDAO extends DBContext {
                 order.setCouponCode(null);
             }
 
-            System.out.println("Debug: Loaded order - ID: " + order.getId() + ", User ID: " + order.getUserId() + ", Total: " + order.getTotal());
+           
 
             List<CartItem> items = getOrderItems(order.getId());
             order.setItems(items);
 
-            System.out.println("Debug: Loaded " + (items != null ? items.size() : 0) + " items for order " + orderId);
-        } else {
-            System.out.println("Debug: No order found with ID: " + orderId);
         }
 
     } catch (SQLException e) {
@@ -796,8 +790,7 @@ public class OrderDAO extends DBContext {
                 List<CartItem> items = getOrderItems(order.getId());
                 order.setItems(items);
 
-                // Debug: Kiểm tra số lượng items
-                System.out.println("Debug: Loaded " + (items != null ? items.size() : 0) + " items for order " + order.getId() + " in getAllOrders");
+                
 
                 orders.add(order);
             }
