@@ -186,6 +186,7 @@ public class ProductDetailList extends HttpServlet {
                 i++;
             }
             double averageRating = (double) totalStar / allFeedbacks;
+            request.setAttribute("allFeedbacks", allFeedbacks);
             request.setAttribute("averageRating", averageRating);
             request.setAttribute("fiveStarCount", ratingCounts[4]);
             request.setAttribute("fourStarCount", ratingCounts[3]);
