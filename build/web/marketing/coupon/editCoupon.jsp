@@ -175,7 +175,7 @@
                             <label for="code" class="form-label required-field">Mã giảm giá</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="code" name="code" value="${param.code != null ? param.code : coupon.code}" required maxlength="20">
-                                <button type="button" class="btn btn-outline-secondary" onclick="generateRandomCode()">Ngẫu nhiên</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="generateRandomCode()">Tạo ngẫu nhiên</button>
                             </div>
                         </div>
 

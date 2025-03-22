@@ -6,6 +6,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -46,57 +47,64 @@
                 color: #495057;
                 font-weight: 600;
             }
-            
-            .color-size-group {
-                margin-bottom: 1rem;
+
+            .model-table-container {
+                max-height: 400px;
+                overflow-y: auto;
+                border: 1px solid #dee2e6;
+                border-radius: 0.25rem;
+                margin-bottom: 1.5rem;
             }
 
-            /* Đồng bộ giao diện form-floating */
+            .model-table-container table {
+                margin-bottom: 0;
+            }
+
+            .model-table-container .table-bordered th,
+            .model-table-container .table-bordered td {
+                border-color: #dee2e6;
+            }
+
             .form-floating .form-select {
-                padding-top: 1.625rem; 
+                padding-top: 1.625rem;
                 padding-bottom: 0.375rem;
             }
 
             .form-floating label {
-                font-size: 0.875rem; /* Giữ kích thước nhãn nhỏ gọn */
-                color: #6c757d; 
+                font-size: 0.875rem;
+                color: #6c757d;
             }
 
-            /* Khoảng cách giữa các nhóm */
             .row.g-3 > div {
                 margin-bottom: 1rem;
             }
 
-            /* Tùy chỉnh Select2 để đồng bộ với form-floating */
             .select2-container--default .select2-selection--single {
-                height: calc(3.5rem + 2px); /* Chiều cao khớp với form-select */
+                height: calc(3.5rem + 2px);
                 padding: 0.375rem 0.75rem;
                 border-radius: 0.25rem;
-                border: 1px solid #ced4da; /* Màu viền mặc định */
-                outline: none; /* Loại bỏ outline */
+                border: 1px solid #ced4da;
+                outline: none;
             }
 
-            /* Xóa focus styles của Select2 */
             .select2-container--default.select2-container--focus .select2-selection--single,
             .select2-container--default.select2-container--open .select2-selection--single {
-                border-color: #80bdff; /* Sử dụng màu viền nhẹ nhàng */
-                box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Box shadow như Bootstrap */
-                outline: 0 !important; /* Loại bỏ outline */
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+                outline: 0 !important;
             }
 
-            /* Chỉnh vị trí text trong Select2 */
             .select2-container--default .select2-selection--single .select2-selection__rendered {
-                line-height: calc(3.5rem - 12px); /* Căn chỉnh văn bản thấp hơn */
-                padding-top: 0.3rem; /* Đẩy text xuống dưới */
-                padding-left: 0; /* Giữ text sát lề trái */
-                vertical-align: bottom; /* Căn bottom */
+                line-height: calc(3.5rem - 12px);
+                padding-top: 0.3rem;
+                padding-left: 0;
+                vertical-align: bottom;
             }
 
             .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: calc(3.5rem - 6px); /* Căn chỉnh mũi tên giữa */
+                height: calc(3.5rem - 6px);
             }
 
-            /* Hiệu ứng hover và focus cho các trường */
             .form-control:hover, .form-select:hover, .select2-selection:hover {
                 border-color: #80bdff;
             }
@@ -133,7 +141,6 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
@@ -156,7 +163,6 @@
                         <input type="hidden" name="source" value="${param.source}">
 
                         <div class="row g-3">
-                            <!-- Màu sắc -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <select class="form-select" id="colorInput" name="color" required>
@@ -169,7 +175,6 @@
                                 </div>
                             </div>
 
-                            <!-- Kích thước -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <select class="form-select" id="sizeInput" name="size" required>
@@ -182,7 +187,6 @@
                                 </div>
                             </div>
 
-                            <!-- Số lượng -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantity" name="quantity" required min="0">
@@ -190,6 +194,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="d-flex justify-content-between mt-4">
                             <a onclick="history.back()" class="btn btn-secondary">
@@ -201,23 +206,45 @@
                         </div>
                     </form>
                 </div>
+                <!-- Model Table Section -->
+                <div class="info-section mt-4">
+                    <h5 class="mb-3">Mẫu sản phẩm có sẵn</h5>
+                    <div class="model-table-container">
+                        <table class="table table-bordered table-hover" id="variantTable">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th>Màu sắc</th>
+                                    <th>Kích thước</th>
+                                    <th>Ngày cập nhật</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${variants}" var="variant">
+                                    <tr>
+                                        <td>${variant.color.name}</td>
+                                        <td>${variant.size.name}</td>
+                                        <td><fmt:formatDate value="${variant.lastRestockDate}" pattern="dd/MM/yyyy"/></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
         <script>
             $(document).ready(function () {
-                // Khởi tạo Select2 cho màu sắc với các tùy chọn để căn chỉnh text
+                // Khởi tạo Select2 cho màu sắc
                 $('#colorInput').select2({
                     placeholder: "Chọn hoặc nhập màu sắc",
-                    tags: true, // Cho phép nhập giá trị mới
+                    tags: true,
                     width: '100%',
                     dropdownParent: $('#colorInput').closest('.form-floating'),
                     templateSelection: function(data) {
-                        // Để căn chỉnh text khi đã chọn
                         if (data.id) {
                             return $('<span style="padding-top: 0.5rem; display: block;">' + data.text + '</span>');
                         }
@@ -228,29 +255,50 @@
                 // Khởi tạo Select2 cho kích thước
                 $('#sizeInput').select2({
                     placeholder: "Chọn hoặc nhập kích thước",
-                    tags: true, // Cho phép nhập giá trị mới
+                    tags: true,
                     width: '100%',
                     dropdownParent: $('#sizeInput').closest('.form-floating'),
                     templateSelection: function(data) {
-                        // Để căn chỉnh text khi đã chọn
                         if (data.id) {
                             return $('<span style="padding-top: 0.5rem; display: block;">' + data.text + '</span>');
                         }
                         return data.text;
                     }
                 });
-                
-                // Loại bỏ đường viền đen xuất hiện sau khi nhấn Enter
+
+                // Loại bỏ đường viền đen sau khi nhấn Enter
                 $(document).on('keydown', '.select2-search__field', function(event) {
-                    if (event.keyCode === 13) { // Enter key
+                    if (event.keyCode === 13) {
                         setTimeout(function() {
                             $('.select2-container--focus .select2-selection').css('outline', 'none');
                         }, 10);
                     }
                 });
-            });
-            
-            $(document).ready(function () {
+
+                // Lọc bảng động khi thay đổi màu sắc hoặc kích thước
+                function filterTable() {
+                    var selectedColor = $('#colorInput').val() ? $('#colorInput').val().toLowerCase() : '';
+                    var selectedSize = $('#sizeInput').val() ? $('#sizeInput').val().toLowerCase() : '';
+
+                    $('#variantTable tbody tr').each(function() {
+                        var rowColor = $(this).find('td:eq(0)').text().toLowerCase();
+                        var rowSize = $(this).find('td:eq(1)').text().toLowerCase();
+
+                        var colorMatch = selectedColor === '' || rowColor === selectedColor;
+                        var sizeMatch = selectedSize === '' || rowSize === selectedSize;
+
+                        if (colorMatch && sizeMatch) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+
+                $('#colorInput, #sizeInput').on('change', function() {
+                    filterTable();
+                });
+
                 // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');

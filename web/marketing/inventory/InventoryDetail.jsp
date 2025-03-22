@@ -100,10 +100,14 @@
                     display: block;
                 }
             }
+
+            .search-container {
+                display: flex;
+                align-items: center;
+            }
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
@@ -112,7 +116,6 @@
 
         <div class="main-content">
             <div class="container py-4">
-                <!-- Thông báo thành công -->
                 <c:if test="${not empty param.success}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         <c:choose>
@@ -130,7 +133,6 @@
                     </div>
                 </c:if>
 
-                <!-- Error Messages -->
                 <c:if test="${not empty errorMessage || not empty param.error}">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         ${not empty errorMessage ? errorMessage : 'Không thể xóa mẫu sản phẩm. Vui lòng thử lại!'}
@@ -138,7 +140,6 @@
                     </div>
                 </c:if>
 
-                <!-- Product Info Section -->
                 <div class="info-section">
                     <h5 class="mb-3">Thông tin sản phẩm</h5>
                     <div class="row">
@@ -166,16 +167,19 @@
                     </div>
                 </div>
 
-                <!-- Model Table Section -->
                 <div class="info-section">
                     <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
-                    <div class="d-flex justify-content-end mb-3">
+                    <div class="d-flex justify-content-between mb-3 search-container">
+                        <div class="input-group" style="width: 300px;">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm mẫu sản phẩm...">
+                        </div>
                         <a href="addModel?productId=${inventory.productId}&source=${param.source}" class="btn btn-success">
                             <i class="fas fa-plus me-2"></i>Thêm Mẫu Mới
                         </a>
                     </div>
                     <div class="model-table-container">
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover" id="variantTable">
                             <thead class="table-light sticky-top">
                                 <tr>
                                     <th>Màu sắc</th>
@@ -228,7 +232,6 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modals -->
         <c:forEach items="${variants}" var="variant">
             <div class="modal fade" id="deleteModal${variant.id}" tabindex="-1" 
                  aria-labelledby="deleteModalLabel${variant.id}" aria-hidden="true">
@@ -258,34 +261,28 @@
             </div>
         </c:forEach>
 
-        <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
         <script>
             $(document).ready(function () {
-                // Tự động tắt thông báo thành công sau 5 giây
                 if ($('#successAlert').length) {
                     setTimeout(function () {
                         $('#successAlert').alert('close');
-                    }, 3000); // 3000ms = 3 giây
+                    }, 3000);
                 }
 
-                // Tự động tắt thông báo lỗi sau 5 giây
                 if ($('#errorAlert').length) {
                     setTimeout(function () {
                         $('#errorAlert').alert('close');
-                    }, 3000); // 3000ms = 3 giây
+                    }, 3000);
                 }
 
-                // Toggle sidebar
                 $('.sidebar-toggle').on('click', function () {
                     $('.sidebar').toggleClass('active');
                     $('.main-content').toggleClass('active');
                     $(this).hide();
                 });
 
-                // Close sidebar when clicking outside on mobile
                 $(document).on('click', function (e) {
                     if ($(window).width() <= 768) {
                         if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
@@ -294,6 +291,19 @@
                             $('.sidebar-toggle').show();
                         }
                     }
+                });
+
+                // Tìm kiếm trong bảng
+                $('#searchInput').on('keyup', function () {
+                    var value = $(this).val().toLowerCase();
+                    $('#variantTable tbody tr').each(function () {
+                        var rowText = $(this).text().toLowerCase();
+                        if (rowText.indexOf(value) === -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
                 });
             });
         </script>

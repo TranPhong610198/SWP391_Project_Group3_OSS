@@ -8,6 +8,7 @@ import DAO.InventoryDAO;
 import DAO.ProductDAO;
 import entity.Color;
 import entity.Size;
+import entity.Variant;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -42,10 +43,12 @@ public class AddModelServlet extends HttpServlet {
 
         List<Color> colorList = inventoryDao.getColorsByProductId(productId);
         List<Size> sizeList = inventoryDao.getSizesByProductId(productId);
+        List<Variant> variants = inventoryDao.getProductVariants(productId); // Lấy danh sách variants
 
         request.setAttribute("productId", productId);
         request.setAttribute("colorList", colorList);
         request.setAttribute("sizeList", sizeList);
+        request.setAttribute("variants", variants); // Thêm variants vào request
 
         request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
     }
@@ -64,17 +67,17 @@ public class AddModelServlet extends HttpServlet {
             String sizeName = request.getParameter("size").trim();
             String quantityStr = request.getParameter("quantity");
 
-            // Lấy danh sách màu và kích thước để gửi lại nếu có lỗi
             List<Color> colorList = inventoryDao.getColorsByProductId(productId);
             List<Size> sizeList = inventoryDao.getSizesByProductId(productId);
+            List<Variant> variants = inventoryDao.getProductVariants(productId);
 
-            // Kiểm tra lỗi đầu vào
             if (!COLOR_PATTERN.matcher(colorName).matches()) {
                 request.setAttribute("errorMessage", "Màu sắc chỉ được phép chứa chữ cái và khoảng trắng");
                 request.setAttribute("productId", productId);
                 request.setAttribute("source", source);
                 request.setAttribute("colorList", colorList);
                 request.setAttribute("sizeList", sizeList);
+                request.setAttribute("variants", variants);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
@@ -91,6 +94,7 @@ public class AddModelServlet extends HttpServlet {
                 request.setAttribute("source", source);
                 request.setAttribute("colorList", colorList);
                 request.setAttribute("sizeList", sizeList);
+                request.setAttribute("variants", variants);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
@@ -124,17 +128,14 @@ public class AddModelServlet extends HttpServlet {
                 request.setAttribute("source", source);
                 request.setAttribute("colorList", colorList);
                 request.setAttribute("sizeList", sizeList);
+                request.setAttribute("variants", variants);
                 request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
                 return;
             }
 
-            // Thêm variant mới
             inventoryDao.addNewVariant(productId, colorId, sizeId, quantity);
-
-            // Cập nhật trạng thái sản phẩm nếu cần
             productDao.updateProductStatusIfNeeded(productId);
 
-            // Tạo URL chuyển hướng với source
             String redirectUrl = "inventoryDetail?id=" + productId + "&success=add";
             if (source != null && !source.trim().isEmpty()) {
                 redirectUrl += "&source=" + source;
@@ -147,8 +148,8 @@ public class AddModelServlet extends HttpServlet {
             request.setAttribute("source", request.getParameter("source"));
             request.setAttribute("colorList", inventoryDao.getColorsByProductId(Integer.parseInt(request.getParameter("productId"))));
             request.setAttribute("sizeList", inventoryDao.getSizesByProductId(Integer.parseInt(request.getParameter("productId"))));
+            request.setAttribute("variants", inventoryDao.getProductVariants(Integer.parseInt(request.getParameter("productId"))));
             request.getRequestDispatcher("/marketing/inventory/AddModel.jsp").forward(request, response);
         }
     }
-
 }

@@ -6,6 +6,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,9 +48,25 @@
                 font-weight: 600;
             }
 
-            /* Đồng bộ giao diện form-floating */
+            .model-table-container {
+                max-height: 400px;
+                overflow-y: auto;
+                border: 1px solid #dee2e6;
+                border-radius: 0.25rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .model-table-container table {
+                margin-bottom: 0;
+            }
+
+            .model-table-container .table-bordered th,
+            .model-table-container .table-bordered td {
+                border-color: #dee2e6;
+            }
+
             .form-floating .form-select {
-                padding-top: 1.625rem; 
+                padding-top: 1.625rem;
                 padding-bottom: 0.375rem;
             }
 
@@ -58,12 +75,10 @@
                 color: #6c757d;
             }
 
-            /* Khoảng cách giữa các nhóm */
             .row.g-3 > div {
                 margin-bottom: 1rem;
             }
 
-            /* Tùy chỉnh Select2 để đồng bộ với form-floating */
             .select2-container--default .select2-selection--single {
                 height: calc(3.5rem + 2px);
                 padding: 0.375rem 0.75rem;
@@ -126,7 +141,6 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
@@ -149,7 +163,6 @@
                         <input type="hidden" name="source" value="${param.source}">
 
                         <div class="row g-3">
-                            <!-- Màu sắc -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <select class="form-select" id="colorInput" name="color" required>
@@ -162,7 +175,6 @@
                                 </div>
                             </div>
 
-                            <!-- Kích thước -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <select class="form-select" id="sizeInput" name="size" required>
@@ -175,7 +187,6 @@
                                 </div>
                             </div>
 
-                            <!-- Số lượng -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantity" name="quantity" 
@@ -195,13 +206,38 @@
                         </div>
                     </form>
                 </div>
+                <!-- Model Table Section -->
+                <div class="info-section mt-4">
+                    <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
+                    <div class="model-table-container">
+                        <table class="table table-bordered table-hover" id="variantTable">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th>Màu sắc</th>
+                                    <th>Kích thước</th>
+                                    <th>Số lượng</th>
+                                    <th>Ngày cập nhật</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${variants}" var="variant">
+                                    <tr>
+                                        <td>${variant.color.name}</td>
+                                        <td>${variant.size.name}</td>
+                                        <td>${variant.quantity}</td>
+                                        <td><fmt:formatDate value="${variant.lastRestockDate}" pattern="dd/MM/yyyy"/></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
         <script>
             $(document).ready(function () {
                 // Khởi tạo Select2 cho màu sắc
@@ -239,6 +275,30 @@
                             $('.select2-container--focus .select2-selection').css('outline', 'none');
                         }, 10);
                     }
+                });
+
+                // Lọc bảng động khi thay đổi màu sắc hoặc kích thước
+                function filterTable() {
+                    var selectedColor = $('#colorInput').val() ? $('#colorInput').val().toLowerCase() : '';
+                    var selectedSize = $('#sizeInput').val() ? $('#sizeInput').val().toLowerCase() : '';
+
+                    $('#variantTable tbody tr').each(function() {
+                        var rowColor = $(this).find('td:eq(0)').text().toLowerCase();
+                        var rowSize = $(this).find('td:eq(1)').text().toLowerCase();
+
+                        var colorMatch = selectedColor === '' || rowColor === selectedColor;
+                        var sizeMatch = selectedSize === '' || rowSize === selectedSize;
+
+                        if (colorMatch && sizeMatch) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+
+                $('#colorInput, #sizeInput').on('change', function() {
+                    filterTable();
                 });
 
                 // Toggle sidebar
