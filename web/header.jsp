@@ -158,22 +158,29 @@
                                             <!-- Hiển thị tùy theo vai trò -->
                                             <c:choose>
                                                 <c:when test="${sessionScope.acc.role == 'admin'}">
-                                                    <a href="${pageContext.request.contextPath}/admin/userlists">Trang quản trị</a>
-                                                    <a href="${pageContext.request.contextPath}/marketing/productlist">Trang tiếp thị</a>
-                                                    <a href="${pageContext.request.contextPath}/saledashboard">Trang bán hàng</a>
+                                                    <a href="${pageContext.request.contextPath}/admin/dashboard">Trang quản trị</a>
+                                                    <a href="${pageContext.request.contextPath}/marketing/dashboard">Trang tiếp thị</a>
+                                                    <a href="${pageContext.request.contextPath}/sale/dashboard">Trang bán hàng</a>
                                                 </c:when>
                                                 <c:when test="${sessionScope.acc.role == 'marketing'}">
-                                                    <a href="${pageContext.request.contextPath}/marketing/productlist">Trang tiếp thị</a>
+                                                    <a href="${pageContext.request.contextPath}/marketing/dashboard">Trang tiếp thị</a>
                                                 </c:when>
                                                 <c:when test="${sessionScope.acc.role == 'sale'}">
                                                     <a href="${pageContext.request.contextPath}/sale/dashboard">Trang bán hàng</a>
-                                                    <a href="${pageContext.request.contextPath}/sale/orders">Quản lý đơn hàng</a>
                                                 </c:when>
                                                 <c:otherwise> <!-- customer -->
                                                     <a href="${pageContext.request.contextPath}/myorder">Lịch sử đơn hàng</a>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <a href="${pageContext.request.contextPath}/profile">Trang cá nhân</a>
+                                            <c:choose>
+                                                <c:when test="${sessionScope.acc.role == 'customer'}">
+                                                    <a href="${pageContext.request.contextPath}/profile">Trang cá nhân</a>
+                                                </c:when>
+                                                <c:otherwise> 
+                                                    <a href="${pageContext.request.contextPath}/profile">Hồ sơ</a>
+                                                </c:otherwise>
+                                            </c:choose>
+<!--                                            <a href="${pageContext.request.contextPath}/profile">Trang cá nhân</a>-->
                                             <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
                                         </div>
                                     </div>
