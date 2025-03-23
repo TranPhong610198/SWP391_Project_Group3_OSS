@@ -19,6 +19,35 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.css">
         <!-- Custom CSS -->
         <style>
+            /* Style cho mua ngay + thêm vào giỏ hàng */
+            .product-buttons .btn-primary {
+                background: #e44d26; /* Đồng bộ màu với btn-buy-now */
+                border: none;
+                padding: 12px 20px;
+                transition: all 0.3s ease;
+            }
+
+            .product-buttons .btn-primary:hover {
+                background: #c53d1d;
+                transform: translateY(-2px);
+            }
+
+            .product-buttons .btn-outline-primary {
+                background: #333; /* Đồng bộ màu với btn-add-cart */
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                transition: all 0.3s ease;
+            }
+
+            .product-buttons .btn-outline-primary:hover {
+                background: #000;
+                color: white;
+                transform: translateY(-2px);
+            }
+
+            /*----------------------------------------------------------*/
+                        
             .back-to-top {
                 position: fixed;
                 bottom: 120px; /* Vị trí cao hơn nút chat AI */
@@ -472,7 +501,7 @@
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
                                                 <div class="product-buttons d-flex gap-2">
-                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1">Mua ngay</button>
+                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
                                                     <button onclick="addToCart(${product.id}, event)" class="btn btn-outline-primary btn-sm flex-grow-1">
                                                         <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
                                                     </button>
@@ -515,7 +544,7 @@
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
                                                 <div class="product-buttons d-flex gap-2">
-                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1">Mua ngay</button>
+                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
                                                     <button onclick="addToCart(${product.id}, event)" class="btn btn-outline-primary btn-sm flex-grow-1">
                                                         <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
                                                     </button>
@@ -756,6 +785,6 @@
                 });
             });
         </script>
-        
+
     </body>
 </html>

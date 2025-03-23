@@ -592,7 +592,7 @@ public class UserDAO extends DBContext {
                 // Delete posts
                 "DELETE FROM posts WHERE author_id = ?",
                 // Delete contact history
-                "DELETE FROM customer_contact_history WHERE user_id = ? OR updated_by = ?",
+                "DELETE FROM customer_contact_history WHERE user_id = ? ",
                 // Delete addresses
                 "DELETE FROM user_addresses WHERE user_id = ?",
                 // Delete token
