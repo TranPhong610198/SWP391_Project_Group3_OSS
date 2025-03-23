@@ -498,8 +498,11 @@ public class OrderDAO extends DBContext {
                 order.setOrderDate(rs.getTimestamp("created_at"));
                 order.setPaymentMethod(rs.getString("payment_method"));
                 order.setPaymentStatus(rs.getString("payment_status"));
+                order.setShippingProvider(rs.getString("shipping_provider"));
+                order.setTrackingNumber(rs.getString("tracking_number"));
 
                 String shippingProvider = rs.getString("shipping_provider");
+
                 if (shippingProvider != null) {
                     if (shippingProvider.toLowerCase().contains("express")) {
                         order.setShippingMethod("express");
@@ -807,7 +810,7 @@ public class OrderDAO extends DBContext {
         return orders;
     }
 
-    //Các method để dùng cho Oder List - Trần Phong
+    //Các method để dùng cho Oder List, Oder Detail - Trần Phong
     public List<Order> getOrdersWithFilters(String sql, List<Object> params) {
         List<Order> orders = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -856,5 +859,55 @@ public class OrderDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public boolean updateShippingInfo(int orderId, String shippingProvider, String trackingNumber) {
+        try {
+            String sql = "UPDATE shipping SET shipping_provider = ?, tracking_number = ? WHERE order_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, shippingProvider);
+            stmt.setString(2, trackingNumber);
+            stmt.setInt(3, orderId);
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating shipping info: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean updateOrderStatus(int orderId, String status, int updatedBy, String shippingProvider, String trackingNumber) {
+        try {
+            // Cập nhật trạng thái đơn hàng
+            String sqlUpdateOrder = "UPDATE orders SET status = ?, updated_at = GETDATE() WHERE id = ?";
+            PreparedStatement stmtUpdateOrder = connection.prepareStatement(sqlUpdateOrder);
+            stmtUpdateOrder.setString(1, status);
+            stmtUpdateOrder.setInt(2, orderId);
+            stmtUpdateOrder.executeUpdate();
+
+            // Thêm vào lịch sử đơn hàng
+            String sqlOrderHistory = "INSERT INTO order_history (order_id, updated_by, status, notes, updated_at) "
+                    + "VALUES (?, ?, ?, ?, GETDATE())";
+            PreparedStatement stmtOrderHistory = connection.prepareStatement(sqlOrderHistory);
+            stmtOrderHistory.setInt(1, orderId);
+            stmtOrderHistory.setInt(2, updatedBy);
+            stmtOrderHistory.setString(3, status);
+            stmtOrderHistory.setString(4, "Cập nhật trạng thái thành " + status);
+            stmtOrderHistory.executeUpdate();
+
+            // Cập nhật thông tin vận chuyển nếu trạng thái là shipping
+            if ("shipping".equals(status)) {
+                updateShippingInfo(orderId, shippingProvider, trackingNumber);
+            }
+
+            stmtUpdateOrder.close();
+            stmtOrderHistory.close();
+
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error updating order status: " + e.getMessage());
+            return false;
+        }
     }
 }

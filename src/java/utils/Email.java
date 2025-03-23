@@ -161,6 +161,63 @@ public class Email {
         }
     }
 
+    // Thêm phương thức gửi email thông báo trạng thái đơn hàng
+    public boolean sendOrderStatusEmail(User user, String orderCode, String statusText) throws UnsupportedEncodingException {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", HOST);
+        props.put("mail.smtp.port", PORT);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.ssl.trust", HOST);
+
+        try {
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(USERNAME, PASSWORD);
+                }
+            });
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(USERNAME, "Fasshion Shop"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
+            message.setSubject(MimeUtility.encodeText("Cập nhật trạng thái đơn hàng #" + orderCode, "UTF-8", "B"));
+
+            String htmlContent = String.format(
+                    "<html>"
+                    + "<head>"
+                    + "<style>"
+                    + "body {font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f2f2f2;}"
+                    + ".container {padding: 20px; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd; border-radius: 5px;}"
+                    + ".header {background-color: #4CAF50; padding: 10px; text-align: center; color: #ffffff;}"
+                    + ".content {padding: 20px;}"
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<div class='container'>"
+                    + "<div class='header'><h2>Cập nhật trạng thái đơn hàng</h2></div>"
+                    + "<div class='content'><p>Xin chào %s,</p>"
+                    + "<p>Đơn hàng #%s của bạn đã được cập nhật sang trạng thái: <strong>%s</strong>.</p>"
+                    + "<p>Trân trọng,<br>Fasshion Shop</p></div>"
+                    + "</div>"
+                    + "</body>"
+                    + "</html>",
+                    user.getFullName(),
+                    orderCode,
+                    statusText
+            );
+
+            message.setContent(htmlContent, "text/html; charset=UTF-8");
+            Transport.send(message);
+            return true;
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static void main(String[] args) throws UnsupportedEncodingException {
         Email email = new Email();
         boolean sent = email.sendEmail(

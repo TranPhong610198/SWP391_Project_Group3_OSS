@@ -16,7 +16,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <style>
             /* Sử dụng cùng style với listProducts.jsp */
-            /* Copy toàn bộ phần <style> từ listProducts.jsp vào đây */
+            /* Copy toàn bộ phần <style> từ listProducts.jsp vào đây nếu cần */
         </style>
     </head>
     <body>
@@ -43,23 +43,83 @@
                                 <p><strong>Ngày đặt hàng:</strong> <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></p>
                                 <p><strong>Tổng chi phí:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></p>
                                 <p><strong>Trạng thái:</strong> 
-                                    <span class="status-badge bg-${order.status == 'completed' ? 'success' : order.status == 'cancelled' ? 'danger' : 'warning'}">${order.status}</span>
+                                    <span class="status-badge bg-${order.status == 'completed' ? 'success' : order.status == 'cancelled' ? 'danger' : 'warning'}">
+                                        <c:choose>
+                                            <c:when test="${order.status == 'pending_pay'}">Chờ thanh toán</c:when>
+                                            <c:when test="${order.status == 'pending'}">Chờ xử lý</c:when>
+                                            <c:when test="${order.status == 'processing'}">Đang xử lý</c:when>
+                                            <c:when test="${order.status == 'shipping'}">Đang giao</c:when>
+                                            <c:when test="${order.status == 'completed'}">Hoàn thành</c:when>
+                                            <c:when test="${order.status == 'returned'}">Hoàn trả</c:when>
+                                            <c:when test="${order.status == 'cancelled'}">Đã hủy</c:when>
+                                            <c:otherwise>${order.status}</c:otherwise>
+                                        </c:choose>
+                                    </span>
                                 </p>
                             </div>
                             <div class="col-md-6">
-                                <form method="POST" action="orderdetails">
-                                    <input type="hidden" name="orderId" value="${order.id}">
-                                    <label><strong>Cập nhật trạng thái:</strong></label>
-                                    <select name="status" class="form-select mb-2">
-                                        <option value="pending_pay" ${order.status == 'pending_pay' ? 'selected' : ''}>Chờ thanh toán</option>
-                                        <option value="pending" ${order.status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
-                                        <option value="processing" ${order.status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
-                                        <option value="shipping" ${order.status == 'shipping' ? 'selected' : ''}>Đang giao</option>
-                                        <option value="completed" ${order.status == 'completed' ? 'selected' : ''}>Hoàn thành</option>
-                                        <option value="cancelled" ${order.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
-                                    </select>
-                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Lưu</button>
-                                </form>
+                                <c:if test="${order.status == 'shipping' || order.status == 'completed' || order.status == 'returned' || order.status == 'cancelled'}">
+                                    <div class="card">
+                                        <div class="card-header">Thông tin vận chuyển</div>
+                                        <div class="card-body">
+                                            <p><strong>Đơn vị vận chuyển:</strong> ${order.shippingProvider}</p>
+                                            <p><strong>Mã vận đơn:</strong> ${order.trackingNumber}</p>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <!-- Xử lý trạng thái -->
+                                <c:choose>
+                                    <c:when test="${order.status == 'pending_pay'}">
+                                        <!-- Chờ thanh toán: Không hiển thị gì để chỉnh sửa -->
+                                        <p><strong>Không thể chỉnh sửa trạng thái khi đang chờ thanh toán.</strong></p>
+                                    </c:when>
+                                    <c:when test="${order.status == 'pending'}">
+                                        <!-- Chờ xử lý: Nút xác nhận và hủy -->
+                                        <form method="POST" action="orderdetails" class="mb-2">
+                                            <input type="hidden" name="orderId" value="${order.id}">
+                                            <input type="hidden" name="status" value="processing">
+                                            <button type="submit" class="btn btn-success"><i class="fas fa-check me-2"></i>Xác nhận đơn hàng</button>
+                                        </form>
+                                        <form method="POST" action="orderdetails">
+                                            <input type="hidden" name="orderId" value="${order.id}">
+                                            <input type="hidden" name="status" value="cancelled">
+                                            <button type="submit" class="btn btn-danger"><i class="fas fa-times me-2"></i>Hủy đơn hàng</button>
+                                        </form>
+                                    </c:when>
+                                    <c:when test="${order.status == 'processing'}">
+                                        <!-- Đang xử lý: Nhập đơn vị vận chuyển và mã vận đơn -->
+                                        <form method="POST" action="orderdetails">
+                                            <input type="hidden" name="orderId" value="${order.id}">
+                                            <input type="hidden" name="status" value="shipping">
+                                            <div class="mb-2">
+                                                <label><strong>Đơn vị vận chuyển:</strong></label>
+                                                <input type="text" name="shippingProvider" class="form-control" required>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label><strong>Mã vận đơn:</strong></label>
+                                                <input type="text" name="trackingNumber" class="form-control" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Cập nhật</button>
+                                        </form>
+                                    </c:when>
+                                    <c:when test="${order.status == 'shipping'}">
+                                        <!-- Đang giao: Nút hoàn thành và hoàn trả -->
+                                        <form method="POST" action="orderdetails" class="mb-2">
+                                            <input type="hidden" name="orderId" value="${order.id}">
+                                            <input type="hidden" name="status" value="completed">
+                                            <button type="submit" class="btn btn-success"><i class="fas fa-check me-2"></i>Hoàn thành</button>
+                                        </form>
+                                        <form method="POST" action="orderdetails">
+                                            <input type="hidden" name="orderId" value="${order.id}">
+                                            <input type="hidden" name="status" value="returned">
+                                            <button type="submit" class="btn btn-warning"><i class="fas fa-undo me-2"></i>Hoàn trả</button>
+                                        </form>
+                                    </c:when>
+                                    <c:when test="${order.status == 'completed' || order.status == 'returned' || order.status == 'cancelled'}">
+                                        <!-- Hoàn thành, hoàn trả, đã hủy: Không hiển thị gì để chỉnh sửa -->
+                                        <p><strong>Không thể chỉnh sửa trạng thái khi đơn hàng đã hoàn tất hoặc bị hủy.</strong></p>
+                                    </c:when>
+                                </c:choose>
                             </div>
                         </div>
                     </div>
@@ -124,7 +184,18 @@
                                     <tr>
                                         <td><fmt:formatDate value="${entry.updatedAt}" pattern="dd/MM/yyyy HH:mm"/></td>
                                         <td>${entry.updaterName}</td>
-                                        <td>${entry.status}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${entry.status == 'pending_pay'}">Chờ thanh toán</c:when>
+                                                <c:when test="${entry.status == 'pending'}">Chờ xử lý</c:when>
+                                                <c:when test="${entry.status == 'processing'}">Đang xử lý</c:when>
+                                                <c:when test="${entry.status == 'shipping'}">Đang giao</c:when>
+                                                <c:when test="${entry.status == 'completed'}">Hoàn thành</c:when>
+                                                <c:when test="${entry.status == 'returned'}">Hoàn trả</c:when>
+                                                <c:when test="${entry.status == 'cancelled'}">Đã hủy</c:when>
+                                                <c:otherwise>${entry.status}</c:otherwise>
+                                            </c:choose>
+                                        </td>
                                         <td>${entry.notes}</td>
                                     </tr>
                                 </c:forEach>

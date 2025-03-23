@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Order {
+
     private int id;
     private int userId;
     private String orderCode;
@@ -16,18 +17,37 @@ public class Order {
     private String paymentMethod;
     private String paymentStatus;
     private String shippingMethod;
+
+    private String shippingProvider;
+    private String trackingNumber;
     private String status;
     private List<CartItem> items;
-    
+
     // Thông tin địa chỉ giao hàng
     private String recipientName;
     private String recipientEmail;
     private String phone;
     private String address;
     private String notes;
-    
+
     public Order() {
         this.status = "pending"; // Trạng thái mặc định
+    }
+
+    public String getShippingProvider() {
+        return shippingProvider;
+    }
+
+    public void setShippingProvider(String shippingProvider) {
+        this.shippingProvider = shippingProvider;
+    }
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
     }
 
     public int getId() {
@@ -109,7 +129,7 @@ public class Order {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-    
+
     public String getPaymentStatus() {
         return paymentStatus;
     }
@@ -149,7 +169,7 @@ public class Order {
     public void setRecipientName(String recipientName) {
         this.recipientName = recipientName;
     }
-    
+
     public String getRecipientEmail() {
         return recipientEmail;
     }

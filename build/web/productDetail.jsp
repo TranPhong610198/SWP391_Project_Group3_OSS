@@ -437,7 +437,7 @@
                             <!--</div>-->
                             <%--</c:if>--%>
                         </div>
-                        ${product.description}
+                      <%--  ${product.description}--%>
 
                         <form action="productdetail" method="POST">
                             <input type="hidden" name="id" value="${product.id}">

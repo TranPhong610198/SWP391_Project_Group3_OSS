@@ -370,17 +370,17 @@
                 <div class="card-body py-3">
                     <div class="row text-center">
                         <div class="col-md-4 mb-2 mb-md-0">
-                            <a href="contact" class="text-decoration-none d-inline-block">
+                            <a href="footer.jsp" class="text-decoration-none d-inline-block">
                                 <i class="fas fa-envelope"></i> Liên hệ
                             </a>
                         </div>
                         <div class="col-md-4 mb-2 mb-md-0">
-                            <a href="about" class="text-decoration-none d-inline-block">
+                            <a href="footer.jsp" class="text-decoration-none d-inline-block">
                                 <i class="fas fa-info-circle"></i> Về chúng tôi
                             </a>
                         </div>
                         <div class="col-md-4">
-                            <a href="help" class="text-decoration-none d-inline-block">
+                            <a href="footer.jsp" class="text-decoration-none d-inline-block">
                                 <i class="fas fa-question-circle"></i> Trợ giúp
                             </a>
                         </div>
@@ -399,9 +399,7 @@
                                         <i class="fas fa-shopping-cart empty-cart-icon"></i>
                                         <h5 class="mb-3">Giỏ hàng trống</h5>
                                         <p class="text-muted mb-4">Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
-                                        <a href="listproduct" class="btn btn-primary">
-                                            <i class="fas fa-shopping-bag me-2"></i> Chọn sản phẩm
-                                        </a>
+                                        
                                     </div>
                                 </c:when>
                                 <c:otherwise>
