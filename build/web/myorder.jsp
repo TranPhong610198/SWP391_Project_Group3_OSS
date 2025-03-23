@@ -726,22 +726,22 @@
 
                                 <div class="order-actions">
                                     <a href="orderdetail?id=${order.id}" class="btn-order-detail">
-                                        <i class="fas fa-eye"></i> Xem chi tiết
+                                        <i class="fas fa-eye me-2"></i> Xem chi tiết
                                     </a>
                                     <div>
                                         <c:if test="${order.status == 'pending_pay'}">
                                             <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
-                                                <i class="fas fa-times"></i> Hủy đơn hàng
+                                                <i class="fas fa-times me-2"></i> Hủy đơn hàng
                                             </a>
                                             <c:if test="${order.paymentStatus == 'pending' && order.paymentMethod == 'bank_transfer'}">
-                                                <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
-                                                    <i class="fas fa-money-check-alt"></i> Thanh toán lại
+                                                <a href="myorder?action=retry_payment&id=${order.id}" class="btn-order-detail">
+                                                    <i class="fas fa-money-check-alt me-2"></i> Thanh toán lại
                                                 </a>
                                             </c:if>
                                         </c:if>
                                          <c:if test="${order.status == 'pending'}">
                                             <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
-                                                <i class="fas fa-times"></i> Hủy đơn hàng
+                                                <i class="fas fa-times me-2"></i> Hủy đơn hàng
                                             </a>
                                             
                                         </c:if>
@@ -749,7 +749,7 @@
                                             <c:if test="${not empty order.items}">
                                                 <c:set var="firstItem" value="${order.items[0]}" />
                                                 <a href="productdetail?id=${firstItem.productId}" class="btn-reorder">
-                                                    <i class="fas fa-redo"></i> Mua lại
+                                                    <i class="fas fa-redo me-2"></i> Mua lại
                                                 </a>
                                             </c:if>
                                         </c:if>
