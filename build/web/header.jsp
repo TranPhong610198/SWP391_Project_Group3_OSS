@@ -170,7 +170,6 @@
                                                     <a href="${pageContext.request.contextPath}/sale/orders">Quản lý đơn hàng</a>
                                                 </c:when>
                                                 <c:otherwise> <!-- customer -->
-                                                    <a href="${pageContext.request.contextPath}/profile">Trang cá nhân</a>
                                                     <a href="${pageContext.request.contextPath}/myorder">Lịch sử đơn hàng</a>
                                                 </c:otherwise>
                                             </c:choose>
