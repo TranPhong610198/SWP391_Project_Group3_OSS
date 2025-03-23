@@ -114,7 +114,7 @@
         </li>
 
         <li class="menu-item p-2">
-            <a href="reports.jsp" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="report" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-file-alt me-2"></i>
                 Báo cáo
             </a>
