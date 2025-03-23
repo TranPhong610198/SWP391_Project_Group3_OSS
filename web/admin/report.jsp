@@ -14,6 +14,52 @@
         <!-- DataTables CSS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
         <style>
+            /* Add spacing between report sections */
+            .report-card {
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                margin-bottom: 30px;
+            }
+
+            /* Custom headers for each section */
+            .report-card .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+
+            /* Table styling */
+            .table {
+                margin-bottom: 0;
+            }
+
+            .table thead th {
+                font-weight: bold;
+            }
+
+            .summary-row {
+                font-weight: bold;
+            }
+
+            /* Filter section styling */
+            .filters {
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            /* Badge styling for better visibility */
+            .badge {
+                font-size: 85%;
+                padding: 0.35em 0.65em;
+            }
+
+            /* Export buttons styling */
+            .btn-export {
+                font-weight: 500;
+            }
             :root {
                 --primary-color: #2c3e50;
                 --secondary-color: #34495e;
@@ -559,55 +605,6 @@
                     </div>
                 </div>
 
-                <style>
-                    /* Add spacing between report sections */
-                    .report-card {
-                        border-radius: 8px;
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                        overflow: hidden;
-                        margin-bottom: 30px;
-                    }
-
-                    /* Custom headers for each section */
-                    .report-card .card-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        padding: 15px 20px;
-                        font-weight: bold;
-                        font-size: 1.1rem;
-                    }
-
-                    /* Table styling */
-                    .table {
-                        margin-bottom: 0;
-                    }
-
-                    .table thead th {
-                        font-weight: bold;
-                    }
-
-                    .summary-row {
-                        font-weight: bold;
-                    }
-
-                    /* Filter section styling */
-                    .filters {
-                        border: 1px solid rgba(0, 0, 0, 0.1);
-                    }
-
-                    /* Badge styling for better visibility */
-                    .badge {
-                        font-size: 85%;
-                        padding: 0.35em 0.65em;
-                    }
-
-                    /* Export buttons styling */
-                    .btn-export {
-                        font-weight: 500;
-                    }
-                </style>
-
                 <!-- jQuery -->
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <!-- Bootstrap JS Bundle with Popper -->
@@ -619,140 +616,140 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
                 <script>
-                                $(document).ready(function () {
-                                    // Initialize DataTables
-                                    $('#userTable').DataTable({
-                                        "language": {
-                                            "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
-                                            "zeroRecords": "Không tìm thấy dữ liệu",
-                                            "info": "Trang _PAGE_ trên _PAGES_",
-                                            "infoEmpty": "Không có dữ liệu",
-                                            "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
-                                            "search": "Tìm kiếm:",
-                                            "paginate": {
-                                                "first": "Đầu",
-                                                "last": "Cuối",
-                                                "next": "Tiếp",
-                                                "previous": "Trước"
-                                            }
-                                        }
-                                    });
-
-                                    $('#orderTable').DataTable({
-                                        "language": {
-                                            "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
-                                            "zeroRecords": "Không tìm thấy dữ liệu",
-                                            "info": "Trang _PAGE_ trên _PAGES_",
-                                            "infoEmpty": "Không có dữ liệu",
-                                            "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
-                                            "search": "Tìm kiếm:",
-                                            "paginate": {
-                                                "first": "Đầu",
-                                                "last": "Cuối",
-                                                "next": "Tiếp",
-                                                "previous": "Trước"
-                                            }
-                                        }
-                                    });
-
-                                    $('#productTable').DataTable({
-                                        "language": {
-                                            "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
-                                            "zeroRecords": "Không tìm thấy dữ liệu",
-                                            "info": "Trang _PAGE_ trên _PAGES_",
-                                            "infoEmpty": "Không có dữ liệu",
-                                            "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
-                                            "search": "Tìm kiếm:",
-                                            "paginate": {
-                                                "first": "Đầu",
-                                                "last": "Cuối",
-                                                "next": "Tiếp",
-                                                "previous": "Trước"
-                                            }
-                                        }
-                                    });
-
-                                    // Toggle Sidebar
-                                    $('.sidebar-toggle').click(function () {
-                                        $('.sidebar').toggleClass('collapsed');
-                                        $('.main-content').toggleClass('expanded');
-                                    });
-
-                                    // Export functions
-                                    function exportTableToExcel(tableId, fileName) {
-                                        const table = document.getElementById(tableId);
-                                        const wb = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
-                                        XLSX.writeFile(wb, fileName + '.xlsx');
-                                    }
-
-                                    // Export buttons
-                                    $('#exportUserBtn').click(function () {
-                                        exportTableToExcel('userTable', 'user_report');
-                                    });
-
-                                    $('#exportOrderBtn').click(function () {
-                                        exportTableToExcel('orderTable', 'order_report');
-                                    });
-
-                                    $('#exportProductBtn').click(function () {
-                                        exportTableToExcel('productTable', 'product_report');
-                                    });
-                                });
-                                $(document).ready(function () {
-                                    // Khi modal được hiển thị, tải dữ liệu
-                                    $('#lowStockModal').on('shown.bs.modal', function () {
-                                        $.ajax({
-                                            url: '${pageContext.request.contextPath}/admin/low-stock-products',
-                                            method: 'GET',
-                                            dataType: 'json',
-                                            success: function (data) {
-                                                console.log('Low stock products:', data);
-
-                                                // Khởi tạo DataTable với dữ liệu JSON
-                                                let table = $('#lowStockTable');
-                                                if ($.fn.DataTable.isDataTable(table)) {
-                                                    table.DataTable().destroy();
+                                        $(document).ready(function () {
+                                            // Initialize DataTables
+                                            $('#userTable').DataTable({
+                                                "language": {
+                                                    "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
+                                                    "zeroRecords": "Không tìm thấy dữ liệu",
+                                                    "info": "Trang _PAGE_ trên _PAGES_",
+                                                    "infoEmpty": "Không có dữ liệu",
+                                                    "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
+                                                    "search": "Tìm kiếm:",
+                                                    "paginate": {
+                                                        "first": "Đầu",
+                                                        "last": "Cuối",
+                                                        "next": "Tiếp",
+                                                        "previous": "Trước"
+                                                    }
                                                 }
-                                                table.DataTable({
-                                                    "language": {
-                                                        "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
-                                                        "zeroRecords": "Không tìm thấy dữ liệu",
-                                                        "info": "Trang _PAGE_ trên _PAGES_",
-                                                        "infoEmpty": "Không có dữ liệu",
-                                                        "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
-                                                        "search": "Tìm kiếm:",
-                                                        "paginate": {
-                                                            "first": "Đầu",
-                                                            "last": "Cuối",
-                                                            "next": "Tiếp",
-                                                            "previous": "Trước"
-                                                        }
-                                                    },
-                                                    "data": data,
-                                                    "columns": [
-                                                        {"data": "id"},
-                                                        {"data": "title"},
-                                                        {"data": "categoryName", "defaultContent": ""},
-                                                        {"data": "size", "defaultContent": ""},
-                                                        {"data": "color", "defaultContent": ""},
-                                                        {"data": "stockQuantity"}
-                                                    ]
-                                                });
-                                            },
-                                            error: function (xhr, status, error) {
-                                                console.error('Error loading low stock products:', error);
-                                                $('#lowStockTableBody').html('<tr><td colspan="6" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
-                                            }
-                                        });
-                                    });
+                                            });
 
-                                    // Export low stock products
-                                    $('#exportLowStockBtn').click(function () {
-                                        const table = document.getElementById('lowStockTable');
-                                        const wb = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
-                                        XLSX.writeFile(wb, 'low_stock_products.xlsx');
-                                    });
-                                });
+                                            $('#orderTable').DataTable({
+                                                "language": {
+                                                    "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
+                                                    "zeroRecords": "Không tìm thấy dữ liệu",
+                                                    "info": "Trang _PAGE_ trên _PAGES_",
+                                                    "infoEmpty": "Không có dữ liệu",
+                                                    "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
+                                                    "search": "Tìm kiếm:",
+                                                    "paginate": {
+                                                        "first": "Đầu",
+                                                        "last": "Cuối",
+                                                        "next": "Tiếp",
+                                                        "previous": "Trước"
+                                                    }
+                                                }
+                                            });
+
+                                            $('#productTable').DataTable({
+                                                "language": {
+                                                    "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
+                                                    "zeroRecords": "Không tìm thấy dữ liệu",
+                                                    "info": "Trang _PAGE_ trên _PAGES_",
+                                                    "infoEmpty": "Không có dữ liệu",
+                                                    "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
+                                                    "search": "Tìm kiếm:",
+                                                    "paginate": {
+                                                        "first": "Đầu",
+                                                        "last": "Cuối",
+                                                        "next": "Tiếp",
+                                                        "previous": "Trước"
+                                                    }
+                                                }
+                                            });
+
+                                            // Toggle Sidebar
+                                            $('.sidebar-toggle').click(function () {
+                                                $('.sidebar').toggleClass('collapsed');
+                                                $('.main-content').toggleClass('expanded');
+                                            });
+
+                                            // Export functions
+                                            function exportTableToExcel(tableId, fileName) {
+                                                const table = document.getElementById(tableId);
+                                                const wb = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
+                                                XLSX.writeFile(wb, fileName + '.xlsx');
+                                            }
+
+                                            // Export buttons
+                                            $('#exportUserBtn').click(function () {
+                                                exportTableToExcel('userTable', 'user_report');
+                                            });
+
+                                            $('#exportOrderBtn').click(function () {
+                                                exportTableToExcel('orderTable', 'order_report');
+                                            });
+
+                                            $('#exportProductBtn').click(function () {
+                                                exportTableToExcel('productTable', 'product_report');
+                                            });
+                                        });
+                                        $(document).ready(function () {
+                                            // Khi modal được hiển thị, tải dữ liệu
+                                            $('#lowStockModal').on('shown.bs.modal', function () {
+                                                $.ajax({
+                                                    url: '${pageContext.request.contextPath}/admin/low-stock-products',
+                                                    method: 'GET',
+                                                    dataType: 'json',
+                                                    success: function (data) {
+                                                        console.log('Low stock products:', data);
+
+                                                        // Khởi tạo DataTable với dữ liệu JSON
+                                                        let table = $('#lowStockTable');
+                                                        if ($.fn.DataTable.isDataTable(table)) {
+                                                            table.DataTable().destroy();
+                                                        }
+                                                        table.DataTable({
+                                                            "language": {
+                                                                "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
+                                                                "zeroRecords": "Không tìm thấy dữ liệu",
+                                                                "info": "Trang _PAGE_ trên _PAGES_",
+                                                                "infoEmpty": "Không có dữ liệu",
+                                                                "infoFiltered": "(lọc từ _MAX_ tổng số dòng)",
+                                                                "search": "Tìm kiếm:",
+                                                                "paginate": {
+                                                                    "first": "Đầu",
+                                                                    "last": "Cuối",
+                                                                    "next": "Tiếp",
+                                                                    "previous": "Trước"
+                                                                }
+                                                            },
+                                                            "data": data,
+                                                            "columns": [
+                                                                {"data": "id"},
+                                                                {"data": "title"},
+                                                                {"data": "categoryName", "defaultContent": ""},
+                                                                {"data": "size", "defaultContent": ""},
+                                                                {"data": "color", "defaultContent": ""},
+                                                                {"data": "stockQuantity"}
+                                                            ]
+                                                        });
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        console.error('Error loading low stock products:', error);
+                                                        $('#lowStockTableBody').html('<tr><td colspan="6" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
+                                                    }
+                                                });
+                                            });
+
+                                            // Export low stock products
+                                            $('#exportLowStockBtn').click(function () {
+                                                const table = document.getElementById('lowStockTable');
+                                                const wb = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
+                                                XLSX.writeFile(wb, 'low_stock_products.xlsx');
+                                            });
+                                        });
                 </script>
-                </body>
-                </html>
+    </body>
+</html>
