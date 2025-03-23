@@ -1,5 +1,7 @@
 package utils;
 
+import entity.CartItem;
+import entity.Order;
 import java.util.Properties;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
@@ -162,7 +164,7 @@ public class Email {
     }
 
     // Thêm phương thức gửi email thông báo trạng thái đơn hàng
-    public boolean sendOrderStatusEmail(User user, String orderCode, String statusText) throws UnsupportedEncodingException {
+    public boolean sendOrderStatusEmail(Order order, String statusText) throws UnsupportedEncodingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
         props.put("mail.smtp.port", PORT);
@@ -181,34 +183,55 @@ public class Email {
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(USERNAME, "Fasshion Shop"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
-            message.setSubject(MimeUtility.encodeText("Cập nhật trạng thái đơn hàng #" + orderCode, "UTF-8", "B"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(order.getRecipientEmail()));
+            message.setSubject(MimeUtility.encodeText("Cập nhật trạng thái đơn hàng #" + order.getOrderCode(), "UTF-8", "B"));
 
-            String htmlContent = String.format(
-                    "<html>"
-                    + "<head>"
-                    + "<style>"
-                    + "body {font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f2f2f2;}"
-                    + ".container {padding: 20px; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd; border-radius: 5px;}"
-                    + ".header {background-color: #4CAF50; padding: 10px; text-align: center; color: #ffffff;}"
-                    + ".content {padding: 20px;}"
-                    + "</style>"
-                    + "</head>"
-                    + "<body>"
-                    + "<div class='container'>"
-                    + "<div class='header'><h2>Cập nhật trạng thái đơn hàng</h2></div>"
-                    + "<div class='content'><p>Xin chào %s,</p>"
-                    + "<p>Đơn hàng #%s của bạn đã được cập nhật sang trạng thái: <strong>%s</strong>.</p>"
-                    + "<p>Trân trọng,<br>Fasshion Shop</p></div>"
-                    + "</div>"
-                    + "</body>"
-                    + "</html>",
-                    user.getFullName(),
-                    orderCode,
-                    statusText
-            );
+            // Tạo nội dung email
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><head><style>")
+                    .append("body {font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f2f2f2;}")
+                    .append(".container {padding: 20px; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd; border-radius: 5px;}")
+                    .append(".header {background-color: #4CAF50; padding: 10px; text-align: center; color: #ffffff;}")
+                    .append(".content {padding: 20px;}")
+                    .append(".product-table {width: 100%; border-collapse: collapse; margin-top: 20px;}")
+                    .append(".product-table th, .product-table td {border: 1px solid #dddddd; padding: 8px; text-align: left;}")
+                    .append(".product-table th {background-color: #f2f2f2;}")
+                    .append("</style></head><body><div class='container'>")
+                    .append("<div class='header'><h2>Cập nhật trạng thái đơn hàng</h2></div>")
+                    .append("<div class='content'><p>Xin chào ").append(order.getRecipientName()).append(",</p>")
+                    .append("<p>Đơn hàng #").append(order.getOrderCode()).append(" của bạn đã được cập nhật sang trạng thái: <strong>").append(statusText).append("</strong>.</p>");
 
-            message.setContent(htmlContent, "text/html; charset=UTF-8");
+            // Thêm chi tiết đơn hàng
+            htmlContent.append("<h3>Chi tiết đơn hàng:</h3>")
+                    .append("<table border='1' style='border-collapse: collapse;'><thead><tr>")
+                    .append("<th>Hình ảnh</th><th>Tên sản phẩm</th><th>Kích thước</th><th>Màu sắc</th><th>Số lượng</th><th>Đơn giá</th></tr></thead><tbody>");
+            for (CartItem item : order.getItems()) {
+                String imageUrl = item.getProductThumbnail(); // Lấy đường dẫn ảnh từ sản phẩm
+                if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+                    imageUrl = "http://localhost:9999/fashionshop" + imageUrl; // Thêm domain nếu là đường dẫn tương đối
+                }
+                htmlContent.append("<tr>")
+                        .append("<td><img src='").append(item.getProductThumbnail()).append("' width='50' height='50' alt='").append(item.getProductTitle()).append("'></td>")
+                        .append("<td>").append(item.getProductTitle()).append("</td>")
+                        .append("<td>").append(item.getSize()).append("</td>")
+                        .append("<td>").append(item.getColor()).append("</td>")
+                        .append("<td>").append(item.getQuantity()).append("</td>")
+                        .append("<td>").append(String.format("%,.0f", item.getProductPrice())).append(" ₫</td>")
+                        .append("</tr>");
+            }
+            htmlContent.append("</tbody></table>");
+
+            // Thêm thông tin vận chuyển nếu trạng thái từ "shipping" trở đi
+            String currentStatus = order.getStatus();
+            if ("shipping".equals(currentStatus) || "completed".equals(currentStatus) || "returned".equals(currentStatus)) {
+                htmlContent.append("<h3>Thông tin vận chuyển:</h3>")
+                        .append("<p><strong>Đơn vị vận chuyển:</strong> ").append(order.getShippingProvider()).append("</p>")
+                        .append("<p><strong>Mã vận đơn:</strong> ").append(order.getTrackingNumber()).append("</p>");
+            }
+
+            htmlContent.append("<p>Trân trọng,<br>Fasshion Shop</p></div></div></body></html>");
+
+            message.setContent(htmlContent.toString(), "text/html; charset=UTF-8");
             Transport.send(message);
             return true;
 

@@ -59,9 +59,8 @@
                             </div>
                             <div class="col-md-6">
                                 <c:if test="${order.status == 'shipping' || order.status == 'completed' || order.status == 'returned' || order.status == 'cancelled'}">
-                                    <div class="card">
-                                        <div class="card-header">Thông tin vận chuyển</div>
-                                        <div class="card-body">
+                                    <div>
+                                        <div>
                                             <p><strong>Đơn vị vận chuyển:</strong> ${order.shippingProvider}</p>
                                             <p><strong>Mã vận đơn:</strong> ${order.trackingNumber}</p>
                                         </div>
@@ -69,10 +68,7 @@
                                 </c:if>
                                 <!-- Xử lý trạng thái -->
                                 <c:choose>
-                                    <c:when test="${order.status == 'pending_pay'}">
-                                        <!-- Chờ thanh toán: Không hiển thị gì để chỉnh sửa -->
-                                        <p><strong>Không thể chỉnh sửa trạng thái khi đang chờ thanh toán.</strong></p>
-                                    </c:when>
+
                                     <c:when test="${order.status == 'pending'}">
                                         <!-- Chờ xử lý: Nút xác nhận và hủy -->
                                         <form method="POST" action="orderdetails" class="mb-2">
@@ -115,10 +111,7 @@
                                             <button type="submit" class="btn btn-warning"><i class="fas fa-undo me-2"></i>Hoàn trả</button>
                                         </form>
                                     </c:when>
-                                    <c:when test="${order.status == 'completed' || order.status == 'returned' || order.status == 'cancelled'}">
-                                        <!-- Hoàn thành, hoàn trả, đã hủy: Không hiển thị gì để chỉnh sửa -->
-                                        <p><strong>Không thể chỉnh sửa trạng thái khi đơn hàng đã hoàn tất hoặc bị hủy.</strong></p>
-                                    </c:when>
+
                                 </c:choose>
                             </div>
                         </div>
@@ -144,6 +137,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>Ảnh sản phẩm</th>
                                     <th>Tên sản phẩm</th>
                                     <th>Kích thước</th>
                                     <th>Màu sắc</th>
@@ -154,6 +148,9 @@
                             <tbody>
                                 <c:forEach items="${order.items}" var="item">
                                     <tr>
+                                        <td>
+                                            <img src="${item.productThumbnail.contains('http') ? item.productThumbnail : pageContext.request.contextPath+item.productThumbnail}" alt="alt" height="150px"/>
+                                        </td>
                                         <td>${item.productTitle}</td>
                                         <td>${item.size}</td>
                                         <td>${item.color}</td>
