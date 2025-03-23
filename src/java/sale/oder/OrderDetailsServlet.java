@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import utils.Email;
 
 /**
  *
@@ -28,6 +29,7 @@ public class OrderDetailsServlet extends HttpServlet {
 
     private OrderDAO orderDAO = new OrderDAO();
     private UserDAO userDAO = new UserDAO();
+    private Email emailUtil = new Email();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -104,16 +106,66 @@ public class OrderDetailsServlet extends HttpServlet {
 
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             String newStatus = request.getParameter("status");
-            int updatedBy = user.getId(); // Giả sử ID người dùng hiện tại là 1, cần thay bằng logic lấy từ session
+            int updatedBy = user.getId();
 
-            boolean success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy);
+            Order order = orderDAO.getOrderById(orderId);
+            boolean success = false;
+
+            // Xử lý theo trạng thái mới
+            if ("processing".equals(newStatus) || "cancelled".equals(newStatus)) {
+                success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
+            } else if ("shipping".equals(newStatus)) {
+                String shippingProvider = request.getParameter("shippingProvider");
+                String trackingNumber = request.getParameter("trackingNumber");
+                success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, shippingProvider, trackingNumber);
+            } else if ("completed".equals(newStatus) || "returned".equals(newStatus)) {
+                success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
+            }
+
             if (success) {
+                sendOrderStatusEmail(order, newStatus);
                 response.sendRedirect(request.getContextPath() + "/sale/orderdetails?id=" + orderId + "&alert=SSU");
             } else {
                 response.sendRedirect(request.getContextPath() + "/sale/orderdetails?id=" + orderId + "&alert=ERR");
             }
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "error/error.jsp");
+            response.sendRedirect(request.getContextPath() + "/error.jsp");
+        }
+    }
+
+    // Hàm gửi email thông báo cập nhật trạng thái đơn hàng
+    private void sendOrderStatusEmail(Order order, String newStatus) {
+        try {
+            User recipient = new User();
+            recipient.setEmail(order.getRecipientEmail());
+            recipient.setFullName(order.getRecipientName());
+
+            // Ánh xạ trạng thái sang tiếng Việt
+            String statusText = switch (newStatus) {
+                case "processing" ->
+                    "Đang xử lý";
+                case "shipping" ->
+                    "Đang giao";
+                case "completed" ->
+                    "Hoàn thành";
+                case "returned" ->
+                    "Hoàn trả";
+                case "cancelled" ->
+                    "Đã hủy";
+                default ->
+                    newStatus;
+            };
+
+            // Gửi email
+            boolean sent = emailUtil.sendOrderStatusEmail(recipient, order.getOrderCode(), statusText);
+            if (sent) {
+                System.out.println("Email sent successfully to " + recipient.getEmail());
+            } else {
+                System.out.println("Failed to send email to " + recipient.getEmail());
+            }
+        } catch (Exception e) {
+            System.out.println("Error sending email: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
