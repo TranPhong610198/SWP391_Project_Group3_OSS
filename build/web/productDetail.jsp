@@ -520,7 +520,6 @@
                 </div>
             </div>
 
-            <!---------------------Hiển thị danh sách đánh giá sản phẩm, nhưng chưa phát triển-------------------------------------------------->
             <!-- Feedback Section -->
             <div id="feedback_section" class="feedback-section">
                 <h2 class="feedback-title">Đánh Giá (${allFeedbacks>0 ? allFeedbacks : 0})</h2>
