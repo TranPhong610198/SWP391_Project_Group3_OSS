@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!DOCTYPE html>
 <html>
     <head>
@@ -227,15 +229,15 @@
                 <div class="footer-section">
                     <h3>Địa chỉ shop</h3>
                     <div class="footer-map">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.5658496875026!2d105.53028539866351!3d21.02946918218991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134598cba855fa3%3A0xa996e7fddd39b07f!2zTmjDoCB0cuG7jSBNaW5oIFF1w6Ju!5e0!3m2!1sen!2s!4v1740045314800!5m2!1sen!2s"
-                            width="100%" 
-                            height="200" 
-                            style="border:0;" 
-                            allowfullscreen 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+                        <div id="map" style="width: 100%; height: 200px;"></div>
+                        <script>
+            var map = L.map('map').setView([${shopLat}, ${shopLon}], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            L.marker([${shopLat}, ${shopLon}]).addTo(map);
+                        </script>
                     </div>
                 </div>
             </div>
