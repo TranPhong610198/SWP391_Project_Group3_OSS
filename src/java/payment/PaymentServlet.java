@@ -223,7 +223,7 @@ public class PaymentServlet extends HttpServlet {
                 // Thanh toán thất bại hoặc bị hủy (bao gồm mã lỗi 24)
                 try (java.sql.Connection conn = new Context.DBContext().connection;
                      java.sql.PreparedStatement stmt = conn.prepareStatement(
-                             "UPDATE payments SET payment_status = 'pending' WHERE order_id = ?")) {
+                             "UPDATE payments SET payment_status = 'pending_pay' WHERE order_id = ?")) {
                     stmt.setInt(1, order.getId());
                     int updateResult = stmt.executeUpdate();
                     System.out.println("Updated payment status to pending: " + updateResult + " rows affected");
@@ -232,7 +232,7 @@ public class PaymentServlet extends HttpServlet {
                 }
 
                 orderDAO.updateOrderStatus(order.getId(), "pending_pay", order.getUserId());
-                order.setPaymentStatus("pending");
+                order.setPaymentStatus("pending_pay");
             }
 
             // Luôn chuyển hướng đến cartcompletion.jsp
