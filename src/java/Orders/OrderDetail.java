@@ -106,14 +106,7 @@ public class OrderDetail extends HttpServlet {
                 }
             }
         } else if (action != null && action.equals("reorder")) {
-            // Handle reordering functionality 
             int orderId = Integer.parseInt(request.getParameter("id"));
-            
-            // Implementation for reordering would go here
-            // This would typically add the items from the order back to the cart
-            // and redirect to cart page
-            
-            // For now, just redirect to cart
             response.sendRedirect("cartdetail");
             return;
         }
