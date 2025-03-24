@@ -57,13 +57,7 @@
                 Quản lý đơn hàng
             </a>
         </li>
-        <li class="menu-item p-2">
-            <a href="${pageContext.request.contextPath}/sale/customerlist" 
-               class="text-decoration-none text-light d-flex align-items-center">
-                <i class="fas fa-users me-2"></i>
-                Quản lý khách hàng
-            </a>
-        </li>
+        
         <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/home" 
                class="text-decoration-none text-light d-flex align-items-center">

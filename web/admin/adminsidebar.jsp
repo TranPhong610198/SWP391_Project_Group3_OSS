@@ -48,9 +48,7 @@
                 <li class="submenu-item py-1">
                     <a href="${pageContext.request.contextPath}/admin/userlists" class="text-decoration-none text-light">Danh sách người dùng</a>
                 </li>
-                <li class="submenu-item py-1">
-                    <a href="${pageContext.request.contextPath}/admin/customerlist" class="text-decoration-none text-light">Danh sách khách hàng</a>
-                </li>
+                
                 <li class="submenu-item py-1">
                     <a href="${pageContext.request.contextPath}/admin/categorylists" class="text-decoration-none text-light">Danh sách danh mục</a>
                 </li>
@@ -218,7 +216,7 @@
         // Handle admin management section
         if (currentPath.includes('/admin/userlists') ||
                 currentPath.includes('/admin/categorylists') ||
-                currentPath.includes('/admin/customerlist') ||
+                
                 currentPath.includes('/admin/footer-settings')) {
 
             // Show admin submenu
@@ -239,11 +237,7 @@
                 if (userListItem) {
                     userListItem.classList.add('active');
                 }
-            } else if (currentPath.includes('/admin/customerlist')) {
-                const categoryListItem = document.querySelector('a[href$="/admin/customerlist"]').closest('.submenu-item');
-                if (categoryListItem) {
-                    categoryListItem.classList.add('active');
-                }
+           
             } else if (currentPath.includes('/admin/categorylists')) {
                 const categoryListItem = document.querySelector('a[href$="/admin/categorylists"]').closest('.submenu-item');
                 if (categoryListItem) {

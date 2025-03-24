@@ -79,7 +79,7 @@
         </style>
     </head>
     <body>
-        <jsp:include page="/admin/adminsidebar.jsp" />
+        <jsp:include page="/marketing/sidebar.jsp" />
 
         <div class="main-content">
             <div class="container-fluid">
@@ -99,7 +99,7 @@
                             </div>
                         </c:if>
 
-                        <form action="${pageContext.request.contextPath}/admin/addCustomer" method="post" id="customerForm">
+                        <form action="${pageContext.request.contextPath}/marketing/addCustomer" method="post" id="customerForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label required">Họ và tên</label>
@@ -164,7 +164,7 @@
                             </div>
 
                             <div class="d-flex justify-content-end mt-4">
-                                <a href="${pageContext.request.contextPath}/admin/customerlist" 
+                                <a href="${pageContext.request.contextPath}/marketing/customerlist" 
                                    class="btn btn-secondary me-2">Quay lại</a>
                                 <button type="submit" class="btn btn-primary" id="submitBtn">Tạo</button>
                             </div>

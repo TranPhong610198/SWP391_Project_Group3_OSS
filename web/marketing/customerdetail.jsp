@@ -172,7 +172,7 @@
     </head>
     <body>
         <!-- Include the sidebar -->
-        <jsp:include page="/admin/adminsidebar.jsp" />
+        <jsp:include page="/marketing/sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
@@ -212,7 +212,7 @@
                     </div>
                     <div class="card-body">
                         <!-- Form chỉnh sửa thông tin khách hàng -->
-                        <form action="${pageContext.request.contextPath}/admin/customerdetail/edit" method="post" class="row g-3">
+                        <form action="${pageContext.request.contextPath}/marketing/customerdetail/edit" method="post" class="row g-3">
                             <input type="hidden" name="id" value="${customer.id}">
 
                             <div class="col-md-4">
@@ -275,13 +275,13 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Lưu thay đổi
                                 </button>
-                                <a href="${pageContext.request.contextPath}/admin/customerlist" class="btn btn-secondary ms-2">
+                                <a href="${pageContext.request.contextPath}/marketing/customerlist" class="btn btn-secondary ms-2">
                                     <i class="fas fa-times me-2"></i>Hủy
                                 </a>
 
                             </div>
                             <div class="text-center mt-3">
-                                <a href="${pageContext.request.contextPath}/admin/customerlist" class="btn btn-secondary">
+                                <a href="${pageContext.request.contextPath}/marketing/customerlist" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left me-1"></i>Quay lại
                                 </a>
                             </div>

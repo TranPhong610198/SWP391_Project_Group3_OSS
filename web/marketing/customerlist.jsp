@@ -150,7 +150,7 @@
     </head>
     <body>
         <!-- Include the sidebar -->
-        <jsp:include page="/admin/adminsidebar.jsp" />
+        <jsp:include page="/marketing/sidebar.jsp" />
 
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>

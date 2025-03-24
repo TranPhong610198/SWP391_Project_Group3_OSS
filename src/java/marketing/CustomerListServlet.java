@@ -1,4 +1,4 @@
-package admin;
+package marketing;
 
 import DAO.CustomerDAO;
 import entity.Customer;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/admin/customerlist")
+@WebServlet("/marketing/customerlist")
 public class CustomerListServlet extends HttpServlet {
     private CustomerDAO customerDAO;
     private static final int RECORDS_PER_PAGE = 10;
@@ -109,7 +109,7 @@ public class CustomerListServlet extends HttpServlet {
             request.setAttribute("sortDir", sortDir);
 
             // Forward to JSP page
-            request.getRequestDispatcher("/admin/customerlist.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/customerlist.jsp").forward(request, response);
             
         } catch (Exception e) {
             e.printStackTrace();

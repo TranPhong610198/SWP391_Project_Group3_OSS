@@ -1,4 +1,4 @@
-package admin;
+package marketing;
 
 import DAO.CustomerDAO;
 import entity.Customer;
@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-@WebServlet(name = "CustomerAddServlet", urlPatterns = "/admin/addCustomer")
+@WebServlet(name = "CustomerAddServlet", urlPatterns = "/marketing/addCustomer")
 public class AddCustomer extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+        request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
     }
 
     private boolean isNullOrEmpty(String str) {
@@ -94,28 +94,28 @@ public class AddCustomer extends HttpServlet {
                     || isNullOrEmpty(mobile) || isNullOrEmpty(gender)
                     || isNullOrEmpty(customerType) || isNullOrEmpty(address)) {
                 request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
                 return;
             }
 
             // Validate fullname
             if (!Pattern.matches("^([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+([ ]([A-ZĐẮẰẲẴẶÀẢÃÁẠÂẦẨẪẬẤĂẲẮẰẴẲẸẺẼÈÉẸÊỀỂỄỆẾÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴỴ]|[a-zđắằẳẵặàảãáạâầẩẫậấăằẳẵẳẹẻẽèéẹêềểễệếìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ])+)*$", fullName)) {
                 request.setAttribute("error", "Vui lòng nhập họ và tên hợp lệ.");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
                 return;
             }
 
             // Validate email format
             if (!Pattern.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email)) {
                 request.setAttribute("error", "Vui lòng nhập email hợp lệ.");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
                 return;
             }
 
             // Validate phone
             if (!Pattern.matches("^(\\+84|0)[1-9][0-9]{8,9}$", mobile)) {
                 request.setAttribute("error", "Vui lòng nhập số điện thoại Việt Nam hợp lệ.");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
                 return;
             }
 
@@ -125,14 +125,14 @@ public class AddCustomer extends HttpServlet {
             Customer checkExistEmail = customerDAO.checkExistEmail(email);
             if (checkExistEmail != null) {
                 request.setAttribute("error", "Email đã được đăng ký!");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
                 return;
             }
             
             Customer checkExistPhone = customerDAO.checkExistPhone(mobile);
             if (checkExistPhone != null) {
                 request.setAttribute("error", "Số điện thoại đã được đăng ký!");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
                 return;
             }
 
@@ -141,17 +141,17 @@ public class AddCustomer extends HttpServlet {
 
             if (success) {
                 // Redirect to customer list with success message
-                response.sendRedirect(request.getContextPath() + "/admin/customerlist");
+                response.sendRedirect(request.getContextPath() + "/marketing/customerlist");
             } else {
                 request.setAttribute("error", "Không thể tạo khách hàng mới");
-                request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+                request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
             // Log the exception
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi khi tạo khách hàng");
-            request.getRequestDispatcher("/admin/customerform.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/customerform.jsp").forward(request, response);
         }
     }
 }
