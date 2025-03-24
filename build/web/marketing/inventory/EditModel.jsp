@@ -188,12 +188,25 @@
                             </div>
 
                             <div class="col-md-4">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control" id="quantity" name="quantity" 
-                                           value="${variant.quantity}" required min="0">
-                                    <label for="quantity">Số lượng</label>
-                                </div>
-                            </div>
+    <div class="form-floating">
+        <input type="number" class="form-control" id="quantity" name="quantity" 
+               value="${variant.quantity}" required min="0">
+        <label for="quantity">Số lượng</label>
+    </div>
+    <div class="row g-2 mt-2">
+        <div class="col-6">
+            <select class="form-select" id="stockAction" name="stockAction">
+                <option value="none" selected>Không thay đổi</option>
+                <option value="import">Nhập</option>
+                <option value="export">Xuất</option>
+            </select>
+        </div>
+        <div class="col-6">
+            <input type="number" class="form-control" id="stockChange" name="stockChange" 
+                   placeholder="Số lượng thay đổi" min="0" value="0">
+        </div>
+    </div>
+</div>
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
@@ -208,7 +221,7 @@
                 </div>
                 <!-- Model Table Section -->
                 <div class="info-section mt-4">
-                    <h5 class="mb-3">Chi tiết mẫu sản phẩm</h5>
+                    <h5 class="mb-3">Mẫu sản phẩm có sẵn</h5>
                     <div class="model-table-container">
                         <table class="table table-bordered table-hover" id="variantTable">
                             <thead class="table-light sticky-top">

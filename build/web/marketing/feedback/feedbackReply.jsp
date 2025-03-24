@@ -607,18 +607,19 @@
                 </div>
 
                 <div class="card mt-3">
-                    <div class="card-header">
-                        <i class="fas fa-reply"></i>Thêm phản hồi mới
-                    </div>
-                    <div class="card-body">
-                        <form action="feedbackreply" method="POST" class="new-reply-form">
-                            <input type="hidden" name="feedbackId" value="${feedback.id}">
-                            <input type="hidden" name="returnUrl" value="${returnUrl}"> <!-- Gửi returnUrl -->
-                            <input type="hidden" name="productId" value="${productId}"> <!-- Gửi productId nếu có -->
-                            <div class="mb-3">
-                                <label for="comment" class="form-label">Nội dung phản hồi</label>
-                                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
-                            </div>
+                <div class="card-header">
+                    <i class="fas fa-reply"></i>Thêm phản hồi mới
+                </div>
+                <div class="card-body">
+                    <form action="feedbackreply" method="POST" class="new-reply-form" id="new-reply-form">
+                        <input type="hidden" name="feedbackId" value="${feedback.id}">
+                        <input type="hidden" name="returnUrl" value="${returnUrl}">
+                        <input type="hidden" name="productId" value="${productId}">
+                        <div class="mb-3">
+                            <label for="new-comment" class="form-label">Nội dung phản hồi</label>
+                            <textarea class="form-control" id="new-comment" name="comment" rows="3" required maxlength="500"></textarea>
+                            <div id="char-count" class="form-text">0/500</div>
+                        </div>
                             <div class="form-buttons">
                                 <c:choose>
                                     <c:when test="${returnUrl == 'feedbackdetail' && not empty productId}">
@@ -647,6 +648,37 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                $(document).ready(function () {
+                    // Đếm số ký tự cho textarea thêm mới
+                    $('#new-comment').on('input', function() {
+                        let length = $(this).val().length;
+                        $('#char-count').text(length + '/500');
+                        if (length > 500) {
+                            $(this).val($(this).val().substring(0, 500));
+                            $('#char-count').text('500/500');
+                        }
+                    });
+                });
+
+                function editReply(replyId) {
+                    $('#reply-comment-' + replyId).hide();
+                    $('#edit-form-' + replyId).show();
+                    // Đếm ký tự cho textarea chỉnh sửa
+                    $('#comment-' + replyId).on('input', function() {
+                        let length = $(this).val().length;
+                        if (length > 150) {
+                            $(this).val($(this).val().substring(0, 500));
+                        }
+                    });
+                }
+
+                function cancelEdit(replyId) {
+                    $('#reply-comment-' + replyId).show();
+                    $('#edit-form-' + replyId).hide();
+                }
+            </script>
+        
         <script>
             $(document).ready(function () {
                 // Auto close alerts after 3 seconds
