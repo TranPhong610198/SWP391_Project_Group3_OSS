@@ -89,15 +89,8 @@ public class CartContact extends HttpServlet {
     }
 
     if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-       
         response.sendRedirect("cartdetail");
         return;
-    }
-
-    // Debug: Kiểm tra cart.items
-    
-    for (CartItem item : cart.getItems()) {
-        
     }
 
     // Lấy các sản phẩm đã chọn từ session
@@ -119,7 +112,6 @@ public class CartContact extends HttpServlet {
     }
 
     if (selectedItems.isEmpty()) {
-        
         response.sendRedirect("cartdetail");
         return;
     }
@@ -135,7 +127,7 @@ public class CartContact extends HttpServlet {
     Double discountAmount = (Double) session.getAttribute("cartDiscount");
 
     // Thiết lập phí vận chuyển mặc định
-    double shippingFee = 30000.0;
+    double shippingFee = (subtotal > 500000) ? 0.0 : 30000.0; // Miễn phí ship nếu subtotal > 500k
 
     // Tính tổng tiền cuối cùng sau giảm giá
     double total = subtotal;

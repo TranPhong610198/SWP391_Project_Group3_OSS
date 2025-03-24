@@ -618,7 +618,8 @@
                         <div class="col-md-4">
                             <select class="form-select" name="status" onchange="this.form.submit()">
                                 <option value="" ${empty status ? 'selected' : ''}>Tất cả trạng thái</option>
-                                <option value="pending_pay" ${status == 'pending_pay' ? 'selected' : ''}>Chờ xác nhận</option>
+                                <option value="pending" ${status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
+                                <option value="pending_pay" ${status == 'pending_pay' ? 'selected' : ''}>Chờ thanh toán</option>
                                 <option value="processing" ${status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
                                 <option value="shipped" ${status == 'shipped' ? 'selected' : ''}>Đang vận chuyển</option>
                                 <option value="completed" ${status == 'completed' ? 'selected' : ''}>Đã hoàn thành</option>
@@ -659,7 +660,7 @@
                                             <span class="order-status status-pending">Chờ thanh toán</span>
                                         </c:when>
                                         <c:when test="${order.status == 'pending'}">
-                                            <span class="order-status status-pending">Chờ xác nhận</span>
+                                            <span class="order-status status-pending">Chờ xử lý</span>
                                         </c:when>
                                         <c:when test="${order.status == 'processing'}">
                                             <span class="order-status status-processing">Đang xử lý</span>

@@ -74,7 +74,9 @@ public class OrderDetail extends HttpServlet {
                 subtotal += item.getProductPrice() * item.getQuantity();  
             }
         }
-        
+        if (subtotal > 500000) {
+            shippingFee = 0.0; // Override shippingFee từ session nếu subtotal > 500k
+        }
         // Set attributes for JSP
         request.setAttribute("order", order);
         request.setAttribute("orderHistory", orderHistory);
