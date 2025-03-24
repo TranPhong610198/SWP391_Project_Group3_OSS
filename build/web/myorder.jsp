@@ -2,14 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Đơn hàng của tôi</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
             :root {
                 --primary-color: #0d6efd;
                 --primary-dark: #0b5ed7;
@@ -31,11 +31,11 @@
                 --transition-normal: all 0.3s ease;
             }
 
-            body {
-                background-color: #f8f9fa;
-                color: var(--dark-color);
-                font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            }
+           body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            font-family: 'Roboto', sans-serif; /* Cập nhật phông chữ */
+        }
 
             .container {
                 max-width: 1200px;

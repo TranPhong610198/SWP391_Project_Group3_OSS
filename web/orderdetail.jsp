@@ -11,7 +11,12 @@
     <title>Chi tiết đơn hàng #${order.orderCode}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Thêm phông chữ */
+        }
+
         .container {
             padding-top: 30px;
             padding-bottom: 30px;
@@ -542,10 +547,10 @@
                                 <div class="payment-info text-muted">
                                     <small>Trạng thái thanh toán: 
                                         <c:choose>
-                                            <c:when test="${order.paymentStatus eq 'pending'}">Chờ thanh toán</c:when>
-                                            <c:when test="${order.paymentStatus eq 'completed'}">Đã thanh toán</c:when>
-                                            <c:when test="${order.paymentStatus eq 'failed'}">Thanh toán thất bại</c:when>
-                                            <c:when test="${order.paymentStatus eq 'refunded'}">Đã hoàn tiền</c:when>
+                                            <c:when test="${order.paymentStatus eq 'pending'}"><span class="text-warning">Chờ thanh toán</span></c:when>
+                                            <c:when test="${order.paymentStatus eq 'completed'}"><span class="text-success">Đã thanh toán</span></c:when>
+                                            <c:when test="${order.paymentStatus eq 'failed'}"><span class="text-danger">Thanh toán thất bại</span></c:when>
+                                            <c:when test="${order.paymentStatus eq 'refunded'}"><span class="text-info">Thanh toán thất bại</span></c:when>
                                             <c:otherwise>${order.paymentStatus}</c:otherwise>
                                         </c:choose>
                                     </small>
