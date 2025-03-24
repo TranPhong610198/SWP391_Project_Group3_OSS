@@ -68,12 +68,13 @@ public class SliderDAO extends DBContext {
     }
 
     // đa hình để lọc bài đăng hoặc sản phẩm ẩn 
+    /* trích xuất link xem là post hay product rồi lấy id để kiểm tra status của nó
+                    nếu status của product hay post khác active (riêng product thì nếu status không phải là inactive thì cho in tẹt bô) thì không cho in ra slider
+                     (không cho in bằng cách nào - bằng cách dell chạy câu lệnh bên dưới, hay chính là dell cho vào list)*/
     public List<Slider> getAllSliders(String status) {
         List<Slider> sliders = new ArrayList<>();
-
         StringBuilder sql = new StringBuilder("SELECT * FROM sliders");
         List<Object> params = new ArrayList<>();
-
         // WHERE conditions
         boolean hasCondition = false;
         if (status != null && !status.isEmpty()) {
@@ -81,10 +82,8 @@ public class SliderDAO extends DBContext {
             params.add(status);
             hasCondition = true;
         }
-
         // Order by display_order for proper sequencing
         sql.append(" ORDER BY display_order ASC");
-
         try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 if (params.get(i) instanceof Integer) {
@@ -103,12 +102,42 @@ public class SliderDAO extends DBContext {
                     slider.setDisplay_order(rs.getInt("display_order"));
                     slider.setStatus(rs.getString("status"));
                     slider.setNotes(rs.getString("notes"));
-                    
-                    
-                    /* trích xuất link xem là post hay product rồi lấy id để kiểm tra status của nó
-                    nếu status của product hay post khác active (riêng product thì nếu status không phải là inactive thì cho in tẹt bô) thì không cho in ra slider
-                     (không cho in bằng cách nào - bằng cách dell chạy câu lệnh bên dưới, hay chính là dell cho vào list)*/
-                    sliders.add(slider);
+
+                    // Extract link to check if it's a post or product, then verify its status
+                    String link = slider.getLink();
+                    boolean shouldAddSlider = true;
+
+                    if (link != null && !link.isEmpty()) {
+                        // Check if it's a post
+                        if (link.contains("/post/") || link.contains("post_id=")) {
+                            // Extract post ID from the link
+                            int postId = extractIdFromLink(link, "post");
+                            if (postId > 0) {
+                                // Check post status
+                                String postStatus = getPostStatus(postId);
+                                if (postStatus == null || !postStatus.equals("active")) {
+                                    shouldAddSlider = false;
+                                }
+                            }
+                        } // Check if it's a product
+                        else if (link.contains("/product/") || link.contains("product_id=")) {
+                            // Extract product ID from the link
+                            int productId = extractIdFromLink(link, "product");
+                            if (productId > 0) {
+                                // Check product status
+                                String productStatus = getProductStatus(productId);
+                                // For products, only exclude if status is "inactive"
+                                if (productStatus != null && productStatus.equals("inactive")) {
+                                    shouldAddSlider = false;
+                                }
+                            }
+                        }
+                    }
+
+                    // Add slider to list only if it passes all checks
+                    if (shouldAddSlider) {
+                        sliders.add(slider);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -117,9 +146,67 @@ public class SliderDAO extends DBContext {
         }
         return sliders;
     }
+
+// Helper method to extract ID from link
+    private int extractIdFromLink(String link, String type) {
+        try {
+            // Handle URL format like /post/123 or /product/456
+            if (link.contains("/" + type + "/")) {
+                String[] parts = link.split("/" + type + "/");
+                if (parts.length > 1) {
+                    // Extract the ID part and remove any additional path or query parameters
+                    String idPart = parts[1].split("/")[0].split("\\?")[0];
+                    return Integer.parseInt(idPart);
+                }
+            } // Handle URL format like ?post_id=123 or ?product_id=456
+            else if (link.contains(type + "_id=")) {
+                // Find the parameter in the query string
+                int startIndex = link.indexOf(type + "_id=") + (type + "_id=").length();
+                int endIndex = link.indexOf("&", startIndex);
+                if (endIndex == -1) {
+                    endIndex = link.length();
+                }
+                return Integer.parseInt(link.substring(startIndex, endIndex));
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Error extracting ID from link: " + e.getMessage());
+        }
+        return -1;
+    }
+
+// Method to get post status from database
+    private String getPostStatus(int postId) {
+        String status = null;
+        try (PreparedStatement st = connection.prepareStatement("SELECT status FROM posts WHERE id = ?")) {
+            st.setInt(1, postId);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    status = rs.getString("status");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking post status: " + e.getMessage());
+        }
+        return status;
+    }
+
+// Method to get product status from database
+    private String getProductStatus(int productId) {
+        String status = null;
+        try (PreparedStatement st = connection.prepareStatement("SELECT status FROM products WHERE id = ?")) {
+            st.setInt(1, productId);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    status = rs.getString("status");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking product status: " + e.getMessage());
+        }
+        return status;
+    }
 //________________________________________________________________________________________________
-    
-    
+
     public int getTotalSlidersCount(String search, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM sliders WHERE 1=1");
         List<Object> params = new ArrayList<>();
