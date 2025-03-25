@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
 
 /**
  *
@@ -552,5 +553,48 @@ public class FeedbackDAO extends DBContext {
             e.printStackTrace();
         }
         return ratingCounts;
+    }
+
+    public int insertFeedback(Feedback feedback) {
+        System.out.println("Run insert feedback");
+        String sql = "INSERT INTO feedback (order_item_id, user_id, rating, comment, status, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, GETDATE(), GETDATE()); SELECT SCOPE_IDENTITY();";
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, feedback.getOrderItemId());
+            ps.setInt(2, feedback.getUserId());
+            ps.setInt(3, feedback.getRating());
+            ps.setString(4, feedback.getComment());
+            ps.setString(5, feedback.getStatus());
+
+            int affectedRows = ps.executeUpdate();
+            System.out.println(affectedRows);
+            if (affectedRows == 0) {
+                throw new SQLException("Creating feedback failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating feedback failed, no ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public boolean insertFeedbackImage(int feedbackId, String imageUrl) {
+        String sql = "INSERT INTO feedback_images (feedback_id, image_url, created_at) VALUES (?, ?, GETDATE())";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, feedbackId);
+            ps.setString(2, imageUrl);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
