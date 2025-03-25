@@ -85,7 +85,8 @@ public class CartDetail extends HttpServlet {
 
         // Truyền thông tin trạng thái sản phẩm tới JSP
         request.setAttribute("productStatusMap", productStatusMap);
-        List<Coupon> availableCoupons = couponDAO.getAvailableCoupons();
+        boolean isVip = user != null && checkUserVipStatus(user);
+        List<Coupon> availableCoupons = couponDAO.getAvailableCoupons(isVip);
         request.setAttribute("availableCoupons", availableCoupons);
 
         setupCartAttributes(request, cart);
@@ -211,27 +212,33 @@ public class CartDetail extends HttpServlet {
 
         String currentCoupon = request.getParameter("couponCode");
         if (currentCoupon != null && !currentCoupon.isEmpty()) {
-            synchronized (this) { // Đồng bộ để xử lý tranh chấp
+            synchronized (this) {
                 Coupon coupon = couponDAO.getCouponByCode(currentCoupon);
                 if (coupon != null) {
                     try {
-                        // Kiểm tra và validate coupon
                         if (!"active".equals(coupon.getStatus())) {
                             throw new Exception("Mã giảm giá không còn hiệu lực!");
                         }
                         Date expiryDate = coupon.getExpiry_date();
-                        if (expiryDate != null && new Date().after(expiryDate)) { // Sửa lỗi ở đây
+                        if (expiryDate != null && new Date().after(expiryDate)) {
                             coupon.setStatus("expired");
                             couponDAO.updateCoupon(coupon);
                             throw new Exception("Mã giảm giá đã hết hạn!");
                         }
                         int currentUsedCount = coupon.getUsed_count();
-                        if (expiryDate != null && new Date().after(expiryDate)) {
-                            throw new Exception("Mã giảm giá đã hết lượt sử dụng bởi người dùng khác!");
+                        Integer usageLimit = coupon.getUsage_limit();
+                        if (usageLimit != null && currentUsedCount >= usageLimit) {
+                            throw new Exception("Mã giảm giá đã hết lượt sử dụng!");
+                        }
+
+                        // Kiểm tra phân quyền sử dụng mã giảm giá
+                        String couponType = coupon.getCouponType();
+                        boolean isUserVip = user != null && checkUserVipStatus(user);
+                        if ("vip".equals(couponType) && !isUserVip) {
+                            throw new Exception("Mã giảm giá này chỉ dành cho khách hàng VIP!");
                         }
 
                         double discount = validateAndCalculateCouponDiscount(currentCoupon, totalSelected);
-                        // Tăng used_count nếu áp dụng thành công
                         coupon.setUsed_count(currentUsedCount + 1);
                         couponDAO.updateCoupon(coupon);
 
@@ -364,7 +371,16 @@ public class CartDetail extends HttpServlet {
                 couponDAO.updateCoupon(coupon);
                 throw new Exception("Mã giảm giá đã hết hạn!");
             }
-            // Không kiểm tra usage_limit khi apply, chỉ kiểm tra khi checkout
+
+            // Kiểm tra phân quyền sử dụng mã giảm giá
+            String couponType = coupon.getCouponType();
+            boolean isUserVip = user != null && checkUserVipStatus(user);
+            if ("vip".equals(couponType) && !isUserVip) {
+                throw new Exception("Mã giảm giá này chỉ dành cho khách hàng VIP!");
+            }
+            if ("normal".equals(couponType) && isUserVip) {
+                // Có thể thêm logic nếu muốn hạn chế VIP không dùng mã "normal"
+            }
 
             double discount = validateAndCalculateCouponDiscount(couponCode, totalAmount);
             session.setAttribute("appliedCoupon", couponCode);
@@ -399,16 +415,6 @@ public class CartDetail extends HttpServlet {
             }
         }
 
-        // Không kiểm tra usage_limit ở đây nữa, chuyển sang handleCheckout
-        /*
-        Integer usageLimit = coupon.getUsage_limit();
-        if (usageLimit != null && usageLimit > 0) {
-            int usedCount = coupon.getUsed_count();
-            if (usedCount >= usageLimit) {
-                throw new Exception("Mã giảm giá đã hết lượt sử dụng!");
-            }
-        }
-         */
         if (totalAmount < coupon.getMin_order_amount()) {
             throw new Exception(String.format("Đơn hàng cần tối thiểu %,.0f₫ để áp dụng mã này!",
                     coupon.getMin_order_amount()));
@@ -425,6 +431,13 @@ public class CartDetail extends HttpServlet {
         }
 
         return discount;
+    }
+
+    private boolean checkUserVipStatus(User user) {
+        if (user == null) {
+            return false; 
+        }    
+        return "vip".equalsIgnoreCase(user.getRole());
     }
 
     @Override

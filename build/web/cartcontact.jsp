@@ -239,7 +239,6 @@
     <body>
         <div><jsp:include page="/header.jsp" /></div><br><br>
         <div class="container">
-            <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="cartdetail">Giỏ hàng</a></li>
@@ -249,7 +248,6 @@
 
             <form action="cartcontact" method="post">
                 <div class="row">
-                    <!-- Left Column - Cart Contact Information -->
                     <div class="col-lg-8">
                         <!-- Selected Products Summary -->
                         <div class="card mb-4">
@@ -280,7 +278,6 @@
                                 <h5 class="card-title">
                                     <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ giao hàng
                                 </h5>
-
                                 <div class="address-list mb-3">
                                     <c:choose>
                                         <c:when test="${empty addresses}">
@@ -313,7 +310,6 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-
                                 <button type="button" class="btn btn-outline-primary" 
                                         data-bs-toggle="modal" data-bs-target="#addAddressModal">
                                     <i class="fas fa-plus me-2"></i>Thêm địa chỉ mới
@@ -332,10 +328,16 @@
                                         <div class="form-check">
                                             <input type="radio" class="form-check-input" 
                                                    name="shipping_method" value="standard" checked
-                                                   onchange="updateShippingFee(30000)">
+                                                   onchange="updateShippingFee(${subtotal > 500000 ? 0 : 30000})">
                                             <label class="form-check-label">
                                                 <strong>Giao hàng tiêu chuẩn</strong><br>
-                                                <small class="text-muted">3-5 ngày - 30.000₫</small>
+                                                <small class="text-muted">
+                                                    3-5 ngày - 
+                                                    <c:choose>
+                                                        <c:when test="${subtotal > 500000}">Miễn phí</c:when>
+                                                        <c:otherwise>30.000₫</c:otherwise>
+                                                    </c:choose>
+                                                </small>
                                             </label>
                                         </div>
                                     </div>
@@ -343,10 +345,16 @@
                                         <div class="form-check">
                                             <input type="radio" class="form-check-input" 
                                                    name="shipping_method" value="express"
-                                                   onchange="updateShippingFee(45000)">
+                                                   onchange="updateShippingFee(${subtotal > 500000 ? 0 : 45000})">
                                             <label class="form-check-label">
                                                 <strong>Giao hàng nhanh</strong><br>
-                                                <small class="text-muted">1-2 ngày - 45.000₫</small>
+                                                <small class="text-muted">
+                                                    1-2 ngày - 
+                                                    <c:choose>
+                                                        <c:when test="${subtotal > 500000}">Miễn phí</c:when>
+                                                        <c:otherwise>45.000₫</c:otherwise>
+                                                    </c:choose>
+                                                </small>
                                             </label>
                                         </div>
                                     </div>
@@ -384,7 +392,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Navigation Buttons - Only visible on mobile -->
                         <div class="d-block d-lg-none">
                             <div class="d-flex justify-content-between">
                                 <a href="cartdetail?from=contact" class="btn btn-outline-secondary">
@@ -409,7 +416,6 @@
                                                           type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                     </span>
                                 </div>
-
                                 <c:if test="${discount != null && discount > 0}">
                                     <div class="d-flex justify-content-between mb-2 text-success">
                                         <span>Giảm giá:</span>
@@ -424,12 +430,16 @@
                                         </div>
                                     </c:if>
                                 </c:if>
-
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Phí vận chuyển:</span>
                                     <span id="shippingFee">
-                                        <fmt:formatNumber value="${shippingFee}" 
-                                                          type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        <c:choose>
+                                            <c:when test="${subtotal > 500000}">Miễn phí</c:when>
+                                            <c:otherwise>
+                                                <fmt:formatNumber value="${shippingFee}" 
+                                                                  type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </span>
                                 </div>
                                 <hr>
@@ -440,8 +450,6 @@
                                                           type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                     </strong>
                                 </div>
-
-                                <!-- Navigation Buttons - Only visible on desktop -->
                                 <div class="d-none d-lg-block mt-4">
                                     <div class="d-grid gap-2">
                                         <button type="submit" class="btn btn-primary">
@@ -523,24 +531,25 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                                       // API URLs for address selection
                                                        const API_PROVINCE = 'https://provinces.open-api.vn/api/?depth=1';
                                                        const API_DISTRICT = 'https://provinces.open-api.vn/api/p/';
                                                        const API_WARD = 'https://provinces.open-api.vn/api/d/';
 
-                                                       // Update shipping fee and total amount
                                                        function updateShippingFee(fee) {
                                                            const subtotal = ${subtotal};
                                                            const discount = ${discount != null ? discount : 0};
+                                                           const freeShippingThreshold = 500000;
 
-                                                           const formattedFee = new Intl.NumberFormat('vi-VN', {
+                                                           // Nếu subtotal > 500k, phí vận chuyển luôn là 0
+                                                           const shippingFee = (subtotal > freeShippingThreshold) ? 0 : fee;
+
+                                                           const formattedFee = (shippingFee === 0) ? 'Miễn phí' : new Intl.NumberFormat('vi-VN', {
                                                                style: 'currency',
                                                                currency: 'VND',
                                                                maximumFractionDigits: 0
-                                                           }).format(fee);
+                                                           }).format(shippingFee);
 
-                                                           // Tính tổng tiền sau khi trừ giảm giá và cộng phí ship
-                                                           const total = subtotal - discount + fee;
+                                                           const total = subtotal - discount + shippingFee;
                                                            const formattedTotal = new Intl.NumberFormat('vi-VN', {
                                                                style: 'currency',
                                                                currency: 'VND',
@@ -551,14 +560,12 @@
                                                            document.getElementById('totalAmount').textContent = formattedTotal;
                                                        }
 
-                                                       // Elements for address form
                                                        const provinceSelect = document.getElementById('province');
                                                        const districtSelect = document.getElementById('district');
                                                        const wardSelect = document.getElementById('ward');
                                                        const specificAddress = document.getElementById('specific_address');
                                                        const fullAddressInput = document.getElementById('full_address');
 
-                                                       // Load provinces
                                                        async function loadProvinces() {
                                                            try {
                                                                const response = await fetch(API_PROVINCE);
@@ -574,18 +581,14 @@
                                                            }
                                                        }
 
-                                                       // Load districts
                                                        async function loadDistricts(provinceCode) {
                                                            try {
                                                                const response = await fetch(API_DISTRICT + provinceCode + '?depth=2');
                                                                const data = await response.json();
-
                                                                districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
                                                                districtSelect.disabled = false;
-
                                                                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
                                                                wardSelect.disabled = true;
-
                                                                data.districts.forEach(district => {
                                                                    const option = document.createElement('option');
                                                                    option.value = district.code;
@@ -597,15 +600,12 @@
                                                            }
                                                        }
 
-                                                       // Load wards
                                                        async function loadWards(districtCode) {
                                                            try {
                                                                const response = await fetch(API_WARD + districtCode + '?depth=2');
                                                                const data = await response.json();
-
                                                                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
                                                                wardSelect.disabled = false;
-
                                                                data.wards.forEach(ward => {
                                                                    const option = document.createElement('option');
                                                                    option.value = ward.code;
@@ -617,13 +617,11 @@
                                                            }
                                                        }
 
-                                                       // Update full address
                                                        function updateFullAddress() {
                                                            const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
                                                            const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
                                                            const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
                                                            const specific = specificAddress.value.trim();
-
                                                            const addressParts = [];
                                                            if (specific)
                                                                addressParts.push(specific);
@@ -633,11 +631,9 @@
                                                                addressParts.push(district);
                                                            if (province)
                                                                addressParts.push(province);
-
                                                            fullAddressInput.value = addressParts.join(', ');
                                                        }
 
-                                                       // Event listeners
                                                        provinceSelect.addEventListener('change', (e) => {
                                                            if (e.target.value) {
                                                                loadDistricts(e.target.value);
@@ -663,7 +659,6 @@
                                                        wardSelect.addEventListener('change', updateFullAddress);
                                                        specificAddress.addEventListener('input', updateFullAddress);
 
-                                                       // Initialize on page load
                                                        loadProvinces();
         </script>
     </body>

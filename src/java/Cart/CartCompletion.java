@@ -72,7 +72,6 @@ public class CartCompletion extends HttpServlet {
         String paymentMethod = (String) session.getAttribute("payment_method");
 
         if (addressId == null || shippingMethod == null || shippingFee == null || paymentMethod == null) {
-            
             response.sendRedirect("cartdetail");
             return;
         }
@@ -82,14 +81,12 @@ public class CartCompletion extends HttpServlet {
         List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
         if (selectedItemIds == null || selectedQuantities == null || selectedItemIds.isEmpty()) {
-            
             response.sendRedirect("cartdetail");
             return;
         }
 
         Cart cart = user != null ? cartDAO.getCartByUserId(user.getId()) : cartDAO.getCartFromCookies(request);
         if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-           
             response.sendRedirect("cartdetail");
             return;
         }
@@ -99,21 +96,18 @@ public class CartCompletion extends HttpServlet {
                 if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
                     item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
                     selectedItems.add(item);
-                    
                     break;
                 }
             }
         }
 
         if (selectedItems.isEmpty()) {
-
             response.sendRedirect("cartdetail");
             return;
         }
 
         UserAddress shippingAddress = getShippingAddress(user, addressId, request);
         if (shippingAddress == null) {
-            
             response.sendRedirect("cartcontact");
             return;
         }
@@ -123,6 +117,11 @@ public class CartCompletion extends HttpServlet {
         for (CartItem item : selectedItems) {
             subtotal += item.getProductPrice() * item.getQuantity();
         }
+        // Kiểm tra lại logic miễn phí ship để đảm bảo nhất quán
+        if (subtotal > 500000) {
+            shippingFee = 0.0; // Override shippingFee từ session nếu subtotal > 500k
+        }
+
         Double discountAmount = (Double) session.getAttribute("cartDiscount");
         String appliedCoupon = (String) session.getAttribute("appliedCoupon");
         double total = subtotal - (discountAmount != null ? discountAmount : 0) + shippingFee;
@@ -143,11 +142,11 @@ public class CartCompletion extends HttpServlet {
         order.setRecipientName(shippingAddress.getRecipientName());
         order.setPhone(shippingAddress.getPhone());
         order.setAddress(shippingAddress.getAddress());
-        order.setItems(selectedItems); // Gán danh sách sản phẩm
+        order.setItems(selectedItems);
         order.setShippingMethod(shippingMethod);
         order.setPaymentMethod(paymentMethod);
-        order.setShippingFee(shippingFee);
-        order.setPaymentStatus("pending");
+        order.setShippingFee(shippingFee); // Sử dụng shippingFee đã được kiểm tra
+        order.setPaymentStatus("pending_pay");
         if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
             order.setDiscountAmount(discountAmount);
             order.setCouponCode(appliedCoupon);

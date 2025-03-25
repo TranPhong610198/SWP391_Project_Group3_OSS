@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @WebServlet(name = "OrderDetailServlet", urlPatterns = {"/orderdetail"})
@@ -22,7 +24,7 @@ public class OrderDetail extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
@@ -31,14 +33,14 @@ public class OrderDetail extends HttpServlet {
             response.sendRedirect("login?redirect=myorder");
             return;
         }
-        
+
         // Get order ID from request
         String orderIdStr = request.getParameter("id");
         if (orderIdStr == null || orderIdStr.isEmpty()) {
             response.sendRedirect("myorder");
             return;
         }
-        
+
         int orderId;
         try {
             orderId = Integer.parseInt(orderIdStr);
@@ -46,19 +48,19 @@ public class OrderDetail extends HttpServlet {
             response.sendRedirect("myorder");
             return;
         }
-        
+
         // Get order details - ensure we get the latest data from database
         Order order = orderDAO.getOrderById(orderId);
-        
+
         // Check if order exists and belongs to the current user
         if (order == null || order.getUserId() != user.getId()) {
             response.sendRedirect("myorder");
             return;
         }
-        
+
         // Get order history
         List<OrderHistory> orderHistory = orderDAO.getOrderHistory(orderId);
-        
+
         // Calculate shipping fee based on shipping method
         double shippingFee = 30000.0; // Default standard shipping
         if (order.getShippingMethod() != null) {
@@ -66,21 +68,23 @@ public class OrderDetail extends HttpServlet {
                 shippingFee = 45000.0;
             }
         }
-        
+
         // Calculate subtotal from order items
         double subtotal = 0;
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             for (CartItem item : order.getItems()) {
-                subtotal += item.getProductPrice() * item.getQuantity();  
+                subtotal += item.getProductPrice() * item.getQuantity();
             }
         }
-        
+        if (subtotal > 500000) {
+            shippingFee = 0.0; // Override shippingFee từ session nếu subtotal > 500k
+        }
         // Set attributes for JSP
         request.setAttribute("order", order);
         request.setAttribute("orderHistory", orderHistory);
         request.setAttribute("subtotal", subtotal);
         request.setAttribute("shippingFee", shippingFee);
-        
+
         // Forward to JSP
         request.getRequestDispatcher("orderdetail.jsp").forward(request, response);
     }
@@ -88,29 +92,38 @@ public class OrderDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       // Check if there's an action parameter
         String action = request.getParameter("action");
-        
-        if (action != null && action.equals("cancel")) {
-            // Handle order cancellation
+
+        if (action != null && action.equals("reorder")) {
             int orderId = Integer.parseInt(request.getParameter("id"));
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("acc");
-            
+
             if (user != null) {
-                boolean success = orderDAO.cancelOrder(orderId, user.getId());
-                if (success) {
-                    request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công");
-                } else {
-                    request.setAttribute("errorMessage", "Không thể hủy đơn hàng. Vui lòng liên hệ với nhân viên hỗ trợ.");
+                Order order = orderDAO.getOrderById(orderId);
+                if (order != null && order.getUserId() == user.getId()) {
+                    // Tạo query string từ danh sách sản phẩm trong đơn hàng
+                    StringBuilder queryParams = new StringBuilder();
+                    List<CartItem> items = order.getItems();
+                    if (items != null && !items.isEmpty()) {
+                        for (int i = 0; i < items.size(); i++) {
+                            CartItem item = items.get(i);
+                            if (i > 0) {
+                                queryParams.append("&");
+                            }
+                            queryParams.append("productId=").append(item.getProductId())
+                                    .append("&size=").append(URLEncoder.encode(item.getSize(), StandardCharsets.UTF_8.toString()))
+                                    .append("&color=").append(URLEncoder.encode(item.getColor(), StandardCharsets.UTF_8.toString()))
+                                    .append("&quantity=").append(item.getQuantity());
+                        }
+                    }
+                    // Chuyển hướng đến trang cartcontact với dữ liệu sản phẩm đã mã hóa
+                    response.sendRedirect("cartcontact?" + queryParams.toString());
+                    return;
                 }
             }
-        } else if (action != null && action.equals("reorder")) {
-            int orderId = Integer.parseInt(request.getParameter("id"));
-            response.sendRedirect("cartdetail");
-            return;
         }
-        
+
         processRequest(request, response);
     }
 

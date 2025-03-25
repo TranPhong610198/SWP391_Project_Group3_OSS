@@ -910,4 +910,19 @@ public class OrderDAO extends DBContext {
             return false;
         }
     }
+
+    public boolean updatePayStatus(int orderId, String status) {
+        String sql = "UPDATE payments SET payment_status = ?, created_at = GETDATE() WHERE order_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, orderId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -613,65 +613,68 @@
         </div>
 
         <!-- Coupon Modal -->
-        <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="couponModalLabel">Chọn Shopee Voucher</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <c:if test="${not empty availableCoupons}">
-                            <c:forEach items="${availableCoupons}" var="coupon">
-                                <div class="coupon-item mb-2 p-2 border rounded" style="background-color: #f8f9fa;">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <p class="mb-1 fw-bold">
-                                                ${coupon.code} - 
-                                                <c:choose>
-                                                    <c:when test="${coupon.discount_type == 'percentage'}">
-                                                        Giảm ${coupon.discount_value}%
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        Giảm ₫<fmt:formatNumber value="${coupon.discount_value}" type="number"/>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </p>
-                                            <p class="mb-1 small text-muted">
-                                                <c:if test="${coupon.discount_type == 'percentage' && coupon.max_discount > 0}">
-                                                    Giảm tối đa ₫<fmt:formatNumber value="${coupon.max_discount}" type="number"/>
-                                                </c:if>
-                                                <c:if test="${coupon.discount_type != 'percentage'}">
-                                                    Giảm tối đa ₫<fmt:formatNumber value="${coupon.discount_value}" type="number"/>
-                                                </c:if>
-                                            </p>
-                                            <p class="mb-0 small text-muted">
-                                                Đơn tối thiểu ₫<fmt:formatNumber value="${coupon.min_order_amount}" type="number"/>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <input type="radio" name="selectedCoupon" value="${coupon.code}" 
-                                                   data-type="${coupon.discount_type}" 
-                                                   data-value="${coupon.discount_value}" 
-                                                   data-min="${coupon.min_order_amount}" 
-                                                   data-max="${coupon.max_discount}"
-                                                   ${coupon.code eq appliedCoupon ? 'checked' : ''}>
-                                        </div>
+        <!-- Coupon Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="couponModalLabel">Chọn Voucher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <c:if test="${not empty availableCoupons}">
+                    <c:forEach items="${availableCoupons}" var="coupon">
+                        <c:if test="${(coupon.couponType == 'normal') || (coupon.couponType == 'vip' && isUserVip)}">
+                            <div class="coupon-item mb-2 p-2 border rounded" style="background-color: #f8f9fa;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="mb-1 fw-bold">
+                                            ${coupon.code} - 
+                                            <c:choose>
+                                                <c:when test="${coupon.discount_type == 'percentage'}">
+                                                    Giảm ${coupon.discount_value}%
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Giảm ₫<fmt:formatNumber value="${coupon.discount_value}" type="number"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                        <p class="mb-1 small text-muted">
+                                            <c:if test="${coupon.discount_type == 'percentage' && coupon.max_discount > 0}">
+                                                Giảm tối đa ₫<fmt:formatNumber value="${coupon.max_discount}" type="number"/>
+                                            </c:if>
+                                            <c:if test="${coupon.discount_type != 'percentage'}">
+                                                Giảm tối đa ₫<fmt:formatNumber value="${coupon.discount_value}" type="number"/>
+                                            </c:if>
+                                        </p>
+                                        <p class="mb-0 small text-muted">
+                                            Đơn tối thiểu ₫<fmt:formatNumber value="${coupon.min_order_amount}" type="number"/>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="selectedCoupon" value="${coupon.code}" 
+                                               data-type="${coupon.discount_type}" 
+                                               data-value="${coupon.discount_value}" 
+                                               data-min="${coupon.min_order_amount}" 
+                                               data-max="${coupon.max_discount}"
+                                               ${coupon.code eq appliedCoupon ? 'checked' : ''}>
                                     </div>
                                 </div>
-                            </c:forEach>
+                            </div>
                         </c:if>
-                        <c:if test="${empty availableCoupons}">
-                            <p class="text-muted text-center">Không có mã giảm giá nào khả dụng.</p>
-                        </c:if>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Trở lại</button>
-                        <button type="button" class="btn btn-primary" onclick="applyCoupon()">OK</button>
-                    </div>
-                </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty availableCoupons}">
+                    <p class="text-muted text-center">Không có mã giảm giá nào khả dụng.</p>
+                </c:if>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Trở lại</button>
+                <button type="button" class="btn btn-primary" onclick="applyCoupon()">OK</button>
             </div>
         </div>
+    </div>
+</div>
     </div>
 
     <jsp:include page="/footer.jsp" />

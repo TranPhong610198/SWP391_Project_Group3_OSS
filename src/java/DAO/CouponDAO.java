@@ -242,38 +242,39 @@ public class CouponDAO extends DBContext {
         return null;
     }
 
-    public List<Coupon> getAvailableCoupons() {
-        updateCouponStatus();
+    public List<Coupon> getAvailableCoupons(boolean isVip) {
+    updateCouponStatus();
 
-        List<Coupon> coupons = new ArrayList<>();
-        String sql = "SELECT * FROM coupons "
-                + "WHERE status = 'active' "
-                + "AND (expiry_date IS NULL OR expiry_date > GETDATE()) "
-                + "AND (usage_limit IS NULL OR used_count < usage_limit) "
-                + "ORDER BY min_order_amount ASC";
+    List<Coupon> coupons = new ArrayList<>();
+    String sql = "SELECT * FROM coupons " +
+                 "WHERE status = 'active' " +
+                 "AND (expiry_date IS NULL OR expiry_date > GETDATE()) " +
+                 "AND (usage_limit IS NULL OR used_count < usage_limit) " +
+                 (isVip ? "" : "AND coupon_type = 'normal' ") + // Nếu không phải VIP, chỉ lấy mã normal
+                 "ORDER BY min_order_amount ASC";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Coupon coupon = new Coupon();
-                coupon.setId(rs.getInt("id"));
-                coupon.setCode(rs.getString("code"));
-                coupon.setDiscount_type(rs.getString("discount_type"));
-                coupon.setDiscount_value(rs.getDouble("discount_value"));
-                coupon.setMin_order_amount(rs.getDouble("min_order_amount"));
-                coupon.setMax_discount(rs.getDouble("max_discount"));
-                coupon.setUsage_limit(rs.getInt("usage_limit"));
-                coupon.setUsed_count(rs.getInt("used_count"));
-                coupon.setExpiry_date(rs.getTimestamp("expiry_date"));
-                coupon.setCouponType(rs.getString("coupon_type"));
-                coupon.setStatus(rs.getString("status"));
-                coupons.add(coupon);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Coupon coupon = new Coupon();
+            coupon.setId(rs.getInt("id"));
+            coupon.setCode(rs.getString("code"));
+            coupon.setDiscount_type(rs.getString("discount_type"));
+            coupon.setDiscount_value(rs.getDouble("discount_value"));
+            coupon.setMin_order_amount(rs.getDouble("min_order_amount"));
+            coupon.setMax_discount(rs.getDouble("max_discount"));
+            coupon.setUsage_limit(rs.getInt("usage_limit"));
+            coupon.setUsed_count(rs.getInt("used_count"));
+            coupon.setExpiry_date(rs.getTimestamp("expiry_date"));
+            coupon.setCouponType(rs.getString("coupon_type"));
+            coupon.setStatus(rs.getString("status"));
+            coupons.add(coupon);
         }
-        return coupons;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return coupons;
+}
 
     public static void main(String[] args) {
         CouponDAO dao = new CouponDAO();
