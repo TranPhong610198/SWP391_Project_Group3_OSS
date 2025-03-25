@@ -44,6 +44,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     // Explicitly set these as separate attributes for easier access in JSP
     request.setAttribute("productsByCategory", productsByCategory);
     request.setAttribute("feedbackByRating", feedbackByRating);
+    request.setAttribute("customerContactStats", stats.getCustomerContactStats());
+    request.setAttribute("topVIPCustomers", stats.getTopVIPCustomers());
     
     // Forward to JSP
     request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);

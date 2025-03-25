@@ -284,7 +284,70 @@
                     </div>
                 </div>
             </div>
-            
+            <!-- Customer Type Distribution and VIP List -->
+<div class="row mb-4">
+    <!-- Customer Type Chart -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Phân phối loại khách hàng</h6>
+            </div>
+            <div class="card-body">
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="customerTypeChart"></canvas>
+                </div>
+                <div class="mt-3 text-center small">
+                    <span class="mr-2">
+                        <i class="fas fa-circle text-success"></i> VIP: ${stats.customerContactStats['vip']}
+                    </span>
+                    <span class="mr-2">
+                        <i class="fas fa-circle text-primary"></i> Normal: ${stats.customerContactStats['normal']}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top VIP Customers Table -->
+    <div class="col-xl-6 col-lg-6">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách khách hàng VIP hàng đầu</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>SĐT</th>
+                            <th>Email</th>
+                            <th>Tổng đơn hàng</th>
+                            <th>Tổng đã chi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${stats.topVIPCustomers}" var="customer">
+                            <tr>
+                                <td>${customer.fullName}</td>
+                                <td>${customer.mobile}</td>
+                                <td>${customer.email}</td>
+                                <td>${customer.totalPurchases}</td>
+                                <td><fmt:formatNumber value="${customer.totalSpend}" type="currency" currencySymbol="$"/></td>
+                            </tr>
+                        </c:forEach>
+                        <c:if test="${empty stats.topVIPCustomers}">
+                            <tr>
+                                <td colspan="5" class="text-center">Không có khách hàng VIP nào</td>
+                            </tr>
+                        </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
             <div class="col-xl-6 col-lg-6">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -770,6 +833,47 @@ document.addEventListener('DOMContentLoaded', function() {
                             var label = context.label || '';
                             var value = context.raw || 0;
                             return label + ': ' + value;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    var customerTypeChartContext = document.getElementById('customerTypeChart').getContext('2d');
+    var customerTypeChart = new Chart(customerTypeChartContext, {
+        type: 'doughnut',
+        data: {
+            labels: ['VIP', 'Normal'],
+            datasets: [{
+                data: [
+                    ${stats.customerContactStats['vip']},
+                    ${stats.customerContactStats['normal']}
+                ],
+                backgroundColor: ['#1cc88a', '#4e73df'],
+                hoverBackgroundColor: ['#17a673', '#2e59d9'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.label || '';
+                            var value = context.raw || 0;
+                            return label + ': ' + value + ' khách hàng';
                         }
                     }
                 }

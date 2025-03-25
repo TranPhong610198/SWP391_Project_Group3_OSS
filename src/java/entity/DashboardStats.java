@@ -47,13 +47,15 @@ public class DashboardStats {
     private int expiredCoupons;
     private Map<String, String> couponUsage;
     private Map<String, Integer> couponExpirations;
+    private Map<String, Integer> customerContactStats; // For VIP and Normal counts
+    private List<Customer> topVIPCustomers;
 
     // Thêm constructor không tham số
     public DashboardStats() {
         // Constructor không tham số
     }
 
-    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, int inactiveProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int inactiveCoupons, int expiredCoupons, Map<String, String> couponUsage, Map<String, Integer> couponExpirations) {
+    public DashboardStats(Date startDate, Date endDate, int totalProducts, int activeProducts, int outOfStockProducts, int inactiveProducts, Map<String, Integer> productsByCategory, int totalStock, List<LowStockProduct> lowStockProducts, int totalCustomers, int activeCustomers, int inactiveCustomers, int pendingCustomers, Map<Date, Integer> newCustomersByDay, int totalPosts, int publishedPosts, int draftPosts, int totalFeedback, double averageRating, Map<Integer, Integer> feedbackByRating, int totalSliders, int activeSliders, int totalCoupons, int activeCoupons, int inactiveCoupons, int expiredCoupons, Map<String, String> couponUsage, Map<String, Integer> couponExpirations, Map<String, Integer> customerContactStats, List<Customer> topVIPCustomers) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalProducts = totalProducts;
@@ -82,6 +84,8 @@ public class DashboardStats {
     this.expiredCoupons = expiredCoupons;
     this.couponUsage = couponUsage;
     this.couponExpirations = couponExpirations;
+    this.customerContactStats = customerContactStats;
+    this.topVIPCustomers = topVIPCustomers;
 }
     
     public int getTotalProducts() {
@@ -291,6 +295,22 @@ public void setInactiveCoupons(int inactiveCoupons) {
 
     public void setCouponExpirations(Map<String, Integer> couponExpirations) {
         this.couponExpirations = couponExpirations;
+    }
+    
+    public Map<String, Integer> getCustomerContactStats() {
+        return customerContactStats;
+    }
+
+    public void setCustomerContactStats(Map<String, Integer> customerContactStats) {
+        this.customerContactStats = customerContactStats;
+    }
+
+    public List<Customer> getTopVIPCustomers() {
+        return topVIPCustomers;
+    }
+
+    public void setTopVIPCustomers(List<Customer> topVIPCustomers) {
+        this.topVIPCustomers = topVIPCustomers;
     }
 
     public Date getStartDate() {

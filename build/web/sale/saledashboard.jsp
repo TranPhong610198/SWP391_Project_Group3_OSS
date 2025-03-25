@@ -68,8 +68,8 @@
         <div class="container-fluid py-4">
             <div class="row mb-4">
                 <div class="col-md-8">
-                    <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển bán hàng</h1>
-                    <p class="text-muted">Xem hiệu suất bán hàng và số liệu thống kê của bạn</p>
+                    <h2><i class="bi bi-bar-chart-line"></i> Bảng điều khiển bán hàng</h2>
+                    
                 </div>
                 <div class="col-md-4">
                     <form action="${pageContext.request.contextPath}/sale/dashboard" method="GET" class="d-flex">
@@ -89,70 +89,43 @@
             </div>
 
             <!-- Overview Cards -->
-            <div class="row">
-                <div class="col-xl-3 col-md-6">
-                    <div class="card border-left-primary">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-box bg-gradient-primary text-white">
-                                    <i class="fas fa-coins fa-lg"></i>
-                                </div>
-                                <div>
-                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng doanh thu</div>
-                                    <div class="h5 mb-0 fw-bold">
-                                        <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="$" />
-                                    </div>
-                                </div>
-                            </div>
+            <div class="row mb-4">
+    <!-- Tổng doanh thu -->
+    <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng doanh thu</div>
+                        <div class="h4 mb-0 fw-bold">
+                            <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="$" />
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card border-left-success">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-box bg-gradient-success text-white">
-                                    <i class="fas fa-shopping-cart fa-lg"></i>
-                                </div>
-                                <div>
-                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng đơn hàng</div>
-                                    <div class="h5 mb-0 fw-bold">${salesOverview.totalSales}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card border-left-info">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-box bg-gradient-info text-white">
-                                    <i class="fas fa-user-crown fa-lg"></i>
-                                </div>
-                                <div>
-                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng VIP</div>
-                                    <div class="h5 mb-0 fw-bold">${salesOverview.vipCustomers}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card border-left-warning">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-box bg-gradient-warning text-white">
-                                    <i class="fas fa-users fa-lg"></i>
-                                </div>
-                                <div>
-                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Khách hàng thông thường</div>
-                                    <div class="h5 mb-0 fw-bold">${salesOverview.normalCustomers}</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="icon-box bg-gradient-primary text-white rounded-circle shadow" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-coins fa-2x"></i>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Tổng đơn hàng -->
+    <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng đơn hàng</div>
+                        <div class="h4 mb-0 fw-bold">${salesOverview.totalSales}</div>
+                    </div>
+                    <div class="icon-box bg-gradient-success text-white rounded-circle shadow" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Order Status Section -->
             <div class="row mb-4">
