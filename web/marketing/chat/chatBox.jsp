@@ -14,7 +14,7 @@
     <title>Trò chuyện với ${messages[0].senderId == sessionScope.userID ? messages[0].receiverUsername : messages[0].senderUsername}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <style>
+        <style>
         body, html {
             height: 100%;
             margin: 0;
@@ -67,6 +67,10 @@
             display: block;
             margin-top: 5px;
         }
+        .back-btn {
+            margin-top: 10px;
+            width: 100%;
+        }
         @media (max-width: 768px) {
             .main-content {
                 margin-left: 0;
@@ -102,6 +106,9 @@
                             <input type="file" id="imageInput" class="form-control me-2" accept="image/*">
                             <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
                         </form>
+                        <button type="button" class="btn btn-secondary back-btn" onclick="goBack()">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                        </button>
                     </div>
                 </div>
             </div>
@@ -207,6 +214,10 @@
                 </div>`;
             $("#chatMessages").append(html);
             $('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
+        }
+        
+        function goBack() {
+            window.history.back();
         }
     </script>
 </body>
