@@ -623,10 +623,14 @@ public class OrderDAO extends DBContext {
     }
 
     public boolean cancelOrder(int orderId, int userId) {
+        Connection conn = null;
         try {
-            // Kiểm tra đơn hàng có thuộc về người dùng này không
-            String sqlCheckOrder = "SELECT id FROM orders WHERE id = ? AND user_id = ?";
-            PreparedStatement stmtCheckOrder = connection.prepareStatement(sqlCheckOrder);
+            conn = connection;
+            conn.setAutoCommit(false);
+
+            // Kiểm tra đơn hàng
+            String sqlCheckOrder = "SELECT id, status FROM orders WHERE id = ? AND user_id = ?";
+            PreparedStatement stmtCheckOrder = conn.prepareStatement(sqlCheckOrder);
             stmtCheckOrder.setInt(1, orderId);
             stmtCheckOrder.setInt(2, userId);
             ResultSet rs = stmtCheckOrder.executeQuery();
@@ -634,50 +638,63 @@ public class OrderDAO extends DBContext {
             if (!rs.next()) {
                 rs.close();
                 stmtCheckOrder.close();
-                return false; // Đơn hàng không tồn tại hoặc không thuộc về người dùng này
+                conn.rollback();
+                return false;
             }
 
+            String currentStatus = rs.getString("status");
             rs.close();
             stmtCheckOrder.close();
 
-            // Lấy thông tin đơn hàng để hoàn trả tồn kho
-            List<CartItem> orderItems = getOrderItems(orderId);
+            // Chỉ cho phép hủy nếu trạng thái là pending hoặc pending_pay
+            if (!"pending".equals(currentStatus) && !"pending_pay".equals(currentStatus)) {
+                conn.rollback();
+                return false;
+            }
 
-            // Cập nhật trạng thái đơn hàng thành "cancelled"
+            // Cập nhật trạng thái đơn hàng
             if (updateOrderStatus(orderId, "cancelled", userId)) {
-                // Hoàn trả số lượng sản phẩm về kho
-                InventoryDAO inventoryDAO = new InventoryDAO();
-                for (CartItem item : orderItems) {
-                    inventoryDAO.updateVariantQuantity(item.getVariantId(), item.getQuantity());
-                }
-
-                // Kiểm tra và cập nhật số lượt dùng của mã giảm giá
+                // Xử lý mã giảm giá nếu có
                 String sqlGetCoupon = "SELECT oc.coupon_id FROM order_coupons oc WHERE oc.order_id = ?";
-                PreparedStatement stmtGetCoupon = connection.prepareStatement(sqlGetCoupon);
+                PreparedStatement stmtGetCoupon = conn.prepareStatement(sqlGetCoupon);
                 stmtGetCoupon.setInt(1, orderId);
                 ResultSet rsCoupon = stmtGetCoupon.executeQuery();
 
                 if (rsCoupon.next()) {
                     int couponId = rsCoupon.getInt("coupon_id");
-                    // Giảm số lần sử dụng của mã giảm giá
                     String sqlUpdateCoupon = "UPDATE coupons SET used_count = used_count - 1 WHERE id = ? AND used_count > 0";
-                    PreparedStatement stmtUpdateCoupon = connection.prepareStatement(sqlUpdateCoupon);
+                    PreparedStatement stmtUpdateCoupon = conn.prepareStatement(sqlUpdateCoupon);
                     stmtUpdateCoupon.setInt(1, couponId);
                     stmtUpdateCoupon.executeUpdate();
-
                     stmtUpdateCoupon.close();
                 }
-
                 rsCoupon.close();
                 stmtGetCoupon.close();
 
+                conn.commit();
                 return true;
             }
 
+            conn.rollback();
             return false;
         } catch (SQLException e) {
             System.out.println("Error cancelling order: " + e.getMessage());
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Rollback failed: " + ex.getMessage());
+            }
             return false;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                System.out.println("Error resetting auto-commit: " + e.getMessage());
+            }
         }
     }
 

@@ -674,6 +674,9 @@
                                     <c:when test="${order.status == 'cancelled'}">
                                         <span class="order-status status-cancelled">Đã hủy</span>
                                     </c:when>
+                                        <c:when test="${order.status == 'returned'}">
+                                        <span class="order-status status-cancelled">Đã hoàn trả</span>
+                                    </c:when>
                                     <c:otherwise>
                                         <span class="order-status">${order.status}</span>
                                     </c:otherwise>
