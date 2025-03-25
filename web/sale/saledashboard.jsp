@@ -91,7 +91,7 @@
             <!-- Overview Cards -->
             <div class="row mb-4">
     <!-- Tổng doanh thu -->
-    <div class="col-xl-6 col-md-6 mb-4">
+    <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
@@ -110,7 +110,7 @@
     </div>
 
     <!-- Tổng đơn hàng -->
-    <div class="col-xl-6 col-md-6 mb-4">
+    <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
@@ -125,6 +125,25 @@
             </div>
         </div>
     </div>
+                    
+                    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="icon-box bg-gradient-success text-white">
+                    <i class="fas fa-boxes fa-lg"></i> <!-- Icon representing quantity -->
+                </div>
+                <div>
+                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Tổng doanh số bán hàng</div>
+                    <div class="h5 mb-0 fw-bold">
+                        <fmt:formatNumber value="${salesOverview.completedSalesQuantity}" 
+                                        type="number" groupingUsed="true" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
             <!-- Order Status Section -->
