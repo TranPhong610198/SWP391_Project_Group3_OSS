@@ -636,12 +636,9 @@
                                     <a href="feedback?order=${order.id}" class="btn btn-primary">
                                         <i class="fas fa-star"></i> Đánh giá sản phẩm
                                     </a>
-                                    <c:if test="${not empty order.items}">
-                                        <c:set var="firstItem" value="${order.items[0]}" />
-                                        <a href="productdetail?id=${firstItem.productId}" class="btn btn-outline-primary">
-                                            <i class="fas fa-redo"></i> Đặt lại
-                                        </a>
-                                    </c:if>
+                                    <a href="orderdetail?action=reorder&id=${order.id}" class="btn btn-outline-primary">
+                                        <i class="fas fa-redo"></i> Mua lại
+                                    </a>
                                 </div>
                             </c:if>
                         </div>
