@@ -4,8 +4,10 @@
  */
 package sale.oder;
 
+import DAO.CustomerDAO;
 import DAO.OrderDAO;
 import DAO.UserDAO;
+import entity.Customer;
 import entity.Order;
 import entity.User;
 import entity.OrderHistory;
@@ -17,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.List;
 import utils.Email;
 
@@ -30,6 +33,7 @@ public class OrderDetailsServlet extends HttpServlet {
     private OrderDAO orderDAO = new OrderDAO();
     private UserDAO userDAO = new UserDAO();
     private Email emailUtil = new Email();
+    private CustomerDAO customerDAO = new CustomerDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -120,6 +124,30 @@ public class OrderDetailsServlet extends HttpServlet {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, shippingProvider, trackingNumber);
             } else if ("completed".equals(newStatus) || "returned".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
+                // kiểm tra khách hàng đã mua trc đây chưa
+                // rồi cập nhật hoăc tạo mới khách hàng
+                Customer tempCus = customerDAO.checkExistEmail(order.getRecipientEmail());
+                if (tempCus!=null) {
+                    customerDAO.updateCustomerPurchaseStats(order.getUserId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
+                    if (tempCus.getTotalSpend().doubleValue()+order.getTotal() >= 1000000 ){
+                        customerDAO.updateCustomerType(tempCus.getId(), "vip");
+                    }
+                }else{
+                    Customer newCustomer = new Customer();
+                    newCustomer.setUserId(order.getUserId());
+                    newCustomer.setEmail(order.getRecipientEmail());
+                    newCustomer.setFullName(order.getRecipientName());
+                    newCustomer.setGender(userDAO.getUserById(order.getUserId()).getGender());
+                    newCustomer.setMobile(order.getPhone());
+                    newCustomer.setTotalPurchases(1);
+                    newCustomer.setTotalSpend(BigDecimal.valueOf(order.getTotal()));
+                    if(order.getTotal()>=1000000){
+                        newCustomer.setCustomerType("vip");
+                    }else
+                        newCustomer.setCustomerType("normal");
+                    customerDAO.addCustomer(newCustomer);
+                }
+
             }
 
             if (success) {

@@ -222,8 +222,7 @@ public class Email {
             htmlContent.append("</tbody></table>");
 
             // Thêm thông tin vận chuyển nếu trạng thái từ "shipping" trở đi
-            String currentStatus = order.getStatus();
-            if ("shipping".equals(currentStatus) || "completed".equals(currentStatus) || "returned".equals(currentStatus)) {
+            if ("shipping".equals(statusText) || "completed".equals(statusText) || "returned".equals(statusText)) {
                 htmlContent.append("<h3>Thông tin vận chuyển:</h3>")
                         .append("<p><strong>Đơn vị vận chuyển:</strong> ").append(order.getShippingProvider()).append("</p>")
                         .append("<p><strong>Mã vận đơn:</strong> ").append(order.getTrackingNumber()).append("</p>");
