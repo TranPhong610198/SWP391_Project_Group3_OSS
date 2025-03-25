@@ -400,7 +400,7 @@ public class ProductDAO extends DBContext {
     public boolean hasProcessOrders(int productId) {
         String query = "SELECT COUNT(*) FROM order_items oi "
                 + "JOIN orders o ON oi.order_id = o.id "
-                + "WHERE oi.product_id = ? AND o.status IN ('pending', 'processing', 'shipped')";
+                + "WHERE oi.product_id = ? AND o.status IN ('pending', 'processing', 'shipping')";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();

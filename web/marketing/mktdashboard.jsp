@@ -22,25 +22,25 @@
     <div class="container-fluid py-4">
         <div class="row mb-4">
             <div class="col-md-6">
-                <h2><i class="bi bi-bar-chart-line"></i> Marketing Dashboard</h2>
+                <h2><i class="bi bi-bar-chart-line"></i> Bảng điều khiển tiếp thị</h2>
             </div>
             <div class="col-md-6">
                 <!-- Date range selector -->
                 <form class="row g-3 justify-content-end" method="get" action="${pageContext.request.contextPath}/marketing/dashboard">
                     <div class="col-auto">
-                        <label for="startDate" class="col-form-label">From:</label>
+                        <label for="startDate" class="col-form-label">Từ:</label>
                     </div>
                     <div class="col-auto">
                         <input type="date" class="form-control" id="startDate" name="startDate" value="${startDateStr}">
                     </div>
                     <div class="col-auto">
-                        <label for="endDate" class="col-form-label">To:</label>
+                        <label for="endDate" class="col-form-label">Đến:</label>
                     </div>
                     <div class="col-auto">
                         <input type="date" class="form-control" id="endDate" name="endDate" value="${endDateStr}">
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Apply</button>
+                        <button type="submit" class="btn btn-primary">Lọc</button>
                     </div>
                 </form>
             </div>
@@ -56,18 +56,18 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-primary text-uppercase mb-2">
-                            Total Products
+                            Tổng sản phẩm
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">${stats.totalProducts}</div>
                         <div class="mt-3 small">
                             <div class="text-xs text-success">
-                                <i class="fas fa-check-circle mr-1"></i>Active: ${stats.activeProducts}
+                                <i class="fas fa-check-circle mr-1"></i>Đang bán: ${stats.activeProducts}
                             </div>
                             <div class="text-xs text-danger">
-                                <i class="fas fa-exclamation-circle mr-1"></i>Out of Stock: ${stats.outOfStockProducts}
+                                <i class="fas fa-exclamation-circle mr-1"></i>Hết hàng: ${stats.outOfStockProducts}
                             </div>
                             <div class="text-xs text-secondary">
-                                <i class="fas fa-minus-circle mr-1"></i>Inactive: ${stats.totalProducts - stats.activeProducts - stats.outOfStockProducts}
+                                <i class="fas fa-minus-circle mr-1"></i>Ngừng bán: ${stats.totalProducts - stats.activeProducts - stats.outOfStockProducts}
                             </div>
                         </div>
                     </div>
@@ -86,18 +86,18 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-success text-uppercase mb-2">
-                            Total Customers
+                            Tổng khách hàng
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">${stats.totalCustomers}</div>
                         <div class="mt-3 small">
                             <div class="text-xs text-success">
-                                <i class="fas fa-user-check mr-1"></i>Active: ${stats.activeCustomers}
+                                <i class="fas fa-user-check mr-1"></i>Đang hoạt động: ${stats.activeCustomers}
                             </div>
                             <div class="text-xs text-secondary">
-                                <i class="fas fa-user-slash mr-1"></i>Inactive: ${stats.inactiveCustomers}
+                                <i class="fas fa-user-slash mr-1"></i>Ngừng hoạt động: ${stats.inactiveCustomers}
                             </div>
                             <div class="text-xs text-warning">
-                                <i class="fas fa-user-clock mr-1"></i>Pending: ${stats.pendingCustomers}
+                                <i class="fas fa-user-clock mr-1"></i>Đang phê duyệt: ${stats.pendingCustomers}
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-warning text-uppercase mb-2">
-                            Average Rating
+                            Đánh giá trung bình
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
                             <fmt:formatNumber value="${stats.averageRating}" pattern="0.0" /> / 5.0
@@ -146,7 +146,7 @@
             <div class="col-xl-8 col-lg-7">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">New Customer Trends</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Xu hướng khách hàng mới</h6>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
@@ -160,18 +160,18 @@
             <div class="col-xl-4 col-lg-5"> 
     <div class="card shadow mb-4"> 
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"> 
-            <h6 class="m-0 font-weight-bold text-primary">Feedback Distribution</h6> 
+            <h6 class="m-0 font-weight-bold text-primary">Phân phối phản hồi</h6> 
         </div> 
         <div class="card-body"> 
             <div style="position: relative; height: 300px; width: 100%;">
                 <canvas id="feedbackChart"></canvas> 
             </div> 
             <div class="mt-4 text-center small"> 
-                <span class="mr-2"> <i class="fas fa-circle text-danger"></i> 1 Star </span> 
-                <span class="mr-2"> <i class="fas fa-circle text-warning"></i> 2 Stars </span> 
-                <span class="mr-2"> <i class="fas fa-circle text-info"></i> 3 Stars </span> 
-                <span class="mr-2"> <i class="fas fa-circle text-primary"></i> 4 Stars </span> 
-                <span class="mr-2"> <i class="fas fa-circle text-success"></i> 5 Stars </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-danger"></i> 1 Sao </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-warning"></i> 2 Sao </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-info"></i> 3 Sao </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-primary"></i> 4 Sao </span> 
+                <span class="mr-2"> <i class="fas fa-circle text-success"></i> 5 Sao </span> 
             </div> 
         </div> 
     </div> 
@@ -183,7 +183,7 @@
             <div class="col-xl-6 col-lg-6">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Products by Category</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Sản phẩm theo danh mục</h6>
         </div>
         <div class="card-body">
             <div style="position: relative; height: 350px; width: 100%;">
@@ -192,7 +192,7 @@
             <div class="mt-4 small text-center">
                 <c:choose>
                     <c:when test="${empty stats.productsByCategory}">
-                        <span class="text-muted">No data available</span>
+                        <span class="text-muted">Không có dữ liệu có sẵn</span>
                     </c:when>
                     <c:otherwise>
                         <c:forEach items="${stats.productsByCategory}" var="category" varStatus="status">
@@ -212,31 +212,31 @@
             <div class="col-xl-6 col-lg-6">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Inventory Status</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Trạng thái kho</h6>
         </div>
         <div class="card-body">
-            <h4 class="small font-weight-bold">Active Products <span class="float-right">
+            <h4 class="small font-weight-bold">San phẩm đang bán <span class="float-right">
                 <fmt:formatNumber value="${stats.activeProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
             </span></h4>
             <div class="progress mb-4">
                 <div class="progress-bar bg-success" role="progressbar" style="width: ${stats.activeProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
             </div>
             
-            <h4 class="small font-weight-bold">Out of Stock <span class="float-right">
+            <h4 class="small font-weight-bold">Hết hàng <span class="float-right">
                 <fmt:formatNumber value="${stats.outOfStockProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
             </span></h4>
             <div class="progress mb-4">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: ${stats.outOfStockProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
             </div>
             
-                <h4 class="small font-weight-bold">Inactive Products <span class="float-right">
+                <h4 class="small font-weight-bold">Sản phầm ngừng bán <span class="float-right">
                         <fmt:formatNumber value="${stats.inactiveProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}" pattern="0.0" />%
                     </span></h4>
                 <div class="progress mb-4">
                     <div class="progress-bar bg-secondary" role="progressbar" style="width: ${stats.inactiveProducts / (stats.totalProducts == 0 ? 1 : stats.totalProducts) * 100}%"></div>
                 </div>
             
-            <h4 class="small font-weight-bold">Total Inventory: ${stats.totalStock} items</h4>
+            <h4 class="small font-weight-bold">Tổng kho: ${stats.totalStock} mặt hàng</h4>
         </div>
     </div>
 </div>
@@ -247,18 +247,18 @@
             <div class="col-xl-6 col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Low Stock Alerts</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Cảnh báo hàng tồn kho thấp</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Product ID</th>
-                                        <th>Product Name</th>
-                                        <th>Size</th>
-                                        <th>Color</th>
-                                        <th>Stock</th>
+                                        <th>ID Sản phẩm</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Kích thước</th>
+                                        <th>Màu sắc</th>
+                                        <th>Kho</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -275,7 +275,7 @@
                                     </c:forEach>
                                     <c:if test="${empty stats.lowStockProducts}">
                                         <tr>
-                                            <td colspan="5" class="text-center">No low stock products</td>
+                                            <td colspan="5" class="text-center">Không có sản phẩm tồn kho thấp</td>
                                         </tr>
                                     </c:if>
                                 </tbody>
@@ -288,15 +288,15 @@
             <div class="col-xl-6 col-lg-6">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Coupon Usage</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Sử dụng phiếu giảm giá</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Coupon Code</th>
-                            <th>Usage (Used/Limit)</th>
+                            <th>Mã giảm giá</th>
+                            <th>Sử dụng (Đã sử dụng/Giới hạn)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -308,7 +308,7 @@
                         </c:forEach>
                         <c:if test="${empty stats.couponUsage}">
                             <tr>
-                                <td colspan="2" class="text-center">No coupon usage data</td>
+                                <td colspan="2" class="text-center">Không có dữ liệu sử dụng phiếu giảm giá</td>
                             </tr>
                         </c:if>
                     </tbody>
@@ -322,7 +322,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Total Coupons</div>
+                            Tổng số phiếu giảm giá</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.totalCoupons}</div>
                     </div>
                 </div>
@@ -335,7 +335,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Active Coupons</div>
+                            Phiếu giảm giá đang hoạt động</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.activeCoupons}</div>
                     </div>
                 </div>
@@ -348,7 +348,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Expired Coupons</div>
+                            Phiếu giảm giá đã hết hạn</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.expiredCoupons}</div>
                     </div>
                 </div>
@@ -361,7 +361,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                            Inactive Coupons</div>
+                            Phiếu giảm giá không hoạt động</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.inactiveCoupons}</div>
                     </div>
                 </div>
@@ -372,7 +372,7 @@
             
             <!-- Coupon Expiration Chart -->
             <div class="mt-4">
-                <h6 class="m-0 font-weight-bold text-primary mb-3">Coupon Expiration Timeline</h6>
+                <h6 class="m-0 font-weight-bold text-primary mb-3">Dòng thời gian hết hạn của phiếu giảm giá</h6>
                 <div class="chart-bar">
                     <canvas id="couponExpirationChart"></canvas>
                 </div>
@@ -393,7 +393,7 @@
                             data: {
                                 labels: expirationLabels,
                                 datasets: [{
-                                    label: "Coupons",
+                                    label: "Phiếu giảm giá",
                                     backgroundColor: "#4e73df",
                                     hoverBackgroundColor: "#2e59d9",
                                     borderColor: "#4e73df",
@@ -425,24 +425,24 @@
         <div class="col-xl-6 col-lg-6">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Content Management</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Quản lý nội dung</h6>
         </div>
         <div class="card-body">
             <div class="row">
                 <!-- Posts Chart -->
                 <div class="col-md-6">
                     <div class="text-center mb-3">
-                        <h5 class="font-weight-bold">Posts</h5>
+                        <h5 class="font-weight-bold">Bài đăng</h5>
                     </div>
                     <div style="position: relative; height: 200px; width: 100%;">
                         <canvas id="postsChart"></canvas>
                     </div>
                     <div class="mt-3 text-center small">
                         <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Published: ${stats.publishedPosts}
+                            <i class="fas fa-circle text-success"></i> Đã xuất bản: ${stats.publishedPosts}
                         </span>
                         <span class="mr-2">
-                            <i class="fas fa-circle text-warning"></i> Draft: ${stats.draftPosts}
+                            <i class="fas fa-circle text-warning"></i> Bản thảo: ${stats.draftPosts}
                         </span>
                     </div>
                 </div>
@@ -450,17 +450,17 @@
                 <!-- Sliders Chart -->
                 <div class="col-md-6">
                     <div class="text-center mb-3">
-                        <h5 class="font-weight-bold">Sliders</h5>
+                        <h5 class="font-weight-bold">Thanh trượt</h5>
                     </div>
                     <div style="position: relative; height: 200px; width: 100%;">
                         <canvas id="slidersChart"></canvas>
                     </div>
                     <div class="mt-3 text-center small">
                         <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Active: ${stats.activeSliders}
+                            <i class="fas fa-circle text-info"></i> Đang hoạt động: ${stats.activeSliders}
                         </span>
                         <span class="mr-2">
-                            <i class="fas fa-circle text-secondary"></i> Inactive: ${stats.totalSliders - stats.activeSliders}
+                            <i class="fas fa-circle text-secondary"></i> Không hoạt động: ${stats.totalSliders - stats.activeSliders}
                         </span>
                     </div>
                 </div>
@@ -487,7 +487,7 @@
                     </c:forEach>
                 ],
                 datasets: [{
-                    label: 'New Customers',
+                    label: 'Khách hàng mới',
                     data: [
                         <c:forEach items="${stats.newCustomersByDay}" var="entry" varStatus="status">
                             ${entry.value},
@@ -527,7 +527,7 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'New Customer Registrations'
+                        text: 'Đăng ký khách hàng mới'
                     },
                     tooltip: {
                         callbacks: {
@@ -535,7 +535,7 @@
                                 return tooltipItems[0].label;
                             },
                             label: function(context) {
-                                return 'New customers: ' + context.raw;
+                                return 'Khách hàng mới: ' + context.raw;
                             }
                         }
                     }
@@ -567,9 +567,9 @@
         var feedbackChart = new Chart(feedbackChartContext, {
             type: 'bar',
             data: {
-                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                labels: ['1 Sao', '2 Sao', '3 Sao', '4 Sao', '5 Sao'],
                 datasets: [{
-                    label: 'Number of Feedback',
+                    label: 'Số lượng phản hồi',
                     data: feedbackData,
                     backgroundColor: [
                         '#e74a3b', // 1 Star
@@ -600,7 +600,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Number of Feedback'
+                            text: 'Số lượng phản hồi'
                         }
                     },
                     x: {
@@ -618,7 +618,7 @@
                         callbacks: {
                             label: function(context) {
                                 var value = context.raw || 0;
-                                return 'Feedback: ' + value;
+                                return 'Phản hồi: ' + value;
                             }
                         }
                     }
@@ -682,7 +682,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         label: function(context) {
                             var label = context.label || '';
                             var value = context.raw || 0;
-                            return label + ': ' + value + ' products';
+                            return label + ': ' + value + ' sản phẩm';
                         }
                     }
                 }
@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var postsChart = new Chart(postsChartContext, {
         type: 'doughnut',
         data: {
-            labels: ['Published', 'Draft'],
+            labels: ['Đã xuất bản', 'Bản thảo'],
             datasets: [{
                 data: [${stats.publishedPosts}, ${stats.draftPosts}],
                 backgroundColor: ['#1cc88a', '#f6c23e'],
@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var slidersChart = new Chart(slidersChartContext, {
         type: 'doughnut',
         data: {
-            labels: ['Active', 'Inactive'],
+            labels: ['Đang hoạt động', 'Không hoạt động'],
             datasets: [{
                 data: [${stats.activeSliders}, ${stats.totalSliders - stats.activeSliders}],
                 backgroundColor: ['#36b9cc', '#858796'],

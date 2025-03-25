@@ -1,6 +1,7 @@
 package Orders;
 
 import DAO.OrderDAO;
+import entity.CartItem;
 import entity.Order;
 import entity.User;
 import java.io.IOException;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -87,38 +90,38 @@ public class MyOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
+   String action = request.getParameter("action");
 
-    if (action != null && action.equals("cancel")) {
+    if (action != null && action.equals("reorder")) {
         int orderId = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
-        
-        if (user != null) {
-            boolean success = orderDAO.cancelOrder(orderId, user.getId());
-            if (success) {
-                request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công");
-            } else {
-                request.setAttribute("errorMessage", "Không thể hủy đơn hàng");
-            }
-        }
-    } else if (action != null && action.equals("retry_payment")) {
-        int orderId = Integer.parseInt(request.getParameter("id"));
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-        
+
         if (user != null) {
             Order order = orderDAO.getOrderById(orderId);
-            if (order != null && order.getUserId() == user.getId() && 
-                ("pending".equals(order.getPaymentStatus()) || "pending_pay".equals(order.getStatus()))) {
-                session.setAttribute("pending_order", order);
-                response.sendRedirect("payment");
+            if (order != null && order.getUserId() == user.getId()) {
+                // Tạo query string từ danh sách sản phẩm trong đơn hàng
+                StringBuilder queryParams = new StringBuilder();
+                List<CartItem> items = order.getItems();
+                if (items != null && !items.isEmpty()) {
+                    for (int i = 0; i < items.size(); i++) {
+                        CartItem item = items.get(i);
+                        if (i > 0) {
+                            queryParams.append("&");
+                        }
+                        queryParams.append("productId=").append(item.getProductId())
+                                .append("&size=").append(URLEncoder.encode(item.getSize(), StandardCharsets.UTF_8.toString()))
+                                .append("&color=").append(URLEncoder.encode(item.getColor(), StandardCharsets.UTF_8.toString()))
+                                .append("&quantity=").append(item.getQuantity());
+                    }
+                }
+                // Chuyển hướng đến trang cartcontact với dữ liệu sản phẩm đã mã hóa
+                response.sendRedirect("cartcontact?" + queryParams.toString());
                 return;
-            } else {
-                request.setAttribute("errorMessage", "Không thể thanh toán lại đơn hàng này");
             }
         }
     }
+
     processRequest(request, response);
 }
 

@@ -47,7 +47,7 @@
             }
 
             /*----------------------------------------------------------*/
-                        
+
             .back-to-top {
                 position: fixed;
                 bottom: 120px; /* Vị trí cao hơn nút chat AI */
@@ -502,9 +502,7 @@
                                                 </div>
                                                 <div class="product-buttons d-flex gap-2">
                                                     <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
-                                                    <button onclick="addToCart(${product.id}, event)" class="btn btn-outline-primary btn-sm flex-grow-1">
-                                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
-                                                    </button>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -544,15 +542,16 @@
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
                                                 <div class="product-buttons d-flex gap-2">
-                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
-                                                    <button onclick="addToCart(${product.id}, event)" class="btn btn-outline-primary btn-sm flex-grow-1">
-                                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1">
+                                                        <i class="fas fa-bolt"></i> Mua Ngay
                                                     </button>
+
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>             
                                     </a>
-                                </div>
+
+                                </div>                       
                             </c:forEach>
                         </div>
                     </div>

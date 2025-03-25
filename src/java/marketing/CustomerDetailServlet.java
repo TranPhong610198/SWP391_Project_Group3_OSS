@@ -114,7 +114,7 @@ public class CustomerDetailServlet extends HttpServlet {
             String email = request.getParameter("email");
             String mobile = request.getParameter("mobile");
             String gender = request.getParameter("gender");
-            String address = request.getParameter("address");
+//            String address = request.getParameter("address");
             String customerType = request.getParameter("customerType");
 
             // Lấy thông tin hiện tại từ database để giữ nguyên các trường không thay đổi
@@ -134,7 +134,7 @@ public class CustomerDetailServlet extends HttpServlet {
             customer.setEmail(email);
             customer.setMobile(mobile);
             customer.setGender(gender);
-            customer.setAddress(address);
+//            customer.setAddress(address);
             customer.setCustomerType(customerType);
             
             // Giữ nguyên các thông tin không thay đổi

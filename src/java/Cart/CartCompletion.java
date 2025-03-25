@@ -146,7 +146,7 @@ public class CartCompletion extends HttpServlet {
         order.setShippingMethod(shippingMethod);
         order.setPaymentMethod(paymentMethod);
         order.setShippingFee(shippingFee); // Sử dụng shippingFee đã được kiểm tra
-        order.setPaymentStatus("pending");
+        order.setPaymentStatus("pending_pay");
         if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
             order.setDiscountAmount(discountAmount);
             order.setCouponCode(appliedCoupon);
