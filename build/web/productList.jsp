@@ -14,6 +14,34 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
+            /* Style cho mua ngay + thêm vào giỏ hàng */
+            .product-buttons .btn-primary {
+                background: #e44d26; /* Đồng bộ màu với btn-buy-now */
+                border: none;
+                padding: 12px 20px;
+                transition: all 0.3s ease;
+            }
+
+            .product-buttons .btn-primary:hover {
+                background: #c53d1d;
+                transform: translateY(-2px);
+            }
+
+            .product-buttons .btn-outline-primary {
+                background: #333; /* Đồng bộ màu với btn-add-cart */
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                transition: all 0.3s ease;
+            }
+
+            .product-buttons .btn-outline-primary:hover {
+                background: #000;
+                color: white;
+                transform: translateY(-2px);
+            }
+
+            /*----------------------------------------------------------*/
             body {
                 background-color: #f8f9fa;
             }
@@ -344,6 +372,10 @@
                                                 <div class="product-price">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
+                                                <div class="product-buttons d-flex gap-2">
+                                                    <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
+
+                                                </div>
                                             </div>
                                         </a>
                                     </div>
@@ -400,70 +432,70 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            function formatNumberInput(input) {
-                let value = input.value.replace(/\D/g, '');
-                console.log(value);
-                if (value) {
-                    value = parseInt(value, 10).toLocaleString('vi-VN');
-                    input.value = value;
-                } else {
-                    input.value = '';
-                }
-            }
+                                                        function formatNumberInput(input) {
+                                                            let value = input.value.replace(/\D/g, '');
+                                                            console.log(value);
+                                                            if (value) {
+                                                                value = parseInt(value, 10).toLocaleString('vi-VN');
+                                                                input.value = value;
+                                                            } else {
+                                                                input.value = '';
+                                                            }
+                                                        }
 
-            // Chạy sau khi trang đã tải
-            document.addEventListener('DOMContentLoaded', function () {
-                const minPriceInput = document.getElementById('minPrice');
-                const maxPriceInput = document.getElementById('maxPrice');
+                                                        // Chạy sau khi trang đã tải
+                                                        document.addEventListener('DOMContentLoaded', function () {
+                                                            const minPriceInput = document.getElementById('minPrice');
+                                                            const maxPriceInput = document.getElementById('maxPrice');
 
-                minPriceInput.addEventListener('input', function () {
-                    formatNumberInput(this);
-                    if (minPriceInput.value.replace(/\./g, '') > 99999999) {
-                        alert('Giới hạn nhập vào là 99.999.999 đ');
-                        $('#minPrice').val('99.999.999');
-                    }
-                });
+                                                            minPriceInput.addEventListener('input', function () {
+                                                                formatNumberInput(this);
+                                                                if (minPriceInput.value.replace(/\./g, '') > 99999999) {
+                                                                    alert('Giới hạn nhập vào là 99.999.999 đ');
+                                                                    $('#minPrice').val('99.999.999');
+                                                                }
+                                                            });
 
 
-                maxPriceInput.addEventListener('input', function () {
-                    formatNumberInput(this);
-                    if (maxPriceInput.value.replace(/\./g, '') > 99999999) {
-                        alert('Giới hạn nhập vào là 99.999.999 đ');
-                        $('#maxPrice').val('99.999.999');
-                    }
-                });
-            });
+                                                            maxPriceInput.addEventListener('input', function () {
+                                                                formatNumberInput(this);
+                                                                if (maxPriceInput.value.replace(/\./g, '') > 99999999) {
+                                                                    alert('Giới hạn nhập vào là 99.999.999 đ');
+                                                                    $('#maxPrice').val('99.999.999');
+                                                                }
+                                                            });
+                                                        });
 
-            $(document).ready(function () {
-                $('input[name="priceRange"]').on('change', function () {
-                    if (this.value) {
-                        const [min, max] = this.value.split('-');
-                        $('#minPrice').val(parseInt(min, 10).toLocaleString('vi-VN'));
-                        $('#maxPrice').val(parseInt(max, 10).toLocaleString('vi-VN'));
-                    } else {
-                        // All prices option
-                        $('#minPrice').val('');
-                        $('#maxPrice').val('');
-                    }
-                });
+                                                        $(document).ready(function () {
+                                                            $('input[name="priceRange"]').on('change', function () {
+                                                                if (this.value) {
+                                                                    const [min, max] = this.value.split('-');
+                                                                    $('#minPrice').val(parseInt(min, 10).toLocaleString('vi-VN'));
+                                                                    $('#maxPrice').val(parseInt(max, 10).toLocaleString('vi-VN'));
+                                                                } else {
+                                                                    // All prices option
+                                                                    $('#minPrice').val('');
+                                                                    $('#maxPrice').val('');
+                                                                }
+                                                            });
 
-                $('#minPrice, #maxPrice').on('input', function () {
-                    $('input[name="priceRange"]').prop('checked', false);
-                });
+                                                            $('#minPrice, #maxPrice').on('input', function () {
+                                                                $('input[name="priceRange"]').prop('checked', false);
+                                                            });
 
-                // Kiểm duyệt giá nhập vào
-                $('#maxPrice').on('change', function () {
-                    const maxPrice = parseInt($('#maxPrice').val().replace(/\./g, '')) || 0;
-                    const minPrice = parseInt($('#minPrice').val().replace(/\./g, '')) || 0;
+                                                            // Kiểm duyệt giá nhập vào
+                                                            $('#maxPrice').on('change', function () {
+                                                                const maxPrice = parseInt($('#maxPrice').val().replace(/\./g, '')) || 0;
+                                                                const minPrice = parseInt($('#minPrice').val().replace(/\./g, '')) || 0;
 
-                    console.log('minPrice: ' + minPrice);
-                    console.log('maxPrice: ' + maxPrice);
-                    if (maxPrice < minPrice) {
-                        alert('Giá tối đa không được nhỏ hơn giá tối thiểu!');
-                        $('#maxPrice').val(parseInt(minPrice, 10).toLocaleString('vi-VN'));
-                    }
-                });
-            });
+                                                                console.log('minPrice: ' + minPrice);
+                                                                console.log('maxPrice: ' + maxPrice);
+                                                                if (maxPrice < minPrice) {
+                                                                    alert('Giá tối đa không được nhỏ hơn giá tối thiểu!');
+                                                                    $('#maxPrice').val(parseInt(minPrice, 10).toLocaleString('vi-VN'));
+                                                                }
+                                                            });
+                                                        });
         </script>
     </body>
 </html>

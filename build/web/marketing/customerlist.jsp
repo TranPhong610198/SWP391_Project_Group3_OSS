@@ -190,7 +190,7 @@
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
                                     <input type="text" name="search" value="${search}" class="form-control search-box" 
-                                           placeholder="Tìm kiếm theo tên, email, SĐT, địa chỉ">
+                                           placeholder="Tìm kiếm theo tên, email, SĐT">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -224,11 +224,11 @@
                         <div>
                             <i class="fas fa-list me-2"></i>Danh sách khách hàng
                         </div>
-                        <div class="d-flex">                        
+<!--                        <div class="d-flex">                        
                             <a href="addCustomer" class="btn btn-primary btn-sm">
                                 <i class="fas fa-user-plus me-1"></i>Thêm mới
                             </a>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="card-body p-0">
                         <c:choose>
@@ -274,7 +274,7 @@
                                                         </span>
                                                     </a>
                                                 </th>
-                                                <th>
+<!--                                                <th>
                                                     <a href="customerlist?sortField=address&sortDir=${sortField == 'address' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
                                                        class="sort-link">
                                                         Địa chỉ
@@ -282,7 +282,7 @@
                                                             ${sortField == 'address' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
                                                         </span>
                                                     </a>
-                                                </th>
+                                                </th>-->
                                                 <th class="text-center" style="width: 100px;">
                                                     <a href="customerlist?sortField=customer_type&sortDir=${sortField == 'customer_type' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
                                                        class="sort-link">
@@ -327,7 +327,7 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>${customer.mobile}</td>
-                                                    <td>${customer.address}</td>
+<!--                                                    <td>${customer.address}</td>-->
                                                     <td>
                                                         <span class="badge ${customer.customerType == 'vip' ? 'bg-warning text-dark' : (customer.customerType == 'normal' ? 'bg-success' : 'bg-info')}">
                                                             ${customer.customerType}

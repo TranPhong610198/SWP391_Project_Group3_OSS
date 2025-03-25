@@ -127,37 +127,37 @@ public class CustomerDAO extends DBContext {
      * @param customer Customer object to add
      * @return true if successful, false otherwise
      */
-    public boolean addCustomer(Customer customer) {
-        String sql = "INSERT INTO customer_contact_history (user_id, customer_type, email, full_name, gender, " +
-                    "mobile, address, total_purchases, total_spend, updated_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
-        
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            
-            // Handle nullable user_id
-            if (customer.getUserId() != null) {
-                st.setInt(1, customer.getUserId());
-            } else {
-                st.setNull(1, java.sql.Types.INTEGER);
-            }
-            
-            st.setString(2, customer.getCustomerType());
-            st.setString(3, customer.getEmail());
-            st.setString(4, customer.getFullName());
-            st.setString(5, customer.getGender());
-            st.setString(6, customer.getMobile());
-            st.setString(7, customer.getAddress());
-            st.setInt(8, customer.getTotalPurchases());
-            st.setBigDecimal(9, customer.getTotalSpend());
-            
-            
-            return st.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public boolean addCustomer(Customer customer) {
+//        String sql = "INSERT INTO customer_contact_history (user_id, customer_type, email, full_name, gender, " +
+//                    "mobile, total_purchases, total_spend, updated_at) " +
+//                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
+//        
+//        try {
+//            PreparedStatement st = connection.prepareStatement(sql);
+//            
+//            // Handle nullable user_id
+//            if (customer.getUserId() != null) {
+//                st.setInt(1, customer.getUserId());
+//            } else {
+//                st.setNull(1, java.sql.Types.INTEGER);
+//            }
+//            
+//            st.setString(2, customer.getCustomerType());
+//            st.setString(3, customer.getEmail());
+//            st.setString(4, customer.getFullName());
+//            st.setString(5, customer.getGender());
+//            st.setString(6, customer.getMobile());
+//            st.setString(7, customer.getAddress());
+//            st.setInt(8, customer.getTotalPurchases());
+//            st.setBigDecimal(9, customer.getTotalSpend());
+//            
+//            
+//            return st.executeUpdate() > 0;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
     
     /**
      * Update an existing customer's information
@@ -166,7 +166,7 @@ public class CustomerDAO extends DBContext {
      */
     public boolean updateCustomer(Customer customer) {
         String sql = "UPDATE customer_contact_history SET user_id = ?, customer_type = ?, email = ?, " +
-                    "full_name = ?, gender = ?, mobile = ?, address = ?, total_purchases = ?, " +
+                    "full_name = ?, gender = ?, mobile = ?, total_purchases = ?, " +
                     "total_spend = ?, updated_at = GETDATE() WHERE id = ?";
         
         try {
@@ -184,11 +184,11 @@ public class CustomerDAO extends DBContext {
             st.setString(4, customer.getFullName());
             st.setString(5, customer.getGender());
             st.setString(6, customer.getMobile());
-            st.setString(7, customer.getAddress());
-            st.setInt(8, customer.getTotalPurchases());
-            st.setBigDecimal(9, customer.getTotalSpend());
+//            st.setString(7, customer.getAddress());
+            st.setInt(7, customer.getTotalPurchases());
+            st.setBigDecimal(8, customer.getTotalSpend());
             
-            st.setInt(10, customer.getId());
+            st.setInt(9, customer.getId());
             
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -324,7 +324,7 @@ public class CustomerDAO extends DBContext {
         customer.setFullName(rs.getString("full_name"));
         customer.setGender(rs.getString("gender"));
         customer.setMobile(rs.getString("mobile"));
-        customer.setAddress(rs.getString("address"));
+//        customer.setAddress(rs.getString("address"));
         customer.setTotalPurchases(rs.getInt("total_purchases"));
         customer.setTotalSpend(rs.getBigDecimal("total_spend"));
         

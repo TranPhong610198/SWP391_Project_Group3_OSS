@@ -55,7 +55,7 @@ public class CustomerListServlet extends HttpServlet {
             
             // Add search condition
             if (searchTerm != null && !searchTerm.isEmpty()) {
-                sql.append(" AND (full_name LIKE ? OR email LIKE ? OR mobile LIKE ? OR address LIKE ?)");
+                sql.append(" AND (full_name LIKE ? OR email LIKE ? OR mobile LIKE ?)");
                 String searchPattern = "%" + searchTerm + "%";
                 params.add(searchPattern);
                 params.add(searchPattern);

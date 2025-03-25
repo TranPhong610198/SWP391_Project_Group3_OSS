@@ -254,10 +254,10 @@
                                 </select>
                             </div>
 
-                            <div class="col-12 mb-3">
+<!--                            <div class="col-12 mb-3">
                                 <label for="address" class="form-label">Địa chỉ</label>
                                 <textarea class="form-control" id="address" name="address" rows="3">${customer.address}</textarea>
-                            </div>
+                            </div>-->
 
                             <div class="timestamp-info">
                                 <div class="d-flex justify-content-between">
