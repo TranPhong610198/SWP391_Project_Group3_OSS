@@ -96,7 +96,7 @@ public class SubmitFeedback extends HttpServlet {
 
         try {
             int orderId = Integer.parseInt(orderIdParam);
-            System.out.println("99: orderId:" + orderId);
+//            System.out.println("99: orderId:" + orderId);
 
             // Fetch order details 
             OrderDAO orderDAO = new OrderDAO(); // You'll need to implement this
@@ -141,10 +141,10 @@ public class SubmitFeedback extends HttpServlet {
 
         // Get order ID 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        System.out.println("143: test orderId:" + orderId);
+//        System.out.println("143: test orderId:" + orderId);
         // Get all order item IDs
         String[] orderItemIds = request.getParameterValues("orderItemId");
-        System.out.println("146: test orderIdS:" + orderItemIds.toString());
+//        System.out.println("146: test orderIdS:" + orderItemIds.toString());
 
         // Prepare FeedbackDAO
         FeedbackDAO feedbackDAO = new FeedbackDAO();
@@ -153,13 +153,13 @@ public class SubmitFeedback extends HttpServlet {
             // Process feedback for each order item
             for (String orderItemIdStr : orderItemIds) {
                 int orderItemId = Integer.parseInt(orderItemIdStr);
-                
+//                System.out.println("156: orderItemId: "+ orderItemId);
                 // Get rating and comment for this specific item
                 String ratingParam = "rating-" + orderItemId;
                 String commentParam = "comment-" + orderItemId;
                 
-                System.out.println("161: rating param:" + ratingParam);
-                System.out.println("162: comment param:" + commentParam);
+//                System.out.println("161: rating param:" + ratingParam);
+//                System.out.println("162: comment param:" + commentParam);
                 // Skip if no rating provided
                 System.out.println("164: test:" + request.getParameter(ratingParam));
                 if (request.getParameter(ratingParam) == null) {
@@ -168,7 +168,7 @@ public class SubmitFeedback extends HttpServlet {
 
                 int rating = Integer.parseInt(request.getParameter(ratingParam));
                 String comment = request.getParameter(commentParam);
-                System.out.println("171: test:"+comment);
+//                System.out.println("171: test:"+comment);
                 // Create Feedback object
                 Feedback feedback = new Feedback();
                 feedback.setOrderItemId(orderItemId);

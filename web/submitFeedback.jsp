@@ -71,15 +71,15 @@
                                             <span data-rating="4">★</span>
                                             <span data-rating="5">★</span>
                                         </div>
-                                        <input type="text" name="rating" 
-                                               id="rating-${item.id}" 
-                                               required>
+                                        <input type="text" name="rating-${item.id}" 
+                                               id="rating-${item.id}" value="0"
+                                               required/>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="comment-${item.id}" class="form-label">Nhận Xét</label>
                                         <textarea 
-                                            name="comment" 
+                                            name="comment-${item.id}" 
                                             id="comment-${item.id}" 
                                             class="form-control" 
                                             rows="3" 
@@ -91,13 +91,13 @@
                                         <label class="form-label">Hình Ảnh (Tối Đa 5)</label>
                                         <input 
                                             type="file" 
-                                            name="feedbackImages" 
+                                            name="feedbackImages-${item.id}" 
                                             class="form-control image-upload" 
                                             id="images-${item.id}" 
                                             multiple 
                                             accept="image/*" 
                                             data-max-files="5"
-                                            >
+                                            />
                                         <div class="image-preview mt-2" id="preview-${item.id}"></div>
                                     </div>
                                 </div>
@@ -120,8 +120,8 @@
                 document.querySelectorAll('.star-rating').forEach(starContainer => {
                     const itemId = starContainer.getAttribute('data-item-id');
                     const stars = starContainer.querySelectorAll('span');
-                    const hiddenInput = document.getElementById(`rating-${itemId}`);
-
+                    const hiddenInput = document.getElementById('rating-${item.id}');
+                    
                     stars.forEach(star => {
                         star.addEventListener('click', function () {
                             const rating = this.getAttribute('data-rating');
@@ -133,7 +133,7 @@
                             for (let i = 0; i < rating; i++) {
                                 stars[i].classList.add('active');
                             }
-
+                            console.log(rating);
                             // Set hidden input value
                             hiddenInput.value = rating;
                         });
@@ -144,7 +144,7 @@
                 document.querySelectorAll('.image-upload').forEach(input => {
                     input.addEventListener('change', function (event) {
                         const itemId = this.id.split('-')[1];
-                        const preview = document.getElementById(`preview-${itemId}`);
+                        const preview = document.getElementById('preview-${item.id}');
                         const maxFiles = parseInt(this.getAttribute('data-max-files'), 10);
 
                         // Clear previous previews

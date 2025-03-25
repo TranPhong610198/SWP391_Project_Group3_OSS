@@ -556,7 +556,7 @@ public class FeedbackDAO extends DBContext {
     }
 
     public int insertFeedback(Feedback feedback) {
-        System.out.println("Run insert feedback");
+//        System.out.println("Run insert feedback");
         String sql = "INSERT INTO feedback (order_item_id, user_id, rating, comment, status, created_at, updated_at) "
                 + "VALUES (?, ?, ?, ?, ?, GETDATE(), GETDATE()); SELECT SCOPE_IDENTITY();";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
