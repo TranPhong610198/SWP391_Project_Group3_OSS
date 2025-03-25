@@ -341,6 +341,16 @@
                 align-self: flex-start;
             }
 
+            .ai-message img {
+                max-width: 100%; /* Giới hạn chiều rộng tối đa bằng chiều rộng của .ai-message */
+                max-height: 150px; /* Giới hạn chiều cao tối đa, nhỏ hơn chatBox vì widget nhỏ hơn */
+                width: auto; /* Giữ tỷ lệ ảnh */
+                height: auto; /* Giữ tỷ lệ ảnh */
+                border-radius: 5px; /* Bo góc cho đẹp */
+                display: block; /* Đảm bảo ảnh không bị inline gây lỗi bố cục */
+                margin-top: 5px; /* Khoảng cách với nội dung text */
+            }
+
             .ai-chat-input {
                 display: flex;
                 padding: 10px;
@@ -613,121 +623,140 @@
             <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
         </div>
 
-        <!-- Chat Widget -->
+                <!-- Chat Widget -->
         <div class="ai-chat-widget" id="aiChatWidget">
-            <div class="ai-chat-header">
-                <div>Góc hỏi đáp</div>
-                <div class="ai-chat-close" onclick="toggleChatWidget()">✕</div>
-            </div>
-            <div class="ai-chat-messages" id="aiChatMessages">
+    <div class="ai-chat-header" onclick="toggleChatWidget()">
+        <span><i class="fas fa-comment"></i> Chat với chúng tôi</span>
+        <i class="fas fa-times" id="aiChatClose"></i>
+    </div>
+    <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
+        <c:choose>
+            <c:when test="${not empty chatError}">
+                <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
+            </c:when>
+            <c:otherwise>
                 <div class="ai-message bot">Chào bạn! Tôi là trợ lý của Fashion Shop. Tôi có thể giúp gì cho bạn?</div>
-            </div>
-            <div class="ai-chat-input">
-                <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn..." onkeypress="if (event.key === 'Enter')
-                            sendMessage()">
-                <button onclick="sendMessage()">Gửi</button>
-            </div>
-        </div>
+                <c:forEach items="${chatMessages}" var="msg">
+                    <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
+                        <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
+                        <p>${msg.content}</p>
+                        <c:if test="${not empty msg.imageUrl}">
+                            <img src="${msg.imageUrl}" alt="Attached image">
+                        </c:if>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+    </div>
+    <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
+        <form id="chatForm" class="d-flex">
+            <input type="hidden" name="userId" value="${chatUserId}">
+            <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn" onkeypress="if(event.key === 'Enter') sendMessage();">
+            <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
+        </form>
+    </div>
+</div>
+
         <!-- Back to Top -->
         <button id="backToTopButton" class="back-to-top">
             <div class="arrow"></div>
         </button>
-        <script>
-            // Hiển thị/ẩn chat widget
-            function toggleChatWidget() {
-                const widget = document.getElementById('aiChatWidget');
-                if (widget.style.display === 'flex') {
-                    widget.style.display = 'none';
-                } else {
-                    widget.style.display = 'flex';
-                }
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    let socket;
+
+    $(document).ready(function() {
+        $('#aiChatMessages').scrollTop($('#aiChatMessages')[0].scrollHeight);
+        <c:if test="${not empty userID}">connectWebSocket();</c:if>
+    });
+
+    function toggleChatWidget() {
+        const widget = document.getElementById('aiChatWidget');
+        if (widget.style.display === 'flex') {
+            widget.style.display = 'none';
+            if (socket) socket.close();
+        } else {
+            widget.style.display = 'flex';
+            <c:if test="${not empty userID}">connectWebSocket();</c:if>
+        }
+    }
+
+    function connectWebSocket() {
+        const userId = '${userID}';
+        if (!userId || userId === "null") return;
+
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("WebSocket already connected for user: " + userId);
+            return;
+        }
+
+        socket = new WebSocket("ws://" + window.location.host + "${pageContext.request.contextPath}/chat/" + userId);
+
+        socket.onopen = function() {
+            console.log("WebSocket connected for user: " + userId);
+        };
+
+        socket.onmessage = function(event) {
+            console.log("Received message: " + event.data);
+            const message = JSON.parse(event.data);
+            if (message.error) {
+                alert(message.error);
+                return;
             }
+            displayMessage(message);
+        };
 
-            // Gửi tin nhắn đến API và hiển thị phản hồi
-            async function sendMessage() {
-                const input = document.getElementById('userInput');
-                const message = input.value.trim();
+        socket.onclose = function(event) {
+            console.log("WebSocket disconnected. Code: " + event.code + ", Reason: " + event.reason);
+        };
 
-                if (!message)
-                    return;
+        socket.onerror = function(error) {
+            console.error("WebSocket error:", error);
+        };
+    }
 
-                // Hiển thị tin nhắn của người dùng
-                addMessage('user', message);
-                input.value = '';
+    function sendMessage() {
+        const content = $("#messageInput").val().trim();
+        const userId = '${userID}';
+        const receiverId = '${chatUserId}'; // Giả định chatUserId là ID của marketing
 
-                // Hiển thị đang nhập
-                const tempId = addMessage('bot', 'Đang nhập...');
+        if (!content) {
+            alert("Vui lòng nhập tin nhắn!");
+            return;
+        }
 
-                try {
-                    // Gọi API Gemini
-                    const response = await callGeminiAPI(message);
+        if (!userId || userId === "null") return;
 
-                    // Cập nhật tin nhắn bot
-                    updateMessage(tempId, response);
-                } catch (error) {
-                    updateMessage(tempId, "Xin lỗi, câu hỏi của bạn khó quá. Tôi không thể xử lý được. Hãy hỏi Trần Phong :>");
-                    console.error("Error calling Gemini API:", error);
-                }
-            }
+        const message = {
+            content: content,
+            receiverId: parseInt(receiverId) || 3, // Mặc định gửi tới marketing (ID = 3) nếu chatUserId không có
+            createdAt: new Date().toISOString()
+        };
 
-            // Thêm tin nhắn vào khung chat
-            function addMessage(type, content) {
-                const messagesContainer = document.getElementById('aiChatMessages');
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('ai-message', type);
-                messageElement.textContent = content;
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("Sending message: " + JSON.stringify(message));
+            socket.send(JSON.stringify(message));
+            $("#messageInput").val("");
+        } else {
+            console.error("WebSocket is not open");
+            connectWebSocket();
+            setTimeout(sendMessage, 1000); // Thử gửi lại sau khi kết nối
+        }
+    }
 
-                const id = 'msg-' + Date.now();
-                messageElement.id = id;
-
-                messagesContainer.appendChild(messageElement);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                return id;
-            }
-
-            // Cập nhật nội dung tin nhắn
-            function updateMessage(id, content) {
-                const messageElement = document.getElementById(id);
-                if (messageElement) {
-                    messageElement.textContent = content;
-                }
-            }
-
-            // Gọi Gemini API (cần thay API_KEY thực tế của bạn)
-            async function callGeminiAPI(prompt) {
-                const API_KEY = 'AIzaSyA12flOEGLDWppjXlvurjzZVwC2ug9rA-o'; // Thay bằng API key thực của bạn
-                const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-
-                const requestBody = {
-                    contents: [{
-                            parts: [{
-                                    text: `Bạn là trợ lý AI của Fashion Shop, một cửa hàng thời trang. Hãy trả lời câu hỏi sau một cách ngắn gọn, hữu ích: ${prompt}`
-                                }]
-                        }],
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 800
-                    }
-                };
-
-                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(requestBody)
-                        });
-
-                        const data = await response.json();
-
-                        if (data.candidates && data.candidates[0].content.parts[0].text) {
-                            return data.candidates[0].content.parts[0].text;
-                        } else {
-                            throw new Error('Không nhận được phản hồi hợp lệ');
-                        }
-                    }
-        </script>
+    function displayMessage(message) {
+        const isSent = message.senderId == '${userID}';
+        const className = isSent ? 'user' : 'bot';
+        const html = `
+            <div class="ai-message ${className}">
+               
+                <p>${message.content}</p>
+                ${message.imageUrl ? '<img src="' + message.imageUrl + '" alt="Attached image">' : ''}
+            </div>`;
+        $("#aiChatMessages").append(html);
+        $('#aiChatMessages').scrollTop($('#aiChatMessages')[0].scrollHeight);
+    }
+</script>
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <jsp:include page="footer.jsp" />
