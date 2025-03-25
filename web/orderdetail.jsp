@@ -633,7 +633,7 @@
                             </c:if>
                             <c:if test="${order.status eq 'completed'}">
                                 <div class="action-buttons">
-                                    <a href="feedback?order=${order.id}" class="btn btn-primary">
+                                    <a href="submitfeedback?orderId=${order.id}" class="btn btn-primary">
                                         <i class="fas fa-star"></i> Đánh giá sản phẩm
                                     </a>
                                     <a href="orderdetail?action=reorder&id=${order.id}" class="btn btn-outline-primary">
