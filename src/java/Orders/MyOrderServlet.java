@@ -90,17 +90,38 @@ public class MyOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-   String action = request.getParameter("action");
+  String action = request.getParameter("action");
 
-    if (action != null && action.equals("reorder")) {
-        int orderId = Integer.parseInt(request.getParameter("id"));
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
+    HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("acc");
 
-        if (user != null) {
+    if (user == null) {
+        response.sendRedirect("login?redirect=myorder");
+        return;
+    }
+
+    if (action != null) {
+        if (action.equals("cancel")) {
+            int orderId = Integer.parseInt(request.getParameter("id"));
             Order order = orderDAO.getOrderById(orderId);
+
             if (order != null && order.getUserId() == user.getId()) {
-                // Tạo query string từ danh sách sản phẩm trong đơn hàng
+                boolean cancelled = orderDAO.cancelOrder(orderId, user.getId());
+                if (cancelled) {
+                    request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công!");
+                } else {
+                    request.setAttribute("errorMessage", "Không thể hủy đơn hàng. Vui lòng thử lại!");
+                }
+            } else {
+                request.setAttribute("errorMessage", "Đơn hàng không tồn tại hoặc không thuộc về bạn!");
+            }
+            processRequest(request, response);
+            return;
+        } else if (action.equals("reorder")) {
+            int orderId = Integer.parseInt(request.getParameter("id"));
+            Order order = orderDAO.getOrderById(orderId);
+
+            if (order != null && order.getUserId() == user.getId()) {
                 StringBuilder queryParams = new StringBuilder();
                 List<CartItem> items = order.getItems();
                 if (items != null && !items.isEmpty()) {
@@ -115,7 +136,6 @@ public class MyOrderServlet extends HttpServlet {
                                 .append("&quantity=").append(item.getQuantity());
                     }
                 }
-                // Chuyển hướng đến trang cartcontact với dữ liệu sản phẩm đã mã hóa
                 response.sendRedirect("cartcontact?" + queryParams.toString());
                 return;
             }
