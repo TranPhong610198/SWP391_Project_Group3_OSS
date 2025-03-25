@@ -7,7 +7,7 @@ public class UserAddress {
     private String phone;
     private String address;
     private boolean isDefault;
-    
+    private String email;
     public UserAddress() {
     }
     
@@ -18,6 +18,7 @@ public class UserAddress {
         this.phone = phone;
         this.address = address;
         this.isDefault = isDefault;
+        this.email = email;
     }
 
     // Getters and setters for all fields (including id and userId)
@@ -78,7 +79,13 @@ public class UserAddress {
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public String toString() {  //Good for debugging

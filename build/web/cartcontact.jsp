@@ -301,7 +301,15 @@
                                                             <br>
                                                             <span class="text-muted">
                                                                 <i class="fas fa-phone me-1"></i>${address.phone}
-                                                            </span><br>
+                                                            </span>
+                                                            <!-- Hiển thị email nếu là khách -->
+                                                            <c:if test="${isGuest && not empty address.email}">
+                                                                <br>
+                                                                <span class="text-muted">
+                                                                    <i class="fas fa-envelope me-1"></i>${address.email}
+                                                                </span>
+                                                            </c:if>
+                                                            <br>
                                                             <span><i class="fas fa-home me-1"></i>${address.address}</span>
                                                         </label>
                                                     </div>
@@ -316,7 +324,6 @@
                                 </button>
                             </div>
                         </div>
-
                         <!-- Shipping Method Section -->
                         <div class="card mb-4">
                             <div class="card-body">
@@ -468,64 +475,73 @@
         </div>
 
         <!-- Add Address Modal -->
-        <div class="modal fade" id="addAddressModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Thêm địa chỉ mới</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form action="cartcontact" method="post">
-                        <input type="hidden" name="action" value="add_address">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Họ tên người nhận</label>
-                                <input type="text" class="form-control" name="recipient_name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Số điện thoại</label>
-                                <input type="tel" class="form-control" name="phone" 
-                                       pattern="[0-9]{10}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Tỉnh/Thành phố</label>
-                                <select class="form-select" id="province" required>
-                                    <option value="">Chọn tỉnh/thành phố</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Quận/Huyện</label>
-                                <select class="form-select" id="district" required disabled>
-                                    <option value="">Chọn quận/huyện</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Phường/Xã</label>
-                                <select class="form-select" id="ward" required disabled>
-                                    <option value="">Chọn phường/xã</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Địa chỉ cụ thể</label>
-                                <textarea class="form-control" id="specific_address" 
-                                          rows="2" placeholder="Số nhà, tên đường" required></textarea>
-                            </div>
-                            <input type="hidden" name="address" id="full_address">
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" 
-                                       name="is_default" id="defaultAddress">
-                                <label class="form-check-label" for="defaultAddress">
-                                    Đặt làm địa chỉ mặc định
-                                </label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">Thêm địa chỉ</button>
-                        </div>
-                    </form>
-                </div>
+       <!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm địa chỉ mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <form action="cartcontact" method="post">
+                <input type="hidden" name="action" value="add_address">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Họ tên người nhận</label>
+                        <input type="text" class="form-control" name="recipient_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" name="phone" 
+                               pattern="[0-9]{10}" required>
+                    </div>
+                    <!-- Thêm trường email chỉ khi chưa đăng nhập -->
+                    <c:if test="${isGuest}">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" 
+                                   placeholder="example@domain.com" required>
+                        </div>
+                    </c:if>
+                    <div class="mb-3">
+                        <label class="form-label">Tỉnh/Thành phố</label>
+                        <select class="form-select" id="province" required>
+                            <option value="">Chọn tỉnh/thành phố</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quận/Huyện</label>
+                        <select class="form-select" id="district" required disabled>
+                            <option value="">Chọn quận/huyện</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phường/Xã</label>
+                        <select class="form-select" id="ward" required disabled>
+                            <option value="">Chọn phường/xã</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ cụ thể</label>
+                        <textarea class="form-control" id="specific_address" 
+                                  rows="2" placeholder="Số nhà, tên đường" required></textarea>
+                    </div>
+                    <input type="hidden" name="address" id="full_address">
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" 
+                               name="is_default" id="defaultAddress">
+                        <label class="form-check-label" for="defaultAddress">
+                            Đặt làm địa chỉ mặc định
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm địa chỉ</button>
+                </div>
+            </form>
+        </div>
+    </div>
         </div><br><br><br><br>
         <div><jsp:include page="/footer.jsp" /></div>
 
