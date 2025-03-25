@@ -1505,7 +1505,7 @@ VALUES
     (7,13, 'normal', 'GuXun@gmail.com', N'Cổ Xán', 'male', '0976543210', 7, 180000.00, CAST(N'2025-02-22T15:44:26.6000000' AS DateTime2)),
     
     -- User 16 (customer)
-    (8,16, 'vip', 'HuJia@gmail.com', N'Hồ Gia', 'female', '0932198765', 52, 142000000.00, CAST(N'2025-03-14T10:15:37.2000000' AS DateTime2)),
+    (8,16, 'vip', 'HuJia@gmail.com', N'Hồ Gia', 'female', '0932198765', 52, 14200000.00, CAST(N'2025-03-14T10:15:37.2000000' AS DateTime2)),
     
     -- User 17 (customer)
     (9,17, 'normal', 'LingYing@gmail.com', N'Lăng Ảnh', 'male', '0954321987', 21, 575000.00, CAST(N'2025-03-07T09:34:12.5000000' AS DateTime2)),
