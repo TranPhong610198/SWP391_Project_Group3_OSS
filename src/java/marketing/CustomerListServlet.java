@@ -60,7 +60,7 @@ public class CustomerListServlet extends HttpServlet {
                 params.add(searchPattern);
                 params.add(searchPattern);
                 params.add(searchPattern);
-                params.add(searchPattern);
+                
             }
             
             // Add sorting
