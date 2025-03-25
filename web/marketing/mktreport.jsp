@@ -278,34 +278,7 @@
     </table>
 </div>
 
-<!-- Thêm bảng Phân bố Coupon theo Tháng -->
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Tháng</th>
-                <th>Số lượng Coupon</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${not empty couponDistributionByMonth}">
-                    <c:forEach items="${couponDistributionByMonth}" var="entry">
-                        <tr>
-                            <td>${entry.key}</td>
-                            <td>${entry.value}</td>
-                        </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td colspan="2" class="text-center">No data available</td>
-                    </tr>
-                </c:otherwise>
-            </c:choose>
-        </tbody>
-    </table>
-</div>
+
                 <!-- 2. FEEDBACK REPORT -->
                 <c:if test="${reportType == 'overview' || reportType == 'feedback'}">
                     <div class="report-section bg-white">
@@ -930,6 +903,7 @@
                                     <tr><td>Bài viết đã đăng</td><td><c:out value="${postsByStatus['published']}" default="0" /></td></tr>
                                     <tr><td>Bài viết nổi bật</td><td>${featuredPostsCount}</td></tr>
                                     <tr><td>Bài viết nháp</td><td><c:out value="${postsByStatus['draft']}" default="0" /></td></tr>
+                                    <tr><td>Thời gian trung bình từ nháp đến đăng</td><td><fmt:formatNumber value="${averageTimeDraftToPublished}" pattern="#,##0.0" /> ngày</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -955,24 +929,7 @@
                                 </tbody>
                             </table>
                         </div>
-<!-- Thêm vào bảng KPI Tổng quan: Thời gian trung bình từ nháp đến đăng -->
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Tiêu chí</th>
-                <th>Giá trị</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Tổng số bài viết</td><td><c:set var="totalPosts" value="0" /><c:forEach items="${postsByStatus}" var="entry"><c:set var="totalPosts" value="${totalPosts + entry.value}" /></c:forEach>${totalPosts}</td></tr>
-            <tr><td>Bài viết đã đăng</td><td><c:out value="${postsByStatus['published']}" default="0" /></td></tr>
-            <tr><td>Bài viết nổi bật</td><td>${featuredPostsCount}</td></tr>
-            <tr><td>Bài viết nháp</td><td><c:out value="${postsByStatus['draft']}" default="0" /></td></tr>
-            <tr><td>Thời gian trung bình từ nháp đến đăng</td><td><fmt:formatNumber value="${averageTimeDraftToPublished}" pattern="#,##0.0" /> ngày</td></tr>
-        </tbody>
-    </table>
-</div>
+
 
 <!-- Thêm bảng Số lượng Bài viết theo Tác giả -->
 <div class="table-responsive">
@@ -1058,7 +1015,107 @@
                         </div>
                     </div>
                 </c:if>
+<!-- 7. COMPREHENSIVE REPORT -->
+<c:if test="${reportType == 'overview' || reportType == 'comprehensive'}">
+    <div class="report-section bg-white">
+        <div class="report-header">
+            <h2>Comprehensive Report</h2>
+            <p class="text-muted">Combined metrics for products and coupon usage</p>
+        </div>
 
+        <!-- Bảng KPI Tổng quan -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tiêu chí</th>
+                        <th>Giá trị</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Tổng số Coupon đã dùng</td><td>${couponUsageMetrics.totalUsed}</td></tr>
+                    <tr><td>Tổng số Coupon đã tạo</td><td>${couponUsageMetrics.totalCreated}</td></tr>
+                    <tr><td>Tỷ lệ sử dụng trung bình</td><td><fmt:formatNumber value="${couponUsageMetrics.averageUsageRate}" pattern="#,##0.00" />%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bảng Top 10 Sản phẩm Tổng hợp -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Điểm đánh giá trung bình</th>
+                        <th>Số đánh giá</th>
+                        <th>Số lượng bán</th>
+                        <th>Tồn kho</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty combinedProductMetrics}">
+                            <c:forEach items="${combinedProductMetrics}" var="product">
+                                <tr>
+                                    <td>${product.title}</td>
+                                    <td><fmt:formatNumber value="${product.avg_rating}" pattern="#,##0.0" /></td>
+                                    <td>${product.review_count}</td>
+                                    <td>${product.total_sold}</td>
+                                    <td>${product.stock_quantity}</td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="5" class="text-center">No data available</td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bảng Đề xuất -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Hạng mục</th>
+                        <th>Thông tin chi tiết & Đề xuất</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hiệu quả Coupon</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${couponUsageMetrics.averageUsageRate < 20}">
+                                    Tỷ lệ sử dụng trung bình thấp (<fmt:formatNumber value="${couponUsageMetrics.averageUsageRate}" pattern="#,##0.00" />%). Tăng cường quảng bá coupon.
+                                </c:when>
+                                <c:otherwise>
+                                    Tỷ lệ sử dụng trung bình tốt (<fmt:formatNumber value="${couponUsageMetrics.averageUsageRate}" pattern="#,##0.00" />%). Duy trì chiến lược hiện tại.
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sản phẩm nổi bật</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${not empty combinedProductMetrics && combinedProductMetrics.size() > 0}">
+                                    <strong>${combinedProductMetrics[0].title}</strong> dẫn đầu với ${combinedProductMetrics[0].total_sold} đơn vị bán. Tập trung quảng bá.
+                                </c:when>
+                                <c:otherwise>
+                                    Chưa có dữ liệu sản phẩm nổi bật.
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</c:if>
             </div> <!-- Closes col-md-10 ms-auto p-4 -->
         </div> <!-- Closes initial row -->
     </div> <!-- Closes container-fluid -->
