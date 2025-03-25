@@ -55,7 +55,6 @@ public class SalesReportDAO extends DBContext {
         return report;
     }
 
-    
     /**
      * Gets sales overview metrics like total revenue, orders, etc.
      */
