@@ -124,8 +124,7 @@ public class OrderDetailsServlet extends HttpServlet {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, shippingProvider, trackingNumber);
             } else if ("completed".equals(newStatus) || "returned".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
-                // kiểm tra khách hàng đã mua trc đây chưa
-                // rồi cập nhật hoăc tạo mới khách hàng
+                orderDAO.updatePayStatus(orderId, "completed");
                 Customer tempCus = customerDAO.checkExistEmail(order.getRecipientEmail());
                 if (tempCus!=null) {
                     customerDAO.updateCustomerPurchaseStats(order.getUserId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
