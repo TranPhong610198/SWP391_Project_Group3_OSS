@@ -488,7 +488,7 @@
                         <div class="info-value">${order.address}</div>
                     </div>
 
-                    <c:if test="${order.status eq 'shipped' || order.status eq 'completed'}">
+                    <c:if test="${order.status eq 'shipping' || order.status eq 'completed'}">
                         <div class="info-item">
                             <div class="info-label">Mã vận đơn:</div>
                             <div class="info-value">
@@ -535,7 +535,7 @@
                                 <c:when test="${order.status eq 'processing'}">
                                     <span class="order-status status-processing">Đang xử lý</span>
                                 </c:when>
-                                <c:when test="${order.status eq 'shipped'}">
+                                <c:when test="${order.status eq 'shipping'}">
                                     <span class="order-status status-shipped">Đang giao hàng</span>
                                 </c:when>
                                 <c:when test="${order.status eq 'completed'}">

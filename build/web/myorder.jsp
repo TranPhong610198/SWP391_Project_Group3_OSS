@@ -621,7 +621,7 @@
                                 <option value="pending" ${status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
                                 <option value="pending_pay" ${status == 'pending_pay' ? 'selected' : ''}>Chờ thanh toán</option>
                                 <option value="processing" ${status == 'processing' ? 'selected' : ''}>Đang xử lý</option>
-                                <option value="shipped" ${status == 'shipped' ? 'selected' : ''}>Đang vận chuyển</option>
+                                <option value="shipping" ${status == 'shipping' ? 'selected' : ''}>Đang vận chuyển</option>
                                 <option value="completed" ${status == 'completed' ? 'selected' : ''}>Đã hoàn thành</option>
                                 <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
                             </select>
@@ -665,7 +665,7 @@
                                         <c:when test="${order.status == 'processing'}">
                                             <span class="order-status status-processing">Đang xử lý</span>
                                         </c:when>
-                                        <c:when test="${order.status == 'shipped'}">
+                                        <c:when test="${order.status == 'shipping'}">
                                             <span class="order-status status-shipping">Đang vận chuyển</span>
                                         </c:when>
                                         <c:when test="${order.status == 'completed'}">
