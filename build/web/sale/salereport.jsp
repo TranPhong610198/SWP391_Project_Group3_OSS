@@ -176,6 +176,7 @@
             <i class="fas fa-file-export me-1"></i>Xuất báo cáo
         </button>
         <table class="table table-bordered table-report" id="overviewTable">
+            <h6>1.1 Tổng quan</h6>
             <thead>
                 <tr>
                     <th>Tổng Số Đơn Hàng</th>
@@ -198,6 +199,7 @@
         <div class="table-container" id="overviewRecommendationsTableContainer">
             <div class="table-responsive">
                 <table class="table table-bordered" id="overviewRecommendationsTable">
+                    <h6>1.2 Nhận xét tổng quan doanh thu</h6>
                     <thead>
                         <tr><th>Hạng mục</th><th>Thông tin chi tiết & Đề xuất</th></tr>
                     </thead>
