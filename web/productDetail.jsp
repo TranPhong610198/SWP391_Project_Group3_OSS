@@ -584,7 +584,7 @@
                                     <c:if test="${not empty feedback.replies}">
                                         <c:forEach items="${feedback.replies}" var="reply">
                                             <div class="reply" style="margin-left: 40px; margin-top: 10px;">
-                                                <div class="feedback-author">Cửa hàng (${reply.userFullName})</div>
+                                                <div class="feedback-author">Cửa hàng</div>
                                                 <div class="feedback-text">${reply.comment}</div>
                                                 <div class="feedback-date">
                                                     <fmt:formatDate value="${reply.createdAt}" pattern="dd/MM/yyyy HH:mm" />

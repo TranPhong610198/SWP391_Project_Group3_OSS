@@ -2,12 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package marketing;
+package marketing.Post;
 
 import DAO.PostDAO;
-import DAO.UserDAO;
-import entity.Post;
-import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,14 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name = "PostServlet", urlPatterns = {"/marketing/postList"})
-public class PostServlet extends HttpServlet {
+@WebServlet(name = "DeletPostServlet", urlPatterns = {"/marketing/deletePost"})
+public class DeletePostServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +37,10 @@ public class PostServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet PostManagement</title>");
+            out.println("<title>Servlet DeletPostServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet PostManagement at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeletPostServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,42 +56,28 @@ public class PostServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String idParam = request.getParameter("id");
+        if (idParam != null) {
+            try {
+                int postId = Integer.parseInt(idParam);
+                PostDAO postDAO = new PostDAO();
+                boolean isDeleted = postDAO.deletePost(postId);
 
-        int page = 1;
-        int pageSize = 10;
-        String search = request.getParameter("search");
-        String authorIdStr = request.getParameter("authorId");
-        String status = request.getParameter("status");
-      
-
-        Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
-                ? Integer.parseInt(authorIdStr)
-                : null;
-
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
+                if (isDeleted) {
+                     request.getSession().setAttribute("success", "Xóa bài viết thành công!");
+                } else {
+                     request.getSession().setAttribute("error", "Không tìm thấy bài viết để xóa!");
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "ID không hợp lệ!");
+            }
+        } else {
+            request.setAttribute("error", "Thiếu ID bài viết!");
         }
 
-        PostDAO postDAO = new PostDAO();
-        List<Post> posts = postDAO.getAllPosts(page, pageSize, search, authorId, status);
-
-        UserDAO userDAO = new UserDAO();
-        List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'
-
-        int totalItems = postDAO.getTotalPostsCount(search, authorId, status);
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-
-        request.setAttribute("posts", posts);
-        request.setAttribute("authors", authors); // Gửi danh sách authors đến JSP
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalItems", totalItems);
-        
-
-        request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
+        response.sendRedirect("postList");
     }
 
     /**
@@ -121,4 +103,5 @@ public class PostServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

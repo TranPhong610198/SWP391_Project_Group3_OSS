@@ -1,7 +1,13 @@
-package marketing;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package marketing.Post;
 
-import DAO.SliderDAO;
-import entity.Slider;
+import DAO.PostDAO;
+import DAO.UserDAO;
+import entity.Post;
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,8 +21,8 @@ import java.util.List;
  *
  * @author DELL
  */
-@WebServlet(name = "SliderListServlet", urlPatterns = {"/marketing/sliderList"})
-public class SliderListServlet extends HttpServlet {
+@WebServlet(name = "PostServlet", urlPatterns = {"/marketing/postList"})
+public class PostServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,10 +41,10 @@ public class SliderListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SliderManagement</title>");
+            out.println("<title>Servlet PostManagement</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SliderManagement at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet PostManagement at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -54,44 +60,42 @@ public class SliderListServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Retrieve pagination parameters
+
         int page = 1;
         int pageSize = 10;
-        
-        // Retrieve filter parameters
         String search = request.getParameter("search");
+        String authorIdStr = request.getParameter("authorId");
         String status = request.getParameter("status");
-        
-        // Convert page parameter if it exists
+      
+
+        Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
+                ? Integer.parseInt(authorIdStr)
+                : null;
+
         if (request.getParameter("page") != null) {
-            try {
-                page = Integer.parseInt(request.getParameter("page"));
-            } catch (NumberFormatException e) {
-                // Default to page 1 if invalid input
-                page = 1;
-            }
+            page = Integer.parseInt(request.getParameter("page"));
         }
-        
-        // Get sliders from database with filters
-        SliderDAO sliderDAO = new SliderDAO();
-        List<Slider> sliders = sliderDAO.getAllSliders(page, pageSize, search, status);
-        
-        // Calculate pagination information
-        int totalSliders = sliderDAO.getTotalSlidersCount(search, status);
-        int totalPages = (int) Math.ceil((double) totalSliders / pageSize);
-        
-        // Set attributes for JSP
-        request.setAttribute("sliders", sliders);
+
+        PostDAO postDAO = new PostDAO();
+        List<Post> posts = postDAO.getAllPosts(page, pageSize, search, authorId, status);
+
+        UserDAO userDAO = new UserDAO();
+        List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'
+
+        int totalItems = postDAO.getTotalPostsCount(search, authorId, status);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        request.setAttribute("posts", posts);
+        request.setAttribute("authors", authors); // Gửi danh sách authors đến JSP
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalItems", totalSliders);
-        request.setAttribute("pageSize", pageSize);  // Make sure pageSize is set as attribute
+        request.setAttribute("totalItems", totalItems);
         
-        // Forward to JSP
-        request.getRequestDispatcher("/marketing/slider/sliderlist.jsp").forward(request, response);
+
+        request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
     }
 
     /**

@@ -1,4 +1,4 @@
-package marketing;
+package marketing.Product;
 
 import DAO.CategoryDAO;
 import entity.Category;

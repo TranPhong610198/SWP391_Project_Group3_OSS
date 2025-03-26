@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package marketing;
+package marketing.Post;
 
 import DAO.PostDAO;
 import entity.Post;
@@ -15,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.sql.Date;
@@ -24,14 +25,13 @@ import java.util.List;
  *
  * @author DELL
  */
-@WebServlet(name = "DetailPostServlet", urlPatterns = {"/marketing/detailPost"})
+@WebServlet(name = "AddPostServlet", urlPatterns = {"/marketing/addPost"})
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,    // 1 MB
-    maxFileSize = 1024 * 1024 * 10,      // 10 MB
-    maxRequestSize = 1024 * 1024 * 15,   // 15 MB
-    location = ""
+    fileSizeThreshold = 1024 * 1024, // 1 MB
+    maxFileSize = 1024 * 1024 * 10,  // 10 MB
+    maxRequestSize = 1024 * 1024 * 15 // 15 MB
 )
-public class PostDetailServlet extends HttpServlet {
+public class AddPostServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,10 +50,10 @@ public class PostDetailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditPostServlet</title>");
+            out.println("<title>Servlet AddPostServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditPostServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddPostServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -71,20 +71,11 @@ public class PostDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pId = request.getParameter("id");
-        int postId;
-        try {
-            postId = Integer.parseInt(pId);
-            PostDAO postDAO = new PostDAO();
-            Post p = postDAO.getPostById(postId);
+        PostDAO postDAO = new PostDAO();
+    List<User> users = postDAO.getAuthorsByRole(); // Lấy danh sách admin & marketing
+    request.setAttribute("users", users);
 
-
-            request.setAttribute("post", p);
-            request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
-
+    request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
     }
 
     /**
@@ -99,24 +90,22 @@ public class PostDetailServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        int id = Integer.parseInt(request.getParameter("id"));
+    try {
         String title = request.getParameter("title");
-        String oldThumbnail = request.getParameter("old_thumbnail");
         String summary = request.getParameter("summary");
         String content = request.getParameter("content");
         String status = request.getParameter("status");
-        Date updatedAt = new Date(System.currentTimeMillis());
+        Date createdAt = new Date(System.currentTimeMillis());
+        boolean isFeatured = request.getParameter("isFeatured") != null;
         
-        // Nếu bất kỳ trường nào bị để trống, báo lỗi
         if (title.isEmpty() || summary.isEmpty() || content.isEmpty() || status.isEmpty()) {
             request.setAttribute("error", "Tất cả các trường không được để trống.");
-            request.setAttribute("post", new Post(id, title, oldThumbnail, summary, content, status, updatedAt));
-            request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
+            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
             return;
-        }
-        Part thumbnailPart = request.getPart("thumbnail");
-        String thumbnail = oldThumbnail; // Giữ ảnh cũ mặc định
-        boolean isFeatured = request.getParameter("isFeatured") != null;
+        }        
+        
+        // Xử lý file ảnh
+        String thumbnail = "";
         try {
             Part filePart = request.getPart("thumbnail");
             if (filePart != null && filePart.getSize() > 0) {
@@ -134,42 +123,49 @@ public class PostDetailServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
+            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+            return;
         }
+
+        // Kiểm tra session user
+        HttpSession session = request.getSession();
+        User existingUser = (User) session.getAttribute("acc");
+        if (existingUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Tạo và lưu post
+        Post post = new Post();
+        post.setTitle(title);
+        post.setThumbnail(thumbnail);
+        post.setSummary(summary);
+        post.setContent(content);
+        post.setStatus(status);
+        post.setCreatedAt(createdAt);
+        post.setUser(existingUser);
+        post.setIsFeatured(isFeatured); 
 
         PostDAO postDAO = new PostDAO();
-    Post oldPost = postDAO.getPostById(id);
+        boolean isAdded = postDAO.addPost(post);
 
-    // Kiểm tra nếu không có thay đổi gì
-    if (oldPost.getTitle().equals(title) && 
-        oldPost.getSummary().equals(summary) && 
-        oldPost.getContent().equals(content) && 
-        oldPost.getStatus().equals(status) && 
-        oldPost.getThumbnail().equals(thumbnail) && 
-        oldPost.isIsFeatured() == isFeatured) {
-        response.sendRedirect("postList");
-        return;
-    }
+        if (isAdded) {
+    // Change from request attribute to session attribute
+    session.setAttribute("success", "Đã thêm bài đăng thành công!");
     
-        Post post = new Post(id, title, thumbnail, summary, content, status, updatedAt);
-        post.setIsFeatured(isFeatured);
+    // Redirect to post list
+    response.sendRedirect(request.getContextPath() + "/marketing/postList");
+} else {
+    request.setAttribute("error", "Thêm bài viết thất bại!");
+    request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+}
         
-        boolean isUpdated = postDAO.updatePost(post);
-
-        //Post p = postDAO.getPostById(id);
-
-
-        if (isUpdated) {
-            // Lưu thông báo thành công vào session thay vì request
-        request.getSession().setAttribute("success", "Bài đăng đã được cập nhật thành công.");
-        // Chuyển hướng về trang danh sách bài đăng
-        response.sendRedirect("postList");
-        } else {
-
-            request.setAttribute("post", oldPost);
-            request.setAttribute("error", "Cập nhật bài viết thất bại.");
-            request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
-        }
-
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("error", "Lỗi: " + e.getMessage());
+        request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+    }
     }
 
     /**

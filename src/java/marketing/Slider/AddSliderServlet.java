@@ -1,4 +1,4 @@
-package marketing;
+package marketing.Slider;
 
 import DAO.PostDAO;
 import DAO.ProductDAO;

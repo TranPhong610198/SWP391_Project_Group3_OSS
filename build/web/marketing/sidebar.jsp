@@ -121,12 +121,12 @@
             </a>
         </li>
         
-        <li class="menu-item p-2">
+<!--        <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/marketing/chatlist" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-user-cog me-2"></i>
                 Chăm sóc khách hàng
             </a>
-        </li>
+        </li>-->
 
         <li class="menu-item p-2">
             <a href="report" class="text-decoration-none text-light d-flex align-items-center">

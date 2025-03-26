@@ -1,7 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package marketing;
+package marketing.Slider;
 
 import DAO.PostDAO;
 import DAO.ProductDAO;
