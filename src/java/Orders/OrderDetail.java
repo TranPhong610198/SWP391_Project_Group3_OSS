@@ -79,12 +79,18 @@ public class OrderDetail extends HttpServlet {
         if (subtotal > 500000) {
             shippingFee = 0.0; // Override shippingFee từ session nếu subtotal > 500k
         }
+        
+        //Kiểm tra order đã feedback chưa
+        boolean checkFeedBack = orderDAO.hasFeedback(orderId);
+        
         // Set attributes for JSP
+        request.setAttribute("isFeedBack", checkFeedBack);
         request.setAttribute("order", order);
         request.setAttribute("orderHistory", orderHistory);
         request.setAttribute("subtotal", subtotal);
         request.setAttribute("shippingFee", shippingFee);
-
+        
+        
         // Forward to JSP
         request.getRequestDispatcher("orderdetail.jsp").forward(request, response);
     }

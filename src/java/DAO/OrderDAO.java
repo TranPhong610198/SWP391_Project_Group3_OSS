@@ -464,89 +464,88 @@ public class OrderDAO extends DBContext {
     }
 
     // Add these methods to your existing OrderDAO.java class
+    public Order getOrderById(int orderId) {
+        Order order = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-public Order getOrderById(int orderId) {
-    Order order = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-
-    try {
-        String sql = "SELECT o.*, p.payment_method, p.payment_status, "
-                + "s.shipping_provider, s.tracking_number, s.estimated_delivery, "
-                + "oc.coupon_id, oc.discount_applied, c.code AS coupon_code "
-                + "FROM orders o "
-                + "LEFT JOIN payments p ON o.id = p.order_id "
-                + "LEFT JOIN shipping s ON o.id = s.order_id "
-                + "LEFT JOIN order_coupons oc ON o.id = oc.order_id "
-                + "LEFT JOIN coupons c ON oc.coupon_id = c.id "
-                + "WHERE o.id = ?";
-
-        stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, orderId);
-        rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            order = new Order();
-            order.setId(rs.getInt("id"));
-            order.setUserId(rs.getInt("user_id"));
-            order.setOrderCode(rs.getString("notes"));
-            order.setStatus(rs.getString("status"));
-            order.setTotal(rs.getDouble("total_amount"));
-            order.setRecipientName(rs.getString("recipient_name"));
-            order.setRecipientEmail(rs.getString("recipient_email"));
-            order.setPhone(rs.getString("recipient_phone"));
-            order.setAddress(rs.getString("recipient_address"));
-            order.setOrderDate(rs.getTimestamp("created_at"));
-            order.setPaymentMethod(rs.getString("payment_method"));
-            order.setPaymentStatus(rs.getString("payment_status"));
-            order.setShippingProvider(rs.getString("shipping_provider"));
-            order.setTrackingNumber(rs.getString("tracking_number"));
-
-            // Thiết lập shippingMethod dựa trên shipping_provider
-            String shippingProvider = rs.getString("shipping_provider");
-            if (shippingProvider != null) {
-                if (shippingProvider.toLowerCase().contains("express")) {
-                    order.setShippingMethod("express");
-                } else if (shippingProvider.toLowerCase().contains("standard")) {
-                    order.setShippingMethod("standard");
-                } else {
-                    order.setShippingMethod("standard"); // Mặc định là standard nếu không xác định được
-                }
-            } else {
-                order.setShippingMethod("standard"); // Mặc định nếu không có thông tin
-            }
-
-            double discountAmount = rs.getDouble("discount_applied");
-            if (!rs.wasNull() && discountAmount > 0) {
-                order.setDiscountAmount(discountAmount);
-                order.setCouponCode(rs.getString("coupon_code"));
-            } else {
-                order.setDiscountAmount(0.0);
-                order.setCouponCode(null);
-            }
-
-            List<CartItem> items = getOrderItems(order.getId());
-            order.setItems(items);
-        }
-
-    } catch (SQLException e) {
-        System.out.println("Error getting order: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
         try {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stmt != null) {
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            System.out.println("Error closing resources: " + e.getMessage());
-        }
-    }
+            String sql = "SELECT o.*, p.payment_method, p.payment_status, "
+                    + "s.shipping_provider, s.tracking_number, s.estimated_delivery, "
+                    + "oc.coupon_id, oc.discount_applied, c.code AS coupon_code "
+                    + "FROM orders o "
+                    + "LEFT JOIN payments p ON o.id = p.order_id "
+                    + "LEFT JOIN shipping s ON o.id = s.order_id "
+                    + "LEFT JOIN order_coupons oc ON o.id = oc.order_id "
+                    + "LEFT JOIN coupons c ON oc.coupon_id = c.id "
+                    + "WHERE o.id = ?";
 
-    return order;
-}
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, orderId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setOrderCode(rs.getString("notes"));
+                order.setStatus(rs.getString("status"));
+                order.setTotal(rs.getDouble("total_amount"));
+                order.setRecipientName(rs.getString("recipient_name"));
+                order.setRecipientEmail(rs.getString("recipient_email"));
+                order.setPhone(rs.getString("recipient_phone"));
+                order.setAddress(rs.getString("recipient_address"));
+                order.setOrderDate(rs.getTimestamp("created_at"));
+                order.setPaymentMethod(rs.getString("payment_method"));
+                order.setPaymentStatus(rs.getString("payment_status"));
+                order.setShippingProvider(rs.getString("shipping_provider"));
+                order.setTrackingNumber(rs.getString("tracking_number"));
+
+                // Thiết lập shippingMethod dựa trên shipping_provider
+                String shippingProvider = rs.getString("shipping_provider");
+                if (shippingProvider != null) {
+                    if (shippingProvider.toLowerCase().contains("express")) {
+                        order.setShippingMethod("express");
+                    } else if (shippingProvider.toLowerCase().contains("standard")) {
+                        order.setShippingMethod("standard");
+                    } else {
+                        order.setShippingMethod("standard"); // Mặc định là standard nếu không xác định được
+                    }
+                } else {
+                    order.setShippingMethod("standard"); // Mặc định nếu không có thông tin
+                }
+
+                double discountAmount = rs.getDouble("discount_applied");
+                if (!rs.wasNull() && discountAmount > 0) {
+                    order.setDiscountAmount(discountAmount);
+                    order.setCouponCode(rs.getString("coupon_code"));
+                } else {
+                    order.setDiscountAmount(0.0);
+                    order.setCouponCode(null);
+                }
+
+                List<CartItem> items = getOrderItems(order.getId());
+                order.setItems(items);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error getting order: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing resources: " + e.getMessage());
+            }
+        }
+
+        return order;
+    }
 
     public List<OrderHistory> getOrderHistory(int orderId) {
         List<OrderHistory> history = new ArrayList<>();
@@ -941,6 +940,21 @@ public Order getOrderById(int orderId) {
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Cách method để dùng cho feedback - Trần Phong
+    public boolean hasFeedback(int orderId) {
+        String query = "SELECT COUNT(*) FROM feedback f JOIN order_items oi ON f.order_item_id = oi.id WHERE oi.order_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

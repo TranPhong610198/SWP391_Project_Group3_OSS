@@ -659,9 +659,16 @@
                             </c:if>
                             <c:if test="${order.status eq 'completed'}">
                                 <div class="action-buttons">
-                                    <a href="submitfeedback?orderId=${order.id}" class="btn btn-primary">
-                                        <i class="fas fa-star"></i> Đánh giá sản phẩm
-                                    </a>
+                                    <c:if test="${!isFeedBack}">
+                                        <a href="submitfeedback?orderId=${order.id}" class="btn btn-primary">
+                                            <i class="fas fa-star"></i> Đánh giá sản phẩm
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${isFeedBack}">
+                                        <a onclick="return false;" class="btn btn-warning">
+                                            <i class="fas fa-star"></i> Đã đánh giá
+                                        </a>
+                                    </c:if>
                                     <a href="orderdetail?action=reorder&id=${order.id}" class="btn btn-outline-primary">
                                         <i class="fas fa-redo"></i> Mua lại
                                     </a>
