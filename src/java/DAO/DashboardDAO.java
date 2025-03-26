@@ -3,6 +3,7 @@ package DAO;
 import entity.DashboardStats;
 import entity.LowStockProduct;
 import Context.DBContext;
+import entity.Customer;
 
 import java.sql.*;
 import java.util.*;
@@ -55,7 +56,8 @@ stats.setPendingCustomers(customerStats.getOrDefault("pending", 0));
         stats.setExpiredCoupons(getCouponCount("expired"));
          stats.setCouponUsage(getCouponUsage());
     stats.setCouponExpirations(getCouponExpirations());
-
+    stats.setCustomerContactStats(getCustomerContactStats());
+        stats.setTopVIPCustomers(getTopVIPCustomers());
     } catch (Exception e) {
         e.printStackTrace();
     } finally {
@@ -476,6 +478,79 @@ private Map<String, Integer> getCouponExpirations() {
         e.printStackTrace();
     }
     return expirationStats;
+}
+
+public Map<String, Integer> getCustomerContactStats() {
+    Map<String, Integer> customerStats = new LinkedHashMap<>();
+    try {
+        String sql = "SELECT customer_type, COUNT(*) as count " +
+                     "FROM customer_contact_history " +
+                     "GROUP BY customer_type";
+        
+        ps = connection.prepareStatement(sql);
+        rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            String customerType = rs.getString("customer_type");
+            int count = rs.getInt("count");
+            customerStats.put(customerType, count);
+        }
+        
+        // Ensure both types are present even if count is 0
+        if (!customerStats.containsKey("normal")) {
+            customerStats.put("normal", 0);
+        }
+        if (!customerStats.containsKey("vip")) {
+            customerStats.put("vip", 0);
+        }
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return customerStats;
+}
+
+public List<Customer> getTopVIPCustomers() {  // Xóa tham số startDate và endDate
+    List<Customer> topVIPCustomers = new ArrayList<>();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try {
+        String sql = "SELECT id, user_id, customer_type, email, full_name, gender, mobile, " +
+                     "total_purchases, total_spend " +  // Xóa updated_at
+                     "FROM customer_contact_history " +
+                     "WHERE customer_type = 'vip' " +
+                     "ORDER BY total_spend DESC";
+        
+        ps = connection.prepareStatement(sql);
+        
+        rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Customer customer = new Customer();
+            customer.setId(rs.getInt("id"));
+            customer.setUserId(rs.getObject("user_id") != null ? rs.getInt("user_id") : null);
+            customer.setCustomerType(rs.getString("customer_type"));
+            customer.setEmail(rs.getString("email"));
+            customer.setFullName(rs.getString("full_name"));
+            customer.setGender(rs.getString("gender"));
+            customer.setMobile(rs.getString("mobile"));
+            customer.setTotalPurchases(rs.getInt("total_purchases"));
+            customer.setTotalSpend(rs.getBigDecimal("total_spend"));
+            customer.setUpdatedBy(null);  // Giữ nguyên vì không liên quan đến updated_at
+            // Xóa dòng: customer.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+            topVIPCustomers.add(customer);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return topVIPCustomers;
 }
     
     private void closeConnection() {

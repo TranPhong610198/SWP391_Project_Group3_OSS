@@ -464,85 +464,89 @@ public class OrderDAO extends DBContext {
     }
 
     // Add these methods to your existing OrderDAO.java class
-    public Order getOrderById(int orderId) {
-        Order order = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
 
-        try {
-            String sql = "SELECT o.*, p.payment_method, p.payment_status, "
-                    + "s.shipping_provider, s.tracking_number, s.estimated_delivery, "
-                    + "oc.coupon_id, oc.discount_applied, c.code AS coupon_code "
-                    + "FROM orders o "
-                    + "LEFT JOIN payments p ON o.id = p.order_id "
-                    + "LEFT JOIN shipping s ON o.id = s.order_id "
-                    + "LEFT JOIN order_coupons oc ON o.id = oc.order_id "
-                    + "LEFT JOIN coupons c ON oc.coupon_id = c.id "
-                    + "WHERE o.id = ?";
+public Order getOrderById(int orderId) {
+    Order order = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
 
-            stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, orderId);
-            rs = stmt.executeQuery();
+    try {
+        String sql = "SELECT o.*, p.payment_method, p.payment_status, "
+                + "s.shipping_provider, s.tracking_number, s.estimated_delivery, "
+                + "oc.coupon_id, oc.discount_applied, c.code AS coupon_code "
+                + "FROM orders o "
+                + "LEFT JOIN payments p ON o.id = p.order_id "
+                + "LEFT JOIN shipping s ON o.id = s.order_id "
+                + "LEFT JOIN order_coupons oc ON o.id = oc.order_id "
+                + "LEFT JOIN coupons c ON oc.coupon_id = c.id "
+                + "WHERE o.id = ?";
 
-            if (rs.next()) {
-                order = new Order();
-                order.setId(rs.getInt("id"));
-                order.setUserId(rs.getInt("user_id"));
-                order.setOrderCode(rs.getString("notes"));
-                order.setStatus(rs.getString("status"));
-                order.setTotal(rs.getDouble("total_amount"));
-                order.setRecipientName(rs.getString("recipient_name"));
-                order.setRecipientEmail(rs.getString("recipient_email"));
-                order.setPhone(rs.getString("recipient_phone"));
-                order.setAddress(rs.getString("recipient_address"));
-                order.setOrderDate(rs.getTimestamp("created_at"));
-                order.setPaymentMethod(rs.getString("payment_method"));
-                order.setPaymentStatus(rs.getString("payment_status"));
-                order.setShippingProvider(rs.getString("shipping_provider"));
-                order.setTrackingNumber(rs.getString("tracking_number"));
+        stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, orderId);
+        rs = stmt.executeQuery();
 
-                String shippingProvider = rs.getString("shipping_provider");
+        if (rs.next()) {
+            order = new Order();
+            order.setId(rs.getInt("id"));
+            order.setUserId(rs.getInt("user_id"));
+            order.setOrderCode(rs.getString("notes"));
+            order.setStatus(rs.getString("status"));
+            order.setTotal(rs.getDouble("total_amount"));
+            order.setRecipientName(rs.getString("recipient_name"));
+            order.setRecipientEmail(rs.getString("recipient_email"));
+            order.setPhone(rs.getString("recipient_phone"));
+            order.setAddress(rs.getString("recipient_address"));
+            order.setOrderDate(rs.getTimestamp("created_at"));
+            order.setPaymentMethod(rs.getString("payment_method"));
+            order.setPaymentStatus(rs.getString("payment_status"));
+            order.setShippingProvider(rs.getString("shipping_provider"));
+            order.setTrackingNumber(rs.getString("tracking_number"));
 
-                if (shippingProvider != null) {
-                    if (shippingProvider.toLowerCase().contains("express")) {
-                        order.setShippingMethod("express");
-                    } else {
-                        order.setShippingMethod("standard");
-                    }
-                }
-
-                double discountAmount = rs.getDouble("discount_applied");
-                if (!rs.wasNull() && discountAmount > 0) {
-                    order.setDiscountAmount(discountAmount);
-                    order.setCouponCode(rs.getString("coupon_code"));
+            // Thiết lập shippingMethod dựa trên shipping_provider
+            String shippingProvider = rs.getString("shipping_provider");
+            if (shippingProvider != null) {
+                if (shippingProvider.toLowerCase().contains("express")) {
+                    order.setShippingMethod("express");
+                } else if (shippingProvider.toLowerCase().contains("standard")) {
+                    order.setShippingMethod("standard");
                 } else {
-                    order.setDiscountAmount(0.0);
-                    order.setCouponCode(null);
+                    order.setShippingMethod("standard"); // Mặc định là standard nếu không xác định được
                 }
-
-                List<CartItem> items = getOrderItems(order.getId());
-                order.setItems(items);
-
+            } else {
+                order.setShippingMethod("standard"); // Mặc định nếu không có thông tin
             }
 
-        } catch (SQLException e) {
-            System.out.println("Error getting order: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing resources: " + e.getMessage());
+            double discountAmount = rs.getDouble("discount_applied");
+            if (!rs.wasNull() && discountAmount > 0) {
+                order.setDiscountAmount(discountAmount);
+                order.setCouponCode(rs.getString("coupon_code"));
+            } else {
+                order.setDiscountAmount(0.0);
+                order.setCouponCode(null);
             }
+
+            List<CartItem> items = getOrderItems(order.getId());
+            order.setItems(items);
         }
 
-        return order;
+    } catch (SQLException e) {
+        System.out.println("Error getting order: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error closing resources: " + e.getMessage());
+        }
     }
+
+    return order;
+}
 
     public List<OrderHistory> getOrderHistory(int orderId) {
         List<OrderHistory> history = new ArrayList<>();

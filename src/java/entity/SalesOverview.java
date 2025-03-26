@@ -24,9 +24,11 @@ public class SalesOverview {
     private int totalSales;
     private int vipCustomers;
     private int normalCustomers;
+    private int completedSalesQuantity;
     
     public SalesOverview() {
         this.totalRevenue = BigDecimal.ZERO;
+        this.completedSalesQuantity = 0;
     }
     
     // Getters and Setters
@@ -104,5 +106,13 @@ public class SalesOverview {
     
     public int getTotalCustomers() {
         return vipCustomers + normalCustomers;
+    }
+    
+    public int getCompletedSalesQuantity() {
+        return completedSalesQuantity;
+    }
+    
+    public void setCompletedSalesQuantity(int completedSalesQuantity) {
+        this.completedSalesQuantity = completedSalesQuantity;
     }
 }

@@ -123,16 +123,16 @@ public class OrderDetail extends HttpServlet {
             // Thiết lập lại các thuộc tính để hiển thị chi tiết đơn hàng
             request.setAttribute("order", order);
             request.setAttribute("orderHistory", orderDAO.getOrderHistory(orderId));
-            double subtotal = 0;
-            for (CartItem item : order.getItems()) {
-                subtotal += item.getProductPrice() * item.getQuantity();
-            }
-            double shippingFee = "express".equals(order.getShippingMethod()) ? 45000.0 : 30000.0;
-            if (subtotal > 500000) shippingFee = 0.0;
-            request.setAttribute("subtotal", subtotal);
-            request.setAttribute("shippingFee", shippingFee);
-            request.getRequestDispatcher("orderdetail.jsp").forward(request, response);
-            return;
+//            double subtotal = 0;
+//            for (CartItem item : order.getItems()) {
+//                subtotal += item.getProductPrice() * item.getQuantity();
+//            }
+//            double shippingFee = "express".equals(order.getShippingMethod()) ? 45000.0 : 30000.0;
+//            if (subtotal > 500000) shippingFee = 0.0;
+//            request.setAttribute("subtotal", subtotal);
+//            request.setAttribute("shippingFee", shippingFee);
+//            request.getRequestDispatcher("orderdetail.jsp").forward(request, response);
+//            return;
         } else if (action.equals("reorder")) {
             StringBuilder queryParams = new StringBuilder();
             List<CartItem> items = order.getItems();

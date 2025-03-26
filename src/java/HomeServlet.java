@@ -99,9 +99,10 @@ public class HomeServlet extends HttpServlet {
         // Lấy dữ liệu chat
         Integer userId = (Integer) request.getSession().getAttribute("userID");
         List<Message> messages = null;
-        int chatUserId = userId != null ? userId : -1; // Mặc định -1 nếu chưa đăng nhập
+        int chatUserId = userId != null ? userId : -1;
+        int marketingId = -1;
         if (userId != null) {
-            int marketingId = messageDAO.getMarketingId();
+            marketingId = messageDAO.getMarketingId();
             if (marketingId != -1) {
                 messages = messageDAO.getMessagesBetweenUsers(marketingId, userId);
                 messageDAO.markAsRead(marketingId, userId);
@@ -123,6 +124,7 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("chatMessages", messages); // Tin nhắn chat
         request.setAttribute("chatUserId", chatUserId); // ID người dùng chat
         request.setAttribute("userID", userId); // Thêm userID để dùng trong JSP
+        request.setAttribute("marketingId", marketingId);
 
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
     }

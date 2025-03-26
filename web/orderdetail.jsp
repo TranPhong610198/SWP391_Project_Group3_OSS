@@ -350,7 +350,7 @@
                         <c:set var="steps" value="pending,processing,shipping,completed" />
                         <c:set var="stepsArray" value="${fn:split(steps, ',')}" />
                         <c:set var="isCancelled" value="${order.status eq 'cancelled'}" />
-                       
+
                         <!-- Xác định bước hiện tại -->
                         <c:set var="currentStepIndex" value="0" />
                         <c:choose>
@@ -397,7 +397,7 @@
                                 </div>
                             </div>
                         </c:if>
-                        
+
                         <!-- Chỉ hiển thị các bước tiếp theo nếu đơn hàng không bị hủy -->
                         <c:if test="${not isCancelled}">
                             <!-- Bước 2: Chờ Xác Nhận -->
@@ -456,30 +456,30 @@
 
                             <!-- Bước 5: Đã Giao -->
                             <c:if test="${order.status eq 'completed'}">
-                            <div class="timeline-step ${currentStepIndex >= 4 ? 'active' : ''}">
-                                <div class="timeline-icon"><i class="fas fa-star"></i></div>
-                                <div class="timeline-text">Đã Giao</div>
-                                <div class="timeline-date">
-                                    <c:forEach items="${orderHistory}" var="history">
-                                        <c:if test="${history.status eq 'completed'}">
-                                            <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
-                                        </c:if>
-                                    </c:forEach>
-                                </div>
-                            </div></c:if>
-                             <c:if test="${order.status eq 'returned'}">
-                            <div class="timeline-step ${currentStepIndex >= 4 ? 'active' : ''}">
-                                <div class="timeline-icon"><i class="fas fa-star"></i></div>
-                                <div class="timeline-text">Đã Hoàn Trả</div>
-                                <div class="timeline-date">
-                                    <c:forEach items="${orderHistory}" var="history">
-                                        <c:if test="${history.status eq 'returned'}">
-                                            <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
-                                        </c:if>
-                                    </c:forEach>
-                                </div>
-                            </div></c:if>
-                            
+                                <div class="timeline-step ${currentStepIndex >= 4 ? 'active' : ''}">
+                                    <div class="timeline-icon"><i class="fas fa-star"></i></div>
+                                    <div class="timeline-text">Đã Giao</div>
+                                    <div class="timeline-date">
+                                        <c:forEach items="${orderHistory}" var="history">
+                                            <c:if test="${history.status eq 'completed'}">
+                                                <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </div>
+                                </div></c:if>
+                            <c:if test="${order.status eq 'returned'}">
+                                <div class="timeline-step ${currentStepIndex >= 4 ? 'active' : ''}">
+                                    <div class="timeline-icon"><i class="fas fa-star"></i></div>
+                                    <div class="timeline-text">Đã Hoàn Trả</div>
+                                    <div class="timeline-date">
+                                        <c:forEach items="${orderHistory}" var="history">
+                                            <c:if test="${history.status eq 'returned'}">
+                                                <fmt:formatDate value="${history.updatedAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </div>
+                                </div></c:if>
+
                         </c:if>
                     </div>
                 </div>
@@ -560,7 +560,7 @@
                                 <c:when test="${order.status eq 'cancelled'}">
                                     <span class="order-status status-cancelled">Đã hủy</span>
                                 </c:when>
-                                    <c:when test="${order.status eq 'returned'}">
+                                <c:when test="${order.status eq 'returned'}">
                                     <span class="order-status status-cancelled">Đã hoàn trả</span>
                                 </c:when>
                                 <c:otherwise>
@@ -614,14 +614,21 @@
                                     <c:choose>
                                         <c:when test="${order.shippingMethod eq 'standard'}">
                                             <i class="fas fa-truck me-1"></i> Giao hàng tiêu chuẩn (3-5 ngày)
-                                            <div class="small text-muted mt-1">Phí vận chuyển: 30,000₫</div>
+                                            <div class="small text-muted mt-1">
+                                                Phí vận chuyển: <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                            </div>
                                         </c:when>
                                         <c:when test="${order.shippingMethod eq 'express'}">
                                             <i class="fas fa-shipping-fast me-1"></i> Giao hàng nhanh (1-2 ngày)
-                                            <div class="small text-muted mt-1">Phí vận chuyển: 45,000₫</div>
+                                            <div class="small text-muted mt-1">
+                                                Phí vận chuyển: <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                            </div>
                                         </c:when>
                                         <c:otherwise>
                                             <i class="fas fa-truck me-1"></i> ${order.shippingMethod}
+                                            <div class="small text-muted mt-1">
+                                                Phí vận chuyển: <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                            </div>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
