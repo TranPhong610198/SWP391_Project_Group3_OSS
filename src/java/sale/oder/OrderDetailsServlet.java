@@ -122,16 +122,16 @@ public class OrderDetailsServlet extends HttpServlet {
                 String shippingProvider = request.getParameter("shippingProvider");
                 String trackingNumber = request.getParameter("trackingNumber");
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, shippingProvider, trackingNumber);
-            } else if ("completed".equals(newStatus) || "returned".equals(newStatus)) {
+            } else if ("completed".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 orderDAO.updatePayStatus(orderId, "completed");
                 Customer tempCus = customerDAO.checkExistEmail(order.getRecipientEmail());
-                if (tempCus!=null) {
+                if (tempCus != null) {
                     customerDAO.updateCustomerPurchaseStats(order.getUserId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
-                    if (tempCus.getTotalSpend().doubleValue()+order.getTotal() >= 1000000 ){
+                    if (tempCus.getTotalSpend().doubleValue() + order.getTotal() >= 1000000) {
                         customerDAO.updateCustomerType(tempCus.getId(), "vip");
                     }
-                }else{
+                } else {
                     Customer newCustomer = new Customer();
                     newCustomer.setUserId(order.getUserId());
                     newCustomer.setEmail(order.getRecipientEmail());
@@ -140,13 +140,17 @@ public class OrderDetailsServlet extends HttpServlet {
                     newCustomer.setMobile(order.getPhone());
                     newCustomer.setTotalPurchases(1);
                     newCustomer.setTotalSpend(BigDecimal.valueOf(order.getTotal()));
-                    if(order.getTotal()>=1000000){
+                    if (order.getTotal() >= 1000000) {
                         newCustomer.setCustomerType("vip");
-                    }else
+                    } else {
                         newCustomer.setCustomerType("normal");
+                    }
                     customerDAO.addCustomer(newCustomer);
                 }
 
+            } else {
+                success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
+                orderDAO.updatePayStatus(orderId, "refunded");
             }
 
             if (success) {

@@ -555,6 +555,7 @@ public class FeedbackDAO extends DBContext {
         return ratingCounts;
     }
 
+    // DAO dùng cho feedback phía người dùng - Tran Phong
     public int insertFeedback(Feedback feedback) {
 //        System.out.println("Run insert feedback");
         String sql = "INSERT INTO feedback (order_item_id, user_id, rating, comment, status, created_at, updated_at) "
@@ -596,5 +597,109 @@ public class FeedbackDAO extends DBContext {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Feedback> getFeedbacksByProduct(String filterRating, String notFilterStatus, int productId, int page, int recordsPerPage) {
+        List<Feedback> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT f.*, u.full_name, u.username, p.title, p.thumbnail, oi.product_id ");
+        sql.append("FROM feedback f ");
+        sql.append("JOIN users u ON f.user_id = u.id ");
+        sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
+        sql.append("JOIN products p ON oi.product_id = p.id ");
+        sql.append("WHERE 1=1");
+
+        // Điều kiện tìm kiếm và lọc
+        if (productId > 0) {
+            sql.append(" AND p.id = ?");
+        }
+        if (filterRating != null && !filterRating.isEmpty()) {
+            sql.append(" AND f.rating = ?");
+        }
+        if (notFilterStatus != null && !notFilterStatus.isEmpty()) {
+            sql.append(" AND f.status != ?");
+        }
+
+        sql.append(" ORDER BY f.created_at DESC");
+
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (productId > 0) {
+                ps.setInt(paramIndex++, productId);
+            }
+            if (filterRating != null && !filterRating.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(filterRating));
+            }
+            if (notFilterStatus != null && !notFilterStatus.isEmpty()) {
+                ps.setString(paramIndex++, notFilterStatus);
+            }
+
+            ps.setInt(paramIndex++, (page - 1) * recordsPerPage);
+            ps.setInt(paramIndex++, recordsPerPage);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setId(rs.getInt("id"));
+                feedback.setOrderItemId(rs.getInt("order_item_id"));
+                feedback.setUserId(rs.getInt("user_id"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setComment(rs.getString("comment"));
+                feedback.setStatus(rs.getString("status"));
+                feedback.setCreatedAt(rs.getTimestamp("created_at"));
+                feedback.setUpdatedAt(rs.getTimestamp("updated_at"));
+                feedback.setUserFullName(rs.getString("full_name"));
+                feedback.setUserName(rs.getString("username"));
+                feedback.setProductTitle(rs.getString("title"));
+                feedback.setProductThumbnail(rs.getString("thumbnail"));
+                feedback.setProductId(rs.getInt("product_id"));
+                list.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int getTotalFeedbacksByProduct(String filterRating, String notFilterStatus, int productId) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM feedback f ");
+        sql.append("JOIN users u ON f.user_id = u.id ");
+        sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
+        sql.append("JOIN products p ON oi.product_id = p.id ");
+        sql.append("WHERE 1=1");
+
+        if (productId > 0) {
+            sql.append(" AND p.id = ?");
+        }
+        if (filterRating != null && !filterRating.isEmpty()) {
+            sql.append(" AND f.rating = ?");
+        }
+        if (notFilterStatus != null && !notFilterStatus.isEmpty()) {
+            sql.append(" AND f.status != ?");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (productId > 0) {
+                ps.setInt(paramIndex++, productId);
+            }
+            if (filterRating != null && !filterRating.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(filterRating));
+            }
+            if (notFilterStatus != null && !notFilterStatus.isEmpty()) {
+                ps.setString(paramIndex++, notFilterStatus);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
