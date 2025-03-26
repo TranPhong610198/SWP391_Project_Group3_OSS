@@ -1,12 +1,8 @@
 package marketing;
 
-
 import DAO.MarketingReportDAO;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,117 +19,126 @@ public class MKTReportServlet extends HttpServlet {
         
         String reportType = request.getParameter("type");
         if (reportType == null) {
-            reportType = "overview"; // Default report type
+            reportType = "overview";
+        }
+        
+        String selectedTable = request.getParameter("selectedTable");
+        if (selectedTable == null) {
+            selectedTable = "kpi"; // Mặc định là KPI Tổng quan
         }
         
         MarketingReportDAO reportDAO = new MarketingReportDAO();
         
         try {
-            // Common data for all reports
             Map<String, Object> commonData = new HashMap<>();
             
             // 1. Coupon Report
             if (reportType.equals("overview") || reportType.equals("coupon")) {
-                // Coupon overview
                 commonData.put("couponsByStatus", reportDAO.getCouponsByStatus());
                 commonData.put("couponsByType", reportDAO.getCouponsByType());
                 commonData.put("couponsByDiscountType", reportDAO.getCouponsByDiscountType());
-                
-                // Coupon usage effectiveness
                 commonData.put("couponUsageRate", reportDAO.getCouponUsageRate());
-                commonData.put("mostUsedCoupons", reportDAO.getMostUsedCoupons(5)); // Top 5
+                commonData.put("mostUsedCoupons", reportDAO.getMostUsedCoupons(5));
                 commonData.put("averageDiscountAmount", reportDAO.getAverageDiscountAmount());
-                
-                // Coupon time analysis
                 commonData.put("couponExpiryAnalysis", reportDAO.getCouponExpiryAnalysis());
-                
                 commonData.put("unusedExpiredCouponsCount", reportDAO.getUnusedExpiredCouponsCount());
                 commonData.put("couponUsageMetrics", reportDAO.getCouponUsageMetrics());
+                commonData.put("selectedTable", selectedTable);
             }
             
             // 2. Feedback Report
             if (reportType.equals("overview") || reportType.equals("feedback")) {
-                // Rating analysis
                 commonData.put("averageRating", reportDAO.getAverageRating());
                 commonData.put("ratingDistribution", reportDAO.getRatingDistribution());
                 commonData.put("feedbackByStatus", reportDAO.getFeedbackByStatus());
-                
-                // Product analysis
-                commonData.put("highestRatedProducts", reportDAO.getProductsByRating(true, 5)); // Top 5
-                commonData.put("lowestRatedProducts", reportDAO.getProductsByRating(false, 5)); // Bottom 5
+                commonData.put("highestRatedProducts", reportDAO.getProductsByRating(true, 5));
+                commonData.put("lowestRatedProducts", reportDAO.getProductsByRating(false, 5));
                 commonData.put("productRatingCoverage", reportDAO.getProductRatingCoverage());
-                
-                // Customer analysis
-                commonData.put("mostActiveReviewers", reportDAO.getMostActiveReviewers(5)); // Top 5
+                commonData.put("mostActiveReviewers", reportDAO.getMostActiveReviewers(5));
                 commonData.put("customerFeedbackRate", reportDAO.getCustomerFeedbackRate());
-                
-                // Content analysis
                 commonData.put("feedbackWithImagesCount", reportDAO.getFeedbackWithImagesCount());
                 commonData.put("feedbackWithRepliesCount", reportDAO.getFeedbackWithRepliesCount());
+                Map<String, Integer> feedbackByStatus = reportDAO.getFeedbackByStatus();
+                int totalFeedback = 0;
+                for (Integer value : feedbackByStatus.values()) {
+                    totalFeedback += value;
+                }
+                commonData.put("totalFeedback", totalFeedback);
+                commonData.put("selectedTable", selectedTable);
             }
             
             // 3. Product Report
             if (reportType.equals("overview") || reportType.equals("product")) {
-                // Product overview
                 commonData.put("productsByStatus", reportDAO.getProductsByStatus());
                 commonData.put("productsByCategory", reportDAO.getProductsByCategory());
                 commonData.put("comboProductsCount", reportDAO.getComboProductsCount());
-                
-                // Price analysis
                 commonData.put("averagePriceByCategory", reportDAO.getAveragePriceByCategory());
-                commonData.put("productsWithHighestDiscount", reportDAO.getProductsWithHighestDiscount(5)); // Top 5
-                
-                // Sales performance
-                commonData.put("bestSellingProducts", reportDAO.getBestSellingProducts(5)); // Top 5
+                commonData.put("productsWithHighestPriceIncrease", reportDAO.getProductsWithHighestPriceIncrease(5));
+                commonData.put("bestSellingProducts", reportDAO.getBestSellingProducts(5));
                 commonData.put("revenueByCategory", reportDAO.getRevenueByCategory());
-                
-                // Product variants
                 commonData.put("productVariationsBySize", reportDAO.getProductVariationsBySize());
                 commonData.put("productVariationsByColor", reportDAO.getProductVariationsByColor());
+                commonData.put("combinedProductMetrics", reportDAO.getCombinedProductMetrics(10));
+                commonData.put("selectedTable", selectedTable);
+                Map<String, Integer> productsByStatus = reportDAO.getProductsByStatus();
+                int totalProducts = 0;
+                for (Integer value : productsByStatus.values()) {
+                    totalProducts += value;
+                }
+                commonData.put("totalProducts", totalProducts);
             }
             
             // 4. Inventory Report
             if (reportType.equals("overview") || reportType.equals("inventory")) {
                 commonData.put("totalInventoryValue", reportDAO.getTotalInventoryValue());
-                commonData.put("totalInventoryByProduct", reportDAO.getTotalInventoryByProduct(5)); // Thêm
-                commonData.put("inventoryByCategory", reportDAO.getInventoryByCategory()); // Thêm
+                commonData.put("totalInventoryByProduct", reportDAO.getTotalInventoryByProduct(5));
+                commonData.put("inventoryByCategory", reportDAO.getInventoryByCategory());
                 commonData.put("lowStockProducts", reportDAO.getLowStockProducts(10));
                 commonData.put("productsWithoutRecentRestocking", reportDAO.getProductsWithoutRecentRestocking(30));
                 commonData.put("outOfStockRate", reportDAO.getOutOfStockRate());
                 commonData.put("productVariationsBySize", reportDAO.getProductVariationsBySize());
                 commonData.put("productVariationsByColor", reportDAO.getProductVariationsByColor());
+                commonData.put("selectedTable", selectedTable);
             }
             
             // 5. Slider Report
             if (reportType.equals("overview") || reportType.equals("slider")) {
-                // Slider overview
                 commonData.put("slidersByStatus", reportDAO.getSlidersByStatus());
                 commonData.put("slidersByDisplayOrder", reportDAO.getSlidersByDisplayOrder());
                 commonData.put("allSliders", reportDAO.getAllSliders());
+                commonData.put("selectedTable", selectedTable);
+                Map<String, Integer> slidersByStatus = reportDAO.getSlidersByStatus();
+                int totalSliders = 0;
+                for (Integer value : slidersByStatus.values()) {
+                    totalSliders += value;
+                }
+                commonData.put("totalSliders", totalSliders);
             }
             
             // 6. Post Report
             if (reportType.equals("overview") || reportType.equals("post")) {
-                // Post overview
                 commonData.put("postsByStatus", reportDAO.getPostsByStatus());
                 commonData.put("featuredPostsCount", reportDAO.getFeaturedPostsCount());
                 commonData.put("postsByAuthor", reportDAO.getPostsByAuthor());
-                
-                // Post time analysis
                 commonData.put("postDistributionByMonth", reportDAO.getPostDistributionByMonth());
                 commonData.put("averageTimeDraftToPublished", reportDAO.getAverageTimeDraftToPublished());
                 commonData.put("latestUpdatedPostDate", reportDAO.getLatestUpdatedPostDate());
-                commonData.put("longTimeDraftPosts", reportDAO.getLongTimeDraftPosts(7)); // In draft for 7+ days
+                commonData.put("longTimeDraftPosts", reportDAO.getLongTimeDraftPosts(7));
+                commonData.put("selectedTable", selectedTable);
+                Map<String, Integer> postsByStatus = reportDAO.getPostsByStatus();
+                int totalPosts = 0;
+                for (Integer value : postsByStatus.values()) {
+                    totalPosts += value;
+                }
+                commonData.put("totalPosts", totalPosts);
             }
             
             // 7. Comprehensive Report
             if (reportType.equals("comprehensive")) {
-                // Combined metrics
-                commonData.put("combinedProductMetrics", reportDAO.getCombinedProductMetrics(10)); // Top 10
+                commonData.put("combinedProductMetrics", reportDAO.getCombinedProductMetrics(10));
                 commonData.put("couponUsageMetrics", reportDAO.getCouponUsageMetrics());
             }
             
-            // Set data for JSP
             for (Map.Entry<String, Object> entry : commonData.entrySet()) {
                 request.setAttribute(entry.getKey(), entry.getValue());
             }
@@ -142,7 +147,7 @@ public class MKTReportServlet extends HttpServlet {
             request.getRequestDispatcher("/marketing/mktreport.jsp").forward(request, response);
             
         } finally {
-            reportDAO.close(); // Ensure resources are closed
+            reportDAO.close();
         }
     }
 

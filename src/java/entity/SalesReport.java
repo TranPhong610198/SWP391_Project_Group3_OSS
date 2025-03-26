@@ -2,6 +2,7 @@ package entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,7 @@ public class SalesReport {
         private BigDecimal totalRevenue;
         private Map<String, Integer> sizeDistribution;
         private Map<String, Integer> colorDistribution;
+         private Map<String, Integer> variantDistribution = new HashMap<>();
 
         // Getters and setters (unchanged)
         public int getProductId() {
@@ -150,6 +152,15 @@ public class SalesReport {
         public void setColorDistribution(Map<String, Integer> colorDistribution) {
             this.colorDistribution = colorDistribution;
         }
+        
+        public Map<String, Integer> getVariantDistribution() {
+        return variantDistribution;
+    }
+
+    // Setter cho variantDistribution
+    public void setVariantDistribution(Map<String, Integer> variantDistribution) {
+        this.variantDistribution = variantDistribution;
+    }
     }
 
     public static class CustomerPerformance {
