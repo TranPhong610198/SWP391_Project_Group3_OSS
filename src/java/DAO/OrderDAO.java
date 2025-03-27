@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Random;
 
 public class OrderDAO extends DBContext {
-
-    public Order createOrder(Order order) {
+private InventoryDAO inventoryDAO = new InventoryDAO();
+   public Order createOrder(Order order) {
         Connection conn = null;
         PreparedStatement stmtOrder = null;
         PreparedStatement stmtItems = null;
@@ -61,7 +61,7 @@ public class OrderDAO extends DBContext {
                 order.setOrderCode(orderCode);
             }
 
-            // Bước 2: Thêm các sản phẩm vào bảng order_items
+            // Bước 2: Thêm các sản phẩm vào bảng order_items và giảm số lượng kho
             if (orderId > 0) {
                 if (order.getItems() != null && !order.getItems().isEmpty()) {
                     String sqlItems = "INSERT INTO order_items (order_id, product_id, product_name, product_image, variant_name, quantity, unit_price_at_order) "
@@ -69,7 +69,6 @@ public class OrderDAO extends DBContext {
                     stmtItems = conn.prepareStatement(sqlItems);
 
                     for (CartItem item : order.getItems()) {
-
                         stmtItems.setInt(1, orderId);
                         stmtItems.setInt(2, item.getProductId());
                         stmtItems.setString(3, item.getProductTitle());
@@ -78,12 +77,23 @@ public class OrderDAO extends DBContext {
                         stmtItems.setInt(6, item.getQuantity());
                         stmtItems.setDouble(7, item.getProductPrice());
                         stmtItems.addBatch();
+
+                        // Giảm số lượng kho bằng cách gọi InventoryDAO
+                        int variantId = inventoryDAO.getVariantId(item.getProductId(),
+                                inventoryDAO.getColorByName(item.getProductId(), item.getColor()).getId(),
+                                inventoryDAO.getSizeByName(item.getProductId(), item.getSize()).getId());
+                        if (variantId != -1) {
+                            boolean stockReduced = inventoryDAO.decreaseVariantStock(variantId, item.getQuantity());
+                            if (!stockReduced) {
+                                throw new SQLException("Không thể giảm số lượng kho cho variantId: " + variantId);
+                            }
+                        } else {
+                            throw new SQLException("Không tìm thấy variant cho productId: " + item.getProductId());
+                        }
                     }
 
                     int[] batchResults = stmtItems.executeBatch();
-
                 } else {
-
                     throw new SQLException("Order items are empty, cannot create order without items.");
                 }
             } else {
@@ -142,21 +152,11 @@ public class OrderDAO extends DBContext {
             return null;
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmtOrder != null) {
-                    stmtOrder.close();
-                }
-                if (stmtItems != null) {
-                    stmtItems.close();
-                }
-                if (stmtPayment != null) {
-                    stmtPayment.close();
-                }
-                if (conn != null) {
-                    conn.setAutoCommit(true);
-                }
+                if (rs != null) rs.close();
+                if (stmtOrder != null) stmtOrder.close();
+                if (stmtItems != null) stmtItems.close();
+                if (stmtPayment != null) stmtPayment.close();
+                if (conn != null) conn.setAutoCommit(true);
             } catch (SQLException e) {
                 System.out.println("Error closing resources: " + e.getMessage());
             }
@@ -625,7 +625,7 @@ public class OrderDAO extends DBContext {
         }
     }
 
-    public boolean cancelOrder(int orderId, int userId) {
+   public boolean cancelOrder(int orderId, int userId) {
         Connection conn = null;
         try {
             conn = connection;
@@ -653,6 +653,22 @@ public class OrderDAO extends DBContext {
             if (!"pending".equals(currentStatus) && !"pending_pay".equals(currentStatus)) {
                 conn.rollback();
                 return false;
+            }
+
+            // Lấy danh sách các item trong đơn hàng để hoàn lại kho
+            List<CartItem> items = getOrderItems(orderId);
+            for (CartItem item : items) {
+                int variantId = inventoryDAO.getVariantId(item.getProductId(),
+                        inventoryDAO.getColorByName(item.getProductId(), item.getColor()).getId(),
+                        inventoryDAO.getSizeByName(item.getProductId(), item.getSize()).getId());
+                if (variantId != -1) {
+                    boolean stockIncreased = inventoryDAO.increaseVariantStock(variantId, item.getQuantity());
+                    if (!stockIncreased) {
+                        throw new SQLException("Không thể tăng số lượng kho cho variantId: " + variantId);
+                    }
+                } else {
+                    throw new SQLException("Không tìm thấy variant cho productId: " + item.getProductId());
+                }
             }
 
             // Cập nhật trạng thái đơn hàng

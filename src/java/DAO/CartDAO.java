@@ -307,42 +307,6 @@ public class CartDAO extends DBContext {
         }
     }
 
-//    public void mergeCarts(HttpServletRequest request, HttpServletResponse response, int userId) {
-//
-//        Cart cookieCart = getCartFromCookies(request);
-//
-//        if (cookieCart == null || cookieCart.getItems() == null || cookieCart.getItems().isEmpty()) {
-//            return; // No items in cookie cart to merge
-//        }
-//
-//        Cart dbCart = getCartByUserId(userId);
-//        if (dbCart == null) {
-//            dbCart = createCart(userId);
-//        }
-//
-//        for (CartItem cookieItem : cookieCart.getItems()) {
-//
-//            boolean itemExists = false;
-//            for (CartItem dbItem : dbCart.getItems()) {
-//                if (dbItem.getProductId() == cookieItem.getProductId()
-//                        && dbItem.getVariantId() == cookieItem.getVariantId()) {
-//
-//                    updateCartItemQuantity(dbItem.getId(), dbItem.getQuantity() + cookieItem.getQuantity());
-//                    itemExists = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!itemExists) {
-//                cookieItem.setCartId(dbCart.getId());
-//                addCartItem(cookieItem);
-//            }
-//        }
-//
-//        Cart emptyCart = new Cart();
-//        emptyCart.setItems(new ArrayList<>());
-//        saveCartToCookies(response, emptyCart);
-//    }
     public String encodeCookieValue(String value) throws Exception {
         return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }

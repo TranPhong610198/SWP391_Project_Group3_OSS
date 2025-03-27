@@ -415,7 +415,30 @@
             box-shadow: var(--shadow-md);
         }
 
-        .btn-reorder i {
+        .btn-feedback i {
+            margin-right: 8px;
+        }
+        .btn-feedback {
+            background-color: #0d6efd;
+            color: #fff;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-md);
+            text-decoration: none;
+            transition: var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-feedback:hover {
+            background-color: #blue;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-feedback i {
             margin-right: 8px;
         }
 
@@ -754,6 +777,9 @@
                                             <a href="myorder?action=reorder&id=${order.id}" class="btn-reorder">
                                                 <i class="fas fa-redo me-2"></i> Mua lại
                                             </a>
+                                                <a href="submitfeedback?orderId=${order.id}" class="btn-feedback">
+                                        <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
+                                    </a>
                                         </div>
                                     </c:if>
                                 </div>

@@ -98,7 +98,7 @@ public class OrderDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
+    String action = request.getParameter("action");
 
     HttpSession session = request.getSession();
     User user = (User) session.getAttribute("acc");
@@ -120,25 +120,10 @@ public class OrderDetail extends HttpServlet {
         if (action.equals("cancel")) {
             boolean cancelled = orderDAO.cancelOrder(orderId, user.getId());
             if (cancelled) {
-                request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công!");
-                // Cập nhật lại order sau khi hủy
-                order = orderDAO.getOrderById(orderId);
+                request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công và số lượng kho đã được cập nhật!");
             } else {
-                request.setAttribute("errorMessage", "Không thể hủy đơn hàng. Vui lòng thử lại!");
+                request.setAttribute("errorMessage", "Không thể hủy đơn hàng hoặc cập nhật kho. Vui lòng thử lại!");
             }
-            // Thiết lập lại các thuộc tính để hiển thị chi tiết đơn hàng
-            request.setAttribute("order", order);
-            request.setAttribute("orderHistory", orderDAO.getOrderHistory(orderId));
-//            double subtotal = 0;
-//            for (CartItem item : order.getItems()) {
-//                subtotal += item.getProductPrice() * item.getQuantity();
-//            }
-//            double shippingFee = "express".equals(order.getShippingMethod()) ? 45000.0 : 30000.0;
-//            if (subtotal > 500000) shippingFee = 0.0;
-//            request.setAttribute("subtotal", subtotal);
-//            request.setAttribute("shippingFee", shippingFee);
-//            request.getRequestDispatcher("orderdetail.jsp").forward(request, response);
-//            return;
         } else if (action.equals("reorder")) {
             StringBuilder queryParams = new StringBuilder();
             List<CartItem> items = order.getItems();

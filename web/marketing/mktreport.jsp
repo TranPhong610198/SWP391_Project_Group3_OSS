@@ -547,7 +547,6 @@
                     <option value="kpi" <c:if test="${selectedTable == 'kpi' || empty selectedTable}">selected</c:if>>KPI Tổng quan</option>
                     <option value="bestSellingProducts" <c:if test="${selectedTable == 'bestSellingProducts'}">selected</c:if>>Sản phẩm Bán chạy Nhất</option>
                     <option value="priceIncrease" <c:if test="${selectedTable == 'priceIncrease'}">selected</c:if>>Sản phẩm Tăng giá Cao Nhất</option>
-                    <option value="combinedMetrics" <c:if test="${selectedTable == 'combinedMetrics'}">selected</c:if>>Top 10 Sản phẩm Tổng hợp</option>
                     <option value="recommendations" <c:if test="${selectedTable == 'recommendations'}">selected</c:if>>Đề xuất</option>
                 </select>
             </div>
@@ -626,7 +625,7 @@
         </div>
 
         <!-- Bảng Top 10 Sản phẩm Tổng hợp -->
-        <div class="table-container <c:if test="${selectedTable == 'combinedMetrics'}">active</c:if>" id="combinedMetricsTableContainer">
+<!--        <div class="table-container <c:if test="${selectedTable == 'combinedMetrics'}">active</c:if>" id="combinedMetricsTableContainer">
             <div class="table-responsive">
                 <table class="table table-bordered" id="combinedMetricsTable">
                     <thead>
@@ -658,7 +657,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
 
         <!-- Bảng Đề xuất -->
         <div class="table-container <c:if test="${selectedTable == 'recommendations'}">active</c:if>" id="productRecommendationsTableContainer">
@@ -710,7 +709,7 @@
                                 </c:if>
                             </td>
                         </tr>
-                        <tr>
+<!--                        <tr>
                             <td>Sản phẩm nổi bật</td>
                             <td>
                                 <c:choose>
@@ -722,7 +721,7 @@
                                     </c:otherwise>
                                 </c:choose>
                             </td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>

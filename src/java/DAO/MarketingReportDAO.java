@@ -320,12 +320,13 @@ public List<Map<String, Object>> getMostUsedCoupons(int limit) {
     public List<Map<String, Object>> getProductsByRating(boolean highest, int limit) {
         List<Map<String, Object>> result = new ArrayList<>();
         String sql = "SELECT p.id, p.title, AVG(CAST(f.rating AS FLOAT)) as avg_rating, COUNT(f.id) as review_count " +
-                     "FROM products p " +
-                     "JOIN order_items oi ON p.id = oi.product_id " +
-                     "JOIN feedback f ON oi.id = f.order_item_id " +
-                     "GROUP BY p.id, p.title " +
-                     "HAVING COUNT(f.id) > 0 " +
-                     "ORDER BY avg_rating " + (highest ? "DESC" : "ASC");
+             "FROM products p " +
+             "JOIN order_items oi ON p.id = oi.product_id " +
+             "JOIN feedback f ON oi.id = f.order_item_id " +
+             "WHERE f.status = 'approved' " +  // Thêm điều kiện lấy feedback đã được duyệt
+             "GROUP BY p.id, p.title " +
+             "HAVING COUNT(f.id) > 0 " +
+             "ORDER BY avg_rating " + (highest ? "DESC" : "ASC");
         
         if (limit > 0) {
             sql += " OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY";
@@ -472,7 +473,9 @@ public List<Map<String, Object>> getMostUsedCoupons(int limit) {
     public int getFeedbackWithRepliesCount() {
         int result = 0;
         String sql = "SELECT COUNT(DISTINCT f.id) as count " +
-                     "FROM feedback f JOIN feedback_reply fr ON f.id = fr.feedback_id";
+             "FROM feedback f " +
+             "JOIN feedback_reply fr ON f.id = fr.feedback_id " +
+             "WHERE f.status = 'approved'";
         
         try {
             ps = conn.prepareStatement(sql);
@@ -638,14 +641,28 @@ public List<Map<String, Object>> getMostUsedCoupons(int limit) {
     // Get revenue by category
     public List<Map<String, Object>> getRevenueByCategory() {
         List<Map<String, Object>> result = new ArrayList<>();
-        String sql = "SELECT c.id, c.name, SUM(oi.quantity * oi.unit_price) as revenue " +
-                     "FROM categories c " +
-                     "JOIN products p ON c.id = p.category_id " +
-                     "JOIN order_items oi ON p.id = oi.product_id " +
-                     "JOIN orders o ON oi.order_id = o.id " +
-                     "WHERE o.status NOT IN ('cancelled') " +
-                     "GROUP BY c.id, c.name " +
-                     "ORDER BY revenue DESC";
+        String sql = "WITH CategoryHierarchy AS ("
+        + " SELECT c1.id, c1.name, c1.parent_id, "
+        + " CASE "
+        + "     WHEN c1.parent_id IS NULL THEN c1.id "
+        + "     WHEN c2.parent_id IS NULL THEN c2.id "
+        + "     WHEN c3.parent_id IS NULL THEN c3.id "
+        + "     ELSE NULL "
+        + " END AS top_level_id "
+        + " FROM categories c1 "
+        + " LEFT JOIN categories c2 ON c1.parent_id = c2.id "
+        + " LEFT JOIN categories c3 ON c2.parent_id = c3.id "
+        + ") "
+        + "SELECT c.id, c.name, SUM(oi.quantity * oi.unit_price_at_order) AS revenue "
+        + "FROM order_items oi "
+        + "JOIN products p ON oi.product_id = p.id "
+        + "JOIN CategoryHierarchy ch ON p.category_id = ch.id "
+        + "JOIN categories c ON ch.top_level_id = c.id "
+        + "JOIN orders o ON oi.order_id = o.id "
+        + "WHERE o.status = 'completed' "
+        + "GROUP BY c.id, c.name "
+        + "ORDER BY revenue DESC;";
+
         
         try {
             ps = conn.prepareStatement(sql);

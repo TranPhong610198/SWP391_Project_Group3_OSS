@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,6 @@ public class CartContact extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -78,100 +78,106 @@ public class CartContact extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-     HttpSession session = request.getSession();
-    User user = (User) session.getAttribute("acc");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acc");
 
-    // Thiết lập biến isGuest để kiểm tra trạng thái đăng nhập trong JSP
-    request.setAttribute("isGuest", user == null);
+        // Thiết lập biến isGuest để kiểm tra trạng thái đăng nhập trong JSP
+        request.setAttribute("isGuest", user == null);
 
-    // Lấy danh sách sản phẩm từ query parameters (nếu có, từ reorder)
-    String[] productIds = request.getParameterValues("productId");
-    String[] sizes = request.getParameterValues("size");
-    String[] colors = request.getParameterValues("color");
-    String[] quantities = request.getParameterValues("quantity");
+        // Lấy danh sách sản phẩm từ query parameters (nếu có, từ reorder)
+        String[] productIds = request.getParameterValues("productId");
+        String[] sizes = request.getParameterValues("size");
+        String[] colors = request.getParameterValues("color");
+        String[] quantities = request.getParameterValues("quantity");
 
-    List<CartItem> cartItems = new ArrayList<>();
-    if (productIds != null && sizes != null && colors != null && quantities != null
-            && productIds.length == sizes.length && sizes.length == colors.length && colors.length == quantities.length) {
-        for (int i = 0; i < productIds.length; i++) {
-            CartItem item = new CartItem();
-            item.setProductId(Integer.parseInt(productIds[i]));
-            item.setSize(URLDecoder.decode(sizes[i], StandardCharsets.UTF_8.toString()));
-            item.setColor(URLDecoder.decode(colors[i], StandardCharsets.UTF_8.toString()));
-            item.setQuantity(Integer.parseInt(quantities[i]));
+        List<CartItem> cartItems = new ArrayList<>();
+        if (productIds != null && sizes != null && colors != null && quantities != null
+                && productIds.length == sizes.length && sizes.length == colors.length && colors.length == quantities.length) {
+            for (int i = 0; i < productIds.length; i++) {
+                CartItem item = new CartItem();
+                item.setProductId(Integer.parseInt(productIds[i]));
+                item.setSize(URLDecoder.decode(sizes[i], StandardCharsets.UTF_8.toString()));
+                item.setColor(URLDecoder.decode(colors[i], StandardCharsets.UTF_8.toString()));
+                item.setQuantity(Integer.parseInt(quantities[i]));
 
-            // Lấy thông tin sản phẩm từ ProductDAO
-            ProductDAO productDAO = new ProductDAO();
-            Product product = productDAO.getProductById(item.getProductId());
-            if (product != null) {
-                item.setProductTitle(product.getTitle());
-                item.setProductThumbnail(product.getThumbnail());
-                item.setProductPrice(product.getSalePrice().doubleValue());
+                // Lấy thông tin sản phẩm từ ProductDAO
+                ProductDAO productDAO = new ProductDAO();
+                Product product = productDAO.getProductById(item.getProductId());
+                if (product != null) {
+                    item.setProductTitle(product.getTitle());
+                    item.setProductThumbnail(product.getThumbnail());
+                    item.setProductPrice(product.getSalePrice().doubleValue());
+                }
+                cartItems.add(item);
             }
-            cartItems.add(item);
-        }
-    } else {
-        // Nếu không có dữ liệu từ query string, lấy từ giỏ hàng
-        CartDAO cartDAO = new CartDAO();
-        Cart cart;
-        if (user != null) {
-            cart = cartDAO.getCartByUserId(user.getId());
         } else {
-            cart = cartDAO.getCartFromCookies(request);
-        }
+            // Nếu không có dữ liệu từ query string, lấy từ giỏ hàng
+            CartDAO cartDAO = new CartDAO();
+            Cart cart;
+            if (user != null) {
+                cart = cartDAO.getCartByUserId(user.getId());
+            } else {
+                cart = cartDAO.getCartFromCookies(request);
+            }
 
-        List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
-        List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
+            List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
+            List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
-        if (selectedItemIds != null && selectedQuantities != null && cart != null) {
-            for (CartItem item : cart.getItems()) {
-                for (int i = 0; i < selectedItemIds.size(); i++) {
-                    if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
-                        item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
-                        cartItems.add(item);
-                        break;
+            if (selectedItemIds != null && selectedQuantities != null && cart != null) {
+                for (CartItem item : cart.getItems()) {
+                    for (int i = 0; i < selectedItemIds.size(); i++) {
+                        if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
+                            item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
+                            cartItems.add(item);
+                            break;
+                        }
                     }
                 }
             }
         }
+
+        if (cartItems.isEmpty()) {
+            response.sendRedirect("cartdetail");
+            return;
+        }
+
+        // Tính toán subtotal
+        double subtotal = 0;
+        for (CartItem item : cartItems) {
+            subtotal += item.getProductPrice() * item.getQuantity();
+        }
+
+        // Lấy địa chỉ giao hàng
+        List<UserAddress> addresses;
+        if (user != null) {
+            addresses = userDAO.getUserAddresses(user.getId());
+        } else {
+            addresses = getGuestAddressesFromCookie(request);
+        }
+
+        // Lấy thông tin giảm giá từ session
+        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+        Double discountAmount = (Double) session.getAttribute("cartDiscount");
+
+        // Thiết lập phí vận chuyển mặc định
+        double shippingFee = (subtotal > 500000) ? 0.0 : 30000.0;
+
+        // Lưu dữ liệu vào request
+        request.setAttribute("selectedItems", cartItems);
+        request.setAttribute("addresses", addresses);
+        request.setAttribute("subtotal", subtotal);
+        request.setAttribute("discount", discountAmount);
+        request.setAttribute("appliedCoupon", appliedCoupon);
+        request.setAttribute("shippingFee", shippingFee);
+
+        // Nếu là khách vãng lai, lấy email từ cookie hoặc để trống để người dùng nhập
+        if (user == null) {
+            String guestEmail = getGuestEmailFromCookie(request);
+            request.setAttribute("guestEmail", guestEmail);
+        }
+
+        request.getRequestDispatcher("cartcontact.jsp").forward(request, response);
     }
-
-    if (cartItems.isEmpty()) {
-        response.sendRedirect("cartdetail");
-        return;
-    }
-
-    // Tính toán subtotal
-    double subtotal = 0;
-    for (CartItem item : cartItems) {
-        subtotal += item.getProductPrice() * item.getQuantity();
-    }
-
-    // Lấy địa chỉ giao hàng
-    List<UserAddress> addresses;
-    if (user != null) {
-        addresses = userDAO.getUserAddresses(user.getId());
-    } else {
-        addresses = getGuestAddressesFromCookie(request);
-    }
-
-    // Lấy thông tin giảm giá từ session
-    String appliedCoupon = (String) session.getAttribute("appliedCoupon");
-    Double discountAmount = (Double) session.getAttribute("cartDiscount");
-
-    // Thiết lập phí vận chuyển mặc định
-    double shippingFee = (subtotal > 500000) ? 0.0 : 30000.0;
-
-    // Lưu dữ liệu vào request
-    request.setAttribute("selectedItems", cartItems);
-    request.setAttribute("addresses", addresses);
-    request.setAttribute("subtotal", subtotal);
-    request.setAttribute("discount", discountAmount);
-    request.setAttribute("appliedCoupon", appliedCoupon);
-    request.setAttribute("shippingFee", shippingFee);
-
-    request.getRequestDispatcher("cartcontact.jsp").forward(request, response);
-}
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -203,7 +209,7 @@ public class CartContact extends HttpServlet {
             } else {
                 // Người dùng chưa đăng nhập - lưu vào cookie
                 newAddress.setId(generateGuestAddressId());
-                newAddress.setEmail(request.getParameter("email")); // Lưu email cho khách
+                newAddress.setEmail(request.getParameter("email")); // Lưu email cho khách nếu có trong địa chỉ
 
                 // Lấy danh sách địa chỉ hiện tại từ cookie
                 List<UserAddress> guestAddresses = getGuestAddressesFromCookie(request);
@@ -230,7 +236,6 @@ public class CartContact extends HttpServlet {
             return;
         }
 
-        
         String addressId = request.getParameter("shipping_address");
         if (addressId == null || addressId.isEmpty()) {
             request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
@@ -248,10 +253,28 @@ public class CartContact extends HttpServlet {
             return;
         }
 
+        // Lấy email cho khách vãng lai từ form
+        String guestEmail = null;
+        if (user == null) {
+            guestEmail = request.getParameter("guest_email");
+            if (guestEmail == null || guestEmail.trim().isEmpty()) {
+                request.setAttribute("error", "Vui lòng nhập email để tiếp tục");
+                doGet(request, response);
+                return;
+            }
+            saveGuestEmailToCookie(response, guestEmail); // Lưu email vào cookie nếu cần
+        }
+
+        // Lưu thông tin vào session để sử dụng ở bước tiếp theo (cartcompletion)
         session.setAttribute("shipping_address_id", addressId);
         session.setAttribute("shipping_method", shippingMethod);
         session.setAttribute("shipping_fee", shippingFee);
         session.setAttribute("payment_method", paymentMethod);
+        if (user == null) {
+            session.setAttribute("guest_email", guestEmail); // Lưu email vào session để dùng trong cartcompletion
+        } else {
+            session.setAttribute("user_email", user.getEmail()); // Lưu email người dùng đã đăng nhập
+        }
 
         Double discount = (Double) session.getAttribute("cartDiscount");
         String appliedCoupon = (String) session.getAttribute("appliedCoupon");
@@ -271,7 +294,7 @@ public class CartContact extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
     // Phương thức tạo ID duy nhất cho địa chỉ của khách
     private int generateGuestAddressId() {
@@ -318,6 +341,36 @@ public class CartContact extends HttpServlet {
             response.addCookie(cookie);
         } catch (Exception e) {
             System.out.println("Error saving guest addresses to cookie: " + e.getMessage());
+        }
+    }
+
+    // Phương thức lấy email của khách từ cookie (nếu cần lưu trữ)
+    private String getGuestEmailFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("guest_email".equals(cookie.getName())) {
+                    try {
+                        return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.toString());
+                    } catch (Exception e) {
+                        System.out.println("Error decoding guest email cookie: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // Phương thức lưu email của khách vào cookie (nếu cần lưu trữ)
+    private void saveGuestEmailToCookie(HttpServletResponse response, String email) {
+        try {
+            String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8.toString());
+            Cookie cookie = new Cookie("guest_email", encodedEmail);
+            cookie.setMaxAge(30 * 24 * 60 * 60); // 30 ngày
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        } catch (Exception e) {
+            System.out.println("Error saving guest email to cookie: " + e.getMessage());
         }
     }
 }
