@@ -291,6 +291,7 @@
                                     <option value="shipping" ${status == 'shipping' ? 'selected' : ''}>Đang giao</option>
                                     <option value="completed" ${status == 'completed' ? 'selected' : ''}>Hoàn thành</option>
                                     <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
+                                    <option value="returned" ${status == 'returned' ? 'selected' : ''}>Đã hủy</option>
                                 </select>
                             </div>
                             <div class="col-md-2">

@@ -104,7 +104,8 @@ public class SubmitFeedback extends HttpServlet {
 
             // Verify order belongs to the current user
             if (order == null || order.getUserId() != userId) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập đơn hàng này");
+//                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập đơn hàng này");
+                response.sendRedirect("error/error.jsp");
                 return;
             }
 

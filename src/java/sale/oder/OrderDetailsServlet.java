@@ -188,7 +188,7 @@ public class OrderDetailsServlet extends HttpServlet {
             };
 
             // Gửi email
-            boolean sent = emailUtil.sendOrderStatusEmail(order, statusText);
+            boolean sent = emailUtil.sendOrderStatusEmail(order, statusText, newStatus);
             if (sent) {
                 System.out.println("Email sent successfully to " + recipient.getEmail());
             } else {

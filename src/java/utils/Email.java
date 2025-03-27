@@ -163,7 +163,7 @@ public class Email {
         }
     }
 
-    public boolean sendOrderStatusEmail(Order order, String statusText) throws UnsupportedEncodingException {
+    public boolean sendOrderStatusEmail(Order order, String statusText, String newStatus) throws UnsupportedEncodingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
         props.put("mail.smtp.port", PORT);
@@ -202,6 +202,13 @@ public class Email {
                     .append("<div class='content'><p>Xin chào ").append(order.getRecipientName()).append(",</p>")
                     .append("<p>Chúng tôi xin thông báo rằng đơn hàng <strong>#").append(order.getOrderCode()).append("</strong> của bạn đã được cập nhật sang trạng thái: <strong>").append(statusText).append("</strong>.</p>");
 
+            // Thêm thông tin vận chuyển nếu trạng thái từ "shipping" trở đi
+            if ("shipping".equals(newStatus) || "completed".equals(newStatus) || "returned".equals(newStatus)) {
+                htmlContent.append("<h3>Thông tin vận chuyển:</h3>")
+                        .append("<p><strong>Đơn vị vận chuyển:</strong> ").append(order.getShippingProvider()).append("</p>")
+                        .append("<p><strong>Mã vận đơn:</strong> ").append(order.getTrackingNumber()).append("</p>");
+            }
+            
             // Thêm chi tiết đơn hàng
             htmlContent.append("<h3>Chi tiết đơn hàng:</h3>")
                     .append("<table class='product-table'><thead><tr>")
@@ -221,13 +228,6 @@ public class Email {
                         .append("</tr>");
             }
             htmlContent.append("</tbody></table>");
-
-            // Thêm thông tin vận chuyển nếu trạng thái từ "shipping" trở đi
-            if ("shipping".equals(statusText) || "completed".equals(statusText) || "returned".equals(statusText)) {
-                htmlContent.append("<h3>Thông tin vận chuyển:</h3>")
-                        .append("<p><strong>Đơn vị vận chuyển:</strong> ").append(order.getShippingProvider()).append("</p>")
-                        .append("<p><strong>Mã vận đơn:</strong> ").append(order.getTrackingNumber()).append("</p>");
-            }
 
             // Thêm phần footer
             htmlContent.append("</div><div class='footer'>")
