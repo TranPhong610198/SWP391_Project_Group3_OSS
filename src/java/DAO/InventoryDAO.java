@@ -660,7 +660,6 @@ public class InventoryDAO extends DBContext {
         }
     }
 
-
     public boolean increaseVariantStock(int variantId, int quantity) {
         if (quantity <= 0) {
             return false;
@@ -699,5 +698,27 @@ public class InventoryDAO extends DBContext {
             System.out.println("Error increasing variant stock: " + e.getMessage());
             return false;
         }
+    }
+
+    public Integer getVariantId(int productId, String size, String color) {
+        String query = "SELECT pv.id FROM product_variants pv "
+                + "JOIN product_sizes ps ON pv.size_id = ps.id "
+                + "JOIN product_colors pc ON pv.color_id = pc.id "
+                + "WHERE pv.product_id = ? AND ps.size = ? AND pc.color = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, productId);
+            stmt.setString(2, size);
+            stmt.setString(3, color);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
