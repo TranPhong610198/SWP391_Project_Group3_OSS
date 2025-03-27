@@ -130,9 +130,9 @@ public class CartCompletion extends HttpServlet {
         Order order = new Order();
         if (user != null) {
             order.setUserId(user.getId());
-            order.setRecipientEmail(user.getEmail());
+            order.setRecipientEmail((String) session.getAttribute("user_email")); // Lấy email từ session
         } else {
-            order.setRecipientEmail(shippingAddress.getRecipientName() != null ? shippingAddress.getRecipientName() : "guest@example.com");
+            order.setRecipientEmail((String) session.getAttribute("guest_email")); // Lấy email từ session
         }
 
         String orderCode = "ORD" + System.currentTimeMillis() + (int) (Math.random() * 1000);
@@ -170,7 +170,7 @@ public class CartCompletion extends HttpServlet {
         }
     }
 
-// Phương thức hỗ trợ để gán các thuộc tính cho request
+    // Phương thức hỗ trợ để gán các thuộc tính cho request
     private void prepareOrderAttributes(HttpServletRequest request, Order order) {
         request.setAttribute("orderCode", order.getOrderCode());
         request.setAttribute("orderDate", order.getOrderDate() != null ? order.getOrderDate() : new Date());
@@ -195,7 +195,7 @@ public class CartCompletion extends HttpServlet {
         request.setAttribute("shippingAddress", shippingAddress);
     }
 
-// Phương thức hỗ trợ để lấy địa chỉ giao hàng
+    // Phương thức hỗ trợ để lấy địa chỉ giao hàng
     private UserAddress getShippingAddress(User user, String addressId, HttpServletRequest request) {
         UserAddress shippingAddress = null;
         if (user != null) {
@@ -218,7 +218,7 @@ public class CartCompletion extends HttpServlet {
         return shippingAddress;
     }
 
-// Phương thức hỗ trợ để xóa giỏ hàng và session
+    // Phương thức hỗ trợ để xóa giỏ hàng và session
     private void clearCartAndSession(HttpServletRequest request, HttpServletResponse response, User user, List<CartItem> selectedItems, HttpSession session) {
         if (user != null) {
             for (CartItem item : selectedItems) {
@@ -279,6 +279,8 @@ public class CartCompletion extends HttpServlet {
         session.removeAttribute("appliedCoupon");
         session.removeAttribute("orderPending");
         session.removeAttribute("pending_order");
+        session.removeAttribute("guest_email"); // Xóa email khách vãng lai
+        session.removeAttribute("user_email"); // Xóa email người dùng
     }
 
     @Override
