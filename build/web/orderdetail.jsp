@@ -469,7 +469,7 @@
                                 </div></c:if>
                             <c:if test="${order.status eq 'returned'}">
                                 <div class="timeline-step ${currentStepIndex >= 4 ? 'active' : ''}">
-                                    <div class="timeline-icon"><i class="fas fa-star"></i></div>
+                                    <div class="timeline-icon"><i class="fas fa-redo"></i></div>
                                     <div class="timeline-text">Đã Hoàn Trả</div>
                                     <div class="timeline-date">
                                         <c:forEach items="${orderHistory}" var="history">
