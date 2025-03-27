@@ -20,18 +20,17 @@ import java.util.Collections;
 @WebServlet("/uploadImage")
 @MultipartConfig
 public class UploadImageServlet extends HttpServlet {
+
     private static final Map<String, Session> sessions = Collections.synchronizedMap(ChatWebSocket.getSessions()); // Lấy sessions từ ChatWebSocket
     private MessageDAO messageDAO = new MessageDAO();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Lấy thông tin từ request
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part filePart = request.getPart("file");
         String fileName = filePart.getSubmittedFileName();
         Integer userId = (Integer) request.getSession().getAttribute("userID");
-        String marketingIdStr = request.getParameter("marketingId"); // Truyền từ form
+        String marketingIdStr = request.getParameter("marketingId");
 
         if (userId == null || marketingIdStr == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing userId or marketingId");
@@ -43,7 +42,9 @@ public class UploadImageServlet extends HttpServlet {
         // Upload ảnh
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
         File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdir();
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
 
         String filePath = uploadPath + File.separator + fileName;
         filePart.write(filePath);
@@ -57,21 +58,21 @@ public class UploadImageServlet extends HttpServlet {
             String formattedTime = LocalDateTime.now().format(formatter);
             String responseMessage = "{\"senderId\": \"" + userId + "\", \"content\": \"\", \"createdAt\": \"" + formattedTime + "\", \"imageUrl\": \"" + imageUrl + "\"}";
 
-            String marketingSessionKey = marketingId + "-" + userId;
-            String customerSessionKey = userId + "-" + marketingId;
+            String senderToReceiverKey = userId + "-" + marketingId; // Từ customer đến marketing
+            String receiverToSenderKey = marketingId + "-" + userId; // Từ marketing đến customer
 
-            Session marketingSession = sessions.get(marketingSessionKey);
-            if (marketingSession != null && marketingSession.isOpen()) {
-                marketingSession.getAsyncRemote().sendText(responseMessage);
+            Session senderSession = sessions.get(senderToReceiverKey);
+            Session receiverSession = sessions.get(receiverToSenderKey);
+
+            if (senderSession != null && senderSession.isOpen()) {
+                senderSession.getAsyncRemote().sendText(responseMessage);
             }
-
-            Session customerSession = sessions.get(customerSessionKey);
-            if (customerSession != null && customerSession.isOpen()) {
-                customerSession.getAsyncRemote().sendText(responseMessage);
+            if (receiverSession != null && receiverSession.isOpen()) {
+                receiverSession.getAsyncRemote().sendText(responseMessage);
             }
         }
 
-        // Trả về JSON cho client
+         // Trả về JSON cho client
         response.setContentType("application/json");
         response.getWriter().write("{\"imageUrl\": \"" + imageUrl + "\"}");
     }
@@ -81,3 +82,4 @@ public class UploadImageServlet extends HttpServlet {
         return ChatWebSocket.getSessions();
     }
 }
+

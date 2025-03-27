@@ -391,6 +391,15 @@
                 cursor: pointer;
                 transition: all 0.3s ease;
             }
+            
+            .ai-message img {
+                max-width: 100%;
+                max-height: 150px;
+                width: auto;
+                height: auto;
+                border-radius: 5px;
+                margin-top: 5px;
+            }
 
             .ai-chat-button:hover {
                 transform: scale(1.1);
@@ -625,35 +634,35 @@
 
         <!-- Chat Widget -->
         <div class="ai-chat-widget" id="aiChatWidget">
-    <div class="ai-chat-header" onclick="toggleChatWidget()">
-        <span><i class="fas fa-comment"></i> Chat với hỗ trợ</span>
-        <i class="fas fa-times" id="aiChatClose"></i>
-    </div>
-    <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
-        <c:choose>
-            <c:when test="${not empty chatError}">
-                <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
-            </c:when>
-            <c:otherwise>
-                <c:forEach items="${chatMessages}" var="msg">
-                    <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
-                        <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
-                        <p>${msg.content}</p>
-                        <c:if test="${not empty msg.imageUrl}">
-                            <img src="${msg.imageUrl}" alt="Attached image">
-                        </c:if>
-                    </div>
-                </c:forEach>
-            </c:otherwise>
-        </c:choose>
-    </div>
-    <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
-        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="uploadImage()">
-        <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i></button>
-        <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
-        <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
-    </div>
-</div>
+            <div class="ai-chat-header" onclick="toggleChatWidget()">
+                <span><i class="fas fa-comment"></i> Chat với hỗ trợ</span>
+                <i class="fas fa-times" id="aiChatClose"></i>
+            </div>
+            <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
+                <c:choose>
+                    <c:when test="${not empty chatError}">
+                        <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${chatMessages}" var="msg">
+                            <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
+                                <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
+                                <p>${msg.content}</p>
+                                <c:if test="${not empty msg.imageUrl}">
+                                    <img src="${msg.imageUrl}" alt="Attached image">
+                                </c:if>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
+                <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="uploadImage()">
+                <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i></button>
+                <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
+                <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
+            </div>
+        </div>
 
         <!-- Back to Top -->
         <button id="backToTopButton" class="back-to-top">
@@ -662,64 +671,63 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
     var userId = "${userID}";
-    var marketingId = "${marketingId}";
-    var ws = null;
+var marketingId = "${marketingId}";
+var ws = null;
 
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
+    var chatMessages = document.getElementById("aiChatMessages");
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    if (userId && marketingId !== "-1") {
+        initWebSocket(); // Khởi tạo WebSocket ngay khi load trang
+    }
+});
+
+function toggleChatWidget() {
+    var widget = document.getElementById("aiChatWidget");
+    if (widget.style.display === "none" || widget.style.display === "") {
+        widget.style.display = "flex";
         var chatMessages = document.getElementById("aiChatMessages");
-        if (chatMessages) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    });
-
-    function toggleChatWidget() {
-        var widget = document.getElementById("aiChatWidget");
-        if (widget.style.display === "none" || widget.style.display === "") {
-            widget.style.display = "flex";
-            if (userId && marketingId !== "-1") {
-                initWebSocket();
-            }
-            var chatMessages = document.getElementById("aiChatMessages");
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        } else {
-            widget.style.display = "none";
-            if (ws) {
-                ws.close();
-            }
-        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    } else {
+        widget.style.display = "none";
     }
+}
 
-    function initWebSocket() {
-        if (!userId || marketingId === "-1") return;
-        var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + marketingId + "/" + userId;
-        ws = new WebSocket(wsUrl);
+function initWebSocket() {
+    if (!userId || marketingId === "-1") return;
+    var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + userId + "/" + marketingId; // /chat/6/3 cho userId=6
+    console.log("Attempting to connect to: " + wsUrl);
+    ws = new WebSocket(wsUrl);
 
-        ws.onopen = function() {
-            console.log("WebSocket connected to " + wsUrl);
-        };
+    ws.onopen = function() {
+        console.log("WebSocket connected to " + wsUrl);
+    };
 
-        ws.onmessage = function(event) {
-            console.log("Received: " + event.data);
-            var data = JSON.parse(event.data);
-            var chatMessages = document.getElementById("aiChatMessages");
-            var messageClass = (data.senderId == userId) ? "user" : "bot";
-            var messageHtml = '<div class="ai-message ' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
-            if (data.imageUrl) {
-                messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
-            }
-            messageHtml += '</div>';
-            chatMessages.innerHTML += messageHtml;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        };
+    ws.onmessage = function(event) {
+        console.log("Received: " + event.data);
+        var data = JSON.parse(event.data);
+        var chatMessages = document.getElementById("aiChatMessages");
+        var messageClass = (data.senderId == userId) ? "user" : "bot";
+        var messageHtml = '<div class="ai-message ' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
+        if (data.imageUrl) {
+            messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
+        }
+        messageHtml += '</div>';
+        chatMessages.innerHTML += messageHtml;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
 
-        ws.onerror = function(event) {
-            console.log("WebSocket error: ", event);
-        };
+    ws.onerror = function(event) {
+        console.log("WebSocket error: ", event);
+    };
 
-        ws.onclose = function() {
-            console.log("WebSocket closed");
-        };
-    }
+    ws.onclose = function() {
+        console.log("WebSocket closed, retrying in 2 seconds...");
+        setTimeout(initWebSocket, 2000);
+    };
+}
 
     function sendMessage() {
         var input = document.getElementById("messageInput");
@@ -764,17 +772,6 @@
         }
     });
 </script>
-
-<style>
-    .ai-message img {
-        max-width: 100%;
-        max-height: 150px;
-        width: auto;
-        height: auto;
-        border-radius: 5px;
-        margin-top: 5px;
-    }
-</style>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

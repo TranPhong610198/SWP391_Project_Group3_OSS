@@ -9,16 +9,55 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        body, html { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-        .main-container { display: flex; height: 100%; }
-        .main-content { flex-grow: 1; overflow: hidden; margin-left: 250px; padding: 20px; }
-        .chat-box { height: 70vh; overflow-y: auto; border: 1px solid #dee2e6; padding: 10px; background-color: #f8f9fa; }
-        .message-sent { text-align: right; margin: 5px 0; }
-        .message-received { text-align: left; margin: 5px 0; }
-        .message-sent p, .message-received p { display: inline-block; padding: 5px 10px; border-radius: 10px; margin: 0; }
-        .message-sent p { background-color: #007bff; color: white; }
-        .message-received p { background-color: #e9ecef; }
-        .message-sent small, .message-received small { display: block; font-size: 0.8em; color: #6c757d; }
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .main-container {
+            display: flex;
+            height: 100%;
+        }
+        .main-content {
+            flex-grow: 1;
+            overflow: hidden;
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .chat-box {
+            height: 70vh;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .message-sent {
+            text-align: right;
+            margin: 5px 0;
+        }
+        .message-received {
+            text-align: left;
+            margin: 5px 0;
+        }
+        .message-sent p, .message-received p {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin: 0;
+        }
+        .message-sent p {
+            background-color: #007bff;
+            color: white;
+        }
+        .message-received p {
+            background-color: #e9ecef;
+        }
+        .message-sent small, .message-received small {
+            display: block;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
         .chat-box img {
             max-width: 100%;
             max-height: 200px;
@@ -58,53 +97,59 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         var marketingId = "${marketingId}";
-        var userId = "${userId}";
-        var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + marketingId + "/" + userId;
-        var ws = new WebSocket(wsUrl);
+var userId = "${userId}";
+var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + marketingId + "/" + userId;
+var ws = null;
 
-        ws.onopen = function() {
-            console.log("WebSocket connected to " + wsUrl);
-            scrollToBottom();
-        };
+function initWebSocket() {
+    ws = new WebSocket(wsUrl);
 
-        ws.onmessage = function(event) {
-            console.log("Received: " + event.data);
-            var data = JSON.parse(event.data);
-            var chatBox = document.getElementById("chatBox");
-            var messageClass = (data.senderId === marketingId) ? "message-sent" : "message-received";
-            var messageHtml = '<div class="' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
-            if (data.imageUrl) {
-                console.log("Image URL received: " + data.imageUrl); // Debug imageUrl
-                messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
-            }
-            messageHtml += '</div>';
-            chatBox.innerHTML += messageHtml;
-            scrollToBottom();
-        };
+    ws.onopen = function() {
+        console.log("WebSocket connected to " + wsUrl);
+        scrollToBottom();
+    };
 
-        ws.onerror = function(event) {
-            console.log("WebSocket error: ", event);
-        };
-
-        ws.onclose = function() {
-            console.log("WebSocket closed");
-        };
-
-        function sendMessage() {
-            var input = document.getElementById("messageInput");
-            var message = input.value.trim();
-            if (message && ws.readyState === WebSocket.OPEN) {
-                var jsonMessage = JSON.stringify({
-                    senderId: parseInt(marketingId),
-                    content: message
-                });
-                console.log("Sending: " + jsonMessage);
-                ws.send(jsonMessage);
-                input.value = "";
-            } else {
-                console.log("WebSocket not open or message empty");
-            }
+    ws.onmessage = function(event) {
+        console.log("Received: " + event.data);
+        var data = JSON.parse(event.data);
+        var chatBox = document.getElementById("chatBox");
+        var messageClass = (data.senderId === marketingId) ? "message-sent" : "message-received";
+        var messageHtml = '<div class="' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
+        if (data.imageUrl) {
+            messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
         }
+        messageHtml += '</div>';
+        chatBox.innerHTML += messageHtml;
+        scrollToBottom();
+    };
+
+    ws.onerror = function(event) {
+        console.log("WebSocket error: ", event);
+    };
+
+    ws.onclose = function() {
+        console.log("WebSocket closed, retrying in 2 seconds...");
+        setTimeout(initWebSocket, 2000); // Tự động kết nối lại nếu đóng
+    };
+}
+
+initWebSocket(); // Khởi tạo ngay khi load trang
+
+function sendMessage() {
+    var input = document.getElementById("messageInput");
+    var message = input.value.trim();
+    if (message && ws.readyState === WebSocket.OPEN) {
+        var jsonMessage = JSON.stringify({
+            senderId: parseInt(marketingId),
+            content: message
+        });
+        console.log("Sending: " + jsonMessage);
+        ws.send(jsonMessage);
+        input.value = "";
+    } else {
+        console.log("WebSocket not open or message empty");
+    }
+}
 
         function uploadImage() {
             var fileInput = document.getElementById("imageInput");
@@ -128,11 +173,11 @@
                     });
                     if (ws.readyState === WebSocket.OPEN) {
                         ws.send(jsonMessage); // Gửi tin nhắn qua WebSocket ngay lập tức
-                        console.log("Sent image message: " + jsonMessage);
-                    }
-                    fileInput.value = ""; // Reset input file
-                })
-                .catch(error => console.error("Error uploading image: ", error));
+                                console.log("Sent image message: " + jsonMessage);
+                            }
+                            fileInput.value = ""; // Reset input file
+                        })
+                        .catch(error => console.error("Error uploading image: ", error));
             }
         }
 
@@ -141,7 +186,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        document.getElementById("messageInput").addEventListener("keypress", function(event) {
+        document.getElementById("messageInput").addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
                 sendMessage();
             }
