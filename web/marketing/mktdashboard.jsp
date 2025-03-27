@@ -216,7 +216,7 @@
                 <div class="col-xl-6 col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="m-0">Phân Phối Phản Hồi</h6>
+                            <h6 class="m-0">Phân Phối Đánh Giá</h6>
                         </div>
                         <div class="card-body">
                             <div class="chart-container" style="height: 300px;">
@@ -344,8 +344,8 @@
                                 <canvas id="customerTypeChart"></canvas>
                             </div>
                             <div class="mt-3 text-center small">
-                                <span class="me-2"><i class="fas fa-circle text-success"></i> VIP: ${stats.customerContactStats['vip']}</span>
-                                <span class="me-2"><i class="fas fa-circle text-primary"></i> Normal: ${stats.customerContactStats['normal']}</span>
+                                <span class="me-2"><i class="fas fa-circle text-success"></i> Cao cấp: ${stats.customerContactStats['vip']}</span>
+                                <span class="me-2"><i class="fas fa-circle text-primary"></i> Thông thường: ${stats.customerContactStats['normal']}</span>
                             </div>
                         </div>
                     </div>
@@ -357,7 +357,7 @@
                 <div class="col-xl-4 col-lg-4">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="m-0">Danh Sách Khách Hàng VIP Hàng Đầu</h6>
+                            <h6 class="m-0">Danh Sách Khách Hàng Cao Cấp Hàng Đầu</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -561,9 +561,9 @@
                 var feedbackChart = new Chart(feedbackChartContext, {
                     type: 'bar',
                     data: {
-                        labels: ['1 Sao', '2 Sao', '3 Sao', '4 Sao', '5 Sao'],
+                        labels: ['', '', '', '', ''],
                         datasets: [{
-                            label: 'Số lượng phản hồi',
+                            label: 'Số sao',
                             data: feedbackData,
                             backgroundColor: ['#e74a3b', '#f6c23e', '#36b9cc', '#4e73df', '#1cc88a'],
                             hoverBackgroundColor: ['#be3d30', '#dda20a', '#2c9faf', '#2e59d9', '#17a673'],
@@ -574,8 +574,8 @@
                     options: {
                         maintainAspectRatio: false,
                         scales: {
-                            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, title: { display: true, text: 'Số lượng phản hồi' } },
-                            x: { title: { display: true, text: 'Rating' } }
+                            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, title: { display: true, text: 'Số lượng đánh giá' } },
+                            x: { title: { display: true, text: 'Số sao' } }
                         },
                         plugins: { legend: { display: false } }
                     }
@@ -676,7 +676,7 @@
             var customerTypeChart = new Chart(customerTypeChartContext, {
                 type: 'doughnut',
                 data: {
-                    labels: ['VIP', 'Normal'],
+                    labels: ['Cao cấp', 'Thông thường'],
                     datasets: [{
                         data: [${stats.customerContactStats['vip']}, ${stats.customerContactStats['normal']}],
                         backgroundColor: ['#1cc88a', '#4e73df'],

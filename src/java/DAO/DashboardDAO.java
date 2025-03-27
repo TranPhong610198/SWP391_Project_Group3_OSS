@@ -470,9 +470,9 @@ private Map<String, Integer> getCouponExpirations() {
         rs = ps.executeQuery();
         
         if (rs.next()) {
-            expirationStats.put("Expiring in 7 days", rs.getInt("expiring_7_days"));
-            expirationStats.put("Expiring in 30 days", rs.getInt("expiring_30_days"));
-            expirationStats.put("Expiring later", rs.getInt("expiring_later"));
+            expirationStats.put("Hết hạn trong 7 ngày", rs.getInt("expiring_7_days"));
+            expirationStats.put("Hết hạn trong 30 ngày", rs.getInt("expiring_30_days"));
+            expirationStats.put("Hết hạn ngoài 30 ngày", rs.getInt("expiring_later"));
         }
     } catch (Exception e) {
         e.printStackTrace();

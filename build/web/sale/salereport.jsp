@@ -208,11 +208,13 @@
                             <td>Hiệu quả doanh thu</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${salesReport.totalRevenue > 0}">
-                                        Doanh thu <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></span> dương. Duy trì chiến lược bán hàng hiện tại.
+                                    <c:when test="${salesReport.totalRevenue > 5000000}">
+                                        Doanh thu: <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></span> thì 
+                                        tiếp tục phát huy chiến lược bán hàng hiện tại và xem xét mở rộng quy mô!
                                     </c:when>
                                     <c:otherwise>
-                                        Doanh thu âm hoặc bằng 0 (<span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></span>). Xem xét giảm chi phí hoặc tăng khuyến mãi.
+                                        Doanh thu: <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></span> thì 
+                                        xem xét tối ưu hóa chi phí hoặc đẩy mạnh các chương trình khuyến mãi.
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -221,11 +223,11 @@
                             <td>Giá trị đơn hàng trung bình</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${salesReport.averageOrderValue < 50}">
-                                        Giá trị trung bình thấp (<span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></span>). Đề xuất thêm sản phẩm combo hoặc ưu đãi để tăng giá trị đơn hàng.
+                                    <c:when test="${salesReport.averageOrderValue < 1000000}">
+                                        Giá trị trung bình thấp <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></span>. Đề xuất thêm sản phẩm combo hoặc ưu đãi để tăng giá trị đơn hàng.
                                     </c:when>
                                     <c:otherwise>
-                                        Giá trị trung bình tốt (<span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></span>). Tập trung quảng bá các sản phẩm giá trị cao.
+                                        Giá trị trung bình tốt <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></span>. Tập trung quảng bá các sản phẩm giá trị cao.
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -534,7 +536,14 @@
                                         <c:set var="completionRate" value="${(completedOrders / totalOrders) * 100}" />
                                         Tỷ lệ hoàn thành đơn hàng là 
                                         <span class="highlight-number"><fmt:formatNumber value="${completionRate}" type="number" maxFractionDigits="2"/></span>%. 
-                                        Đề xuất: Phân tích các rào cản làm chậm quá trình hoàn thành đơn hàng.
+                                        <c:choose>
+                                            <c:when test="${completionRate > 70}">
+                                                Đề xuất: Duy trì hiệu suất tốt và tối ưu hóa thêm để tăng trải nghiệm khách hàng.
+                                            </c:when>
+                                            <c:otherwise>
+                                                Đề xuất: Phân tích các rào cản làm chậm quá trình hoàn thành đơn hàng và cải thiện quy trình.
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                     <c:otherwise>
                                         Không có dữ liệu trạng thái đơn hàng để phân tích.
@@ -547,7 +556,14 @@
                             <td>
                                 Thời gian xử lý trung bình là 
                                 <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageFulfillmentTime}" type="number" maxFractionDigits="2"/></span> giờ. 
-                                Khuyến nghị: Đặt mục tiêu giảm thời gian xử lý và tối ưu hóa quy trình logistics.
+                                <c:choose>
+                                    <c:when test="${salesReport.averageFulfillmentTime > 2}">
+                                        Khuyến nghị: Đặt mục tiêu giảm thời gian xử lý và tối ưu hóa quy trình logistics.
+                                    </c:when>
+                                    <c:otherwise>
+                                        Khuyến nghị: Duy trì thời gian xử lý tốt và tiếp tục cải thiện trải nghiệm khách hàng.
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
                     </tbody>
