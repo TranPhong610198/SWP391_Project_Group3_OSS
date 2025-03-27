@@ -638,10 +638,15 @@
                             <c:if test="${order.status eq 'pending_pay' && order.paymentStatus eq 'pending' && (order.paymentMethod eq 'bank_transfer' || order.paymentMethod eq 'cod')}">
                                 <div class="action-buttons">
                                     <!-- Nút "Thanh toán lại" chỉ hiển thị cho bank_transfer -->
-                                    <c:if test="${order.paymentMethod eq 'bank_transfer'}">
-                                        <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
-                                            <i class="fas fa-money-check-alt"></i> Thanh toán lại
+                                    <c:if test="${order.status == 'pending_pay'}">
+                                        <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
+                                            <i class="fas fa-times me-2"></i> Hủy đơn hàng
                                         </a>
+                                        <c:if test="${order.paymentStatus == 'pending' && order.paymentMethod == 'bank_transfer'}">
+                                            <a href="myorder?action=retry_payment&id=${order.id}" class="btn-order-detail">
+                                                <i class="fas fa-money-check-alt me-2"></i> Thanh toán lại
+                                            </a>
+                                        </c:if>
                                     </c:if>
                                     <!-- Nút "Hủy đơn hàng" hiển thị cho cả bank_transfer và cod -->
                                     <a href="orderdetail?action=cancel&id=${order.id}" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
@@ -770,14 +775,14 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                        // Ẩn thông báo sau 5 giây
-                                        window.setTimeout(function () {
-                                            var alerts = document.querySelectorAll('.alert');
-                                            alerts.forEach(function (alert) {
-                                                var bsAlert = new bootstrap.Alert(alert);
-                                                bsAlert.close();
-                                            });
-                                        }, 5000);
+                                            // Ẩn thông báo sau 5 giây
+                                            window.setTimeout(function () {
+                                                var alerts = document.querySelectorAll('.alert');
+                                                alerts.forEach(function (alert) {
+                                                    var bsAlert = new bootstrap.Alert(alert);
+                                                    bsAlert.close();
+                                                });
+                                            }, 5000);
         </script>
     </body>
 </html>
