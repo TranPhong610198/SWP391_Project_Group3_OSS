@@ -121,6 +121,12 @@ public class OrderDetailsServlet extends HttpServlet {
             // Xử lý theo trạng thái mới
             if ("processing".equals(newStatus) || "cancelled".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
+                if ("cancelled".equals(newStatus)) {
+                    for (CartItem temp : order.getItems()) {
+                        int variantId = inventoryDAO.getVariantId(temp.getProductId(), temp.getSize(), temp.getColor());
+                        inventoryDAO.increaseVariantStock(variantId, temp.getQuantity());
+                    }
+                }
             } else if ("shipping".equals(newStatus)) {
                 String shippingProvider = request.getParameter("shippingProvider");
                 String trackingNumber = request.getParameter("trackingNumber");
@@ -154,7 +160,7 @@ public class OrderDetailsServlet extends HttpServlet {
             } else {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 orderDAO.updatePayStatus(orderId, "refunded");
-                for (CartItem temp: order.getItems()){
+                for (CartItem temp : order.getItems()) {
                     int variantId = inventoryDAO.getVariantId(temp.getProductId(), temp.getSize(), temp.getColor());
                     inventoryDAO.increaseVariantStock(variantId, temp.getQuantity());
                 }
