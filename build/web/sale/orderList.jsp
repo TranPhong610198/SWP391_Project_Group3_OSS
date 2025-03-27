@@ -263,7 +263,7 @@
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-search text-muted"></i>
                                     </span>
-                                    <input type="text" name="keyword" value="${keyword}" class="form-control search-box" placeholder="Tìm kiếm mã đơn hàng hoặc tên khách hàng">
+                                    <input type="text" name="keyword" value="${keyword}" class="form-control search-box" placeholder="Tìm kiếm mã đơn hàng hoặc tên hoặc email khách hàng">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -328,6 +328,14 @@
                                             </a>
                                         </th>
                                         <th>
+                                            <a href="orderlist?sortField=recipientEmail&sortDir=${sortField == 'recipientEmail' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&dateFrom=${dateFrom}&dateTo=${dateTo}&customerName=${customerName}&status=${status}&keyword=${keyword}" class="sort-link">
+                                                Email khách hàng
+                                                <span class="sort-icons">
+                                                    ${sortField == 'recipientEmail' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <th>
                                             <a href="orderlist?sortField=recipientName&sortDir=${sortField == 'recipientName' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&dateFrom=${dateFrom}&dateTo=${dateTo}&customerName=${customerName}&status=${status}&keyword=${keyword}" class="sort-link">
                                                 Tên khách hàng
                                                 <span class="sort-icons">
@@ -361,6 +369,7 @@
                                             <td>${loop.index + 1}</td>
                                             <td><span href="orderdetails?id=${order.id}" class="text-primary fw-bold">${order.orderCode}</span></td>
                                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                            <td>${order.recipientEmail}</td>
                                             <td>${order.recipientName}</td>
                                             <td>
                                                 <c:choose>
