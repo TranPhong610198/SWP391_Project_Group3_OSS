@@ -569,37 +569,38 @@ public List<Map<String, Object>> getMostUsedCoupons(int limit) {
     }
     
     // Get products with highest discount
-    public List<Map<String, Object>> getProductsWithHighestDiscount(int limit) {
-        List<Map<String, Object>> result = new ArrayList<>();
-        String sql = "SELECT id, title, original_price, sale_price, " +
-                     "((original_price - sale_price) / original_price) * 100 as discount_percentage " +
-                     "FROM products WHERE original_price > sale_price " +
-                     "ORDER BY discount_percentage DESC";
-        
-        if (limit > 0) {
-            sql += " OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY";
-        }
-        
-        try {
-            ps = conn.prepareStatement(sql);
-            if (limit > 0) {
-                ps.setInt(1, limit);
-            }
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Map<String, Object> product = new HashMap<>();
-                product.put("id", rs.getInt("id"));
-                product.put("title", rs.getString("title"));
-                product.put("original_price", rs.getBigDecimal("original_price"));
-                product.put("sale_price", rs.getBigDecimal("sale_price"));
-                product.put("discount_percentage", rs.getBigDecimal("discount_percentage").setScale(2, RoundingMode.HALF_UP));
-                result.add(product);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error getting products with highest discount: " + e.getMessage());
-        }
-        return result;
+    public List<Map<String, Object>> getProductsWithHighestPriceIncrease(int limit) {
+    List<Map<String, Object>> result = new ArrayList<>();
+    String sql = "SELECT id, title, original_price, sale_price, " +
+                 "((sale_price - original_price) / original_price) * 100 as increase_percentage " +
+                 "FROM products WHERE sale_price > original_price " + 
+                 "ORDER BY increase_percentage DESC";
+
+    if (limit > 0) {
+        sql += " OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY";
     }
+
+    try {
+        ps = conn.prepareStatement(sql);
+        if (limit > 0) {
+            ps.setInt(1, limit);
+        }
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            Map<String, Object> product = new HashMap<>();
+            product.put("id", rs.getInt("id"));
+            product.put("title", rs.getString("title"));
+            product.put("original_price", rs.getBigDecimal("original_price"));
+            product.put("sale_price", rs.getBigDecimal("sale_price"));
+            product.put("increase_percentage", rs.getBigDecimal("increase_percentage").setScale(2, RoundingMode.HALF_UP));
+            result.add(product);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error getting products with highest price increase: " + e.getMessage());
+    }
+    return result;
+}
+
     
     // Get best selling products
     public List<Map<String, Object>> getBestSellingProducts(int limit) {
@@ -1137,8 +1138,10 @@ public List<Map<String, Object>> getInventoryByCategory() {
                      "SUM(pv.stock_quantity) as stock_quantity " +
                      "FROM products p " +
                      "LEFT JOIN order_items oi ON p.id = oi.product_id " +
+                     "LEFT JOIN orders o ON oi.order_id = o.id " +
                      "LEFT JOIN feedback f ON oi.id = f.order_item_id " +
                      "LEFT JOIN product_variants pv ON p.id = pv.product_id " +
+                     "WHERE o.status = 'completed' " +
                      "GROUP BY p.id, p.title " +
                      "ORDER BY total_sold DESC";
         

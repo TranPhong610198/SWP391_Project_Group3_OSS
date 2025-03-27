@@ -108,7 +108,8 @@ public class OrderListServlet extends HttpServlet {
                 params.add(status);
             }
             if (keyword != null && !keyword.isEmpty()) {
-                sql.append(" AND (o.notes LIKE ? OR o.recipient_name LIKE ?)");
+                sql.append(" AND (o.notes LIKE ? OR o.recipient_name LIKE ? OR o.recipient_email LIKE ?)");
+                params.add("%" + keyword + "%");
                 params.add("%" + keyword + "%");
                 params.add("%" + keyword + "%");
             }
@@ -123,6 +124,7 @@ public class OrderListServlet extends HttpServlet {
             // Ánh xạ sortField từ JSP sang cột trong cơ sở dữ liệu
             String dbSortField = sortField.equals("orderDate") ? "created_at"
                     : sortField.equals("recipientName") ? "recipient_name"
+                    : sortField.equals("recipientEmail") ? "recipient_email"
                     : sortField.equals("total") ? "total"
                     : sortField.equals("status") ? "status" : "created_at";
 

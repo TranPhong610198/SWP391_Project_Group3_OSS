@@ -623,10 +623,10 @@
             <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
         </div>
 
-                <!-- Chat Widget -->
+        <!-- Chat Widget -->
         <div class="ai-chat-widget" id="aiChatWidget">
     <div class="ai-chat-header" onclick="toggleChatWidget()">
-        <span><i class="fas fa-comment"></i> Chat với chúng tôi</span>
+        <span><i class="fas fa-comment"></i> Chat với hỗ trợ</span>
         <i class="fas fa-times" id="aiChatClose"></i>
     </div>
     <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
@@ -635,7 +635,6 @@
                 <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
             </c:when>
             <c:otherwise>
-                <div class="ai-message bot">Chào bạn! Tôi là trợ lý của Fashion Shop. Tôi có thể giúp gì cho bạn?</div>
                 <c:forEach items="${chatMessages}" var="msg">
                     <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
                         <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
@@ -649,11 +648,10 @@
         </c:choose>
     </div>
     <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
-        <form id="chatForm" class="d-flex">
-            <input type="hidden" name="userId" value="${chatUserId}">
-            <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn" onkeypress="if(event.key === 'Enter') sendMessage();">
-            <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
-        </form>
+        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="uploadImage()">
+        <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i></button>
+        <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
+        <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
     </div>
 </div>
 
@@ -662,101 +660,122 @@
             <div class="arrow"></div>
         </button>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    let socket;
+        <script>
+    var userId = "${userID}";
+    var marketingId = "${marketingId}";
+    var ws = null;
 
-    $(document).ready(function() {
-        $('#aiChatMessages').scrollTop($('#aiChatMessages')[0].scrollHeight);
-        <c:if test="${not empty userID}">connectWebSocket();</c:if>
+    document.addEventListener('DOMContentLoaded', function () {
+        var chatMessages = document.getElementById("aiChatMessages");
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     });
 
     function toggleChatWidget() {
-        const widget = document.getElementById('aiChatWidget');
-        if (widget.style.display === 'flex') {
-            widget.style.display = 'none';
-            if (socket) socket.close();
+        var widget = document.getElementById("aiChatWidget");
+        if (widget.style.display === "none" || widget.style.display === "") {
+            widget.style.display = "flex";
+            if (userId && marketingId !== "-1") {
+                initWebSocket();
+            }
+            var chatMessages = document.getElementById("aiChatMessages");
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         } else {
-            widget.style.display = 'flex';
-            <c:if test="${not empty userID}">connectWebSocket();</c:if>
+            widget.style.display = "none";
+            if (ws) {
+                ws.close();
+            }
         }
     }
 
-    function connectWebSocket() {
-        const userId = '${userID}';
-        if (!userId || userId === "null") return;
+    function initWebSocket() {
+        if (!userId || marketingId === "-1") return;
+        var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + marketingId + "/" + userId;
+        ws = new WebSocket(wsUrl);
 
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            console.log("WebSocket already connected for user: " + userId);
-            return;
-        }
-
-        socket = new WebSocket("ws://" + window.location.host + "${pageContext.request.contextPath}/chat/" + userId);
-
-        socket.onopen = function() {
-            console.log("WebSocket connected for user: " + userId);
+        ws.onopen = function() {
+            console.log("WebSocket connected to " + wsUrl);
         };
 
-        socket.onmessage = function(event) {
-            console.log("Received message: " + event.data);
-            const message = JSON.parse(event.data);
-            if (message.error) {
-                alert(message.error);
-                return;
+        ws.onmessage = function(event) {
+            console.log("Received: " + event.data);
+            var data = JSON.parse(event.data);
+            var chatMessages = document.getElementById("aiChatMessages");
+            var messageClass = (data.senderId == userId) ? "user" : "bot";
+            var messageHtml = '<div class="ai-message ' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
+            if (data.imageUrl) {
+                messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
             }
-            displayMessage(message);
+            messageHtml += '</div>';
+            chatMessages.innerHTML += messageHtml;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         };
 
-        socket.onclose = function(event) {
-            console.log("WebSocket disconnected. Code: " + event.code + ", Reason: " + event.reason);
+        ws.onerror = function(event) {
+            console.log("WebSocket error: ", event);
         };
 
-        socket.onerror = function(error) {
-            console.error("WebSocket error:", error);
+        ws.onclose = function() {
+            console.log("WebSocket closed");
         };
     }
 
     function sendMessage() {
-        const content = $("#messageInput").val().trim();
-        const userId = '${userID}';
-        const receiverId = '${chatUserId}'; // Giả định chatUserId là ID của marketing
-
-        if (!content) {
-            alert("Vui lòng nhập tin nhắn!");
-            return;
-        }
-
-        if (!userId || userId === "null") return;
-
-        const message = {
-            content: content,
-            receiverId: parseInt(receiverId) || 3, // Mặc định gửi tới marketing (ID = 3) nếu chatUserId không có
-            createdAt: new Date().toISOString()
-        };
-
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            console.log("Sending message: " + JSON.stringify(message));
-            socket.send(JSON.stringify(message));
-            $("#messageInput").val("");
+        var input = document.getElementById("messageInput");
+        var message = input.value.trim();
+        if (message && ws && ws.readyState === WebSocket.OPEN) {
+            var jsonMessage = JSON.stringify({
+                senderId: parseInt(userId),
+                content: message
+            });
+            console.log("Sending: " + jsonMessage);
+            ws.send(jsonMessage);
+            input.value = "";
         } else {
-            console.error("WebSocket is not open");
-            connectWebSocket();
-            setTimeout(sendMessage, 1000); // Thử gửi lại sau khi kết nối
+            console.log("WebSocket not open or message empty");
         }
     }
 
-    function displayMessage(message) {
-        const isSent = message.senderId == '${userID}';
-        const className = isSent ? 'user' : 'bot';
-        const html = `
-            <div class="ai-message ${className}">
-               
-                <p>${message.content}</p>
-                ${message.imageUrl ? '<img src="' + message.imageUrl + '" alt="Attached image">' : ''}
-            </div>`;
-        $("#aiChatMessages").append(html);
-        $('#aiChatMessages').scrollTop($('#aiChatMessages')[0].scrollHeight);
+    function uploadImage() {
+        var fileInput = document.getElementById("imageInput");
+        var file = fileInput.files[0];
+        if (file) {
+            var formData = new FormData();
+            formData.append("file", file);
+            formData.append("marketingId", marketingId);
+
+            fetch('/fashionshop/uploadImage', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Image uploaded: " + data.imageUrl);
+                fileInput.value = ""; // Reset input file
+            })
+            .catch(error => console.error("Error uploading image: ", error));
+        }
     }
+
+    document.getElementById("messageInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
 </script>
+
+<style>
+    .ai-message img {
+        max-width: 100%;
+        max-height: 150px;
+        width: auto;
+        height: auto;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+</style>
+
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <jsp:include page="footer.jsp" />
@@ -813,6 +832,5 @@
                 });
             });
         </script>
-
     </body>
 </html>

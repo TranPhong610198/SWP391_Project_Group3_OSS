@@ -39,10 +39,7 @@ public class SalesReportDAO extends DBContext {
             // Get product performance metrics
             getProductPerformance(report, sqlStartDate, sqlEndDate);
 
-            // Get customer metrics
-            getCustomerMetrics(report, sqlStartDate, sqlEndDate);
-
-            // Get cart metrics
+            
             
 
             // Get order processing metrics
@@ -178,23 +175,41 @@ public class SalesReportDAO extends DBContext {
      * Gets product performance metrics
      */
     private void getProductPerformance(SalesReport report, java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
-        // Top products by revenue
-        String sql = "SELECT TOP 10 " + // Limit to top 10 products
-        "p.id AS product_id, " +
-        "p.title AS product_name, " +
-        "c.name AS category_name, " +
-        "SUM(oi.quantity) AS total_quantity, " +
-        "SUM(oi.quantity * oi.unit_price_at_order) AS total_revenue " +
-        "FROM order_items oi " +
-        "JOIN orders o ON oi.order_id = o.id " +
-        "JOIN products p ON oi.product_id = p.id " +
-        "JOIN categories c ON p.category_id = c.id " +
-        "WHERE o.created_at BETWEEN ? AND ? " +
-        "AND o.status = 'completed' " +  // Only completed orders
-        "GROUP BY p.id, p.title, c.name " +
-        "ORDER BY total_revenue DESC";
+    // Top products by revenue with variant distribution
+    String sql = "WITH CategoryHierarchy AS ( " +
+            "   SELECT c1.id AS category_id, " +
+            "          c1.name AS category_name, " +
+            "          c1.parent_id, " +
+            "          CASE " +
+            "              WHEN c1.parent_id IS NULL THEN c1.id " +
+            "              WHEN c2.parent_id IS NULL THEN c2.id " +
+            "              WHEN c3.parent_id IS NULL THEN c3.id " +
+            "              ELSE NULL " +
+            "          END AS top_level_id " +
+            "   FROM categories c1 " +
+            "   LEFT JOIN categories c2 ON c1.parent_id = c2.id " +
+            "   LEFT JOIN categories c3 ON c2.parent_id = c3.id " +
+            ") " +
+            "SELECT TOP 10 " +
+            "    p.id AS product_id, " +
+            "    p.title AS product_name, " +
+            "    c1.name AS category_name, " +
+            "    SUM(oi.quantity) AS total_quantity, " +
+            "    SUM(oi.quantity * oi.unit_price_at_order) AS total_revenue, " +
+            "    oi.variant_name AS variant, " +
+            "    SUM(oi.quantity) AS variant_quantity " +
+            "FROM order_items oi " +
+            "JOIN orders o ON oi.order_id = o.id " +
+            "JOIN products p ON oi.product_id = p.id " +
+            "JOIN CategoryHierarchy ch ON p.category_id = ch.category_id " +
+            "JOIN categories c1 ON ch.top_level_id = c1.id " +
+            "WHERE o.created_at BETWEEN ? AND ? " +
+            "AND o.status = 'completed' " +
+            "GROUP BY p.id, p.title, c1.name, oi.variant_name " +
+            "ORDER BY total_revenue DESC, total_quantity DESC";
 
     List<SalesReport.ProductPerformance> topProducts = new ArrayList<>();
+    Map<Integer, SalesReport.ProductPerformance> productMap = new HashMap<>();
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
         stmt.setDate(1, startDate);
@@ -202,245 +217,153 @@ public class SalesReportDAO extends DBContext {
 
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                SalesReport.ProductPerformance product = new SalesReport.ProductPerformance();
-                product.setProductId(rs.getInt("product_id"));
-                product.setProductName(rs.getString("product_name"));
-                product.setCategory(rs.getString("category_name"));
-                product.setTotalQuantitySold(rs.getInt("total_quantity"));
-                product.setTotalRevenue(rs.getBigDecimal("total_revenue"));
-
-                // Get additional details for this product
-                getProductVariantDistribution(product);
+                int productId = rs.getInt("product_id");
+                SalesReport.ProductPerformance product;
                 
-                topProducts.add(product);
+                if (!productMap.containsKey(productId)) {
+                    product = new SalesReport.ProductPerformance();
+                    product.setProductId(productId);
+                    product.setProductName(rs.getString("product_name"));
+                    product.setCategory(rs.getString("category_name"));
+                    product.setTotalQuantitySold(rs.getInt("total_quantity"));
+                    product.setTotalRevenue(rs.getBigDecimal("total_revenue"));
+                    product.setVariantDistribution(new HashMap<>()); // Khởi tạo map
+                    
+                    productMap.put(productId, product);
+                    topProducts.add(product);
+                } else {
+                    product = productMap.get(productId);
+                }
+
+                // Thêm phân phối variant
+                String variant = rs.getString("variant");
+                int variantQuantity = rs.getInt("variant_quantity");
+                
+                // Kiểm tra null trước khi thêm
+                if (variant != null) {
+                    product.getVariantDistribution().put(variant, variantQuantity);
+                }
             }
         }
     }
 
     report.setTopProducts(topProducts);
 
-        // Revenue by category
-        sql = "SELECT c.name AS category_name, " +
-                "SUM(oi.quantity * oi.unit_price_at_order) AS category_revenue, " +
-                "COUNT(DISTINCT o.id) AS category_orders " +
-                "FROM order_items oi " +
-                "JOIN orders o ON oi.order_id = o.id " +
-                "JOIN products p ON oi.product_id = p.id " +
-                "JOIN categories c ON p.category_id = c.id " +
-                "WHERE o.created_at BETWEEN ? AND ? " +
-                "AND o.status != 'cancelled' " +
-                "GROUP BY c.name " +
-                "ORDER BY category_revenue DESC";
+    // Revenue by category - keeping consistent with top products query
+    sql = "WITH CategoryHierarchy AS (" +
+            " SELECT c1.id, c1.name, c1.parent_id, " +
+            " CASE " +
+            "     WHEN c1.parent_id IS NULL THEN c1.id " +
+            "     WHEN c2.parent_id IS NULL THEN c2.id " +
+            "     WHEN c3.parent_id IS NULL THEN c3.id " +
+            "     ELSE NULL " +
+            " END AS top_level_id " +
+            " FROM categories c1 " +
+            " LEFT JOIN categories c2 ON c1.parent_id = c2.id " +
+            " LEFT JOIN categories c3 ON c2.parent_id = c3.id " +
+            ") " +
+            "SELECT c1.name AS category_name, " +
+            " SUM(oi.quantity * oi.unit_price_at_order) AS category_revenue, " +
+            " COUNT(DISTINCT o.id) AS category_orders " +
+            "FROM order_items oi " +
+            "JOIN orders o ON oi.order_id = o.id " +
+            "JOIN products p ON oi.product_id = p.id " +
+            "JOIN CategoryHierarchy ch ON p.category_id = ch.id " +
+            "JOIN categories c1 ON ch.top_level_id = c1.id " +
+            "WHERE o.created_at BETWEEN ? AND ? " +
+            "AND o.status = 'completed' " +  // Changed to match top products condition
+            "GROUP BY c1.name " +
+            "ORDER BY category_revenue DESC";
 
-        Map<String, BigDecimal> revenueByCategoryMap = new LinkedHashMap<>();
-        Map<String, Integer> ordersByCategoryMap = new LinkedHashMap<>();
+    Map<String, BigDecimal> revenueByCategoryMap = new LinkedHashMap<>();
+    Map<String, Integer> ordersByCategoryMap = new LinkedHashMap<>();
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDate(1, startDate);
-            stmt.setDate(2, endDate);
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setDate(1, startDate);
+        stmt.setDate(2, endDate);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String categoryName = rs.getString("category_name");
-                    BigDecimal revenue = rs.getBigDecimal("category_revenue");
-                    int orders = rs.getInt("category_orders");
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String categoryName = rs.getString("category_name");
+                BigDecimal revenue = rs.getBigDecimal("category_revenue");
+                int orders = rs.getInt("category_orders");
 
-                    revenueByCategoryMap.put(categoryName, revenue);
-                    ordersByCategoryMap.put(categoryName, orders);
-                }
-            }
-        }
-
-        report.setRevenueByCategoryMap(revenueByCategoryMap);
-        report.setOrdersByCategoryMap(ordersByCategoryMap);
-    }
-
-    /**
-     * Gets distribution of sizes and colors for a product
-     */
-    private void getProductVariantDistribution(SalesReport.ProductPerformance product) throws SQLException {
-        // Size distribution
-        String sqlSizes = "SELECT ps.size, COUNT(oi.id) AS count " +
-                "FROM order_items oi " +
-                "JOIN product_variants pv ON oi.variant_id = pv.id " +
-                "JOIN product_sizes ps ON pv.size_id = ps.id " +
-                "WHERE oi.product_id = ? " +
-                "GROUP BY ps.size " +
-                "ORDER BY count DESC";
-
-        Map<String, Integer> sizeDistribution = new HashMap<>();
-
-        try (PreparedStatement stmt = connection.prepareStatement(sqlSizes)) {
-            stmt.setInt(1, product.getProductId());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String size = rs.getString("size");
-                    int count = rs.getInt("count");
-                    sizeDistribution.put(size, count);
-                }
-            }
-        }
-
-        product.setSizeDistribution(sizeDistribution);
-
-        // Color distribution
-        String sqlColors = "SELECT pc.color, COUNT(oi.id) AS count " +
-                "FROM order_items oi " +
-                "JOIN product_variants pv ON oi.variant_id = pv.id " +
-                "JOIN product_colors pc ON pv.color_id = pc.id " +
-                "WHERE oi.product_id = ? " +
-                "GROUP BY pc.color " +
-                "ORDER BY count DESC";
-
-        Map<String, Integer> colorDistribution = new HashMap<>();
-
-        try (PreparedStatement stmt = connection.prepareStatement(sqlColors)) {
-            stmt.setInt(1, product.getProductId());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String color = rs.getString("color");
-                    int count = rs.getInt("count");
-                    colorDistribution.put(color, count);
-                }
-            }
-        }
-
-        product.setColorDistribution(colorDistribution);
-
-        // Get category
-        String sqlCategory = "SELECT c.name FROM products p " +
-                "JOIN categories c ON p.category_id = c.id " +
-                "WHERE p.id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sqlCategory)) {
-            stmt.setInt(1, product.getProductId());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    product.setCategory(rs.getString("name"));
-                }
+                revenueByCategoryMap.put(categoryName, revenue);
+                ordersByCategoryMap.put(categoryName, orders);
             }
         }
     }
 
-    /**
-     * Gets customer metrics
-     */
-    private void getCustomerMetrics(SalesReport report, java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
-        // New vs returning customers
-        String sqlNewCustomers = "SELECT COUNT(DISTINCT user_id) AS new_customers " +
-                "FROM orders o " +
-                "WHERE created_at BETWEEN ? AND ? " +
-                "AND user_id IS NOT NULL " +
-                "AND user_id NOT IN (" +
-                "    SELECT DISTINCT user_id " +
-                "    FROM orders " +
-                "    WHERE created_at < ? " +
-                "    AND user_id IS NOT NULL" +
-                ")";
+    report.setRevenueByCategoryMap(revenueByCategoryMap);
+    report.setOrdersByCategoryMap(ordersByCategoryMap);
+}
 
-        try (PreparedStatement stmt = connection.prepareStatement(sqlNewCustomers)) {
-            stmt.setDate(1, startDate);
-            stmt.setDate(2, endDate);
-            stmt.setDate(3, startDate);
+/**
+ * Gets distribution of sizes and colors for a product with time constraint
+ */
+private void getProductVariantDistribution(SalesReport.ProductPerformance product, java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
+    // Size distribution with time constraint
+    String sqlSizes = "SELECT ps.size, SUM(oi.quantity) AS count " +
+            "FROM order_items oi " +
+            "JOIN orders o ON oi.order_id = o.id " +
+            "JOIN product_sizes ps ON oi.product_id = ps.product_id " +
+            "WHERE oi.product_id = ? " +
+            "AND o.created_at BETWEEN ? AND ? " +
+            "AND o.status = 'completed' " +
+            "GROUP BY ps.size " +
+            "ORDER BY count DESC";
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    report.setNewCustomers(rs.getInt("new_customers"));
-                }
+    Map<String, Integer> sizeDistribution = new HashMap<>();
+
+    try (PreparedStatement stmt = connection.prepareStatement(sqlSizes)) {
+        stmt.setInt(1, product.getProductId());
+        stmt.setDate(2, startDate);
+        stmt.setDate(3, endDate);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String size = rs.getString("size");
+                int count = rs.getInt("count");
+                sizeDistribution.put(size, count);
             }
         }
-
-        // Returning customers
-        String sqlReturningCustomers = "SELECT COUNT(DISTINCT user_id) AS returning_customers " +
-                "FROM orders o " +
-                "WHERE created_at BETWEEN ? AND ? " +
-                "AND user_id IS NOT NULL " +
-                "AND user_id IN (" +
-                "    SELECT DISTINCT user_id " +
-                "    FROM orders " +
-                "    WHERE created_at < ? " +
-                "    AND user_id IS NOT NULL" +
-                ")";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sqlReturningCustomers)) {
-            stmt.setDate(1, startDate);
-            stmt.setDate(2, endDate);
-            stmt.setDate(3, startDate);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    report.setReturningCustomers(rs.getInt("returning_customers"));
-                }
-            }
-        }
-
-        // Customers by gender
-        String sqlCustomersByGender = "SELECT gender, COUNT(DISTINCT o.user_id) AS customer_count " +
-                "FROM orders o " +
-                "JOIN users u ON o.user_id = u.id " +
-                "WHERE o.created_at BETWEEN ? AND ? " +
-                "GROUP BY u.gender";
-
-        Map<String, Integer> customersByGender = new HashMap<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sqlCustomersByGender)) {
-            stmt.setDate(1, startDate);
-            stmt.setDate(2, endDate);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    customersByGender.put(
-                        rs.getString("gender"), 
-                        rs.getInt("customer_count")
-                    );
-                }
-            }
-        }
-        report.setCustomersByGender(customersByGender);
-
-        // Top customers
-        String sqlTopCustomers = "SELECT " +
-                "u.id AS user_id, " +
-                "u.full_name, " +
-                "u.email, " +
-                "CASE WHEN cch.total_spend >= 5000 THEN 'VIP' ELSE 'Normal' END AS customer_type, " +
-                "COUNT(o.id) AS total_orders, " +
-                "SUM(o.total_amount) AS total_spend, " +
-                "MIN(o.created_at) AS first_order_date, " +
-                "MAX(o.created_at) AS last_order_date " +
-                "FROM orders o " +
-                "JOIN users u ON o.user_id = u.id " +
-                "JOIN customer_contact_history cch ON u.id = cch.user_id " +
-                "WHERE o.created_at BETWEEN ? AND ? " +
-                "GROUP BY u.id, u.full_name, u.email, cch.total_spend " +
-                "ORDER BY total_spend DESC " +
-                "LIMIT 10";
-
-        List<SalesReport.CustomerPerformance> topCustomers = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sqlTopCustomers)) {
-            stmt.setDate(1, startDate);
-            stmt.setDate(2, endDate);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    SalesReport.CustomerPerformance customer = new SalesReport.CustomerPerformance();
-                    customer.setUserId(rs.getInt("user_id"));
-                    customer.setFullName(rs.getString("full_name"));
-                    customer.setEmail(rs.getString("email"));
-                    customer.setCustomerType(rs.getString("customer_type"));
-                    customer.setTotalOrders(rs.getInt("total_orders"));
-                    customer.setTotalSpend(rs.getBigDecimal("total_spend"));
-                    customer.setFirstOrderDate(rs.getDate("first_order_date"));
-                    customer.setLastOrderDate(rs.getDate("last_order_date"));
-
-                    topCustomers.add(customer);
-                }
-            }
-        }
-        report.setTopCustomers(topCustomers);
     }
+
+    product.setSizeDistribution(sizeDistribution);
+
+    // Color distribution with time constraint
+    String sqlColors = "SELECT pc.color, SUM(oi.quantity) AS count " +  // Changed COUNT to SUM for consistency
+            "FROM order_items oi " +
+            "JOIN orders o ON oi.order_id = o.id " +
+            "JOIN products p ON oi.product_id = p.id " +
+            "JOIN product_variants pv ON p.id = pv.product_id " +
+            "JOIN product_colors pc ON pv.color_id = pc.id " +
+            "WHERE p.id = ? " +
+            "AND o.created_at BETWEEN ? AND ? " +
+            "AND o.status = 'completed' " +
+            "GROUP BY pc.color " +
+            "ORDER BY count DESC";
+
+    Map<String, Integer> colorDistribution = new HashMap<>();
+
+    try (PreparedStatement stmt = connection.prepareStatement(sqlColors)) {
+        stmt.setInt(1, product.getProductId());
+        stmt.setDate(2, startDate);
+        stmt.setDate(3, endDate);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String color = rs.getString("color");
+                int count = rs.getInt("count");
+                colorDistribution.put(color, count);
+            }
+        }
+    }
+
+    product.setColorDistribution(colorDistribution);
+
+    // Category is already set from the main query, no need to query again
+}
 
     
 
@@ -453,7 +376,7 @@ public class SalesReportDAO extends DBContext {
         System.out.println("Start Date: " + startDate);
         System.out.println("End Date: " + endDate);
 
-        // Xử lý trạng thái đơn hàng
+        // 1. Xử lý trạng thái đơn hàng
         String sqlOrderStatus = "SELECT status, COUNT(*) AS status_count " +
                 "FROM orders " +
                 "WHERE created_at BETWEEN ? AND ? " +
@@ -464,32 +387,50 @@ public class SalesReportDAO extends DBContext {
         try (PreparedStatement stmt = connection.prepareStatement(sqlOrderStatus)) {
             stmt.setDate(1, startDate);
             stmt.setDate(2, endDate);
-            
-            // In ra câu SQL để kiểm tra
-            System.out.println("SQL Query: " + stmt.toString());
+            System.out.println("SQL Query (Order Status): " + stmt.toString());
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String status = rs.getString("status");
                     int count = rs.getInt("status_count");
-                    
-                    // In ra từng dòng kết quả
                     System.out.println("Status: " + status + ", Count: " + count);
-                    
                     ordersByStatus.put(status, count);
                 }
             }
         }
         
         report.setOrdersByStatus(ordersByStatus);
+
+        // 2. Tính thời gian xử lý trung bình (average fulfillment time)
+        String sqlFulfillmentTime = "SELECT AVG(DATEDIFF(HOUR, created_at, updated_at)) AS avg_fulfillment_time " +
+                "FROM orders " +
+                "WHERE created_at BETWEEN ? AND ? " +
+                "AND status = 'completed'";
         
-        // Tương tự cho fulfillment time
+        try (PreparedStatement stmt = connection.prepareStatement(sqlFulfillmentTime)) {
+            stmt.setDate(1, startDate);
+            stmt.setDate(2, endDate);
+            System.out.println("SQL Query (Fulfillment Time): " + stmt.toString());
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    double avgFulfillmentTime = rs.getDouble("avg_fulfillment_time");
+                    // Nếu giá trị hợp lệ, gán vào report; nếu không, gán 0
+                    report.setAverageFulfillmentTime(avgFulfillmentTime > 0 ? avgFulfillmentTime : 0);
+                    System.out.println("Average Fulfillment Time: " + avgFulfillmentTime + " hours");
+                } else {
+                    report.setAverageFulfillmentTime(0);
+                    System.out.println("No completed orders found for fulfillment time calculation.");
+                }
+            }
+        }
+
     } catch (SQLException e) {
-        // Log chi tiết lỗi
         e.printStackTrace();
         System.err.println("SQL Error Details: " + e.getMessage());
         System.err.println("SQL State: " + e.getSQLState());
         System.err.println("Error Code: " + e.getErrorCode());
+        report.setAverageFulfillmentTime(0); // Gán giá trị mặc định nếu có lỗi
     }
 }
 

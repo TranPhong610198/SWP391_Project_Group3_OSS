@@ -186,9 +186,32 @@ public class OrderSaleDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+        stats.setCompletedSalesQuantity(getCompletedSalesQuantity());
         return stats;
     }
+    /**
+ * Get total quantity of items sold in completed orders
+ * @return int representing total number of items sold
+ */
+public int getCompletedSalesQuantity() {
+    String sql = "SELECT SUM(oi.quantity) as total_quantity_sold " +
+                 "FROM order_items oi " +
+                 "JOIN orders o ON oi.order_id = o.id " +
+                 "WHERE o.status = 'completed'";
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        ResultSet rs = st.executeQuery();
+        
+        if (rs.next()) {
+            int result = rs.getInt("total_quantity_sold");
+            return (result != 0) ? result : 0;
+        }
+        return 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return 0;
+    }
+}
     
     /**
      * Get order status counts for a date range

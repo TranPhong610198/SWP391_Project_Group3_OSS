@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package sale;
 
 import DAO.SalesReportDAO;
 import entity.SalesReport;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,11 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- *
- * @author DELL
- */
-@WebServlet(name="SalesReportServlet", urlPatterns={"/sale/report"})
+@WebServlet(name = "SalesReportServlet", urlPatterns = {"/sale/report"})
 public class SalesReportServlet extends HttpServlet {
     private SalesReportDAO salesReportDAO;
 
@@ -31,13 +21,16 @@ public class SalesReportServlet extends HttpServlet {
         salesReportDAO = new SalesReportDAO();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Default to current month if no dates provided
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate, endDate;
         
         try {
-            // Try to parse dates from request, otherwise use default
+            // Get view parameter (optional)
+           
+            
+            // Try to parse dates from request, otherwise use default (current month)
             String startParam = request.getParameter("startDate");
             String endParam = request.getParameter("endDate");
             
@@ -62,7 +55,7 @@ public class SalesReportServlet extends HttpServlet {
             request.setAttribute("startDate", sdf.format(startDate));
             request.setAttribute("endDate", sdf.format(endDate));
             
-            // Forward to JSP
+            // Forward to the single JSP
             request.getRequestDispatcher("/sale/salereport.jsp").forward(request, response);
             
         } catch (ParseException e) {
@@ -70,7 +63,8 @@ public class SalesReportServlet extends HttpServlet {
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
         doGet(request, response);
     }
 }
