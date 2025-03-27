@@ -17,6 +17,10 @@ import jakarta.websocket.Session;
 import java.util.Map;
 import java.util.Collections;
 
+/**
+ *
+ * @author nguye
+ */
 @WebServlet("/uploadImage")
 @MultipartConfig
 public class UploadImageServlet extends HttpServlet {
