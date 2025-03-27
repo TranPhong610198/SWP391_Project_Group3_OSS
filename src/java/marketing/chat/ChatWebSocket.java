@@ -13,6 +13,10 @@ import com.google.gson.JsonParser;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ *
+ * @author nguye
+ */
 @ServerEndpoint("/chat/{marketingId}/{userId}")
 public class ChatWebSocket {
 

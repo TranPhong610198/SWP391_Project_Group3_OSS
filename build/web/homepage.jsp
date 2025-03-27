@@ -48,10 +48,11 @@
 
             /*----------------------------------------------------------*/
 
+            /* Nút Back to Top */
             .back-to-top {
                 position: fixed;
-                bottom: 120px; /* Vị trí cao hơn nút chat AI */
-                right: 20px;
+                bottom: 20px; /* Cùng mức bottom với nút chat */
+                right: 90px; /* Dịch sang trái để nằm bên cạnh nút chat (60px + khoảng cách 30px) */
                 background-color: #0984e3;
                 color: white;
                 width: 50px;
@@ -84,7 +85,9 @@
 
             .back-to-top:hover {
                 background-color: #0077cc;
+                transform: scale(1.1); /* Hiệu ứng phóng to khi hover */
             }
+            
             .productSwiper {
                 padding: 2rem 1rem;
                 position: relative;
@@ -376,8 +379,8 @@
 
             .ai-chat-button {
                 position: fixed;
-                bottom: 20px;
-                right: 20px;
+                bottom: 20px; /* Giữ nguyên vị trí bottom */
+                right: 20px; /* Giữ nguyên vị trí phải */
                 z-index: 1000;
                 width: 60px;
                 height: 60px;
@@ -624,45 +627,51 @@
                     </c:forEach>
                 </div>
             </section>
-
         </div>
 
+        <c:if test="${sessionScope.acc.role == 'customer' || sessionScope.acc.role == null}">
         <!-- Chat Button -->
         <div class="ai-chat-button" onclick="toggleChatWidget()">
             <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
         </div>
 
-        <!-- Chat Widget -->
-        <div class="ai-chat-widget" id="aiChatWidget">
-            <div class="ai-chat-header" onclick="toggleChatWidget()">
-                <span><i class="fas fa-comment"></i> Chat với hỗ trợ</span>
-                <i class="fas fa-times" id="aiChatClose"></i>
+        <!-- Chat Button -->
+            <div class="ai-chat-button" onclick="toggleChatWidget()">
+                <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
             </div>
-            <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
-                <c:choose>
-                    <c:when test="${not empty chatError}">
-                        <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
-                    </c:when>
-                    <c:otherwise>
-                        <c:forEach items="${chatMessages}" var="msg">
-                            <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
-                                <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
-                                <p>${msg.content}</p>
-                                <c:if test="${not empty msg.imageUrl}">
-                                    <img src="${msg.imageUrl}" alt="Attached image">
-                                </c:if>
-                            </div>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-            <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
-                <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="uploadImage()">
-                <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i></button>
-                <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
-                <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
-            </div>
-        </div>
+
+            <!-- Chat Widget -->
+            <div class="ai-chat-widget" id="aiChatWidget">
+                <div class="ai-chat-header" onclick="toggleChatWidget()">
+                    <span><i class="fas fa-comment"></i> Chat với hỗ trợ</span>
+                    <i class="fas fa-times" id="aiChatClose"></i>
+                </div>
+                <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
+                    <c:choose>
+                        <c:when test="${not empty chatError}">
+                            <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach items="${chatMessages}" var="msg">
+                                <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
+                                    <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
+                                    <p>${msg.content}</p>
+                                    <c:if test="${not empty msg.imageUrl}">
+                                        <img src="${msg.imageUrl}" alt="Attached image">
+                                    </c:if>
+                                </div>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
+                        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="uploadImage()">
+                        <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i></button>
+                        <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
+                        <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
+                    </div>
+                </div>
+        </c:if>
 
         <!-- Back to Top -->
         <button id="backToTopButton" class="back-to-top">

@@ -10,6 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *
+ * @author nguye
+ */
 @WebServlet("/marketing/chatbox")
 public class ChatBoxServlet extends HttpServlet {
     @Override
