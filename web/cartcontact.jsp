@@ -325,11 +325,10 @@
                                         <i class="fas fa-envelope me-2"></i>Thông tin liên hệ
                                     </h5>
                                     <div class="mb-3">
-                                        <label class="form-label">Email của bạn</label>
                                         <input type="email" class="form-control" name="guest_email" value="${guestEmail}" required 
-                                               placeholder="example@email.com" 
+                                               placeholder="Nhập email ở đây" 
                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-                                        <small class="text-muted">Chúng tôi sẽ gửi thông tin đơn hàng qua email này.</small>
+                                        <small class="text-muted">Lưu ý: Vui lòng nhập email chính xác. Chúng tôi sẽ gửi thông tin đơn hàng qua email này.</small>
                                     </div>
                                 </div>
                             </div>
