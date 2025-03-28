@@ -119,6 +119,7 @@ public class OrderDetailsServlet extends HttpServlet {
             boolean success = false;
 
             // Xử lý theo trạng thái mới
+            // Trạng thái mới là processing và cancelled
             if ("processing".equals(newStatus) || "cancelled".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 if ("cancelled".equals(newStatus)) {
@@ -127,14 +128,21 @@ public class OrderDetailsServlet extends HttpServlet {
                         inventoryDAO.increaseVariantStock(variantId, temp.getQuantity());
                     }
                 }
+
+                // Trạng thái mới là đang giao   
             } else if ("shipping".equals(newStatus)) {
                 String shippingProvider = request.getParameter("shippingProvider");
                 String trackingNumber = request.getParameter("trackingNumber");
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, shippingProvider, trackingNumber);
+
+                // Trạng thái mới là hoàn thành    
             } else if ("completed".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 orderDAO.updatePayStatus(orderId, "completed");
-                Customer tempCus = customerDAO.checkExistEmail(order.getRecipientEmail());
+                Customer tempCus = null;
+                if (customerDAO.checkExistEmail(order.getRecipientEmail())!=null && customerDAO.checkExistPhone(order.getPhone())!=null) {
+                    tempCus = customerDAO.checkExistEmail(order.getRecipientEmail());
+                }
                 if (tempCus != null) {
                     customerDAO.updateCustomerPurchaseStats(order.getUserId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
                     if (tempCus.getTotalSpend().doubleValue() + order.getTotal() >= 1000000) {
@@ -157,6 +165,7 @@ public class OrderDetailsServlet extends HttpServlet {
                     customerDAO.addCustomer(newCustomer);
                 }
 
+                // Trạng thái mới là hoàn hàng    
             } else {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 orderDAO.updatePayStatus(orderId, "refunded");

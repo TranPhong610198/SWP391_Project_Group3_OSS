@@ -291,7 +291,7 @@
                                     <option value="shipping" ${status == 'shipping' ? 'selected' : ''}>Đang giao</option>
                                     <option value="completed" ${status == 'completed' ? 'selected' : ''}>Hoàn thành</option>
                                     <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
-                                    <option value="returned" ${status == 'returned' ? 'selected' : ''}>Đã hủy</option>
+                                    <option value="returned" ${status == 'returned' ? 'selected' : ''}>Đã hoàn trả</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -385,11 +385,12 @@
                                             </td>
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                             <td>
-                                                <span class="status-badge bg-${order.status == 'completed' ? 'success' : order.status == 'cancelled' ? 'danger' : order.status == 'pending_pay' ? 'warning' : order.status == 'processing' ? 'info' : order.status == 'shipping' ? 'primary' : 'secondary'}">
+                                                <span class="status-badge bg-${order.status == 'completed' ? 'success' : order.status == 'cancelled' ? 'danger' : order.status == 'returned' ? 'danger' : order.status == 'pending_pay' ? 'warning' : order.status == 'processing' ? 'info' : order.status == 'shipping' ? 'primary' : 'secondary'}">
                                                     ${order.status == 'pending_pay' ? 'Chờ thanh toán' : 
                                                       order.status == 'pending' ? 'Chờ xử lý' : 
                                                       order.status == 'processing' ? 'Đang xử lý' : 
                                                       order.status == 'shipping' ? 'Đang giao' : 
+                                                      order.status == 'returned' ? 'Đã hoàn trả' : 
                                                       order.status == 'completed' ? 'Hoàn thành' : 'Đã hủy'}
                                                 </span>
                                             </td>

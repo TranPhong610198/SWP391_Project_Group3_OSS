@@ -69,6 +69,14 @@
                                 <!-- Xử lý trạng thái -->
                                 <c:choose>
 
+                                    <c:when test="${order.status == 'pending_pay'}">
+                                        <!-- Chờ thanh toán: Nút hủy -->
+                                        <form method="POST" action="orderdetails">
+                                            <input type="hidden" name="orderId" value="${order.id}">
+                                            <input type="hidden" name="status" value="cancelled">
+                                            <button type="submit" class="btn btn-danger"><i class="fas fa-times me-2"></i>Hủy đơn hàng</button>
+                                        </form>
+                                    </c:when>
                                     <c:when test="${order.status == 'pending'}">
                                         <!-- Chờ xử lý: Nút xác nhận và hủy -->
                                         <form method="POST" action="orderdetails" class="mb-2">
