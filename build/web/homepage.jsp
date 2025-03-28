@@ -527,10 +527,9 @@
                                                 <div class="product-price mb-3">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
-                                                <div class="product-buttons d-flex gap-2">
+<!--                                                <div class="product-buttons d-flex gap-2">
                                                     <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
-
-                                                </div>
+                                                </div>-->
                                             </div>
                                         </div>
                                     </a>
@@ -568,12 +567,11 @@
                                                 <div class="product-price mb-3">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
-                                                <div class="product-buttons d-flex gap-2">
+<!--                                                <div class="product-buttons d-flex gap-2">
                                                     <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1">
                                                         <i class="fas fa-bolt"></i> Mua Ngay
                                                     </button>
-
-                                                </div>
+                                                </div>-->
                                             </div>
                                         </div>             
                                     </a>

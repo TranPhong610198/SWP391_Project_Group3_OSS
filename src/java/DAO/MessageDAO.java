@@ -108,7 +108,6 @@ public class MessageDAO extends DBContext {
             msg.setLastSenderId(rs.getInt("sender_id")); // ID của người gửi tin nhắn cuối cùng
             msg.setImageUrl(rs.getString("image_url")); // URL của hình ảnh (nếu có)
             list.add(msg);
-            System.out.println("ChatList User: " + msg.getSenderUsername() + ", Content: " + msg.getContent() + ", LastSenderId: " + msg.getLastSenderId() + ", ImageUrl: " + msg.getImageUrl() + ", IsRead: " + msg.isRead());
         }
     } catch (SQLException e) {
         e.printStackTrace();

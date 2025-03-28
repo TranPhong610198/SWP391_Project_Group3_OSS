@@ -210,7 +210,7 @@
             }
 
             .product-buttons .btn-primary {
-                background-color: var(--primary-color);
+                background-color: #3294D6;
                 border: none;
                 transition: all 0.3s ease;
                 font-weight: 600;
@@ -458,10 +458,9 @@
                                                 <div class="product-price">
                                                     <span><fmt:formatNumber value="${product.salePrice}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                                                 </div>
-                                                <div class="product-buttons d-flex gap-2">
+<!--                                                <div class="product-buttons d-flex gap-2">
                                                     <button onclick="buyNow(${product.id}, event)" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-bolt"></i> Mua Ngay</button>
-
-                                                </div>
+                                                </div>-->
                                             </div>
                                         </a>
                                     </div>

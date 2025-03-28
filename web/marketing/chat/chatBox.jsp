@@ -16,7 +16,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <style>
-            /* Giữ nguyên CSS từ phiên bản trước */
             body, html {
                 height: 100%;
                 margin: 0;
@@ -78,6 +77,8 @@
                 border-radius: 15px;
                 padding: 10px;
                 align-self: flex-end;
+                max-width: 500px; /* Giới hạn chiều rộng tối đa */
+                word-wrap: break-word; /* Tự động xuống dòng khi vượt quá */
             }
             .message-received .message-content {
                 background-color: #e9ecef;
@@ -85,6 +86,8 @@
                 border-radius: 15px;
                 padding: 10px;
                 align-self: flex-start;
+                max-width: 500px; /* Giới hạn chiều rộng tối đa */
+                word-wrap: break-word; /* Tự động xuống dòng khi vượt quá */
             }
             .message-meta {
                 font-size: 0.7em;
@@ -150,7 +153,7 @@
                         <button type="button" class="btn btn-secondary" onclick="toggleEmojiPicker()">
                             <i class="fas fa-smile"></i> <!-- Biểu tượng mặt cười -->
                         </button>
-                        <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn...">
+                        <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." maxlength="500">
                         <button class="btn btn-primary" onclick="sendMessage()">Gửi</button>
                     </div>
                     <div id="imagePreview" class="mt-2" style="display: none;">

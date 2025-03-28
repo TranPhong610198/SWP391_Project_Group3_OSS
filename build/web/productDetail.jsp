@@ -471,6 +471,52 @@
         color: white;
     }
 
+    /* Product Description Section */
+    .product-description-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .product-description-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent-color);
+    }
+
+    .product-description-content {
+        color: #666;
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+
+    .product-description-content p {
+        margin-bottom: 15px;
+    }
+
+    .product-description-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+
+    .product-description-content ul,
+    .product-description-content ol {
+        padding-left: 30px;
+        margin-bottom: 15px;
+    }
+
+    .product-description-content strong,
+    .product-description-content b {
+        color: var(--primary-color);
+    }
+
     /* Responsive Adjustments */
     @media (max-width: 992px) {
         .product-grid {
@@ -583,7 +629,6 @@
                             <!--</div>-->
                             <%--</c:if>--%>
                         </div>
-                      <%--  ${product.description}--%>
 
                         <form action="productdetail" method="POST">
                             <input type="hidden" name="id" value="${product.id}">
@@ -663,6 +708,14 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Product Description Section -->
+            <div class="product-description-section">
+                <h2 class="product-description-title">Mô Tả Sản Phẩm</h2>
+                <div class="product-description-content">
+                    ${product.description}
                 </div>
             </div>
 
