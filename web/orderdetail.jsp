@@ -350,7 +350,7 @@
                         <c:set var="steps" value="pending,processing,shipping,completed" />
                         <c:set var="stepsArray" value="${fn:split(steps, ',')}" />
                         <c:set var="isCancelled" value="${order.status eq 'cancelled'}" />
-                        
+
                         <!-- Xác định bước hiện tại -->
                         <c:set var="currentStepIndex" value="0" />
                         <c:choose>
@@ -625,7 +625,7 @@
                                             </div>
                                         </c:when>
                                         <c:otherwise>
-                                            <i class="fas fa-truck me-1"></i> ${order.shippingMethod}
+                                            <i class="fas fa-truck me-1"></i> Không xác định
                                             <div class="small text-muted mt-1">
                                                 Phí vận chuyển: <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                             </div>
@@ -648,7 +648,7 @@
                                             </a>
                                         </c:if>
                                     </c:if>
-                                    
+
                                 </div>
                             </c:if>
                             <c:if test="${order.status eq 'pending'}">

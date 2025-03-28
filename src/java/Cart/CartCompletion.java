@@ -117,9 +117,11 @@ public class CartCompletion extends HttpServlet {
         for (CartItem item : selectedItems) {
             subtotal += item.getProductPrice() * item.getQuantity();
         }
-        // Kiểm tra lại logic miễn phí ship để đảm bảo nhất quán
+        // Kiểm tra lại phí vận chuyển dựa trên subtotal
         if (subtotal > 500000) {
-            shippingFee = 0.0; // Override shippingFee từ session nếu subtotal > 500k
+            shippingFee = 0.0; // Miễn phí vận chuyển nếu subtotal > 500k
+        } else {
+            shippingFee = "express".equals(shippingMethod) ? 45000.0 : 30000.0;
         }
 
         Double discountAmount = (Double) session.getAttribute("cartDiscount");
@@ -130,9 +132,9 @@ public class CartCompletion extends HttpServlet {
         Order order = new Order();
         if (user != null) {
             order.setUserId(user.getId());
-            order.setRecipientEmail((String) session.getAttribute("user_email")); // Lấy email từ session
+            order.setRecipientEmail((String) session.getAttribute("user_email"));
         } else {
-            order.setRecipientEmail((String) session.getAttribute("guest_email")); // Lấy email từ session
+            order.setRecipientEmail((String) session.getAttribute("guest_email"));
         }
 
         String orderCode = "ORD" + System.currentTimeMillis() + (int) (Math.random() * 1000);
@@ -145,7 +147,7 @@ public class CartCompletion extends HttpServlet {
         order.setItems(selectedItems);
         order.setShippingMethod(shippingMethod);
         order.setPaymentMethod(paymentMethod);
-        order.setShippingFee(shippingFee); // Sử dụng shippingFee đã được kiểm tra
+        order.setShippingFee(shippingFee);
         order.setPaymentStatus("pending_pay");
         if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
             order.setDiscountAmount(discountAmount);

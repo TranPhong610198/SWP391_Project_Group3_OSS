@@ -236,55 +236,61 @@ public class CartContact extends HttpServlet {
             return;
         }
 
-        String addressId = request.getParameter("shipping_address");
-        if (addressId == null || addressId.isEmpty()) {
-            request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
-            doGet(request, response);
-            return;
-        }
-
-        String shippingMethod = request.getParameter("shipping_method");
-        double shippingFee = "express".equals(shippingMethod) ? 45000.0 : 30000.0;
-
-        String paymentMethod = request.getParameter("payment_method");
-        if (paymentMethod == null || paymentMethod.isEmpty()) {
-            request.setAttribute("error", "Vui lòng chọn phương thức thanh toán");
-            doGet(request, response);
-            return;
-        }
-
-        // Lấy email cho khách vãng lai từ form
-        String guestEmail = null;
-        if (user == null) {
-            guestEmail = request.getParameter("guest_email");
-            if (guestEmail == null || guestEmail.trim().isEmpty()) {
-                request.setAttribute("error", "Vui lòng nhập email để tiếp tục");
-                doGet(request, response);
-                return;
-            }
-            saveGuestEmailToCookie(response, guestEmail); // Lưu email vào cookie nếu cần
-        }
-
-        // Lưu thông tin vào session để sử dụng ở bước tiếp theo (cartcompletion)
-        session.setAttribute("shipping_address_id", addressId);
-        session.setAttribute("shipping_method", shippingMethod);
-        session.setAttribute("shipping_fee", shippingFee);
-        session.setAttribute("payment_method", paymentMethod);
-        if (user == null) {
-            session.setAttribute("guest_email", guestEmail); // Lưu email vào session để dùng trong cartcompletion
-        } else {
-            session.setAttribute("user_email", user.getEmail()); // Lưu email người dùng đã đăng nhập
-        }
-
-        Double discount = (Double) session.getAttribute("cartDiscount");
-        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
-        if (discount != null) {
-            session.setAttribute("order_discount", discount);
-            session.setAttribute("order_coupon", appliedCoupon);
-        }
-
-        response.sendRedirect("cartcompletion");
+       String addressId = request.getParameter("shipping_address");
+    if (addressId == null || addressId.isEmpty()) {
+        request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
+        doGet(request, response);
+        return;
     }
+
+    String shippingMethod = request.getParameter("shipping_method");
+    double shippingFee;
+    if ("express".equals(shippingMethod)) {
+        shippingFee = 45000.0;
+    } else {
+        shippingMethod = "standard"; // Đảm bảo giá trị mặc định là "standard"
+        shippingFee = 30000.0;
+    }
+
+    String paymentMethod = request.getParameter("payment_method");
+    if (paymentMethod == null || paymentMethod.isEmpty()) {
+        request.setAttribute("error", "Vui lòng chọn phương thức thanh toán");
+        doGet(request, response);
+        return;
+    }
+
+    // Lấy email cho khách vãng lai từ form
+    String guestEmail = null;
+    if (user == null) {
+        guestEmail = request.getParameter("guest_email");
+        if (guestEmail == null || guestEmail.trim().isEmpty()) {
+            request.setAttribute("error", "Vui lòng nhập email để tiếp tục");
+            doGet(request, response);
+            return;
+        }
+        saveGuestEmailToCookie(response, guestEmail);
+    }
+
+    // Lưu thông tin vào session
+    session.setAttribute("shipping_address_id", addressId);
+    session.setAttribute("shipping_method", shippingMethod); // Lưu đúng giá trị "standard" hoặc "express"
+    session.setAttribute("shipping_fee", shippingFee);
+    session.setAttribute("payment_method", paymentMethod);
+    if (user == null) {
+        session.setAttribute("guest_email", guestEmail);
+    } else {
+        session.setAttribute("user_email", user.getEmail());
+    }
+
+    Double discount = (Double) session.getAttribute("cartDiscount");
+    String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+    if (discount != null) {
+        session.setAttribute("order_discount", discount);
+        session.setAttribute("order_coupon", appliedCoupon);
+    }
+
+    response.sendRedirect("cartcompletion");
+}
 
     /**
      * Returns a short description of the servlet.
