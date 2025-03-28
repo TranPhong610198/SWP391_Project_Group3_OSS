@@ -140,9 +140,6 @@ public class OrderDetailsServlet extends HttpServlet {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 orderDAO.updatePayStatus(orderId, "completed");
                 Customer tempCus = customerDAO.getCusdByEmailPhone(order.getRecipientEmail(), order.getPhone());
-                System.out.println("Email + sđt trong đơn hàng:" + order.getRecipientEmail() + " " + order.getPhone());
-                System.out.println(tempCus == null);
-                System.out.println("userid: " + order.getUserId());
                 if (tempCus != null) {
                     customerDAO.updateCustomerPurchaseStats(tempCus.getId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
                     if (tempCus.getTotalSpend().doubleValue() + order.getTotal() >= 1000000) {
