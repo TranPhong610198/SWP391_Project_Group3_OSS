@@ -49,6 +49,13 @@
                 Bảng điều khiển
             </a>
         </li>
+        
+        <li class="menu-item p-2">
+            <a href="report" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-file-alt me-2"></i>
+                Báo cáo
+            </a>
+        </li>
 
         <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/marketing/customerlist" 
@@ -121,13 +128,6 @@
             </a>
         </li>
         </c:if>
-
-        <li class="menu-item p-2">
-            <a href="report" class="text-decoration-none text-light d-flex align-items-center">
-                <i class="fas fa-file-alt me-2"></i>
-                Báo cáo
-            </a>
-        </li>
 
         
 

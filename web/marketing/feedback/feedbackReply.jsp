@@ -510,8 +510,9 @@
                                     <c:choose>
                                         <c:when test="${not empty feedbackImages}">
                                             <c:forEach items="${feedbackImages}" var="image" varStatus="status">
-                                                <img src="${image}" alt="Feedback Image ${status.index + 1}" class="img-thumbnail feedback-image" 
-                                                     onclick="openLightbox('${image}', ${status.index}, 'Feedback Image ${status.index + 1}')">
+                                                <c:set var="imageUrl" value="${image.contains('https') ? image : pageContext.request.contextPath.concat('/').concat(image)}" />
+                                                <img src="${imageUrl}" alt="Feedback Image ${status.index + 1}" class="img-thumbnail feedback-image" 
+                                                     onclick="openLightbox('${imageUrl}', ${status.index}, 'Feedback Image ${status.index + 1}')">
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>

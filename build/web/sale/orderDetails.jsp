@@ -15,9 +15,152 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <style>
-            /* Sử dụng cùng style với listProducts.jsp */
-            /* Copy toàn bộ phần <style> từ listProducts.jsp vào đây nếu cần */
-        </style>
+    /* Order Details Specific Styling */
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+
+    /* Card Enhancements */
+    .main-content .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        border: 1px solid #e9ecef;
+    }
+
+    .main-content .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: 600;
+        color: #2c3e50;
+        padding: 12px 15px;
+    }
+
+    /* Page Title Styling */
+    .page-title {
+        margin-bottom: 20px;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+    }
+
+    .page-title i {
+        margin-right: 10px;
+        color: #3498db;
+    }
+
+    /* Status Badge */
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85em;
+    }
+
+    .bg-success { 
+        background-color: #28a745; 
+        color: white; 
+    }
+    .bg-danger { 
+        background-color: #dc3545; 
+        color: white; 
+    }
+    .bg-warning { 
+        background-color: #ffc107; 
+        color: #212529; 
+    }
+
+    /* Table Styling */
+    .main-content .table {
+        margin-bottom: 0;
+    }
+
+    .main-content .table thead {
+        background-color: #f1f3f5;
+    }
+
+    .main-content .table th {
+        font-weight: 600;
+        color: #2c3e50;
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+    }
+
+    .main-content .table td {
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+    }
+
+    /* Product Image */
+    .main-content .table img {
+        max-width: 150px;
+        max-height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    /* Form Buttons */
+    .main-content .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .main-content .btn i {
+        margin-right: 5px;
+    }
+    
+        /* Back Button Styling */
+    .back-button-container {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 20px;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .btn-back i {
+        margin-right: 8px;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .main-content {
+            margin-left: 0;
+            padding: 10px;
+        }
+    }
+
+    /* Alert Styling */
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+</style>
     </head>
     <body>
         <jsp:include page="sidebar.jsp" />
@@ -207,6 +350,11 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="back-button-container">
+                    <a href="${pageContext.request.contextPath}/sale/orderlist" class="btn btn-back">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+                    </a>
                 </div>
             </div>
         </div>

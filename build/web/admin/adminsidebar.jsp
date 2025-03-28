@@ -35,6 +35,13 @@
                 Bảng điều khiển
             </a>
         </li>
+        
+        <li class="menu-item p-2">
+            <a href="${pageContext.request.contextPath}/admin/report" class="text-decoration-none text-light d-flex align-items-center">
+                <i class="fas fa-file-alt me-2"></i>
+                Báo cáo
+            </a>
+        </li>
 
         <li class="menu-item p-2">
             <a href="#adminSubmenu" data-bs-toggle="collapse" class="text-decoration-none text-light d-flex align-items-center justify-content-between collapsed">
@@ -56,13 +63,6 @@
                     <a href="${pageContext.request.contextPath}/admin/footer-settings" class="text-decoration-none text-light">Thông tin chân trang</a>
                 </li>
             </ul>
-        </li>
-
-        <li class="menu-item p-2">
-            <a href="${pageContext.request.contextPath}/admin/report" class="text-decoration-none text-light d-flex align-items-center">
-                <i class="fas fa-file-alt me-2"></i>
-                Báo cáo
-            </a>
         </li>
 
         <li class="menu-item p-2">
