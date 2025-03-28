@@ -774,11 +774,20 @@
                                     </c:if>
                                     <c:if test="${order.status == 'completed'}">
                                         <div>
+                                            <c:choose>
+                                                <c:when test="${!feedbackStatus[order.id]}">
+                                                    <a href="submitfeedback?orderId=${order.id}" class="btn-feedback">
+                                                        <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="#" class="btn-feedback" style="background-color: #ffc107; pointer-events: none;">
+                                                        <i class="fas fa-star me-2"></i> Đã đánh giá
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <a href="myorder?action=reorder&id=${order.id}" class="btn-reorder">
                                                 <i class="fas fa-redo me-2"></i> Mua lại
-                                            </a>
-                                            <a href="submitfeedback?orderId=${order.id}" class="btn-feedback">
-                                                <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
                                             </a>
                                         </div>
                                     </c:if>
