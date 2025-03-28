@@ -5,17 +5,17 @@
 <!DOCTYPE html>
 <html lang="vi">
     <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt hàng thành công</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Roboto', sans-serif; /* Cập nhật phông chữ */
-        }
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Đặt hàng thành công</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Roboto', sans-serif; /* Cập nhật phông chữ */
+            }
             .container {
                 max-width: 800px;
                 margin: 30px auto;
@@ -105,7 +105,7 @@
                                     <c:when test="${paymentStatus eq 'pending'}">
                                         <span class="text-warning">Chờ xử lý</span>
                                     </c:when>
-                                        <c:when test="${paymentStatus eq 'pending_pay'}">
+                                    <c:when test="${paymentStatus eq 'pending_pay'}">
                                         <span class="text-warning">Chờ thanh toán</span>
                                     </c:when>
                                     <c:when test="${paymentStatus eq 'failed'}">
@@ -209,9 +209,11 @@
 
                 <!-- Nút điều hướng -->
                 <div class="mt-4">
-                    <a href="myorder" class="btn btn-primary me-2">
-                        <i class="fas fa-list me-2"></i>Xem đơn hàng của tôi
-                    </a>
+                    <c:if test="${not empty sessionScope.acc}">
+                        <a href="myorder" class="btn btn-primary me-2">
+                            <i class="fas fa-list me-2"></i>Xem đơn hàng của tôi
+                        </a>
+                    </c:if>
                     <a href="home" class="btn btn-outline-secondary">
                         <i class="fas fa-home me-2"></i>Về trang chủ
                     </a>
