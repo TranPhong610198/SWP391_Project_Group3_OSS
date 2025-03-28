@@ -77,10 +77,12 @@
             justify-content: center;
         }
 
-        .form-check-input {
+        .form-check-input[type=checkbox] {
             width: 20px;
             height: 20px;
             cursor: pointer;
+            border-width: 2px; 
+            border-color: #D2D2D2; 
         }
 
         .form-check-label {
@@ -127,7 +129,7 @@
 
         .quantity-control .input-group {
             flex-wrap: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding-left: 8px;
             border-radius: 4px;
         }
 

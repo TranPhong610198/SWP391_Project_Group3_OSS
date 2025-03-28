@@ -14,6 +14,14 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #34495e;
+                --accent-color: #3498db;
+                --text-color: #333;
+                --light-background: #f4f6f7;
+                --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
             /* Style cho mua ngay + thêm vào giỏ hàng */
             .product-buttons .btn-primary {
                 background: #e44d26; /* Đồng bộ màu với btn-buy-now */
@@ -42,49 +50,85 @@
             }
 
             /*----------------------------------------------------------*/
+            /* Global Typography and Color Palette */
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #34495e;
+                --accent-color: #3498db;
+                --text-color: #333;
+                --light-background: #f4f6f7;
+                --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+
             body {
-                background-color: #f8f9fa;
+                font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+                background-color: var(--light-background);
+                color: var(--text-color);
+                line-height: 1.6;
             }
 
+            /* Container and Layout */
             .container {
-                max-width: 1600px;
-                margin: 0 auto;
-                padding: 5px;
+                max-width: 1400px;
+                padding: 2rem;
             }
 
-            /* Sidebar Filter Styles */
+            /* Page Title */
+            h1.page-title {
+                font-weight: 700;
+                color: var(--primary-color);
+                position: absolute; /* Đặt position absolute để dịch lên trên ảnh */
+                top: 0; /* Đặt ngay trên cùng của ảnh đầu tiên */
+                left: 0; /* Căn lề trái của ảnh đầu tiên */
+                margin: 0; /* Xóa margin mặc định */
+                padding: 15px 20px; /* Thêm padding cho đẹp */
+                background: rgba(255, 255, 255, 0.8); /* Nền trắng mờ để dễ đọc */
+                border-radius: 0 0 15px 0; /* Bo góc dưới phải */
+                z-index: 10; /* Đảm bảo tiêu đề nằm trên ảnh */
+            }
+
+            h1.page-title::after {
+                display: none; /* Xóa gạch chân để phù hợp với vị trí mới */
+            }
+
+            /* Sidebar Filters */
             .sidebar-filters {
                 background: white;
-                padding: 12px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                margin-bottom: 15px;
-                position: sticky;
-                top: 20px;
+                border-radius: 12px;
+                box-shadow: var(--card-shadow);
+                padding: 25px;
+                transition: all 0.3s ease;
             }
 
-            .filter-section {
-                margin-bottom: 25px;
+            .sidebar-filters:hover {
+                transform: translateY(-5px);
             }
 
             .filter-title {
-                font-size: 1.1rem;
                 font-weight: 600;
-                margin-bottom: 15px;
-                color: #333;
-                border-bottom: 1px solid #eee;
-                padding-bottom: 8px;
+                color: var(--secondary-color);
+                border-bottom: 2px solid var(--accent-color);
+                padding-bottom: 10px;
+                margin-bottom: 20px;
             }
 
+
+            /* Price Range Inputs */
             .price-range {
                 display: flex;
-                gap: 10px;
+                gap: 15px;
                 align-items: center;
-                margin-bottom: 15px;
             }
 
             .price-input {
-                width: 100%;
+                background-color: #f9f9f9;
+                border: 1px solid #e0e0e0;
+                transition: all 0.3s ease;
+            }
+
+            .price-input:focus {
+                border-color: var(--accent-color);
+                box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
             }
 
             .price-radio-options {
@@ -98,61 +142,97 @@
             /* Product Grid Styles */
             .product-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(3, 1fr); /* Cố định 4 cột */
+                gap: 25px;
+                position: relative;
             }
 
-            /* Card sản phẩm - đồng bộ với homepage */
+            /* Product Card */
             .product-card {
                 border: none;
-                border-radius: 12px;
+                border-radius: 15px;
                 overflow: hidden;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-                transition: all 0.3s ease;
-                height: 100%;
-                background: white;
+                box-shadow: var(--card-shadow);
+                transition: all 0.4s ease;
+                display: flex;
+                flex-direction: column;
             }
 
             .product-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                transform: translateY(-10px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            }
+
+            .position-relative {
+                overflow: hidden; /* Cắt phần ảnh thừa */
+                height: 300px; /* Giữ chiều cao cố định */
             }
 
             .product-image {
-                height: 250px;
-                object-fit: cover;
-                width: 100%;
-                transition: all 0.5s ease;
+                width: 100%; /* Đảm bảo ảnh full chiều rộng */
+                height: 100%; /* Đảm bảo ảnh full chiều cao */
+                object-fit: cover; /* Cắt ảnh để vừa khung */
+                transition: transform 0.4s ease;
             }
 
             .product-card:hover .product-image {
-                transform: scale(1.05);
+                transform: scale(1.1);
             }
 
             .product-info {
-                padding: 1.5rem;
+                padding: 20px;
                 background: white;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
             }
 
             .product-title {
                 font-size: 1.1rem;
                 font-weight: 600;
-                margin-bottom: 0.5rem;
-                color: #2d3436;
-                height: auto;
+                color: var(--primary-color);
+                margin-bottom: 10px;
                 overflow: hidden;
+                text-overflow: ellipsis;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
             }
 
             .product-price {
-                font-size: 1.2rem;
-                color: #0984e3;
+                color: var(--accent-color);
+                font-size: 1.3rem;
                 font-weight: 700;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
+                margin-bottom: 15px;
+            }
+            .product-buttons {
+                margin-top: auto;
+            }
+
+            .product-buttons .btn-primary {
+                background-color: var(--primary-color);
+                border: none;
+                transition: all 0.3s ease;
+                font-weight: 600;
+            }
+
+            .product-buttons .btn-primary:hover {
+                background-color: var(--secondary-color);
+                transform: translateY(-3px);
+            }
+
+            .no-products {
+                background: white;
+                border-radius: 15px;
+                box-shadow: var(--card-shadow);
+                padding: 4rem;
+                text-align: center;
+            }
+
+            .no-products i {
+                color: var(--accent-color);
+                font-size: 100px;
+                margin-bottom: 20px;
             }
 
             .product-badge {
@@ -168,26 +248,25 @@
             }
 
             .pagination {
-                margin-top: 40px;
                 justify-content: center;
+                margin-top: 3rem;
             }
 
             .page-link {
-                color: #333;
-                border: none;
+                color: var(--primary-color);
                 margin: 0 5px;
-                border-radius: 4px;
-                padding: 8px 16px;
+                border-radius: 6px;
+                transition: all 0.3s ease;
             }
 
             .page-link:hover {
-                background: #333;
+                background-color: var(--accent-color);
                 color: white;
             }
 
             .page-item.active .page-link {
-                background: #333;
-                border-color: #333;
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
             }
 
             .sort-select {
@@ -253,21 +332,28 @@
                     position: static;
                     margin-bottom: 30px;
                 }
+                .product-grid {
+                    grid-template-columns: repeat(3, 1fr); /* 3 cột */
+                }
             }
 
             @media (max-width: 768px) {
                 .product-grid {
-                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    grid-template-columns: repeat(2, 1fr); /* 2 cột */
                     gap: 15px;
                 }
-
                 .price-range {
                     flex-direction: column;
                     align-items: stretch;
                 }
-
                 .price-input {
                     width: 100%;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .product-grid {
+                    grid-template-columns: 1fr; /* 1 cột */
                 }
             }
         </style>
@@ -277,7 +363,7 @@
 
         <div class="container">
             <!-- Page Title -->
-            <h1 class="h2 mb-4 text-center">${categoryName != null ? categoryName : 'Tất Cả Sản Phẩm'}</h1>
+            <h1 class="h2 mb-4 text-center">${categoryName != null ? categoryName : ''}</h1>
 
             <div class="row">
                 <!-- Sidebar Filters -->
@@ -432,70 +518,75 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-                                                        function formatNumberInput(input) {
-                                                            let value = input.value.replace(/\D/g, '');
-                                                            console.log(value);
-                                                            if (value) {
-                                                                value = parseInt(value, 10).toLocaleString('vi-VN');
-                                                                input.value = value;
-                                                            } else {
-                                                                input.value = '';
-                                                            }
-                                                        }
+  function formatNumberInput(input) {
+    let value = input.value.replace(/\D/g, '');
+    console.log(value);
+    if (value) {
+      value = parseInt(value, 10).toLocaleString('vi-VN');
+      input.value = value;
+    } else {
+      input.value = '';
+    }
+  }
 
-                                                        // Chạy sau khi trang đã tải
-                                                        document.addEventListener('DOMContentLoaded', function () {
-                                                            const minPriceInput = document.getElementById('minPrice');
-                                                            const maxPriceInput = document.getElementById('maxPrice');
+  // Chạy sau khi trang đã tải
+  document.addEventListener('DOMContentLoaded',
+  function() {
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
 
-                                                            minPriceInput.addEventListener('input', function () {
-                                                                formatNumberInput(this);
-                                                                if (minPriceInput.value.replace(/\./g, '') > 99999999) {
-                                                                    alert('Giới hạn nhập vào là 99.999.999 đ');
-                                                                    $('#minPrice').val('99.999.999');
-                                                                }
-                                                            });
+    minPriceInput.addEventListener('input',
+    function() {
+      formatNumberInput(this);
+      if (minPriceInput.value.replace(/\./g, '') > 99999999) {
+        alert('Giới hạn nhập vào là 99.999.999 đ');
+        $('#minPrice').val('99.999.999');
+      }
+    });
 
+    maxPriceInput.addEventListener('input',
+    function() {
+      formatNumberInput(this);
+      if (maxPriceInput.value.replace(/\./g, '') > 99999999) {
+        alert('Giới hạn nhập vào là 99.999.999 đ');
+        $('#maxPrice').val('99.999.999');
+      }
+    });
+  });
 
-                                                            maxPriceInput.addEventListener('input', function () {
-                                                                formatNumberInput(this);
-                                                                if (maxPriceInput.value.replace(/\./g, '') > 99999999) {
-                                                                    alert('Giới hạn nhập vào là 99.999.999 đ');
-                                                                    $('#maxPrice').val('99.999.999');
-                                                                }
-                                                            });
-                                                        });
+  $(document).ready(function() {
+    $('input[name="priceRange"]').on('change',
+    function() {
+      if (this.value) {
+        const[min, max] = this.value.split('-');
+        $('#minPrice').val(parseInt(min, 10).toLocaleString('vi-VN'));
+        $('#maxPrice').val(parseInt(max, 10).toLocaleString('vi-VN'));
+      } else {
+        // All prices option
+        $('#minPrice').val('');
+        $('#maxPrice').val('');
+      }
+    });
 
-                                                        $(document).ready(function () {
-                                                            $('input[name="priceRange"]').on('change', function () {
-                                                                if (this.value) {
-                                                                    const [min, max] = this.value.split('-');
-                                                                    $('#minPrice').val(parseInt(min, 10).toLocaleString('vi-VN'));
-                                                                    $('#maxPrice').val(parseInt(max, 10).toLocaleString('vi-VN'));
-                                                                } else {
-                                                                    // All prices option
-                                                                    $('#minPrice').val('');
-                                                                    $('#maxPrice').val('');
-                                                                }
-                                                            });
+    $('#minPrice, #maxPrice').on('input',
+    function() {
+      $('input[name="priceRange"]').prop('checked', false);
+    });
 
-                                                            $('#minPrice, #maxPrice').on('input', function () {
-                                                                $('input[name="priceRange"]').prop('checked', false);
-                                                            });
+    // Kiểm duyệt giá nhập vào
+    $('#maxPrice').on('change',
+    function() {
+      const maxPrice = parseInt($('#maxPrice').val().replace(/\./g, '')) || 0;
+      const minPrice = parseInt($('#minPrice').val().replace(/\./g, '')) || 0;
 
-                                                            // Kiểm duyệt giá nhập vào
-                                                            $('#maxPrice').on('change', function () {
-                                                                const maxPrice = parseInt($('#maxPrice').val().replace(/\./g, '')) || 0;
-                                                                const minPrice = parseInt($('#minPrice').val().replace(/\./g, '')) || 0;
-
-                                                                console.log('minPrice: ' + minPrice);
-                                                                console.log('maxPrice: ' + maxPrice);
-                                                                if (maxPrice < minPrice) {
-                                                                    alert('Giá tối đa không được nhỏ hơn giá tối thiểu!');
-                                                                    $('#maxPrice').val(parseInt(minPrice, 10).toLocaleString('vi-VN'));
-                                                                }
-                                                            });
-                                                        });
-        </script>
+      console.log('minPrice: ' + minPrice);
+      console.log('maxPrice: ' + maxPrice);
+      if (maxPrice < minPrice) {
+        alert('Giá tối đa không được nhỏ hơn giá tối thiểu!');
+        $('#maxPrice').val(parseInt(minPrice, 10).toLocaleString('vi-VN'));
+      }
+    });
+  });
+</script>
     </body>
 </html>

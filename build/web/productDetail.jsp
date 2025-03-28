@@ -14,373 +14,508 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
-            body {
-                background-color: #f8f9fa;
-            }
+    /* Global Typography and Color Palette (đồng bộ với productList.jsp) */
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --text-color: #333;
+        --light-background: #f4f6f7;
+        --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
 
-            .container {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 20px;
-            }
+    body {
+        font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--light-background);
+        color: var(--text-color);
+        line-height: 1.6;
+    }
 
-            .product-container {
-                background: white;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                padding: 30px;
-                margin-bottom: 30px;
-            }
+    .container {
+        max-width: 1400px;
+        padding: 2rem;
+    }
 
-            .product-image-main {
-                width: 100%;
-                height: 400px;
-                object-fit: contain;
-                margin-bottom: 20px;
-                border-radius: 4px;
-            }
+    .product-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--card-shadow);
+        padding: 30px;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+    }
 
-            .thumbnail-container {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 20px;
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
+    .product-container:hover {
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
 
-            .thumbnail {
-                width: 80px;
-                height: 80px;
-                object-fit: cover;
-                border-radius: 4px;
-                cursor: pointer;
-                border: 2px solid transparent;
-                transition: all 0.3s ease;
-            }
+    /* Product Images */
+    .product-image-main {
+        width: calc(100% - 120px); /* Trừ đi chiều rộng của thumbnail-container + gap */
+        height: 600px;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: transform 0.4s ease;
+    }
 
-            .thumbnail:hover, .thumbnail.active {
-                border-color: #333;
-                transform: translateY(-2px);
-            }
+    /*    .product-image-main:hover {
+            transform: scale(1.05);
+        }*/
 
-            .product-title {
-                font-size: 1.8rem;
-                font-weight: 600;
-                margin-bottom: 15px;
-                color: #333;
-            }
+    .image-section {
+        display: flex;
+        gap: 20px;
+    }
 
-            .product-price {
-                display: flex;
-                align-items: baseline;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
+    .thumbnail-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100px;
+        min-width: 100px;
+        overflow-y: auto;
+        max-height: 600px;
+        padding-right: 10px;
+        border-radius: 8px;
+    }
 
-            .sale-price {
-                font-size: 1.8rem;
-                font-weight: 600;
-                color: #0984e3; /* Changed to blue color */
-            }
+    .thumbnail {
+        width: 100%; /* Tràn hết chiều rộng của thumbnail-container */
+        height: 100px; /* Chiều cao cố định */
+        object-fit: cover; /* Đảm bảo ảnh lấp đầy khung */
+        border-radius: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        display: block; /* Đảm bảo ảnh là block element */
+    }
 
-            .original-price {
-                font-size: 1.2rem;
-                color: #999;
-                text-decoration: line-through;
-            }
+    .thumbnail:hover, .thumbnail.active {
+        border-color: var(--accent-color);
+        transform: scale(1.05);
+    }
 
-            .product-description {
-                margin-bottom: 30px;
-                color: #666;
-                line-height: 1.6;
-            }
+    .thumbnail-placeholder {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 0.9rem;
+        text-align: center;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px dashed #ddd;
+    }
 
-            .quantity-selector {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
+    /* Product Details */
+    .product-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
 
-            .quantity-input {
-                width: 70px;
-                text-align: center;
-            }
+    .product-price {
+        display: flex;
+        align-items: baseline;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
 
-            .option-selector {
-                margin-bottom: 20px;
-            }
+    .sale-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent-color);
+    }
 
-            .option-label {
-                font-weight: 500;
-                margin-bottom: 8px;
-                display: block;
-            }
+    .original-price {
+        font-size: 1.2rem;
+        color: #999;
+        text-decoration: line-through;
+    }
 
-            .action-buttons {
-                display: flex;
-                gap: 15px;
-                margin-top: 30px;
-            }
+    .product-description {
+        margin-bottom: 30px;
+        color: #666;
+        line-height: 1.8;
+    }
 
-            .btn-buy-now {
-                flex: 1;
-                padding: 12px 20px;
-                background: #e44d26;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
+    /* Options and Quantity */
+    .options-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
 
-            .btn-add-cart {
-                flex: 1;
-                padding: 12px 20px;
-                background: #333;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
+    .options-col {
+        flex: 1;
+        min-width: 150px;
+    }
 
-            .btn-buy-now:hover {
-                background: #c53d1d;
-                transform: translateY(-2px);
-            }
+    .option-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+        display: block;
+    }
 
-            .btn-add-cart:hover {
-                background: #000;
-                transform: translateY(-2px);
-            }
+    .form-select, .quantity-input {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
 
-            .product-meta {
-                margin-top: 20px;
-                padding-top: 20px;
-                border-top: 1px solid #eee;
-                font-size: 0.9rem;
-                color: #777;
-            }
+    .form-select:focus, .quantity-input:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
 
-            .meta-item {
-                margin-bottom: 8px;
-            }
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-            .feedback-section {
-                margin-top: 50px;
-            }
+    .quantity-input {
+        width: 70px;
+        text-align: center;
+        background-color: #f9f9f9;
+    }
 
-            .feedback-title {
-                font-size: 1.4rem;
-                font-weight: 600;
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-                border-bottom: 1px solid #eee;
-            }
+    .btn-outline-secondary {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
 
-            .feedback-item {
-                padding: 20px;
-                border-bottom: 1px solid #eee;
-                display: flex;
-                gap: 20px;
-            }
+    .btn-outline-secondary:hover {
+        background-color: var(--accent-color);
+        color: white;
+        border-color: var(--accent-color);
+    }
 
-            .feedback-avatar {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                background: #eee;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #777;
-                font-size: 1.2rem;
-            }
+    .stock-status {
+        display: flex;
+        align-items: center;
+        margin-left: 15px;
+        font-weight: 500;
+    }
 
-            .feedback-content {
-                flex: 1;
-            }
+    .stock-status.in-stock {
+        color: #28a745;
+    }
 
-            .feedback-author {
-                font-weight: 500;
-                margin-bottom: 5px;
-            }
+    .stock-status.out-of-stock {
+        color: #dc3545;
+    }
 
-            .feedback-rating {
-                color: #f5c518;
-                margin-bottom: 8px;
-            }
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
 
-            .feedback-text {
-                color: #666;
-            }
+    .btn-buy-now, .btn-add-cart {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
 
-            .feedback-date {
-                font-size: 0.8rem;
-                color: #999;
-                margin-top: 5px;
-            }
-            .feedback-images {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-top: 10px;
-            }
+    .btn-buy-now {
+        background: var(--accent-color);
+    }
 
-            .feedback-images img {
-                border-radius: 4px;
-            }
-            .reply {
-                background-color: #f9f9f9;
-                padding: 10px;
-                border-radius: 4px;
-                margin-top: 10px;
-            }
-            .reply .feedback-author {
-                color: #2c3e50;
-                font-weight: 600;
-            }
+    .btn-add-cart {
+        background: var(--primary-color);
+    }
 
-            /* Similar Products Section - Matching productList.jsp */
-            .similar-products-section {
-                margin-top: 50px;
-                margin-bottom: 50px;
-            }
+    .btn-buy-now:hover {
+        background: #2980b9;
+        transform: translateY(-3px);
+    }
 
-            .similar-products-title {
-                font-size: 1.4rem;
-                font-weight: 600;
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-                border-bottom: 1px solid #eee;
-            }
+    .btn-add-cart:hover {
+        background: var(--secondary-color);
+        transform: translateY(-3px);
+    }
 
-            /* Product grid styles copied from productList.jsp */
-            .product-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 25px;
-                margin-top: 20px;
-            }
+    .btn-buy-now:disabled, .btn-add-cart:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
 
-            /* Card sản phẩm - đồng bộ với productList.jsp */
-            .product-card {
-                border: none;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-                transition: all 0.3s ease;
-                height: 100%;
-                background: white;
-            }
+    /* Product Meta */
+    .product-meta {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        font-size: 0.9rem;
+        color: #777;
+    }
 
-            .product-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            }
+    .meta-item a {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
 
-            .product-image {
-                height: 250px;
-                object-fit: cover;
-                width: 100%;
-                transition: all 0.5s ease;
-            }
+    .meta-item a:hover {
+        text-decoration: underline;
+    }
 
-            .product-card:hover .product-image {
-                transform: scale(1.05);
-            }
+    /* Feedback Section */
+    .feedback-section {
+        margin-top: 50px;
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: var(--card-shadow);
+    }
 
-            .product-info {
-                padding: 1.5rem;
-                background: white;
-            }
+    .feedback-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent-color);
+    }
 
-            .product-title {
-                font-size: 1.1rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-                color: #2d3436;
-                height: auto;
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-            }
+    .feedback-item {
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        gap: 20px;
+    }
 
-            .product-price {
-                font-size: 1.2rem;
-                color: #0984e3;
-                font-weight: 700;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
+    .feedback-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
 
-            /* Các style mới được thêm vào */
-            .options-row {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
+    .feedback-content {
+        flex: 1;
+    }
 
-            .options-col {
-                flex: 1;
-                min-width: 120px;
-            }
+    .feedback-author {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 5px;
+    }
 
-            .stock-status {
-                display: flex;
-                align-items: center;
-                margin-left: 15px;
-                padding: 6px 0;
-            }
+    .feedback-rating {
+        color: #f5c518;
+        margin-bottom: 8px;
+    }
 
-            .stock-status.in-stock {
-                color: #28a745;
-            }
+    .feedback-text {
+        color: #666;
+        line-height: 1.6;
+    }
 
-            .stock-status.out-of-stock {
-                color: #dc3545;
-            }
+    .feedback-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
 
-            /* Responsive adjustments */
-            @media (max-width: 768px) {
-                .action-buttons {
-                    flex-direction: column;
-                }
+    .feedback-images img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
 
-                .product-image-main {
-                    height: 300px;
-                }
+    .feedback-images img:hover {
+        transform: scale(1.05);
+    }
 
-                .options-row {
-                    flex-direction: column;
-                }
+    .feedback-date {
+        font-size: 0.8rem;
+        color: #999;
+        margin-top: 5px;
+    }
 
-                .options-col {
-                    width: 100%;
-                }
+    .reply {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        margin-left: 40px;
+    }
 
-                .product-grid {
-                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                    gap: 15px;
-                }
-            }
-            #feedback_section {
-                scroll-margin-top: 100px; /* Điều chỉnh giá trị này theo chiều cao header */
-            }
-        </style>
+    .reply .feedback-author {
+        color: var(--secondary-color);
+    }
+
+    /* Similar Products Section */
+    .similar-products-section {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .similar-products-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent-color);
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Đồng bộ với productList.jsp */
+        gap: 25px;
+    }
+
+    .product-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.1);
+    }
+
+    .product-info {
+        padding: 20px;
+        background: white;
+        flex-grow: 1;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .product-price {
+        color: var(--accent-color);
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    /* Pagination */
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+        display: flex;
+        gap: 5px;
+    }
+
+    .page-link {
+        color: var(--primary-color);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .page-link:hover {
+        background-color: var(--accent-color);
+        color: white;
+    }
+
+    .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .product-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+        .product-image-main {
+            height: 300px;
+        }
+        .options-row {
+            flex-direction: column;
+        }
+        .options-col {
+            width: 100%;
+        }
+        .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+        .product-title {
+            font-size: 1.5rem;
+        }
+        .sale-price {
+            font-size: 1.5rem;
+        }
+        .product-image-main {
+            height: 250px;
+        }
+    }
+
+    #feedback_section {
+        scroll-margin-top: 100px;
+    }
+</style>
     </head>
     <body>
         <jsp:include page="header.jsp" />
@@ -412,14 +547,25 @@
                 <div class="row">
                     <!-- Product Images Column -->
                     <div class="col-md-6">
-                        <img src="${product.thumbnail}" class="product-image-main" id="main-product-image" alt="${product.title}">
-
-                        <div class="thumbnail-container">
-                            <c:forEach items="${product.subImages}" var="image" varStatus="status">
-                                <img src="${image}" class="thumbnail ${status.index == 0 ? 'active' : ''}" 
-                                     alt="${product.title} - Image ${status.index + 1}"
-                                     onclick="changeMainImage(this.src)">
-                            </c:forEach>
+                        <div class="image-section">
+                            <div class="thumbnail-container">
+                                <c:choose>
+                                    <c:when test="${not empty product.subImages}">
+                                        <c:forEach items="${product.subImages}" var="image" varStatus="status">
+                                            <img src="${image}" class="thumbnail ${status.index == 0 ? 'active' : ''}" 
+                                                 alt="${product.title} - Image ${status.index + 1}"
+                                                 onclick="changeMainImage(this.src)">
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- Placeholder khi không có ảnh phụ -->
+                                        <div class="thumbnail-placeholder">
+                                            <span>Không có ảnh phụ</span>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <img src="${product.thumbnail}" class="product-image-main" id="main-product-image" alt="${product.title}">
                         </div>
                     </div>
 
@@ -725,6 +871,5 @@
 
 
         </script>
-    </script>
 </body>
 </html>
