@@ -189,8 +189,8 @@
             <tbody>
                 <tr>
                     <td>${salesReport.totalOrders}</td>
-                    <td><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></td>
-                    <td><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></td>
+                    <td><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency" currencySymbol="VNĐ"/></td>
+                    <td><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency" currencySymbol="VNĐ"/></td>
                     <td>${salesReport.totalCustomers}</td>
                     <td>${salesReport.totalProducts}</td>
                 </tr>
@@ -209,11 +209,11 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${salesReport.totalRevenue > 5000000}">
-                                        Doanh thu: <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></span> thì 
+                                        Doanh thu: <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency" currencySymbol="VNĐ"/></span> thì 
                                         tiếp tục phát huy chiến lược bán hàng hiện tại và xem xét mở rộng quy mô!
                                     </c:when>
                                     <c:otherwise>
-                                        Doanh thu: <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency"/></span> thì 
+                                        Doanh thu: <span class="highlight-number"><fmt:formatNumber value="${salesReport.totalRevenue}" type="currency" currencySymbol="VNĐ"/></span> thì 
                                         xem xét tối ưu hóa chi phí hoặc đẩy mạnh các chương trình khuyến mãi.
                                     </c:otherwise>
                                 </c:choose>
@@ -224,10 +224,10 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${salesReport.averageOrderValue < 1000000}">
-                                        Giá trị trung bình thấp <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></span>. Đề xuất thêm sản phẩm combo hoặc ưu đãi để tăng giá trị đơn hàng.
+                                        Giá trị trung bình thấp <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency" currencySymbol="VNĐ"/></span>. Đề xuất thêm sản phẩm combo hoặc ưu đãi để tăng giá trị đơn hàng.
                                     </c:when>
                                     <c:otherwise>
-                                        Giá trị trung bình tốt <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency"/></span>. Tập trung quảng bá các sản phẩm giá trị cao.
+                                        Giá trị trung bình tốt <span class="highlight-number"><fmt:formatNumber value="${salesReport.averageOrderValue}" type="currency" currencySymbol="VNĐ"/></span>. Tập trung quảng bá các sản phẩm giá trị cao.
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -259,7 +259,7 @@
                 <c:forEach items="${salesReport.dailyRevenue}" var="entry">
                     <tr>
                         <td>${entry.key}</td>
-                        <td><fmt:formatNumber value="${entry.value}" type="currency"/></td>
+                        <td><fmt:formatNumber value="${entry.value}" type="currency" currencySymbol="VNĐ"/></td>
                         <td>${salesReport.ordersPerDay[entry.key]}</td>
                     </tr>
                 </c:forEach>
@@ -279,7 +279,7 @@
                 <c:forEach items="${salesReport.monthlyRevenue}" var="entry">
                     <tr>
                         <td>${entry.key}</td>
-                        <td><fmt:formatNumber value="${entry.value}" type="currency"/></td>
+                        <td><fmt:formatNumber value="${entry.value}" type="currency" currencySymbol="VNĐ"/></td>
                         <td>${salesReport.ordersPerMonth[entry.key]}</td>
                     </tr>
                 </c:forEach>
@@ -308,7 +308,7 @@
                                             </c:if>
                                         </c:forEach>
                                         Ngày có doanh thu cao nhất là ${maxDailyRevenueDate} với 
-                                        <span class="highlight-number"><fmt:formatNumber value="${maxDailyRevenue}" type="currency"/></span>. 
+                                        <span class="highlight-number"><fmt:formatNumber value="${maxDailyRevenue}" type="currency" currencySymbol="VNĐ"/></span>. 
                                         Đề xuất: Phân tích các yếu tố làm tăng doanh thu như chương trình khuyến mãi, 
                                         sự kiện đặc biệt hoặc xu hướng tiêu dùng.
                                     </c:when>
@@ -332,7 +332,7 @@
                                             </c:if>
                                         </c:forEach>
                                         Tháng có doanh thu cao nhất là ${maxMonthlyRevenueMonth} với 
-                                        <span class="highlight-number"><fmt:formatNumber value="${maxMonthlyRevenue}" type="currency"/></span>. 
+                                        <span class="highlight-number"><fmt:formatNumber value="${maxMonthlyRevenue}" type="currency" currencySymbol="VNĐ"/></span>. 
                                         Khuyến nghị: Tìm hiểu các yếu tố thúc đẩy doanh thu và nhân rộng chiến lược 
                                         thành công sang các tháng khác.
                                     </c:when>
@@ -381,7 +381,7 @@
                                 <td>${product.productName}</td>
                                 <td>${product.category}</td>
                                 <td>${product.totalQuantitySold}</td>
-                                <td><fmt:formatNumber value="${product.totalRevenue}" type="currency"/></td>
+                                <td><fmt:formatNumber value="${product.totalRevenue}" type="currency" currencySymbol="VNĐ"/></td>
                                 <td>
                                     <c:forEach items="${product.variantDistribution}" var="variantEntry">
                                         ${variantEntry.key}: ${variantEntry.value}<br>
@@ -414,7 +414,7 @@
                         <c:forEach items="${salesReport.revenueByCategoryMap}" var="entry">
                             <tr>
                                 <td>${entry.key}</td>
-                                <td><fmt:formatNumber value="${entry.value}" type="currency"/></td>
+                                <td><fmt:formatNumber value="${entry.value}" type="currency" currencySymbol="VNĐ"/></td>
                                 <td>${salesReport.ordersByCategoryMap[entry.key]}</td>
                             </tr>
                         </c:forEach>
@@ -437,7 +437,7 @@
                                 <c:choose>
                                     <c:when test="${not empty salesReport.topProducts}">
                                         Sản phẩm hàng đầu là "${salesReport.topProducts[0].productName}" 
-                                        với doanh thu <span class="highlight-number"><fmt:formatNumber value="${salesReport.topProducts[0].totalRevenue}" type="currency"/></span> 
+                                        với doanh thu <span class="highlight-number"><fmt:formatNumber value="${salesReport.topProducts[0].totalRevenue}" type="currency" currencySymbol="VNĐ"/></span> 
                                         và số lượng bán <span class="highlight-number">${salesReport.topProducts[0].totalQuantitySold}</span> sản phẩm. 
                                         Đề xuất: Đầu tư phát triển và mở rộng dòng sản phẩm thành công này.
                                     </c:when>
@@ -461,7 +461,7 @@
                                             </c:if>
                                         </c:forEach>
                                         Danh mục có doanh thu cao nhất là "${maxCategoryName}" 
-                                        với <span class="highlight-number"><fmt:formatNumber value="${maxCategoryRevenue}" type="currency"/></span>. 
+                                        với <span class="highlight-number"><fmt:formatNumber value="${maxCategoryRevenue}" type="currency" currencySymbol="VNĐ"/></span>. 
                                         Khuyến nghị: Tập trung nguồn lực và chiến lược marketing vào danh mục này.
                                     </c:when>
                                     <c:otherwise>

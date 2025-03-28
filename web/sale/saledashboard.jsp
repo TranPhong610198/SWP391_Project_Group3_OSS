@@ -127,7 +127,7 @@
                                 <div>
                                     <div class="text-muted text-uppercase fw-bold small">Tổng Doanh Thu</div>
                                     <div class="h4 mb-0 fw-bold text-dark">
-                                        <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="$" />
+                                        <fmt:formatNumber value="${salesOverview.totalRevenue}" type="currency" currencySymbol="VNĐ" />
                                     </div>
                                 </div>
                             </div>
@@ -302,7 +302,7 @@
                                             <tr>
                                                 <td>${category.categoryName}</td>
                                                 <td>${category.totalItems}</td>
-                                                <td><fmt:formatNumber value="${category.totalAmount}" type="currency" currencySymbol="$" /></td>
+                                                <td><fmt:formatNumber value="${category.totalAmount}" type="currency" currencySymbol="VNĐ" /></td>
                                                 <td>
                                                     <div class="progress">
                                                         <div class="progress-bar" role="progressbar" 
@@ -402,7 +402,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Doanh Thu ($)' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Doanh Thu (VNĐ)' } },
                         y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Đơn Hàng' } }
                     }
                 }
