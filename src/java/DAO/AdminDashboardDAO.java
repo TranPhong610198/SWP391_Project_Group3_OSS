@@ -111,7 +111,7 @@ public class AdminDashboardDAO extends DBContext {
      */
     public int getTotalCategories() {
         int totalCategories = 0;
-        String sql = "SELECT COUNT(*) AS total FROM categories";
+        String sql = "SELECT COUNT(*) AS total FROM categories WHERE level = 1";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);

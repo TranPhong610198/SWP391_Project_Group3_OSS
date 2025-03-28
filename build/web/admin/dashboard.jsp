@@ -139,7 +139,7 @@
                                     <div class="mt-2">
                                         <span class="badge bg-success">${userStatusCount.activeCount} Hoạt động</span>
                                         <span class="badge bg-danger">${userStatusCount.inactiveCount} Không hoạt động</span>
-                                        <span class="badge bg-warning">${userStatusCount.pendingCount} Đang chờ</span>
+                                        <span class="badge bg-warning">${userStatusCount.pendingCount} Chờ xác nhận</span>
                                     </div>
                                 </div>
                                 <div class="icon-bg bg-primary bg-opacity-10">
@@ -154,7 +154,7 @@
                         <div class="card dashboard-card h-100">
                             <div class="card-body d-flex justify-content-between align-items-start">
                                 <div>
-                                    <p class="stat-title mb-1">Số lượng thể loại</p>
+                                    <p class="stat-title mb-1">Số lượng thể loại chính</p>
                                     <h3 class="stat-value">${totalCategories}</h3>
                                     <div class="mt-2">
                                         <c:forEach var="category" items="${categoryData}" varStatus="loop">
@@ -205,7 +205,7 @@
                                     </h3>
 
                                     <div class="mt-2">
-                                        <span class="badge bg-primary">Doanh số: ${totalCustomerStats.totalPurchases}</span>
+                                        <span class="badge bg-primary">Số lượng sản phẩm đã bán: ${totalCustomerStats.totalPurchases}</span>
                                     </div>
                                 </div>
                                 <div class="icon-bg bg-danger bg-opacity-10">
@@ -236,7 +236,7 @@
                     <div class="col-md-6">
                         <div class="card dashboard-card">
                             <div class="card-header bg-white">
-                                <h5 class="card-title mb-0">Biểu đồ phân phối số lượng sản phẩm theo từng thể loại</h5>
+                                <h5 class="card-title mb-0">Biểu đồ phân phối số lượng sản phẩm theo từng thể loại chính</h5>
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
@@ -267,7 +267,7 @@
                     <div class="col-md-6">
                         <div class="card dashboard-card">
                             <div class="card-header bg-white">
-                                <h5 class="card-title mb-0">Top 5 vị khách quý của cửa hàng</h5>
+                                <h5 class="card-title mb-0">Top 5 khách hàng tiềm năng của cửa hàng</h5>
                             </div>
                             <div class="card-body table-container">
                                 <table class="table table-hover">
@@ -335,7 +335,7 @@
             const userStatusChart = new Chart(userStatusCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Hoạt động', 'Không hoạt động', 'Đang chờ'],
+                    labels: ['Hoạt động', 'Không hoạt động', 'Chờ xác nhận'],
                     datasets: [{
                             data: [
             ${userStatusCount.activeCount},
