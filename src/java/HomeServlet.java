@@ -77,6 +77,7 @@ public class HomeServlet extends HttpServlet {
         CategoryDAO categoryDAO = new CategoryDAO();
         MessageDAO messageDAO = new MessageDAO();
 
+        
         // Lấy danh sách các slider và bài đăng
         List<Slider> activeSliders = sliderDAO.getAllSliders("active");
         List<Post> latestPosts = postDAO.getPostToHome(1, 4, "", null, "published", null, "created_at", "DESC");

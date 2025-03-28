@@ -133,7 +133,7 @@
                 <div class="d-flex align-items-center justify-content-end">
                     <!-- Search Form -->
                     <form class="search-form" action="listproduct" method="GET">
-                        <input type="text" name="keyword" placeholder="Tìm kiếm...">
+                        <input type="text" name="keyword" placeholder="Nhập tên sản phẩm...">
                         <button type="submit">
                             <i class="fas fa-search"></i>
                         </button>
