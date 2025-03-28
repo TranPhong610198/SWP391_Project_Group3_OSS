@@ -132,7 +132,7 @@
         <div class="main-content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
-                    <i class="fas fa-images me-2"></i>Quản lý thanh trượt
+                    <i class="fas fa-images me-2"></i>Danh sách thanh trượt
                 </h2>
                 <c:if test="${not empty sessionScope.success}">
                     <div class="alert alert-success" role="alert">

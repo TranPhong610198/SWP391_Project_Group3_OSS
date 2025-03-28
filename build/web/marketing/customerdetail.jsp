@@ -224,40 +224,42 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="fullName" class="form-label">Họ và tên</label>
-                                <input type="text" class="form-control" id="fullName" name="fullName" value="${customer.fullName}" required>
+                                <input type="text" class="form-control" id="fullName" name="fullName" value="${customer.fullName}" readonly>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label for="customerType" class="form-label">Loại khách hàng</label>
-                                <select class="form-select" id="customerType" name="customerType">
-                                    <option value="normal" ${customer.customerType == 'normal' ? 'selected' : ''}>Thường xuyên</option>
+                                <select class="form-select" id="customerType" name="customerType" disabled>
+                                    <option value="normal" ${customer.customerType == 'normal' ? 'selected' : ''}>Thường</option>
                                     <option value="vip" ${customer.customerType == 'vip' ? 'selected' : ''}>VIP</option>
                                 </select>
+                                <input type="hidden" name="customerType" value="${customer.customerType}">
                             </div>
+
 
                             <div class="col-md-4 mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="${customer.email}" required>
+                                <input type="email" class="form-control" id="email" name="email" value="${customer.email}" readonly>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label for="mobile" class="form-label">Số điện thoại</label>
-                                <input type="text" class="form-control" id="mobile" name="mobile" value="${customer.mobile}" required>
+                                <input type="text" class="form-control" id="mobile" name="mobile" value="${customer.mobile}" readonly>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label for="gender" class="form-label">Giới tính</label>
-                                <select class="form-select" id="gender" name="gender">
+                                <select class="form-select" id="gender" name="gender" disabled>
                                     <option value="male" ${customer.gender == 'male' ? 'selected' : ''}>Nam</option>
                                     <option value="female" ${customer.gender == 'female' ? 'selected' : ''}>Nữ</option>
-
+                                    <input type="hidden" name="gender" value="${customer.gender}">
                                 </select>
                             </div>
 
-<!--                            <div class="col-12 mb-3">
-                                <label for="address" class="form-label">Địa chỉ</label>
-                                <textarea class="form-control" id="address" name="address" rows="3">${customer.address}</textarea>
-                            </div>-->
+                            <!--                            <div class="col-12 mb-3">
+                                                            <label for="address" class="form-label">Địa chỉ</label>
+                                                            <textarea class="form-control" id="address" name="address" rows="3">${customer.address} </textarea>
+                                                        </div>-->
 
                             <div class="timestamp-info">
                                 <div class="d-flex justify-content-between">
@@ -271,7 +273,7 @@
                                 </div>
                             </div>
 
-                            <div class="text-center mt-4">
+<!--                            <div class="text-center mt-4">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Lưu thay đổi
                                 </button>
@@ -279,7 +281,7 @@
                                     <i class="fas fa-times me-2"></i>Hủy
                                 </a>
 
-                            </div>
+                            </div>-->
                             <div class="text-center mt-3">
                                 <a href="${pageContext.request.contextPath}/marketing/customerlist" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left me-1"></i>Quay lại

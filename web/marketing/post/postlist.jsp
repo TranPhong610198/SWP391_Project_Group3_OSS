@@ -178,7 +178,7 @@
         <div class="main-content">
             <div class="container-fluid p-4">
                 <h2 class="page-title">
-                    <i class="fas fa-newspaper me-2"></i>Quản lý bài đăng
+                    <i class="fas fa-newspaper me-2"></i>Danh sách bài đăng
                 </h2>
                 <c:if test="${sessionScope.success != null}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
