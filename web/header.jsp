@@ -43,7 +43,7 @@
             background-color: #f8f9fa;
         }
         .navbar-nav .dropdown-toggle::after {
-            display: inline-block;
+            display: none !important;
             margin-left: 5px;
             vertical-align: middle;
             content: "";
