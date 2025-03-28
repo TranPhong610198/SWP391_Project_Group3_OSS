@@ -260,8 +260,7 @@
                                         <th class="text-center" style="width: 150px;">Thao tác</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    
+                                <tbody>                                   
                                     <c:choose>
                                         <c:when test="${not empty posts}">
                                             <c:forEach var="post" items="${posts}" varStatus="status">
