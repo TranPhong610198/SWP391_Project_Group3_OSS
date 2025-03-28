@@ -526,7 +526,7 @@ public class FeedbackDAO extends DBContext {
         sql.append("FROM feedback f ");
         sql.append("JOIN order_items oi ON f.order_item_id = oi.id ");
         sql.append("JOIN products p ON oi.product_id = p.id ");
-        sql.append("WHERE p.id = ?");
+        sql.append("WHERE f.status ='approved' AND p.id = ?");
 
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
             sql.append(" AND (f.comment LIKE ? OR p.title LIKE ?)");

@@ -131,7 +131,7 @@
                     <div class="card-header">Thông tin người nhận</div>
                     <div class="card-body">
                         <p><strong>Họ tên:</strong> ${order.recipientName}</p>
-                        <p><strong>Giới tính:</strong> ${user != null ? user.gender : 'Không xác định'}</p>
+                        <p><strong>Giới tính:</strong> ${user != null ? user.gender : ''}</p>
                         <p><strong>Email:</strong> ${order.recipientEmail}</p>
                         <p><strong>Điện thoại:</strong> ${order.phone}</p>
                         <p><strong>Địa chỉ:</strong> ${order.address}</p>
