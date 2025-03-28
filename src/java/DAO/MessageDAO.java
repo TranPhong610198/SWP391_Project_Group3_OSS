@@ -49,60 +49,72 @@ public class MessageDAO extends DBContext {
         }
     }
 
-    // Lấy danh sách user mà marketing đang chat (dùng cho cả marketing và admin)
+    // Lấy danh sách user mà marketing đang chat 
     public List<Message> getChatList(int marketingId, String searchUsername, int page, int recordsPerPage) {
-        List<Message> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder(
-            "WITH LatestMessages AS ( " +
-            "    SELECT sender_id, receiver_id, content, created_at, is_read, " +
-            "           ROW_NUMBER() OVER (PARTITION BY CASE WHEN sender_id = ? THEN receiver_id ELSE sender_id END ORDER BY created_at DESC) as rn " +
-            "    FROM messages " +
-            "    WHERE sender_id = ? OR receiver_id = ? " +
-            ") " +
-            "SELECT u.id, u.username, m.content, m.created_at, m.is_read " +
-            "FROM LatestMessages m " +
-            "JOIN users u ON (u.id = CASE WHEN m.sender_id = ? THEN m.receiver_id ELSE m.sender_id END) " +
-            "WHERE m.rn = 1 AND u.id != ?"
-        );
+    List<Message> list = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "WITH LatestMessages AS ( " +
+        "    SELECT sender_id, receiver_id, content, created_at, image_url, " + // Thêm image_url
+        "           ROW_NUMBER() OVER (PARTITION BY CASE WHEN sender_id = ? THEN receiver_id ELSE sender_id END ORDER BY created_at DESC) as rn " +
+        "    FROM messages " +
+        "    WHERE sender_id = ? OR receiver_id = ? " +
+        "), " +
+        "UnreadCount AS ( " +
+        "    SELECT sender_id, COUNT(*) as unread_count " +
+        "    FROM messages " +
+        "    WHERE receiver_id = ? AND sender_id != ? AND is_read = 0 " +
+        "    GROUP BY sender_id " +
+        ") " +
+        "SELECT u.id, u.username, m.content, m.created_at, m.sender_id, m.image_url, " + // Thêm m.image_url
+        "       CASE WHEN uc.unread_count IS NULL OR uc.unread_count = 0 THEN 1 ELSE 0 END as is_read " +
+        "FROM LatestMessages m " +
+        "JOIN users u ON (u.id = CASE WHEN m.sender_id = ? THEN m.receiver_id ELSE m.sender_id END) " +
+        "LEFT JOIN UnreadCount uc ON u.id = uc.sender_id " +
+        "WHERE m.rn = 1 AND u.id != ?"
+    );
+
+    if (searchUsername != null && !searchUsername.isEmpty()) {
+        sql.append(" AND u.username LIKE ?");
+    }
+
+    sql.append(" ORDER BY m.created_at DESC");
+    sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+        int paramIndex = 1;
+        ps.setInt(paramIndex++, marketingId); // LatestMessages: sender_id
+        ps.setInt(paramIndex++, marketingId); // LatestMessages: sender_id
+        ps.setInt(paramIndex++, marketingId); // LatestMessages: receiver_id
+        ps.setInt(paramIndex++, marketingId); // UnreadCount: receiver_id
+        ps.setInt(paramIndex++, marketingId); // UnreadCount: sender_id != marketingId
+        ps.setInt(paramIndex++, marketingId); // JOIN: sender_id
+        ps.setInt(paramIndex++, marketingId); // WHERE: u.id != marketingId
 
         if (searchUsername != null && !searchUsername.isEmpty()) {
-            sql.append(" AND u.username LIKE ?");
+            ps.setString(paramIndex++, "%" + searchUsername + "%");
         }
 
-        sql.append(" ORDER BY m.created_at DESC");
-        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        ps.setInt(paramIndex++, (page - 1) * recordsPerPage);
+        ps.setInt(paramIndex++, recordsPerPage);
 
-        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int paramIndex = 1;
-            ps.setInt(paramIndex++, marketingId);
-            ps.setInt(paramIndex++, marketingId);
-            ps.setInt(paramIndex++, marketingId);
-            ps.setInt(paramIndex++, marketingId);
-            ps.setInt(paramIndex++, marketingId);
-
-            if (searchUsername != null && !searchUsername.isEmpty()) {
-                ps.setString(paramIndex++, "%" + searchUsername + "%");
-            }
-
-            ps.setInt(paramIndex++, (page - 1) * recordsPerPage);
-            ps.setInt(paramIndex++, recordsPerPage);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Message msg = new Message();
-                msg.setSenderId(rs.getInt("id"));
-                msg.setSenderUsername(rs.getString("username"));
-                msg.setContent(rs.getString("content"));
-                msg.setCreatedAt(rs.getTimestamp("created_at"));
-                msg.setRead(rs.getBoolean("is_read"));
-                list.add(msg);
-                System.out.println("ChatList User: " + msg.getSenderUsername() + ", Content: " + msg.getContent());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Message msg = new Message();
+            msg.setSenderId(rs.getInt("id")); // ID của user trong danh sách chat
+            msg.setSenderUsername(rs.getString("username"));
+            msg.setContent(rs.getString("content"));
+            msg.setCreatedAt(rs.getTimestamp("created_at"));
+            msg.setRead(rs.getBoolean("is_read"));
+            msg.setLastSenderId(rs.getInt("sender_id")); // ID của người gửi tin nhắn cuối cùng
+            msg.setImageUrl(rs.getString("image_url")); // URL của hình ảnh (nếu có)
+            list.add(msg);
+            System.out.println("ChatList User: " + msg.getSenderUsername() + ", Content: " + msg.getContent() + ", LastSenderId: " + msg.getLastSenderId() + ", ImageUrl: " + msg.getImageUrl() + ", IsRead: " + msg.isRead());
         }
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return list;
+}
 
     // Đếm tổng số user đang chat với marketing
     public int getTotalChatUsers(int marketingId, String searchUsername) {

@@ -630,131 +630,126 @@
         </div>
 
         <c:if test="${sessionScope.acc.role == 'customer' || sessionScope.acc.role == null}">
-        <!-- Chat Button -->
-        <div class="ai-chat-button" onclick="toggleChatWidget()">
-            <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
+    <!-- Chat Button -->
+    <div class="ai-chat-button" onclick="toggleChatWidget()">
+        <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="ai-chat-widget" id="aiChatWidget">
+        <div class="ai-chat-header" onclick="toggleChatWidget()">
+            <span><i class="fas fa-comment"></i> Hỗ trợ trực tuyến</span>
+            <i class="fas fa-times" id="aiChatClose"></i>
         </div>
-
-        <!-- Chat Button -->
-            <div class="ai-chat-button" onclick="toggleChatWidget()">
-                <img src="https://cdn-icons-png.flaticon.com/512/5962/5962463.png" alt="Chat AI" width="35" height="35">
-            </div>
-
-            <!-- Chat Widget -->
-            <div class="ai-chat-widget" id="aiChatWidget">
-                <div class="ai-chat-header" onclick="toggleChatWidget()">
-                    <span><i class="fas fa-comment"></i> Chat với hỗ trợ</span>
-                    <i class="fas fa-times" id="aiChatClose"></i>
-                </div>
-                <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
-                    <c:choose>
-                        <c:when test="${not empty chatError}">
-                            <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
-                        </c:when>
-                        <c:otherwise>
-                            <c:forEach items="${chatMessages}" var="msg">
-                                <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
-                                    <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
-                                    <p>${msg.content}</p>
-                                    <c:if test="${not empty msg.imageUrl}">
-                                        <img src="${msg.imageUrl}" alt="Attached image">
-                                    </c:if>
-                                </div>
-                            </c:forEach>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
-                        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="uploadImage()">
-                        <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i></button>
-                        <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
-                        <button type="button" class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
-                    </div>
-                </div>
-        </c:if>
+        <div class="ai-chat-messages d-flex flex-column" id="aiChatMessages">
+            <c:choose>
+                <c:when test="${not empty chatError}">
+                    <div class="ai-message bot">${chatError} <c:if test="${empty userID}"><a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Đăng nhập</a></c:if></div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${chatMessages}" var="msg">
+                        <div class="ai-message ${msg.senderId == userID ? 'user' : 'bot'}">
+                            <small><fmt:formatDate value="${msg.createdAt}" pattern="dd/MM/yyyy HH:mm"/></small>
+                            <p>${msg.content}</p>
+                            <c:if test="${not empty msg.imageUrl}">
+                                <img src="${msg.imageUrl}" alt="Attached image">
+                            </c:if>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <div class="ai-chat-input" <c:if test="${empty userID}">style="display:none;"</c:if>>
+            <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelection()">
+            <button type="button" class="btn btn-secondary me-2" onclick="document.getElementById('imageInput').click()">
+                <i class="fas fa-image"></i>
+            </button>
+            <button type="button" class="btn btn-secondary me-2" onclick="toggleEmojiPicker()">
+                <i class="fas fa-smile"></i>
+            </button>
+            <input type="text" id="messageInput" class="form-control me-2" placeholder="Nhập tin nhắn">
+            <button type="button" class="btn btn-primary" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i> Gửi
+            </button>
+        </div>
+        <div id="imagePreview" class="mt-2" style="display: none; padding: 0 10px;">
+            <img id="previewImage" src="" alt="Ảnh đã chọn" style="max-width: 100px; max-height: 100px; border-radius: 5px;">
+            <button type="button" class="btn btn-danger btn-sm ms-2" onclick="clearImage()">Xóa</button>
+        </div>
+        <div id="emojiPicker" class="mt-2" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background: #fff; position: absolute; z-index: 1000;">
+            <!-- Danh sách emoji sẽ được thêm bằng JavaScript -->
+        </div>
+    </div>
+</c:if>
 
         <!-- Back to Top -->
         <button id="backToTopButton" class="back-to-top">
             <div class="arrow"></div>
         </button>
+        
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
+<script>
     var userId = "${userID}";
-var marketingId = "${marketingId}";
-var ws = null;
+    var marketingId = "${marketingId}";
+    var ws = null;
+    var selectedImageUrl = null;
 
-document.addEventListener('DOMContentLoaded', function () {
-    var chatMessages = document.getElementById("aiChatMessages");
-    if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    if (userId && marketingId !== "-1") {
-        initWebSocket(); // Khởi tạo WebSocket ngay khi load trang
-    }
-});
-
-function toggleChatWidget() {
-    var widget = document.getElementById("aiChatWidget");
-    if (widget.style.display === "none" || widget.style.display === "") {
-        widget.style.display = "flex";
+    document.addEventListener('DOMContentLoaded', function () {
         var chatMessages = document.getElementById("aiChatMessages");
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    } else {
-        widget.style.display = "none";
-    }
-}
-
-function initWebSocket() {
-    if (!userId || marketingId === "-1") return;
-    var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + userId + "/" + marketingId; // /chat/6/3 cho userId=6
-    console.log("Attempting to connect to: " + wsUrl);
-    ws = new WebSocket(wsUrl);
-
-    ws.onopen = function() {
-        console.log("WebSocket connected to " + wsUrl);
-    };
-
-    ws.onmessage = function(event) {
-        console.log("Received: " + event.data);
-        var data = JSON.parse(event.data);
-        var chatMessages = document.getElementById("aiChatMessages");
-        var messageClass = (data.senderId == userId) ? "user" : "bot";
-        var messageHtml = '<div class="ai-message ' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
-        if (data.imageUrl) {
-            messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        messageHtml += '</div>';
-        chatMessages.innerHTML += messageHtml;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
+        if (userId && marketingId !== "-1") {
+            initWebSocket();
+        }
+    });
 
-    ws.onerror = function(event) {
-        console.log("WebSocket error: ", event);
-    };
-
-    ws.onclose = function() {
-        console.log("WebSocket closed, retrying in 2 seconds...");
-        setTimeout(initWebSocket, 2000);
-    };
-}
-
-    function sendMessage() {
-        var input = document.getElementById("messageInput");
-        var message = input.value.trim();
-        if (message && ws && ws.readyState === WebSocket.OPEN) {
-            var jsonMessage = JSON.stringify({
-                senderId: parseInt(userId),
-                content: message
-            });
-            console.log("Sending: " + jsonMessage);
-            ws.send(jsonMessage);
-            input.value = "";
+    function toggleChatWidget() {
+        var widget = document.getElementById("aiChatWidget");
+        if (widget.style.display === "none" || widget.style.display === "") {
+            widget.style.display = "flex";
+            var chatMessages = document.getElementById("aiChatMessages");
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         } else {
-            console.log("WebSocket not open or message empty");
+            widget.style.display = "none";
         }
     }
 
-    function uploadImage() {
+    function initWebSocket() {
+        if (!userId || marketingId === "-1") return;
+        var wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:9999/fashionshop/chat/" + userId + "/" + marketingId;
+        console.log("Attempting to connect to: " + wsUrl);
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = function() {
+            console.log("WebSocket connected to " + wsUrl);
+        };
+
+        ws.onmessage = function(event) {
+            console.log("Received: " + event.data);
+            var data = JSON.parse(event.data);
+            var chatMessages = document.getElementById("aiChatMessages");
+            var messageClass = (data.senderId == userId) ? "user" : "bot";
+            var messageHtml = '<div class="ai-message ' + messageClass + '"><small>' + data.createdAt + '</small><p>' + data.content + '</p>';
+            if (data.imageUrl) {
+                messageHtml += '<img src="' + data.imageUrl + '" alt="Attached image">';
+            }
+            messageHtml += '</div>';
+            chatMessages.innerHTML += messageHtml;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+
+        ws.onerror = function(event) {
+            console.log("WebSocket error: ", event);
+        };
+
+        ws.onclose = function() {
+            console.log("WebSocket closed, retrying in 2 seconds...");
+            setTimeout(initWebSocket, 2000);
+        };
+    }
+
+    function handleImageSelection() {
         var fileInput = document.getElementById("imageInput");
         var file = fileInput.files[0];
         if (file) {
@@ -769,11 +764,97 @@ function initWebSocket() {
             .then(response => response.json())
             .then(data => {
                 console.log("Image uploaded: " + data.imageUrl);
-                fileInput.value = ""; // Reset input file
+                selectedImageUrl = data.imageUrl;
+                document.getElementById("imagePreview").style.display = "block";
+                document.getElementById("previewImage").src = selectedImageUrl;
             })
             .catch(error => console.error("Error uploading image: ", error));
         }
     }
+
+    function clearImage() {
+        selectedImageUrl = null;
+        document.getElementById("imageInput").value = "";
+        document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("previewImage").src = "";
+    }
+
+    function toggleEmojiPicker() {
+        var emojiPicker = document.getElementById("emojiPicker");
+        if (emojiPicker.style.display === "none" || emojiPicker.style.display === "") {
+            loadEmojis();
+            emojiPicker.style.display = "block";
+        } else {
+            emojiPicker.style.display = "none";
+        }
+    }
+
+    function loadEmojis() {
+        fetch('/fashionshop/proxy/emoji')
+            .then(response => {
+                console.log("API Response Status:", response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("API Data:", data);
+                if (!Array.isArray(data)) {
+                    throw new Error("Unexpected data format: Data is not an array");
+                }
+                var emojiPicker = document.getElementById("emojiPicker");
+                emojiPicker.innerHTML = "";
+                data.slice(0, 50).forEach(emoji => {
+                    var span = document.createElement("span");
+                    span.textContent = emoji.character;
+                    span.style.cursor = "pointer";
+                    span.style.fontSize = "24px";
+                    span.style.margin = "5px";
+                    span.onclick = function() {
+                        var input = document.getElementById("messageInput");
+                        input.value += emoji.character;
+                    };
+                    emojiPicker.appendChild(span);
+                });
+            })
+            .catch(error => {
+                console.error("Error loading emojis: ", error);
+                var emojiPicker = document.getElementById("emojiPicker");
+                emojiPicker.innerHTML = "<span>Lỗi tải emoji: " + error.message + "</span>";
+            });
+    }
+
+    function sendMessage() {
+        var input = document.getElementById("messageInput");
+        var message = input.value.trim();
+        var hasContent = message.length > 0;
+        var hasImage = selectedImageUrl !== null;
+
+        if ((hasContent || hasImage) && ws && ws.readyState === WebSocket.OPEN) {
+            var jsonMessage = JSON.stringify({
+                senderId: parseInt(userId),
+                content: hasContent ? message : "",
+                imageUrl: hasImage ? selectedImageUrl : null
+            });
+            console.log("Sending: " + jsonMessage);
+            ws.send(jsonMessage);
+            input.value = "";
+            clearImage();
+            document.getElementById("emojiPicker").style.display = "none";
+        } else {
+            console.log("WebSocket not open or no content/image to send");
+        }
+    }
+
+    // Đóng emoji picker khi nhấn ra ngoài
+    document.addEventListener('click', function(event) {
+        var emojiPicker = document.getElementById("emojiPicker");
+        var emojiButton = document.querySelector('.ai-chat-input .btn-secondary i.fas.fa-smile').parentElement;
+        if (!emojiPicker.contains(event.target) && !emojiButton.contains(event.target)) {
+            emojiPicker.style.display = "none";
+        }
+    });
 
     document.getElementById("messageInput").addEventListener("keypress", function(event) {
         if (event.key === "Enter") {

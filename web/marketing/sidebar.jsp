@@ -76,15 +76,6 @@
             </ul>
         </li>
 
-<!--        <li class="menu-item p-2">
-            <a href="campaignlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
-                <div>
-                    <i class="fas fa-bullhorn me-2"></i>
-                    Chiến dịch Marketing
-                </div>
-                <span class="badge bg-danger rounded-pill">3</span>
-            </a>
-        </li>-->
 
         <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/marketing/couponlist" class="text-decoration-none text-light d-flex align-items-center justify-content-between">
@@ -121,12 +112,15 @@
             </a>
         </li>
         
+        <c:if test="${sessionScope.acc.role == 'marketing'}">
         <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/marketing/chatlist" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-user-cog me-2"></i>
-                Chăm sóc khách hàng
+                Chăm sóc khách hàng  
+<!--                <span class="badge bg-danger rounded-pill">3</span>-->
             </a>
         </li>
+        </c:if>
 
         <li class="menu-item p-2">
             <a href="report" class="text-decoration-none text-light d-flex align-items-center">

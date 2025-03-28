@@ -22,7 +22,6 @@ import java.util.List;
  */
 @WebServlet(name = "ChatListServlet", urlPatterns = {"/marketing/chatlist"})
 public class ChatListServlet extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -54,6 +53,7 @@ public class ChatListServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalUsers", totalUsers);
+        request.setAttribute("marketingId", marketingId); 
 
         request.getRequestDispatcher("/marketing/chat/chatList.jsp").forward(request, response);
     }

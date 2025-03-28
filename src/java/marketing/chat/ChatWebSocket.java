@@ -45,7 +45,10 @@ public class ChatWebSocket {
             JsonObject jsonMessage = JsonParser.parseString(message).getAsJsonObject();
             int senderId = jsonMessage.get("senderId").getAsInt();
             String content = jsonMessage.has("content") ? jsonMessage.get("content").getAsString() : "";
-            String imageUrl = jsonMessage.has("imageUrl") ? jsonMessage.get("imageUrl").getAsString() : null;
+            String imageUrl = null;
+            if (jsonMessage.has("imageUrl") && !jsonMessage.get("imageUrl").isJsonNull()) {
+                imageUrl = jsonMessage.get("imageUrl").getAsString();
+            }
 
             // Xác định receiverId dựa trên senderId
             int receiverId = (senderId == Integer.parseInt(marketingId)) ? Integer.parseInt(userId) : Integer.parseInt(marketingId);

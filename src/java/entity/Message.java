@@ -18,8 +18,9 @@ public class Message {
     private String imageUrl;
     private boolean isRead;
     private Date createdAt;
-    private String senderUsername; // Để hiển thị thông tin người gửi
-    private String receiverUsername; // Để hiển thị thông tin người nhận
+    private String senderUsername; // thông tin người gửi
+    private String receiverUsername; // tin người nhận
+    private int lastSenderId; // người rep cuối cùng
 
     public Message() {
     }
@@ -94,6 +95,14 @@ public class Message {
 
     public void setReceiverUsername(String receiverUsername) {
         this.receiverUsername = receiverUsername;
+    }
+    
+    public int getLastSenderId() {
+        return lastSenderId;
+    }
+
+    public void setLastSenderId(int lastSenderId) {
+        this.lastSenderId = lastSenderId;
     }
 
     @Override
