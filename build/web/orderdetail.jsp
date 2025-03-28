@@ -350,7 +350,7 @@
                         <c:set var="steps" value="pending,processing,shipping,completed" />
                         <c:set var="stepsArray" value="${fn:split(steps, ',')}" />
                         <c:set var="isCancelled" value="${order.status eq 'cancelled'}" />
-
+                        
                         <!-- Xác định bước hiện tại -->
                         <c:set var="currentStepIndex" value="0" />
                         <c:choose>
@@ -599,7 +599,7 @@
                                                 <c:when test="${order.paymentStatus eq 'pending'}"><span class="text-warning">Chờ thanh toán</span></c:when>
                                                 <c:when test="${order.paymentStatus eq 'completed'}"><span class="text-success">Đã thanh toán</span></c:when>
                                                 <c:when test="${order.paymentStatus eq 'failed'}"><span class="text-danger">Thanh toán thất bại</span></c:when>
-                                                <c:when test="${order.paymentStatus eq 'refunded'}"><span class="text-info">Thanh toán thất bại</span></c:when>
+                                                <c:when test="${order.paymentStatus eq 'refunded'}"><span class="text-info">Đã hoàn trả</span></c:when>
                                                 <c:otherwise>${order.paymentStatus}</c:otherwise>
                                             </c:choose>
                                         </small>

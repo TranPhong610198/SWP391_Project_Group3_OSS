@@ -103,9 +103,6 @@
                                         <span class="text-success">Đã thanh toán</span>
                                     </c:when>
                                     <c:when test="${paymentStatus eq 'pending'}">
-                                        <span class="text-warning">Chờ xử lý</span>
-                                    </c:when>
-                                    <c:when test="${paymentStatus eq 'pending_pay'}">
                                         <span class="text-warning">Chờ thanh toán</span>
                                     </c:when>
                                     <c:when test="${paymentStatus eq 'failed'}">
