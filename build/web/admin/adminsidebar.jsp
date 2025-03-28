@@ -30,7 +30,7 @@
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu list-unstyled p-0 mt-3">
         <li class="menu-item p-2">
-            <a href="dashboard" class="text-decoration-none text-light d-flex align-items-center">
+            <a href="${pageContext.request.contextPath}/admin/dashboard" class="text-decoration-none text-light d-flex align-items-center">
                 <i class="fas fa-chart-bar me-2"></i>
                 Bảng điều khiển
             </a>
