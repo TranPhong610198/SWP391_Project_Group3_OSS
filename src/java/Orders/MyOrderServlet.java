@@ -90,7 +90,7 @@ public class MyOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-  String action = request.getParameter("action");
+String action = request.getParameter("action");
 
     HttpSession session = request.getSession();
     User user = (User) session.getAttribute("acc");
@@ -101,27 +101,26 @@ public class MyOrderServlet extends HttpServlet {
     }
 
     if (action != null) {
-        if (action.equals("cancel")) {
-            int orderId = Integer.parseInt(request.getParameter("id"));
-            Order order = orderDAO.getOrderById(orderId);
+        int orderId = Integer.parseInt(request.getParameter("id"));
+        Order order = orderDAO.getOrderById(orderId);
 
-            if (order != null && order.getUserId() == user.getId()) {
+        if (order == null || order.getUserId() != user.getId()) {
+            request.setAttribute("errorMessage", "Đơn hàng không tồn tại hoặc không thuộc về bạn!");
+            processRequest(request, response);
+            return;
+        }
+
+        switch (action) {
+            case "cancel":
                 boolean cancelled = orderDAO.cancelOrder(orderId, user.getId());
                 if (cancelled) {
                     request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công!");
                 } else {
                     request.setAttribute("errorMessage", "Không thể hủy đơn hàng. Vui lòng thử lại!");
                 }
-            } else {
-                request.setAttribute("errorMessage", "Đơn hàng không tồn tại hoặc không thuộc về bạn!");
-            }
-            processRequest(request, response);
-            return;
-        } else if (action.equals("reorder")) {
-            int orderId = Integer.parseInt(request.getParameter("id"));
-            Order order = orderDAO.getOrderById(orderId);
+                break;
 
-            if (order != null && order.getUserId() == user.getId()) {
+            case "reorder":
                 StringBuilder queryParams = new StringBuilder();
                 List<CartItem> items = order.getItems();
                 if (items != null && !items.isEmpty()) {
@@ -138,7 +137,22 @@ public class MyOrderServlet extends HttpServlet {
                 }
                 response.sendRedirect("cartcontact?" + queryParams.toString());
                 return;
-            }
+
+            case "retry_payment":
+                if (order.getStatus().equals("pending_pay") && order.getPaymentMethod().equals("bank_transfer")) {
+                    // Đặt lại trạng thái thanh toán về "pending" để thử lại
+                    boolean paymentStatusUpdated = orderDAO.updatePaymentStatus(orderId, "pending");
+                    if (paymentStatusUpdated) {
+                        session.setAttribute("pending_order", order);
+                        response.sendRedirect("payment"); // Chuyển hướng đến trang thanh toán VNPay
+                        return;
+                    } else {
+                        request.setAttribute("errorMessage", "Không thể khởi tạo lại thanh toán. Vui lòng thử lại!");
+                    }
+                } else {
+                    request.setAttribute("errorMessage", "Đơn hàng không đủ điều kiện để thanh toán lại!");
+                }
+                break;
         }
     }
 

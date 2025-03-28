@@ -140,8 +140,6 @@ public class PaymentServlet extends HttpServlet {
             Map<String, String> vnp_Params = getParameterMap(request);
             String vnp_SecureHash = request.getParameter("vnp_SecureHash");
 
-            System.out.println("VNPay Response Parameters: " + vnp_Params);
-
             if (vnp_SecureHash == null) {
                 throw new Exception("Missing secure hash from VNPay response");
             }
@@ -160,26 +158,22 @@ public class PaymentServlet extends HttpServlet {
 
             boolean isValidHash = validateVNPayHash(vnp_Params, vnp_SecureHash);
             boolean isValidTransaction = false;
+
             if (order != null) {
                 String cleanOrderCode = order.getOrderCode().replaceAll("[^a-zA-Z0-9]", "");
                 isValidTransaction = cleanOrderCode.equals(vnp_TxnRef)
                         && String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
             } else {
-                String orderCode = null;
-                if (vnp_OrderInfo != null && vnp_OrderInfo.contains("Thanh toan don hang ")) {
-                    orderCode = vnp_OrderInfo.replace("Thanh toan don hang ", "");
+                String orderCode = vnp_OrderInfo.replace("Thanh toan don hang ", "");
+                List<Order> orders = orderDAO.getAllOrders();
+                for (Order o : orders) {
+                    if (orderCode.equals(o.getOrderCode())) {
+                        order = o;
+                        break;
+                    }
                 }
-                if (orderCode != null) {
-                    List<Order> orders = orderDAO.getAllOrders();
-                    for (Order o : orders) {
-                        if (orderCode.equals(o.getOrderCode())) {
-                            order = o;
-                            break;
-                        }
-                    }
-                    if (order != null) {
-                        isValidTransaction = String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
-                    }
+                if (order != null) {
+                    isValidTransaction = String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
                 }
             }
 
@@ -187,12 +181,10 @@ public class PaymentServlet extends HttpServlet {
                 throw new Exception("Không tìm thấy đơn hàng trong session hoặc database");
             }
 
-            // Kiểm tra xem đơn hàng đã được tạo trong database chưa
-            if (order.getId() == 0) { // Giả sử id = 0 nghĩa là chưa tạo
+            if (order.getId() == 0) {
                 order = orderDAO.createOrder(order);
             }
 
-            // Xóa giỏ hàng trong mọi trường hợp
             Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
             DAO.CartDAO cartDAO = new DAO.CartDAO();
             if (userId != null) {
@@ -207,35 +199,16 @@ public class PaymentServlet extends HttpServlet {
 
             if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
                 // Thanh toán thành công
-                try (java.sql.Connection conn = new Context.DBContext().connection;
-                     java.sql.PreparedStatement stmt = conn.prepareStatement(
-                             "UPDATE payments SET payment_status = 'completed' WHERE order_id = ?")) {
-                    stmt.setInt(1, order.getId());
-                    int updateResult = stmt.executeUpdate();
-                    System.out.println("Updated payment status result: " + updateResult + " rows affected");
-                } catch (Exception e) {
-                    System.out.println("Error updating payment status: " + e.getMessage());
-                }
-
+                orderDAO.updatePaymentStatus(order.getId(), "completed");
                 orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
                 order.setPaymentStatus("completed");
             } else {
-                // Thanh toán thất bại hoặc bị hủy (bao gồm mã lỗi 24)
-                try (java.sql.Connection conn = new Context.DBContext().connection;
-                     java.sql.PreparedStatement stmt = conn.prepareStatement(
-                             "UPDATE payments SET payment_status = 'pending_pay' WHERE order_id = ?")) {
-                    stmt.setInt(1, order.getId());
-                    int updateResult = stmt.executeUpdate();
-                    System.out.println("Updated payment status to pending: " + updateResult + " rows affected");
-                } catch (Exception e) {
-                    System.out.println("Error updating payment status to pending: " + e.getMessage());
-                }
-
+                // Thanh toán thất bại
+                orderDAO.updatePaymentStatus(order.getId(), "pending"); // Sửa thành "pending"
                 orderDAO.updateOrderStatus(order.getId(), "pending_pay", order.getUserId());
-                order.setPaymentStatus("pending_pay");
+                order.setPaymentStatus("pending");
             }
 
-            // Luôn chuyển hướng đến cartcompletion.jsp
             session.setAttribute("completed_order", order);
             session.removeAttribute("pending_order");
             response.sendRedirect("cartcompletion");

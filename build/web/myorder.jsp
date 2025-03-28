@@ -697,7 +697,7 @@
                                     <c:when test="${order.status == 'cancelled'}">
                                         <span class="order-status status-cancelled">Đã hủy</span>
                                     </c:when>
-                                        <c:when test="${order.status == 'returned'}">
+                                    <c:when test="${order.status == 'returned'}">
                                         <span class="order-status status-cancelled">Đã hoàn trả</span>
                                     </c:when>
                                     <c:otherwise>
@@ -777,9 +777,9 @@
                                             <a href="myorder?action=reorder&id=${order.id}" class="btn-reorder">
                                                 <i class="fas fa-redo me-2"></i> Mua lại
                                             </a>
-                                                <a href="submitfeedback?orderId=${order.id}" class="btn-feedback">
-                                        <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
-                                    </a>
+                                            <a href="submitfeedback?orderId=${order.id}" class="btn-feedback">
+                                                <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
+                                            </a>
                                         </div>
                                     </c:if>
                                 </div>

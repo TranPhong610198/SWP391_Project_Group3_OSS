@@ -39,7 +39,7 @@
         .chat-user:hover {
             background-color: #f8f9fa;
         }
-        .unread {
+/*        .unread {
             font-weight: bold;
             background-color: #e9ecef;
         }
@@ -47,7 +47,7 @@
             content: "●";
             color: #dc3545;
             margin-left: 5px;
-        }
+        }*/
         @media (max-width: 768px) {
             .main-content {
                 margin-left: 0;
@@ -77,6 +77,7 @@
                         </form>
                     </div>
                 </div>
+                <br>
 
                 <div class="card">
                     <div class="card-body p-0">

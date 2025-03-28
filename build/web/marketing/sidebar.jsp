@@ -135,12 +135,7 @@
             </a>
         </li>
 
-        <li class="menu-item p-2">
-            <a href="settings.jsp" class="text-decoration-none text-light d-flex align-items-center">
-                <i class="fas fa-cog me-2"></i>
-                Cài đặt
-            </a>
-        </li>
+        
 
         <li class="menu-item p-2">
             <a href="${pageContext.request.contextPath}/home" class="text-decoration-none text-light d-flex align-items-center">

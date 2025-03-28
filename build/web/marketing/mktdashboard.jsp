@@ -378,7 +378,7 @@
                                                 <td>${customer.mobile}</td>
                                                 <td>${customer.email}</td>
                                                 <td>${customer.totalPurchases}</td>
-                                                <td><fmt:formatNumber value="${customer.totalSpend}" type="currency" currencySymbol="$"/></td>
+                                                <td><fmt:formatNumber value="${customer.totalSpend}" type="currency" currencySymbol="VNĐ"/></td>
                                             </tr>
                                         </c:forEach>
                                         <c:if test="${empty stats.topVIPCustomers}">

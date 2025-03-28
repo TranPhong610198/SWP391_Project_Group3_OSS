@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Random;
 
 public class OrderDAO extends DBContext {
-private InventoryDAO inventoryDAO = new InventoryDAO();
-   public Order createOrder(Order order) {
+
+    private InventoryDAO inventoryDAO = new InventoryDAO();
+
+    public Order createOrder(Order order) {
         Connection conn = null;
         PreparedStatement stmtOrder = null;
         PreparedStatement stmtItems = null;
@@ -152,11 +154,21 @@ private InventoryDAO inventoryDAO = new InventoryDAO();
             return null;
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmtOrder != null) stmtOrder.close();
-                if (stmtItems != null) stmtItems.close();
-                if (stmtPayment != null) stmtPayment.close();
-                if (conn != null) conn.setAutoCommit(true);
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmtOrder != null) {
+                    stmtOrder.close();
+                }
+                if (stmtItems != null) {
+                    stmtItems.close();
+                }
+                if (stmtPayment != null) {
+                    stmtPayment.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
             } catch (SQLException e) {
                 System.out.println("Error closing resources: " + e.getMessage());
             }
@@ -625,7 +637,7 @@ private InventoryDAO inventoryDAO = new InventoryDAO();
         }
     }
 
-   public boolean cancelOrder(int orderId, int userId) {
+    public boolean cancelOrder(int orderId, int userId) {
         Connection conn = null;
         try {
             conn = connection;
@@ -722,75 +734,69 @@ private InventoryDAO inventoryDAO = new InventoryDAO();
     }
 // Add this method to your OrderDAO class
 
-    public boolean updatePaymentStatus(int orderId, String status) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
+   public boolean updatePaymentStatus(int orderId, String status) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
 
+    try {
+        conn = connection; // Giả sử 'connection' là biến đã được khởi tạo trong class
+        conn.setAutoCommit(false);
+
+        // Câu lệnh SQL không bao gồm cột updated_at
+        String sql = "UPDATE payments SET payment_status = ? WHERE order_id = ?";
+        stmt = conn.prepareStatement(sql);
+        stmt.setString(1, status); // "pending", "completed", "failed", hoặc "refunded"
+        stmt.setInt(2, orderId);
+        int result = stmt.executeUpdate();
+
+        if (result <= 0) {
+            System.out.println("Warning: No payment record found for order ID: " + orderId);
+        }
+
+        // Ghi lịch sử thay đổi trạng thái vào bảng order_history
+        String historyNote = switch (status) {
+            case "pending" -> "Đang chờ thanh toán";
+            case "completed" -> "Đã thanh toán thành công";
+            case "failed" -> "Thanh toán không thành công";
+            case "refunded" -> "Đã hoàn tiền";
+            default -> "Cập nhật trạng thái thanh toán: " + status;
+        };
+
+        stmt.close();
+        String orderHistorySql = "INSERT INTO order_history (order_id, updated_by, status, notes, updated_at) "
+                + "VALUES (?, 1, (SELECT status FROM orders WHERE id = ?), ?, GETDATE())";
+        stmt = conn.prepareStatement(orderHistorySql);
+        stmt.setInt(1, orderId);
+        stmt.setInt(2, orderId);
+        stmt.setString(3, historyNote);
+        stmt.executeUpdate();
+
+        conn.commit();
+        return true;
+    } catch (SQLException e) {
         try {
-            conn = connection;
-            conn.setAutoCommit(false); // Start transaction
-
-            // Use explicit transaction to ensure both operations complete or fail together
-            // 1. Update payment status in payments table
-            String sql = "UPDATE payments SET payment_status = ?, updated_at = GETDATE() WHERE order_id = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, status);
-            stmt.setInt(2, orderId);
-            int result = stmt.executeUpdate();
-
-            if (result <= 0) {
-                // No rows updated - possibly no payment record exists
-                System.out.println("Warning: No payment record found for order ID: " + orderId);
-                // Optionally insert a new payment record if needed
+            if (conn != null) {
+                conn.rollback();
             }
-
-            // 2. Add payment info to order history
-            String historyNote = "pending".equals(status) ? "Đang chờ thanh toán"
-                    : "completed".equals(status) ? "Đã thanh toán thành công"
-                    : "failed".equals(status) ? "Thanh toán không thành công"
-                    : "refunded".equals(status) ? "Đã hoàn tiền" : "Cập nhật trạng thái thanh toán: " + status;
-
-            stmt.close(); // Close the previous statement
-
-            String orderHistorySql = "INSERT INTO order_history (order_id, updated_by, status, notes, updated_at) "
-                    + "VALUES (?, 1, (SELECT status FROM orders WHERE id = ?), ?, GETDATE())";
-
-            stmt = conn.prepareStatement(orderHistorySql);
-            stmt.setInt(1, orderId);
-            stmt.setInt(2, orderId);
-            stmt.setString(3, historyNote);
-            stmt.executeUpdate();
-
-            // Commit the transaction
-            conn.commit();
-
-            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error rolling back transaction: " + ex.getMessage());
+        }
+        System.out.println("Error updating payment status: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) {
-            // If any error occurs, roll back the transaction
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException ex) {
-                System.out.println("Error rolling back transaction: " + ex.getMessage());
-            }
-            System.out.println("Error updating payment status: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.setAutoCommit(true); // Reset auto-commit mode
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing resources: " + e.getMessage());
-            }
+            System.out.println("Error closing resources: " + e.getMessage());
         }
     }
-
+}
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         PreparedStatement stmt = null;
