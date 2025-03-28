@@ -162,6 +162,7 @@ public class CustomerDAO extends DBContext {
             return false;
         }
     }
+
     /**
      * Update an existing customer's information
      *
@@ -359,6 +360,40 @@ public class CustomerDAO extends DBContext {
         }
 
         return customer;
+    }
+
+    public Customer getCusdByEmailPhone(String email, String mobile) {
+        String sql = "SELECT * FROM customer_contact_history WHERE email = ? AND mobile = ?";
+        try {
+            Customer customer = new Customer();
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, email);
+            st.setString(2, mobile);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                customer.setId(rs.getInt("id"));
+                int userId = rs.getInt("user_id");
+                if (!rs.wasNull()) {
+                    customer.setUserId(userId);
+                }
+                customer.setCustomerType(rs.getString("customer_type"));
+                customer.setEmail(rs.getString("email"));
+                customer.setFullName(rs.getString("full_name"));
+                customer.setGender(rs.getString("gender"));
+                customer.setMobile(rs.getString("mobile"));
+                customer.setTotalPurchases(rs.getInt("total_purchases"));
+                customer.setTotalSpend(rs.getBigDecimal("total_spend"));
+
+                Timestamp updatedAt = rs.getTimestamp("updated_at");
+                if (updatedAt != null) {
+                    customer.setUpdatedAt(updatedAt.toLocalDateTime());
+                }
+            }
+            return customer;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
     }
 
     /**

@@ -139,32 +139,30 @@ public class OrderDetailsServlet extends HttpServlet {
             } else if ("completed".equals(newStatus)) {
                 success = orderDAO.updateOrderStatus(orderId, newStatus, updatedBy, null, null);
                 orderDAO.updatePayStatus(orderId, "completed");
-                if (customerDAO.checkExistEmail(order.getRecipientEmail()) != null && customerDAO.checkExistPhone(order.getPhone()) != null) {
-                    Customer tempCus = customerDAO.checkExistEmail(order.getRecipientEmail());
-                    System.out.println("Email + sđt trong đơn hàng:" + order.getRecipientEmail() + order.getPhone());
-//                System.out.println("Email + sđt trong danh sách: " + tempCus.getEmail() + tempCus.getMobile());
-//                System.out.println("tempCus: " + tempCus.toString());
-                    if (tempCus != null) {
-                        if (tempCus.getTotalSpend().doubleValue() + order.getTotal() >= 1000000) {
-                            customerDAO.updateCustomerPurchaseStats(tempCus.getId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
-                            customerDAO.updateCustomerType(tempCus.getId(), "vip");
-                        }
-                    } else {
-                        Customer newCustomer = new Customer();
-                        newCustomer.setUserId(order.getUserId());
-                        newCustomer.setEmail(order.getRecipientEmail());
-                        newCustomer.setFullName(order.getRecipientName());
-                        newCustomer.setGender(userDAO.getUserById(order.getUserId()) == null ? " " : userDAO.getUserById(order.getUserId()).getGender());
-                        newCustomer.setMobile(order.getPhone());
-                        newCustomer.setTotalPurchases(1);
-                        newCustomer.setTotalSpend(BigDecimal.valueOf(order.getTotal()));
-                        if (order.getTotal() >= 1000000) {
-                            newCustomer.setCustomerType("vip");
-                        } else {
-                            newCustomer.setCustomerType("normal");
-                        }
-                        customerDAO.addCustomer(newCustomer);
+                Customer tempCus = customerDAO.getCusdByEmailPhone(order.getRecipientEmail(), order.getPhone());
+                System.out.println("Email + sđt trong đơn hàng:" + order.getRecipientEmail() + " " + order.getPhone());
+                System.out.println(tempCus == null);
+                System.out.println("userid: " + order.getUserId());
+                if (tempCus != null) {
+                    customerDAO.updateCustomerPurchaseStats(tempCus.getId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
+                    if (tempCus.getTotalSpend().doubleValue() + order.getTotal() >= 1000000) {
+                        customerDAO.updateCustomerType(tempCus.getId(), "vip");
                     }
+                } else {
+                    Customer newCustomer = new Customer();
+                    newCustomer.setUserId(order.getUserId() == 0 ? null : order.getUserId());
+                    newCustomer.setEmail(order.getRecipientEmail());
+                    newCustomer.setFullName(order.getRecipientName());
+                    newCustomer.setGender(userDAO.getUserById(order.getUserId()) == null ? "other" : userDAO.getUserById(order.getUserId()).getGender());
+                    newCustomer.setMobile(order.getPhone());
+                    newCustomer.setTotalPurchases(1);
+                    newCustomer.setTotalSpend(BigDecimal.valueOf(order.getTotal()));
+                    if (order.getTotal() >= 1000000) {
+                        newCustomer.setCustomerType("vip");
+                    } else {
+                        newCustomer.setCustomerType("normal");
+                    }
+                    customerDAO.addCustomer(newCustomer);
                 }
 
                 // Trạng thái mới là hoàn hàng    
