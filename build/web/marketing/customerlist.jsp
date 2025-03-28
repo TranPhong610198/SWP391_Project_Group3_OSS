@@ -204,8 +204,8 @@
                                 <select name="customerType" class="form-select">
                                     <option value="">Tất cả loại khách hàng</option>
                                     <option value="vip" ${customerType == 'vip' ? 'selected' : ''}>VIP</option>
-                                    <option value="normal" ${customerType == 'normal' ? 'selected' : ''}>Thường xuyên</option>
-                                    
+                                    <option value="normal" ${customerType == 'normal' ? 'selected' : ''}>Thường</option>
+
                                 </select>
                             </div>
                             <div class="col-md-2 d-flex">
@@ -224,11 +224,11 @@
                         <div>
                             <i class="fas fa-list me-2"></i>Danh sách khách hàng
                         </div>
-<!--                        <div class="d-flex">                        
-                            <a href="addCustomer" class="btn btn-primary btn-sm">
-                                <i class="fas fa-user-plus me-1"></i>Thêm mới
-                            </a>
-                        </div>-->
+                        <!--                        <div class="d-flex">                        
+                                                    <a href="addCustomer" class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-user-plus me-1"></i>Thêm mới
+                                                    </a>
+                                                </div>-->
                     </div>
                     <div class="card-body p-0">
                         <c:choose>
@@ -274,15 +274,15 @@
                                                         </span>
                                                     </a>
                                                 </th>
-<!--                                                <th>
-                                                    <a href="customerlist?sortField=address&sortDir=${sortField == 'address' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
-                                                       class="sort-link">
-                                                        Địa chỉ
-                                                        <span class="sort-icons">
-                                                            ${sortField == 'address' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
-                                                        </span>
-                                                    </a>
-                                                </th>-->
+                                                <!--                                                <th>
+                                                                                                    <a href="customerlist?sortField=address&sortDir=${sortField == 'address' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
+                                                                                                       class="sort-link">
+                                                                                                        Địa chỉ
+                                                                                                        <span class="sort-icons">
+                                                ${sortField == 'address' ? (sortDir == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort text-muted"></i>'}
+                                            </span>
+                                        </a>
+                                    </th>-->
                                                 <th class="text-center" style="width: 100px;">
                                                     <a href="customerlist?sortField=customer_type&sortDir=${sortField == 'customer_type' && sortDir == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&gender=${gender}&customerType=${customerType}&search=${search}"
                                                        class="sort-link">
@@ -329,16 +329,17 @@
                                                     <td>${customer.mobile}</td>
 <!--                                                    <td>${customer.address}</td>-->
                                                     <td>
-                                                        <span class="badge ${customer.customerType == 'vip' ? 'bg-warning text-dark' : (customer.customerType == 'normal' ? 'bg-success' : 'bg-info')}">
-                                                            ${customer.customerType}
+                                                        <span class="badge ${customer.customerType == 'vip' ? 'bg-warning text-dark' : 'bg-success'}">
+                                                            ${customer.customerType == 'vip' ? 'VIP' : 'Thường'}
                                                         </span>
                                                     </td>
+
                                                     <td class="text-center">${customer.totalPurchases}</td>
                                                     <td class="text-end">
                                                         <fmt:formatNumber value="${customer.totalSpend}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                                     </td>
                                                     <td class="text-center">
-                                                        
+
                                                         <a href="customerdetail/edit?id=${customer.id}" class="btn btn-primary btn-sm btn-action" title="Chỉnh sửa">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
@@ -402,31 +403,31 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            $(document).ready(function () {
-                // Toggle sidebar
-                $('.sidebar-toggle').on('click', function () {
-                    $('.sidebar').toggleClass('active');
-                    $('.main-content').toggleClass('active');
-                    $(this).hide();
-                });
+                                                               $(document).ready(function () {
+                                                                   // Toggle sidebar
+                                                                   $('.sidebar-toggle').on('click', function () {
+                                                                       $('.sidebar').toggleClass('active');
+                                                                       $('.main-content').toggleClass('active');
+                                                                       $(this).hide();
+                                                                   });
 
-                // Close sidebar when clicking outside on mobile
-                $(document).on('click', function (e) {
-                    if ($(window).width() <= 768) {
-                        if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
-                            $('.sidebar').removeClass('active');
-                            $('.main-content').removeClass('active');
-                            $('.sidebar-toggle').show();
-                        }
-                    }
-                });
+                                                                   // Close sidebar when clicking outside on mobile
+                                                                   $(document).on('click', function (e) {
+                                                                       if ($(window).width() <= 768) {
+                                                                           if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggle').length) {
+                                                                               $('.sidebar').removeClass('active');
+                                                                               $('.main-content').removeClass('active');
+                                                                               $('.sidebar-toggle').show();
+                                                                           }
+                                                                       }
+                                                                   });
 
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                });
-            });
+                                                                   // Initialize tooltips
+                                                                   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                                                   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                                                       return new bootstrap.Tooltip(tooltipTriggerEl)
+                                                                   });
+                                                               });
         </script>
     </body>
 </html>

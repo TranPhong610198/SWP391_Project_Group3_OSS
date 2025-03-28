@@ -238,6 +238,16 @@
                     display: block;
                 }
             }
+            /* Add these new styles for navigation and report switching */
+            .report-nav {
+                margin-bottom: 20px;
+            }
+            .report-section {
+                display: none;
+            }
+            .report-section.active {
+                display: block;
+            }
         </style>
     </head>
     <body class="bg-light">
@@ -254,6 +264,19 @@
                     <i class="fas fa-file-alt me-2"></i>Báo cáo dữ liệu
                 </h2>
 
+                <!-- Navigation Bar for Reports -->
+                <ul class="nav nav-pills report-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#user-report" data-report="user-report">Báo cáo người dùng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#order-report" data-report="order-report">Báo cáo đơn hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product-report" data-report="product-report">Báo cáo sản phẩm</a>
+                    </li>
+                </ul>
+
                 <!-- Stats Cards -->
                 <div class="row g-3 mb-4">
                     <!-- User Stats -->
@@ -266,7 +289,7 @@
                                     <div class="mt-2">
                                         <span class="badge bg-success">${userSummary.activeCount} Hoạt động</span>
                                         <span class="badge bg-danger">${userSummary.inactiveCount} Không hoạt động</span>
-                                        <span class="badge bg-warning">${userSummary.pendingCount} Đang chờ</span>
+                                        <span class="badge bg-warning">${userSummary.pendingCount} Chờ xác nhận</span>
                                     </div>
                                 </div>
                                 <div class="icon-bg bg-primary bg-opacity-10">
@@ -318,7 +341,7 @@
                 </div>
 
                 <!-- User Reports Section -->
-                <div class="report-card user-report">
+                <div id="user-report" class="report-section report-card active">
                     <div class="card-header bg-primary text-white">
                         <span><i class="fas fa-users me-2"></i>Báo cáo người dùng</span>
                         <button class="btn btn-light" id="exportUserBtn">
@@ -385,7 +408,7 @@
                 </div>
 
                 <!-- Order Reports Section -->
-                <div class="report-card order-report mt-4">
+                <div id="order-report" class="report-section report-card">
                     <div class="card-header bg-success text-white">
                         <span><i class="fas fa-shopping-cart me-2"></i>Báo cáo đơn hàng</span>
                         <button class="btn btn-light" id="exportOrderBtn">
@@ -479,7 +502,7 @@
                 </div>
 
                 <!-- Product Reports Section -->
-                <div class="report-card product-report mt-4">
+                <div id="product-report" class="report-section report-card">
                     <div class="card-header bg-warning text-dark">
                         <span><i class="fas fa-boxes me-2"></i>Báo cáo sản phẩm</span>
                         <div>
@@ -618,7 +641,7 @@
                 <script>
                                         $(document).ready(function () {
                                             // Initialize DataTables
-                                            $('#userTable').DataTable({
+                                            const userTable = $('#userTable').DataTable({
                                                 "language": {
                                                     "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
                                                     "zeroRecords": "Không tìm thấy dữ liệu",
@@ -635,7 +658,7 @@
                                                 }
                                             });
 
-                                            $('#orderTable').DataTable({
+                                            const orderTable = $('#orderTable').DataTable({
                                                 "language": {
                                                     "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
                                                     "zeroRecords": "Không tìm thấy dữ liệu",
@@ -652,7 +675,7 @@
                                                 }
                                             });
 
-                                            $('#productTable').DataTable({
+                                            const productTable = $('#productTable').DataTable({
                                                 "language": {
                                                     "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
                                                     "zeroRecords": "Không tìm thấy dữ liệu",
@@ -669,10 +692,15 @@
                                                 }
                                             });
 
-                                            // Toggle Sidebar
-                                            $('.sidebar-toggle').click(function () {
-                                                $('.sidebar').toggleClass('collapsed');
-                                                $('.main-content').toggleClass('expanded');
+                                            // Report navigation
+                                            $('.nav-link').click(function (e) {
+                                                e.preventDefault();
+                                                $('.nav-link').removeClass('active');
+                                                $(this).addClass('active');
+
+                                                const reportId = $(this).data('report');
+                                                $('.report-section').removeClass('active');
+                                                $('#' + reportId).addClass('active');
                                             });
 
                                             // Export functions
@@ -682,7 +710,6 @@
                                                 XLSX.writeFile(wb, fileName + '.xlsx');
                                             }
 
-                                            // Export buttons
                                             $('#exportUserBtn').click(function () {
                                                 exportTableToExcel('userTable', 'user_report');
                                             });
@@ -694,18 +721,14 @@
                                             $('#exportProductBtn').click(function () {
                                                 exportTableToExcel('productTable', 'product_report');
                                             });
-                                        });
-                                        $(document).ready(function () {
-                                            // Khi modal được hiển thị, tải dữ liệu
+
+                                            // Low Stock Modal AJAX (unchanged)
                                             $('#lowStockModal').on('shown.bs.modal', function () {
                                                 $.ajax({
                                                     url: '${pageContext.request.contextPath}/admin/low-stock-products',
                                                     method: 'GET',
                                                     dataType: 'json',
                                                     success: function (data) {
-                                                        console.log('Low stock products:', data);
-
-                                                        // Khởi tạo DataTable với dữ liệu JSON
                                                         let table = $('#lowStockTable');
                                                         if ($.fn.DataTable.isDataTable(table)) {
                                                             table.DataTable().destroy();
@@ -743,7 +766,6 @@
                                                 });
                                             });
 
-                                            // Export low stock products
                                             $('#exportLowStockBtn').click(function () {
                                                 const table = document.getElementById('lowStockTable');
                                                 const wb = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
@@ -751,5 +773,6 @@
                                             });
                                         });
                 </script>
+
     </body>
 </html>
