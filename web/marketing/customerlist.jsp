@@ -340,7 +340,7 @@
                                                     <td class="text-center">
                                                         
                                                         <a href="customerdetail/edit?id=${customer.id}" class="btn btn-primary btn-sm btn-action" title="Chỉnh sửa">
-                                                            <i class="fas fa-edit"></i>
+                                                            <i class="fas fa-eye"></i>
                                                         </a>
                                                         <a href="customerdetail/delete?id=${customer.id}" class="btn btn-danger btn-sm btn-action" title="Xóa"
                                                            onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">
