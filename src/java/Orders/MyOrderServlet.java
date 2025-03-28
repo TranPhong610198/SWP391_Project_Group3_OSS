@@ -14,7 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -37,7 +39,9 @@ public class MyOrderServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
+        response.setContentType("text/html;charset=UTF-8");
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
@@ -66,13 +70,21 @@ public class MyOrderServlet extends HttpServlet {
         List<Order> orders = orderDAO.getUserOrders(user.getId(), keyword, status, page, recordsPerPage);
         int noOfRecords = orderDAO.getNumberOfUserOrders(user.getId(), keyword, status);
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-        
+
+        // Kiểm tra trạng thái feedback cho từng đơn hàng
+        Map<Integer, Boolean> feedbackStatus = new HashMap<>();
+        for (Order order : orders) {
+            boolean hasFeedback = orderDAO.hasFeedback(order.getId());
+            feedbackStatus.put(order.getId(), hasFeedback);
+        }
+
         // Thiết lập các thuộc tính để hiển thị
         request.setAttribute("orders", orders);
         request.setAttribute("noOfPages", noOfPages);
         request.setAttribute("currentPage", page);
         request.setAttribute("keyword", keyword);
         request.setAttribute("status", status);
+        request.setAttribute("feedbackStatus", feedbackStatus); // Thêm thuộc tính feedbackStatus
 
         // Forward đến trang jsp
         request.getRequestDispatcher("myorder.jsp").forward(request, response);
@@ -90,74 +102,74 @@ public class MyOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-String action = request.getParameter("action");
+        String action = request.getParameter("action");
 
-    HttpSession session = request.getSession();
-    User user = (User) session.getAttribute("acc");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acc");
 
-    if (user == null) {
-        response.sendRedirect("login?redirect=myorder");
-        return;
-    }
-
-    if (action != null) {
-        int orderId = Integer.parseInt(request.getParameter("id"));
-        Order order = orderDAO.getOrderById(orderId);
-
-        if (order == null || order.getUserId() != user.getId()) {
-            request.setAttribute("errorMessage", "Đơn hàng không tồn tại hoặc không thuộc về bạn!");
-            processRequest(request, response);
+        if (user == null) {
+            response.sendRedirect("login?redirect=myorder");
             return;
         }
 
-        switch (action) {
-            case "cancel":
-                boolean cancelled = orderDAO.cancelOrder(orderId, user.getId());
-                if (cancelled) {
-                    request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công!");
-                } else {
-                    request.setAttribute("errorMessage", "Không thể hủy đơn hàng. Vui lòng thử lại!");
-                }
-                break;
+        if (action != null) {
+            int orderId = Integer.parseInt(request.getParameter("id"));
+            Order order = orderDAO.getOrderById(orderId);
 
-            case "reorder":
-                StringBuilder queryParams = new StringBuilder();
-                List<CartItem> items = order.getItems();
-                if (items != null && !items.isEmpty()) {
-                    for (int i = 0; i < items.size(); i++) {
-                        CartItem item = items.get(i);
-                        if (i > 0) {
-                            queryParams.append("&");
-                        }
-                        queryParams.append("productId=").append(item.getProductId())
-                                .append("&size=").append(URLEncoder.encode(item.getSize(), StandardCharsets.UTF_8.toString()))
-                                .append("&color=").append(URLEncoder.encode(item.getColor(), StandardCharsets.UTF_8.toString()))
-                                .append("&quantity=").append(item.getQuantity());
-                    }
-                }
-                response.sendRedirect("cartcontact?" + queryParams.toString());
+            if (order == null || order.getUserId() != user.getId()) {
+                request.setAttribute("errorMessage", "Đơn hàng không tồn tại hoặc không thuộc về bạn!");
+                processRequest(request, response);
                 return;
+            }
 
-            case "retry_payment":
-                if (order.getStatus().equals("pending_pay") && order.getPaymentMethod().equals("bank_transfer")) {
-                    // Đặt lại trạng thái thanh toán về "pending" để thử lại
-                    boolean paymentStatusUpdated = orderDAO.updatePaymentStatus(orderId, "pending");
-                    if (paymentStatusUpdated) {
-                        session.setAttribute("pending_order", order);
-                        response.sendRedirect("payment"); // Chuyển hướng đến trang thanh toán VNPay
-                        return;
+            switch (action) {
+                case "cancel":
+                    boolean cancelled = orderDAO.cancelOrder(orderId, user.getId());
+                    if (cancelled) {
+                        request.setAttribute("successMessage", "Đơn hàng đã được hủy thành công!");
                     } else {
-                        request.setAttribute("errorMessage", "Không thể khởi tạo lại thanh toán. Vui lòng thử lại!");
+                        request.setAttribute("errorMessage", "Không thể hủy đơn hàng. Vui lòng thử lại!");
                     }
-                } else {
-                    request.setAttribute("errorMessage", "Đơn hàng không đủ điều kiện để thanh toán lại!");
-                }
-                break;
-        }
-    }
+                    break;
 
-    processRequest(request, response);
-}
+                case "reorder":
+                    StringBuilder queryParams = new StringBuilder();
+                    List<CartItem> items = order.getItems();
+                    if (items != null && !items.isEmpty()) {
+                        for (int i = 0; i < items.size(); i++) {
+                            CartItem item = items.get(i);
+                            if (i > 0) {
+                                queryParams.append("&");
+                            }
+                            queryParams.append("productId=").append(item.getProductId())
+                                    .append("&size=").append(URLEncoder.encode(item.getSize(), StandardCharsets.UTF_8.toString()))
+                                    .append("&color=").append(URLEncoder.encode(item.getColor(), StandardCharsets.UTF_8.toString()))
+                                    .append("&quantity=").append(item.getQuantity());
+                        }
+                    }
+                    response.sendRedirect("cartcontact?" + queryParams.toString());
+                    return;
+
+                case "retry_payment":
+                    if (order.getStatus().equals("pending_pay") && order.getPaymentMethod().equals("bank_transfer")) {
+                        // Đặt lại trạng thái thanh toán về "pending" để thử lại
+                        boolean paymentStatusUpdated = orderDAO.updatePaymentStatus(orderId, "pending");
+                        if (paymentStatusUpdated) {
+                            session.setAttribute("pending_order", order);
+                            response.sendRedirect("payment"); // Chuyển hướng đến trang thanh toán VNPay
+                            return;
+                        } else {
+                            request.setAttribute("errorMessage", "Không thể khởi tạo lại thanh toán. Vui lòng thử lại!");
+                        }
+                    } else {
+                        request.setAttribute("errorMessage", "Đơn hàng không đủ điều kiện để thanh toán lại!");
+                    }
+                    break;
+            }
+        }
+
+        processRequest(request, response);
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.

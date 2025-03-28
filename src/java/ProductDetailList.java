@@ -144,10 +144,11 @@ public class ProductDetailList extends HttpServlet {
 //            List<Feedback> feedbacks = feedbackDAO.getFeedbacksByProduct(
 //                null, filterStar, "approved", "created_at", "desc", productId, page, recordsPerPage
 //            );
-            List<Feedback> feedbacks = feedbackDAO.getFeedbacksByProduct(
-                    filterStar, "rejected", productId, page, recordsPerPage
-            );
+            List<Feedback> feedbacks = feedbackDAO.getFeedbacksByProduct(null, filterStar, "approved", null, "desc", productId, page, recordsPerPage);
 
+//                    feedbackDAO.getFeedbacksByProduct(
+//                    filterStar, "rejected", productId, page, recordsPerPage
+//            );
             // Lấy phản hồi của cửa hàng cho từng đánh giá
             for (Feedback feedback : feedbacks) {
                 List<FeedbackReply> replies = replyDAO.getRepliesByFeedbackId(feedback.getId());
@@ -160,7 +161,7 @@ public class ProductDetailList extends HttpServlet {
             }
 
             // Tính tổng số trang
-            int totalFeedbacks = feedbackDAO.getTotalFeedbacksByProduct(filterStar, "rejected", productId);
+            int totalFeedbacks = feedbackDAO.getTotalFeedbacksByProduct(null, filterStar, "approved", productId);
             int totalPages = (int) Math.ceil(totalFeedbacks * 1.0 / recordsPerPage);
 
             product.setStock(stock);
@@ -180,7 +181,7 @@ public class ProductDetailList extends HttpServlet {
 
             // Tính sao trung bình
             int[] ratingCounts = feedbackDAO.getRatingCountsByProduct(null, productId);
-            int allFeedbacks = feedbackDAO.getTotalFeedbacksByProduct( null, "rejected", productId);
+            int allFeedbacks = feedbackDAO.getTotalFeedbacksByProduct(null, null, "approved", productId);
             double totalStar = 0;
             int i = 1;
             for (int star : ratingCounts) {

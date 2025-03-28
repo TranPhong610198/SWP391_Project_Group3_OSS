@@ -639,19 +639,16 @@
                                 <div class="action-buttons">
                                     <!-- Nút "Thanh toán lại" chỉ hiển thị cho bank_transfer -->
                                     <c:if test="${order.status == 'pending_pay'}">
-                                        <a href="myorder?action=cancel&id=${order.id}" class="btn-cancel-order" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
+                                        <a href="orderdrtail?action=cancel&id=${order.id}" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
                                             <i class="fas fa-times me-2"></i> Hủy đơn hàng
                                         </a>
                                         <c:if test="${order.paymentStatus == 'pending' && order.paymentMethod == 'bank_transfer'}">
-                                            <a href="myorder?action=retry_payment&id=${order.id}" class="btn-order-detail">
+                                            <a href="myorder?action=retry_payment&id=${order.id}" class="btn btn-primary">
                                                 <i class="fas fa-money-check-alt me-2"></i> Thanh toán lại
                                             </a>
                                         </c:if>
                                     </c:if>
-                                    <!-- Nút "Hủy đơn hàng" hiển thị cho cả bank_transfer và cod -->
-                                    <a href="orderdetail?action=cancel&id=${order.id}" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
-                                        <i class="fas fa-times"></i> Hủy đơn hàng
-                                    </a>
+                                    
                                 </div>
                             </c:if>
                             <c:if test="${order.status eq 'pending'}">
