@@ -261,6 +261,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
                                     <c:choose>
                                         <c:when test="${not empty posts}">
                                             <c:forEach var="post" items="${posts}" varStatus="status">
