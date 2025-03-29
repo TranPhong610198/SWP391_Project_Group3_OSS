@@ -694,7 +694,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr><td>Tổng giá trị tồn kho</td><td><fmt:formatNumber value="${totalInventoryValue}" pattern="$#,##0.00" /></td></tr>
+                                            <tr><td>Tổng giá trị tồn kho</td><td><fmt:formatNumber value="${totalInventoryValue}" pattern="#,##0 VNĐ" /></td></tr>
                                         <tr><td>Sản phẩm tồn kho thấp (dưới 10)</td><td>${lowStockProducts.size()}</td></tr>
                                         <tr><td>Tỷ lệ hết hàng</td><td><fmt:formatNumber value="${outOfStockRate.out_of_stock_rate}" pattern="#,##0.0" />%</td></tr>
                                         <tr><td>Sản phẩm chưa nhập lại</td><td>${productsWithoutRecentRestocking.size()}</td></tr>
