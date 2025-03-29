@@ -6,12 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Dashboard</title>
-    <!-- Bootstrap CSS -->
+    <title>Bảng Điều Khiển Bán Hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -170,7 +167,6 @@
                 </div>
             </div>
 
-            <!-- Order Status Section -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card">
@@ -210,7 +206,6 @@
                                     <h4 class="text-dark">${salesOverview.cancelledOrders}</h4>
                                 </div>
                                 <div class="col">
-                                    <!-- Empty column for balance -->
                                 </div>
                             </div>
                         </div>
@@ -218,7 +213,6 @@
                 </div>
             </div>
 
-            <!-- Filter Section Above Charts -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="filter-section">

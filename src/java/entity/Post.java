@@ -15,7 +15,6 @@ public class Post {
     private Date createdAt;
     private Date updatedAt;
 
-    // Constructors
     public Post() {
     }
 

@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Slider Management</title>
+        <title>Danh Sách Thanh Trượt</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
@@ -126,7 +126,6 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
         <div class="main-content">
@@ -178,7 +177,6 @@
                     </div>
                 </div>
 
-                <!-- Sliders Table -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
@@ -250,7 +248,6 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-muted small">
                         Hiển thị ${sliders.size()} / ${totalItems} thanh trượt
@@ -285,7 +282,6 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">

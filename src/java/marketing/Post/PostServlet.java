@@ -69,7 +69,6 @@ public class PostServlet extends HttpServlet {
         String search = request.getParameter("search");
         String authorIdStr = request.getParameter("authorId");
         String status = request.getParameter("status");
-      
 
         Integer authorId = (authorIdStr != null && !authorIdStr.isEmpty() && !authorIdStr.equals("0"))
                 ? Integer.parseInt(authorIdStr)
@@ -83,17 +82,16 @@ public class PostServlet extends HttpServlet {
         List<Post> posts = postDAO.getAllPosts(page, pageSize, search, authorId, status);
 
         UserDAO userDAO = new UserDAO();
-        List<User> authors = userDAO.getAuthorsByRole(); // Lấy danh sách tác giả có role 'admin' và 'marketing'
+        List<User> authors = userDAO.getAuthorsByRole();
 
         int totalItems = postDAO.getTotalPostsCount(search, authorId, status);
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
         request.setAttribute("posts", posts);
-        request.setAttribute("authors", authors); // Gửi danh sách authors đến JSP
+        request.setAttribute("authors", authors);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalItems", totalItems);
-        
 
         request.getRequestDispatcher("/marketing/post/postlist.jsp").forward(request, response);
     }

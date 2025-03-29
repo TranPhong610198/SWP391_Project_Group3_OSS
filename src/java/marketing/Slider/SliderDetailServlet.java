@@ -27,10 +27,10 @@ import java.util.List;
  */
 @WebServlet(name = "SliderDetailServlet", urlPatterns = {"/marketing/detailSlider"})
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,    // 1 MB
-    maxFileSize = 1024 * 1024 * 10,      // 10 MB
-    maxRequestSize = 1024 * 1024 * 15,   // 15 MB
-    location = ""
+        fileSizeThreshold = 1024 * 1024, // 1 MB
+        maxFileSize = 1024 * 1024 * 10, // 10 MB
+        maxRequestSize = 1024 * 1024 * 15, // 15 MB
+        location = ""
 )
 public class SliderDetailServlet extends HttpServlet {
 
@@ -70,35 +70,33 @@ public class SliderDetailServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String sId = request.getParameter("id");
-    int sliderId;
-    try {
-        sliderId = Integer.parseInt(sId);
-        SliderDAO sliderDAO = new SliderDAO();
-        PostDAO postDAO = new PostDAO();
-        ProductDAO productDAO = new ProductDAO();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String sId = request.getParameter("id");
+        int sliderId;
+        try {
+            sliderId = Integer.parseInt(sId);
+            SliderDAO sliderDAO = new SliderDAO();
+            PostDAO postDAO = new PostDAO();
+            ProductDAO productDAO = new ProductDAO();
 
-        Slider slider = sliderDAO.getSliderById(sliderId);
-        List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(sliderId);
+            Slider slider = sliderDAO.getSliderById(sliderId);
+            List<Integer> existingOrders = sliderDAO.getAllDisplayOrdersExcept(sliderId);
 
-        // Lấy danh sách bài đăng đã xuất bản và sản phẩm đang bán
-        List<Post> publishedPosts = postDAO.getPublishedPostTitles();
-        List<Product> activeProducts = productDAO.getActiveProductTitles();
+            List<Post> publishedPosts = postDAO.getPublishedPostTitles();
+            List<Product> activeProducts = productDAO.getActiveProductTitles();
 
-        request.setAttribute("existingOrders", existingOrders);
-        request.setAttribute("slider", slider);
-        request.setAttribute("publishedPosts", publishedPosts);
-        request.setAttribute("activeProducts", activeProducts);
+            request.setAttribute("existingOrders", existingOrders);
+            request.setAttribute("slider", slider);
+            request.setAttribute("publishedPosts", publishedPosts);
+            request.setAttribute("activeProducts", activeProducts);
 
-        request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
-    } catch (NumberFormatException e) {
-        System.out.println(e);
-        response.sendRedirect("sliderList");
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            response.sendRedirect("sliderList");
+        }
     }
-}
-
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -119,24 +117,23 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         int display_order = Integer.parseInt(request.getParameter("display_order"));
         String status = request.getParameter("status");
         String notes = request.getParameter("notes");
-        
-        
-         String postIdStr = request.getParameter("selectedPost");
-    String productIdStr = request.getParameter("selectedProduct");
 
-    int postId = (postIdStr != null && !postIdStr.trim().isEmpty()) ? Integer.parseInt(postIdStr) : 0;
-    int productId = (productIdStr != null && !productIdStr.trim().isEmpty()) ? Integer.parseInt(productIdStr) : 0;
+        String postIdStr = request.getParameter("selectedPost");
+        String productIdStr = request.getParameter("selectedProduct");
 
-    SliderDAO sliderDAO = new SliderDAO();
+        int postId = (postIdStr != null && !postIdStr.trim().isEmpty()) ? Integer.parseInt(postIdStr) : 0;
+        int productId = (productIdStr != null && !productIdStr.trim().isEmpty()) ? Integer.parseInt(productIdStr) : 0;
 
-    if (postId > 0) {
-        // Change to absolute URL with correct format
-        link = "http://localhost:9999/fashionshop/post?id=" + postId;
-    } else if (productId > 0) {
-        // Change to absolute URL with correct format
-        link = "http://localhost:9999/fashionshop/productdetail?id=" + productId;
-    }
-        // Chỉ kiểm tra khi cả hai được chọn (điều này không hợp lệ)
+        SliderDAO sliderDAO = new SliderDAO();
+
+        if (postId > 0) {
+
+            link = "http://localhost:9999/fashionshop/post?id=" + postId;
+        } else if (productId > 0) {
+
+            link = "http://localhost:9999/fashionshop/productdetail?id=" + productId;
+        }
+
         if (postId > 0 && productId > 0) {
             request.setAttribute("error", "Không thể chọn cả bài đăng và sản phẩm cùng lúc.");
             Slider currentSlider = sliderDAO.getSliderById(id);
@@ -145,38 +142,25 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             return;
         }
 
-// Lấy slider gốc để kiểm tra
-        // Thêm đoạn này trước đoạn kiểm tra dữ liệu đầu vào
-// Đảm bảo biến link không null
+        Slider originalSlider = sliderDAO.getSliderById(id);
+        if (link == null) {
+            link = "";
+        }
+        if (postId == 0 && productId == 0) {
 
+            postId = originalSlider.getPostId();
+            productId = originalSlider.getProductId();
+            link = originalSlider.getLink();
+        }
 
-// Nếu không có gì được chọn, giữ nguyên liên kết và ID ban đầu
-Slider originalSlider = sliderDAO.getSliderById(id);
-if (link == null) {
-    link = "";
-}
-if (postId == 0 && productId == 0) {
-    // Nếu không chọn mới, giữ nguyên thông tin từ database
-    postId = originalSlider.getPostId();
-    productId = originalSlider.getProductId();
-    link = originalSlider.getLink();
-}
+        if (title == null || title.isEmpty() || link == null || link.isEmpty() || notes == null || notes.isEmpty()) {
+            request.setAttribute("error", "Tất cả các trường không được để trống.");
+            Slider currentSlider = sliderDAO.getSliderById(id);
+            request.setAttribute("slider", currentSlider);
+            request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
+            return;
+        }
 
-
-        // Kiểm tra dữ liệu đầu vào
-        // Sửa thành:
-if (title == null || title.isEmpty() || link == null || link.isEmpty() || notes == null || notes.isEmpty()) {
-    request.setAttribute("error", "Tất cả các trường không được để trống.");
-    Slider currentSlider = sliderDAO.getSliderById(id);
-    request.setAttribute("slider", currentSlider);
-    request.getRequestDispatcher("/marketing/slider/sliderdetail.jsp").forward(request, response);
-    return;
-}
-
-        // Lấy slider gốc để kiểm tra có thay đổi không
-//        Slider originalSlider = sliderDAO.getSliderById(id);
-
-        // Kiểm tra thứ tự hiển thị trùng lặp - chỉ khi thứ tự hiển thị được thay đổi
         if (originalSlider.getDisplay_order() != display_order && sliderDAO.isDisplayOrderExists(display_order, id)) {
             request.setAttribute("error", "Thứ tự hiển thị đã tồn tại. Vui lòng chọn một thứ tự khác.");
             Slider currentSlider = sliderDAO.getSliderById(id);
@@ -185,27 +169,18 @@ if (title == null || title.isEmpty() || link == null || link.isEmpty() || notes 
             return;
         }
 
-        
-        
-        
-        String image_url = oldImage; // Mặc định giữ lại ảnh cũ
+        String image_url = oldImage;
         boolean imageChanged = false;
-        
-// Kiểm tra có thay đổi nào không
+
         boolean hasChanges = !originalSlider.getTitle().equals(title)
-    || (originalSlider.getLink() == null ? link != null : !originalSlider.getLink().equals(link))
-    || originalSlider.getDisplay_order() != display_order
-    || !originalSlider.getStatus().equals(status)
-    || !originalSlider.getNotes().equals(notes)
-    || originalSlider.getPostId() != postId
-    || originalSlider.getProductId() != productId
-    || imageChanged; // Bổ sung kiểm tra ảnh có thay đổi không
+                || (originalSlider.getLink() == null ? link != null : !originalSlider.getLink().equals(link))
+                || originalSlider.getDisplay_order() != display_order
+                || !originalSlider.getStatus().equals(status)
+                || !originalSlider.getNotes().equals(notes)
+                || originalSlider.getPostId() != postId
+                || originalSlider.getProductId() != productId
+                || imageChanged;
 
-
-
-        // Nếu không có thay đổi, chuyển hướng về danh sách slider không hiển thị thông báo
-        
-        
         try {
             Part imagePart = request.getPart("image");
             if (imagePart != null && imagePart.getSize() > 0) {
@@ -239,21 +214,20 @@ if (title == null || title.isEmpty() || link == null || link.isEmpty() || notes 
         }
 
         if (!hasChanges) {
-    response.sendRedirect("sliderList");
-    return;
-}
+            response.sendRedirect("sliderList");
+            return;
+        }
 
-        // Tạo slider mới với thông tin đã cập nhật
         Slider slider = new Slider(id, title, image_url, link, status, display_order, notes, postId, productId);
 
         boolean isUpdated = sliderDAO.updateSlider(slider);
 
         if (isUpdated) {
-            // Đặt thông báo thành công vào session và chuyển hướng về trang danh sách
+
             request.getSession().setAttribute("success", "Cập nhật thanh trượt thành công.");
             response.sendRedirect("sliderList");
         } else {
-            // Nếu cập nhật thất bại, vẫn ở lại trang chi tiết và hiển thị thông báo lỗi
+
             Slider s = sliderDAO.getSliderById(id);
             request.setAttribute("slider", s);
             request.setAttribute("error", "Cập nhật thanh trượt thất bại.");

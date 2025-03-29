@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Marketing Dashboard</title>
+    <title>Bảng Điều Khiển Tiếp Thị</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -88,7 +88,7 @@
         }
         
         .fixed-height {
-            min-height: 150px; /* Điều chỉnh giá trị này dựa trên chiều cao mong muốn */
+            min-height: 150px; 
             display: flex;
             align-items: center;
         }
@@ -106,9 +106,7 @@
                 </div>
             </div>
 
-            <!-- Summary Stats Cards -->
             <div class="row mb-4">
-                <!-- Tổng Sản Phẩm -->
                 <div class="col-xl-4 col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body fixed-height">
@@ -130,7 +128,6 @@
                     </div>
                 </div>
 
-                <!-- Tổng Khách Hàng -->
                 <div class="col-xl-4 col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body fixed-height">
@@ -152,7 +149,6 @@
                     </div>
                 </div>
 
-                <!-- Đánh Giá Trung Bình -->
                 <div class="col-xl-4 col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body fixed-height">
@@ -169,7 +165,6 @@
                                         <div class="progress">
                                             <div class="progress-bar bg-warning" style="width: ${(stats.averageRating / 5) * 100}%;"></div>
                                         </div>
-                                        <!-- Thêm khoảng trống để cân bằng chiều cao -->
                                         <div class="mt-2"></div>
                                         <div class="mt-2"></div>
                                     </div>
@@ -180,7 +175,6 @@
                 </div>
             </div>
 
-            <!-- Filter Section -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="filter-section">
@@ -199,7 +193,6 @@
                 </div>
             </div>
 
-            <!-- Customer Trends and Feedback Charts -->
             <div class="row mb-4">
                 <div class="col-xl-6 col-lg-6">
                     <div class="card">
@@ -234,7 +227,6 @@
                 </div>
             </div>
 
-            <!-- Products & Inventory Stats -->
             <div class="row mb-4">
                 <div class="col-xl-6 col-lg-6">
                     <div class="card">
@@ -294,7 +286,6 @@
                 </div>
             </div>
 
-            <!-- Low Stock Alerts and Customer Type Distribution -->
             <div class="row mb-4">
                 <div class="col-xl-8 col-lg-8">
                     <div class="card">
@@ -352,7 +343,6 @@
                 </div>
             </div>
 
-            <!-- VIP Customers and Coupon Usage -->
             <div class="row mb-4">
                 <div class="col-xl-4 col-lg-4">
                     <div class="card">
@@ -466,7 +456,6 @@
                 </div>
             </div>
 
-            <!-- Content Management Stats -->
             <div class="row">
                 <div class="col-xl-6 col-lg-6">
                     <div class="card">
@@ -507,7 +496,6 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // New Customers Chart

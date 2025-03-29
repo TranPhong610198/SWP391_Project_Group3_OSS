@@ -56,41 +56,34 @@ public class SliderListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Retrieve pagination parameters
+
         int page = 1;
         int pageSize = 10;
-        
-        // Retrieve filter parameters
+
         String search = request.getParameter("search");
         String status = request.getParameter("status");
-        
-        // Convert page parameter if it exists
+
         if (request.getParameter("page") != null) {
             try {
                 page = Integer.parseInt(request.getParameter("page"));
             } catch (NumberFormatException e) {
-                // Default to page 1 if invalid input
+
                 page = 1;
             }
         }
-        
-        // Get sliders from database with filters
+
         SliderDAO sliderDAO = new SliderDAO();
         List<Slider> sliders = sliderDAO.getAllSliders(page, pageSize, search, status);
-        
-        // Calculate pagination information
+
         int totalSliders = sliderDAO.getTotalSlidersCount(search, status);
         int totalPages = (int) Math.ceil((double) totalSliders / pageSize);
-        
-        // Set attributes for JSP
+
         request.setAttribute("sliders", sliders);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalItems", totalSliders);
-        request.setAttribute("pageSize", pageSize);  // Make sure pageSize is set as attribute
-        
-        // Forward to JSP
+        request.setAttribute("pageSize", pageSize);
+
         request.getRequestDispatcher("/marketing/slider/sliderlist.jsp").forward(request, response);
     }
 

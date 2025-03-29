@@ -27,9 +27,9 @@ import java.util.List;
  */
 @WebServlet(name = "AddPostServlet", urlPatterns = {"/marketing/addPost"})
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024, // 1 MB
-    maxFileSize = 1024 * 1024 * 10,  // 10 MB
-    maxRequestSize = 1024 * 1024 * 15 // 15 MB
+        fileSizeThreshold = 1024 * 1024, // 1 MB
+        maxFileSize = 1024 * 1024 * 10, // 10 MB
+        maxRequestSize = 1024 * 1024 * 15 // 15 MB
 )
 public class AddPostServlet extends HttpServlet {
 
@@ -72,10 +72,10 @@ public class AddPostServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PostDAO postDAO = new PostDAO();
-    List<User> users = postDAO.getAuthorsByRole(); // Lấy danh sách admin & marketing
-    request.setAttribute("users", users);
+        List<User> users = postDAO.getAuthorsByRole(); // Lấy danh sách admin & marketing
+        request.setAttribute("users", users);
 
-    request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+        request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
     }
 
     /**
@@ -90,82 +90,78 @@ public class AddPostServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-    try {
-        String title = request.getParameter("title");
-        String summary = request.getParameter("summary");
-        String content = request.getParameter("content");
-        String status = request.getParameter("status");
-        Date createdAt = new Date(System.currentTimeMillis());
-        boolean isFeatured = request.getParameter("isFeatured") != null;
-        
-        if (title.isEmpty() || summary.isEmpty() || content.isEmpty() || status.isEmpty()) {
-            request.setAttribute("error", "Tất cả các trường không được để trống.");
-            request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
-            return;
-        }        
-        
-        // Xử lý file ảnh
-        String thumbnail = "";
         try {
-            Part filePart = request.getPart("thumbnail");
-            if (filePart != null && filePart.getSize() > 0) {
-                String uploadPath = request.getServletContext().getRealPath("") + "uploads/post/";
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-                
-                String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
-                String filePath = uploadPath + File.separator + fileName;
-                
-                filePart.write(filePath);
-                thumbnail = "uploads/post/" + fileName;
+            String title = request.getParameter("title");
+            String summary = request.getParameter("summary");
+            String content = request.getParameter("content");
+            String status = request.getParameter("status");
+            Date createdAt = new Date(System.currentTimeMillis());
+            boolean isFeatured = request.getParameter("isFeatured") != null;
+
+            if (title.isEmpty() || summary.isEmpty() || content.isEmpty() || status.isEmpty()) {
+                request.setAttribute("error", "Tất cả các trường không được để trống.");
+                request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+                return;
             }
+
+            String thumbnail = "";
+            try {
+                Part filePart = request.getPart("thumbnail");
+                if (filePart != null && filePart.getSize() > 0) {
+                    String uploadPath = request.getServletContext().getRealPath("") + "uploads/post/";
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdir();
+                    }
+
+                    String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
+                    String filePath = uploadPath + File.separator + fileName;
+
+                    filePart.write(filePath);
+                    thumbnail = "uploads/post/" + fileName;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
+                request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+                return;
+            }
+
+            HttpSession session = request.getSession();
+            User existingUser = (User) session.getAttribute("acc");
+            if (existingUser == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            Post post = new Post();
+            post.setTitle(title);
+            post.setThumbnail(thumbnail);
+            post.setSummary(summary);
+            post.setContent(content);
+            post.setStatus(status);
+            post.setCreatedAt(createdAt);
+            post.setUser(existingUser);
+            post.setIsFeatured(isFeatured);
+
+            PostDAO postDAO = new PostDAO();
+            boolean isAdded = postDAO.addPost(post);
+
+            if (isAdded) {
+
+                session.setAttribute("success", "Đã thêm bài đăng thành công!");
+
+                response.sendRedirect(request.getContextPath() + "/marketing/postList");
+            } else {
+                request.setAttribute("error", "Thêm bài viết thất bại!");
+                request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
+            request.setAttribute("error", "Lỗi: " + e.getMessage());
             request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
-            return;
         }
-
-        // Kiểm tra session user
-        HttpSession session = request.getSession();
-        User existingUser = (User) session.getAttribute("acc");
-        if (existingUser == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        // Tạo và lưu post
-        Post post = new Post();
-        post.setTitle(title);
-        post.setThumbnail(thumbnail);
-        post.setSummary(summary);
-        post.setContent(content);
-        post.setStatus(status);
-        post.setCreatedAt(createdAt);
-        post.setUser(existingUser);
-        post.setIsFeatured(isFeatured); 
-
-        PostDAO postDAO = new PostDAO();
-        boolean isAdded = postDAO.addPost(post);
-
-        if (isAdded) {
-    // Change from request attribute to session attribute
-    session.setAttribute("success", "Đã thêm bài đăng thành công!");
-    
-    // Redirect to post list
-    response.sendRedirect(request.getContextPath() + "/marketing/postList");
-} else {
-    request.setAttribute("error", "Thêm bài viết thất bại!");
-    request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
-}
-        
-    } catch (Exception e) {
-        e.printStackTrace();
-        request.setAttribute("error", "Lỗi: " + e.getMessage());
-        request.getRequestDispatcher("/marketing/post/postform.jsp").forward(request, response);
-    }
     }
 
     /**
