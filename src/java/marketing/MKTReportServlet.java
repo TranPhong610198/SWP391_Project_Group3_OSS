@@ -94,7 +94,7 @@ public class MKTReportServlet extends HttpServlet {
                 commonData.put("totalInventoryByProduct", reportDAO.getTotalInventoryByProduct(5));
                 commonData.put("inventoryByCategory", reportDAO.getInventoryByCategory());
                 commonData.put("lowStockProducts", reportDAO.getLowStockProducts(10));
-                commonData.put("productsWithoutRecentRestocking", reportDAO.getProductsWithoutRecentRestocking(30));
+                commonData.put("productsWithoutRecentRestocking", reportDAO.getProductsWithoutRecentRestocking(29));
                 commonData.put("outOfStockRate", reportDAO.getOutOfStockRate());
                 commonData.put("productVariationsBySize", reportDAO.getProductVariationsBySize());
                 commonData.put("productVariationsByColor", reportDAO.getProductVariationsByColor());

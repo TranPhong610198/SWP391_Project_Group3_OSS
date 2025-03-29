@@ -201,7 +201,7 @@
                                         <tbody>
                                             <tr><td>Tổng số Coupon</td><td><c:set var="totalCoupons" value="0" /><c:forEach items="${couponsByStatus}" var="entry"><c:set var="totalCoupons" value="${totalCoupons + entry.value}" /></c:forEach>${totalCoupons}</td></tr>
                                         <tr><td>Coupon đang hoạt động</td><td><c:out value="${couponsByStatus['active']}" default="0" /></td></tr>
-                                        <tr><td>Giá trị giảm giá trung bình</td><td><fmt:formatNumber value="${averageDiscountAmount}" pattern="#,##0.00" /></td></tr>
+                                        <tr><td>Giá trị giảm giá trung bình</td><td><fmt:formatNumber value="${averageDiscountAmount}" pattern="#,##0 VNĐ" /></td></tr>
                                         <tr><td>Coupon hết hạn chưa dùng</td><td>${unusedExpiredCouponsCount}</td></tr>
                                         <tr><td>Tỷ lệ sử dụng trung bình</td><td><fmt:formatNumber value="${couponUsageMetrics.averageUsageRate}" pattern="#,##0.00" />%</td></tr>
                                     </tbody>
@@ -825,7 +825,7 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${not empty productsWithoutRecentRestocking && productsWithoutRecentRestocking.size() > 0}">
-                                                        ${productsWithoutRecentRestocking.size()} sản phẩm chưa bán trong 30+ ngày. Xem xét khuyến mãi để giảm tồn kho.
+                                                        ${productsWithoutRecentRestocking.size()} sản phẩm chưa bán trong 29+ ngày. Xem xét khuyến mãi để giảm tồn kho.
                                                     </c:when>
                                                     <c:otherwise>
                                                         Tồn kho đang luân chuyển tốt, không có dư thừa đáng kể.
