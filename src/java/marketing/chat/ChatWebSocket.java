@@ -41,7 +41,6 @@ public class ChatWebSocket {
     @OnMessage
     public void onMessage(String message, Session session, @PathParam("marketingId") String marketingId, @PathParam("userId") String userId) throws IOException {
         try {
-            System.out.println("Received message: " + message);
             JsonObject jsonMessage = JsonParser.parseString(message).getAsJsonObject();
             int senderId = jsonMessage.get("senderId").getAsInt();
             String content = jsonMessage.has("content") ? jsonMessage.get("content").getAsString() : "";

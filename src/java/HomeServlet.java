@@ -97,23 +97,6 @@ public class HomeServlet extends HttpServlet {
         // Lấy sản phẩm nổi bật
         List<Product> featuredProducts = productDAO.getFeaturedProducts(8);
         
-        // Lấy dữ liệu chat
-        Integer userId = (Integer) request.getSession().getAttribute("userID");
-        List<Message> messages = null;
-        int chatUserId = userId != null ? userId : -1;
-        int marketingId = -1;
-        if (userId != null) {
-            marketingId = messageDAO.getMarketingId();
-            if (marketingId != -1) {
-                messages = messageDAO.getMessagesBetweenUsers(marketingId, userId);
-                messageDAO.markAsRead(marketingId, userId);
-                chatUserId = userId;
-            } else {
-                request.setAttribute("chatError", "Không tìm thấy nhân viên marketing.");
-            }
-        } else {
-            request.setAttribute("chatError", "Vui lòng đăng nhập để sử dụng chat!");
-        }
 
         // Set attributes cho request
         request.setAttribute("sliders", activeSliders);
@@ -121,11 +104,6 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("featuredProducts", featuredProducts);
         request.setAttribute("level1Categories", level1Categories);
         request.setAttribute("productsByCategory", productsByCategory);
-        
-        request.setAttribute("chatMessages", messages); // Tin nhắn chat
-        request.setAttribute("chatUserId", chatUserId); // ID người dùng chat
-        request.setAttribute("userID", userId); // Thêm userID để dùng trong JSP
-        request.setAttribute("marketingId", marketingId);
 
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
     }

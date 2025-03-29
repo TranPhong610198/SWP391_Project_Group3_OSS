@@ -303,6 +303,8 @@
             </c:choose>
         </div>
     </div>
+    
+    <jsp:include page="chat.jsp" />    
     <!-- Include the footer -->
     <jsp:include page="footer.jsp" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

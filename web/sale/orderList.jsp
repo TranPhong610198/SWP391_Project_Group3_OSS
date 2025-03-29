@@ -153,6 +153,17 @@
                 background-color: var(--hover-color);
             }
 
+            /* Sidebar styling */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 250px;
+                z-index: 1000;
+                transition: all 0.3s;
+            }
+
             .sidebar-toggle {
                 position: fixed;
                 left: 10px;
@@ -165,16 +176,10 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
 
-            @media (max-width: 768px) {
-                .main-content {
-                    margin-left: 0;
-                }
-                .main-content.active {
-                    margin-left: 250px;
-                }
-                .sidebar-toggle {
-                    display: block;
-                }
+            /* Table responsiveness */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             /* Select2 styling */
@@ -234,6 +239,147 @@
 
             .select2-container--default .select2-dropdown {
                 max-height: none;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 1550px) {
+                /* Adjust table cells padding */
+                .table td, .table th {
+                    padding: 0.5rem;
+                }
+
+                /* Make columns more adaptable */
+                .table th:nth-child(1),
+                .table td:nth-child(1) {
+                    width: 40px;
+                }
+
+                .table th:nth-child(2),
+                .table td:nth-child(2) {
+                    min-width: 100px;
+                }
+
+                .table th:nth-child(3),
+                .table td:nth-child(3) {
+                    min-width: 120px;
+                }
+
+                .table th:nth-child(4),
+                .table td:nth-child(4),
+                .table th:nth-child(5),
+                .table td:nth-child(5) {
+                    min-width: 150px;
+                }
+
+                .table th:nth-child(6),
+                .table td:nth-child(6) {
+                    min-width: 200px;
+                }
+
+                .table th:nth-child(7),
+                .table td:nth-child(7) {
+                    min-width: 100px;
+                }
+
+                .table th:nth-child(8),
+                .table td:nth-child(8) {
+                    min-width: 120px;
+                }
+
+                .table th:nth-child(9),
+                .table td:nth-child(9) {
+                    min-width: 80px;
+                }
+
+                /* Status badge and action buttons adjustments */
+                .status-badge {
+                    padding: 3px 6px;
+                    font-size: 0.8rem;
+                }
+
+                .action-btn {
+                    padding: 3px 8px;
+                }
+            }
+
+            /* Medium devices (tablets) */
+            @media (max-width: 992px) {
+                .filter-card .row {
+                    flex-direction: column;
+                }
+
+                .filter-card .col-md-4,
+                .filter-card .col-md-2 {
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+
+                .d-grid.gap-2.d-md-flex {
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+
+                .card-body {
+                    padding: 15px 10px;
+                }
+            }
+
+            /* Small devices (phones) */
+            @media (max-width: 768px) {
+                .main-content {
+                    margin-left: 0;
+                }
+
+                .main-content.active {
+                    margin-left: 250px;
+                }
+
+                .sidebar-toggle {
+                    display: block;
+                }
+
+                /* Hide less important columns */
+                .table th:nth-child(4),
+                .table td:nth-child(4),
+                .table th:nth-child(6),
+                .table td:nth-child(6) {
+                    display: none;
+                }
+
+                /* Sidebar gets pushed off-screen when not active */
+                .sidebar {
+                    left: -250px;
+                }
+
+                .sidebar.active {
+                    left: 0;
+                }
+            }
+
+            /* Extra small devices */
+            @media (max-width: 576px) {
+                .table th:nth-child(5),
+                .table td:nth-child(5) {
+                    display: none;
+                }
+
+                .pagination .page-link {
+                    padding: 0.25rem 0.5rem;
+                    font-size: 0.875rem;
+                }
+
+                .page-title {
+                    font-size: 1.5rem;
+                }
+
+                .card-header {
+                    padding: 10px 15px;
+                }
+
+                .action-btn {
+                    padding: 2px 5px;
+                    font-size: 0.75rem;
+                }
             }
         </style>
     </head>

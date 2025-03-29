@@ -824,6 +824,8 @@
             </c:otherwise>
         </c:choose>
     </div>
+                        
+    <jsp:include page="chat.jsp" />
 
     <jsp:include page="footer.jsp" />
 

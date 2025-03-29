@@ -544,6 +544,7 @@
                 </div>
             </div>
         </div><br><br><br><br>
+        <jsp:include page="chat.jsp" />
         <div><jsp:include page="/footer.jsp" /></div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -193,13 +193,13 @@
                             <table class="table table-hover table-bordered mb-0">
                                 <thead>
                                     <tr class="bg-light">
-                                        <th class="text-center" style="width: 60px;">STT</th>
-                                        <th class="text-center" style="width: 150px;">Hình ảnh</th>
+                                        <th class="text-center">STT</th>
+                                        <th class="text-center">Hình ảnh</th>
                                         <th>Tiêu đề</th>
                                         <th>Liên kết ngược</th>
-                                        <th class="text-center" style="width: 100px;">Thứ tự</th>
+                                        <th class="text-center">Thứ tự</th>
                                         <th class="text-center">Trạng thái</th>
-                                        <th class="text-center" style="width: 150px;">Thao tác</th>
+                                        <th class="text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>

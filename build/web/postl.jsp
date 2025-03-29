@@ -222,6 +222,8 @@
                 </div>
             </div>
         </div>
+                        
+        <jsp:include page="chat.jsp" />    
 
         <!-- Include the footer -->
         <jsp:include page="/footer.jsp" />
