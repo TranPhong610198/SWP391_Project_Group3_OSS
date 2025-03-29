@@ -338,89 +338,27 @@ public class PostDAO extends DBContext {
         }
         return posts;
     }
-    
-    public List<Post> getPublishedPostTitles() {
-    List<Post> posts = new ArrayList<>();
-    String sql = "SELECT id, title FROM posts WHERE status = 'published' ORDER BY updated_at DESC";
-    try (PreparedStatement st = connection.prepareStatement(sql)) {
-        try (ResultSet rs = st.executeQuery()) {
-            while (rs.next()) {
-                Post post = new Post();
-                post.setId(rs.getInt("id"));
-                post.setTitle(rs.getString("title"));
-                posts.add(post);
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return posts;
-}
 
+    public List<Post> getPublishedPostTitles() {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT id, title FROM posts WHERE status = 'published' ORDER BY updated_at DESC";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    Post post = new Post();
+                    post.setId(rs.getInt("id"));
+                    post.setTitle(rs.getString("title"));
+                    posts.add(post);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return posts;
+    }
 
     public static void main(String[] args) {
         PostDAO postDAO = new PostDAO();
-
-//        // Test lấy tất cả bài viết
-//        System.out.println("Lấy danh sách bài viết:");
-//        List<Post> posts = postDAO.getAllPosts(1, 5, "", null, null, null, "", "DESC");
-//        for (Post post : posts) {
-//            System.out.println(post.getId() + " - " + post.getTitle());
-//        }
-//
-//        // Test lấy số lượng bài viết
-//        int totalPosts = postDAO.getTotalPostsCount("", null, null, null);
-//        System.out.println("Tổng số bài viết: " + totalPosts);
-//
-//        // Test lấy bài viết theo ID
-//        if (!posts.isEmpty()) {
-//            int postId = posts.get(0).getId();
-//            Post post = postDAO.getPostById(postId);
-//            
-//            System.out.println("Chi tiết bài viết ID " + postId + ": " + post.getTitle() + ": "+ post.getUser().getFullName());
-//        }
-//        Post newPost = new Post();
-//        Date createdAt = new Date(System.currentTimeMillis());
-//        newPost.setTitle("Bài viết mới 2");
-//        newPost.setThumbnail("thumbnail.jpg");
-//        newPost.setCategoryId(1); // ID danh mục hợp lệ trong DB
-//        newPost.setSummary("Tóm tắt bài viết mới");
-//        newPost.setContent("Nội dung chi tiết của bài viết mới");
-//         newPost.setCreatedAt(createdAt);
-//// ✅ Khởi tạo User trước khi gọi setId
-//        User user = new User();
-//        user.setId(1); // ID tác giả hợp lệ trong DB
-//        newPost.setUser(user); // Gán User vào Post
-//
-//        newPost.setIsFeatured(false);
-//        newPost.setStatus("published");
-//
-//        boolean isAdded = postDAO.addPost(newPost);
-//
-//        if (isAdded) {
-//            System.out.println("Thêm bài viết thành công!");
-//        } else {
-//            System.out.println("Thêm bài viết thất bại!");
-//        int postId = 1; // Đổi thành ID bài viết bạn muốn test
-//
-//        // Gọi phương thức getPostById
-//        Post post = postDAO.getPostById(postId);
-//
-//        // Kiểm tra và in kết quả
-//        if (post != null) {
-//            System.out.println("Bài viết tìm thấy:");
-//            System.out.println("ID: " + post.getId());
-//            System.out.println("Tiêu đề: " + post.getTitle());
-//            System.out.println("Tóm tắt: " + post.getSummary());
-//            System.out.println("Nội dung: " + post.getContent());
-//            System.out.println("Tác giả: " + post.getUser().getFullName());
-//            System.out.println("Trạng thái: " + post.getStatus());
-//            System.out.println("Ngày tạo: " + post.getCreatedAt());
-//            System.out.println("Ngày cập nhật: " + post.getUpdatedAt());
-//        } else {
-//            System.out.println("Không tìm thấy bài viết với ID: " + postId);
-//        }
-//        }
     }
 
     //VTĐ add get post lên home

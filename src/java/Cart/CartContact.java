@@ -78,106 +78,110 @@ public class CartContact extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
+       HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("acc");
 
-        // Thiết lập biến isGuest để kiểm tra trạng thái đăng nhập trong JSP
-        request.setAttribute("isGuest", user == null);
+    // Thiết lập biến isGuest để kiểm tra trạng thái đăng nhập trong JSP
+    request.setAttribute("isGuest", user == null);
 
-        // Lấy danh sách sản phẩm từ query parameters (nếu có, từ reorder)
-        String[] productIds = request.getParameterValues("productId");
-        String[] sizes = request.getParameterValues("size");
-        String[] colors = request.getParameterValues("color");
-        String[] quantities = request.getParameterValues("quantity");
+    // Lấy danh sách sản phẩm từ query parameters (nếu có, từ reorder)
+    String[] productIds = request.getParameterValues("productId");
+    String[] sizes = request.getParameterValues("size");
+    String[] colors = request.getParameterValues("color");
+    String[] quantities = request.getParameterValues("quantity");
 
-        List<CartItem> cartItems = new ArrayList<>();
-        if (productIds != null && sizes != null && colors != null && quantities != null
-                && productIds.length == sizes.length && sizes.length == colors.length && colors.length == quantities.length) {
-            for (int i = 0; i < productIds.length; i++) {
-                CartItem item = new CartItem();
-                item.setProductId(Integer.parseInt(productIds[i]));
-                item.setSize(URLDecoder.decode(sizes[i], StandardCharsets.UTF_8.toString()));
-                item.setColor(URLDecoder.decode(colors[i], StandardCharsets.UTF_8.toString()));
-                item.setQuantity(Integer.parseInt(quantities[i]));
+    List<CartItem> cartItems = new ArrayList<>();
+    if (productIds != null && sizes != null && colors != null && quantities != null
+            && productIds.length == sizes.length && sizes.length == colors.length && colors.length == quantities.length) {
+        for (int i = 0; i < productIds.length; i++) {
+            CartItem item = new CartItem();
+            item.setProductId(Integer.parseInt(productIds[i]));
+            item.setSize(URLDecoder.decode(sizes[i], StandardCharsets.UTF_8.toString()));
+            item.setColor(URLDecoder.decode(colors[i], StandardCharsets.UTF_8.toString()));
+            item.setQuantity(Integer.parseInt(quantities[i]));
+            // Tạo ID tạm thời cho CartItem
+            item.setId((int) (System.currentTimeMillis() % Integer.MAX_VALUE) + i); // Đảm bảo ID duy nhất
 
-                // Lấy thông tin sản phẩm từ ProductDAO
-                ProductDAO productDAO = new ProductDAO();
-                Product product = productDAO.getProductById(item.getProductId());
-                if (product != null) {
-                    item.setProductTitle(product.getTitle());
-                    item.setProductThumbnail(product.getThumbnail());
-                    item.setProductPrice(product.getSalePrice().doubleValue());
-                }
-                cartItems.add(item);
+            // Lấy thông tin sản phẩm từ ProductDAO
+            ProductDAO productDAO = new ProductDAO();
+            Product product = productDAO.getProductById(item.getProductId());
+            if (product != null) {
+                item.setProductTitle(product.getTitle());
+                item.setProductThumbnail(product.getThumbnail());
+                item.setProductPrice(product.getSalePrice().doubleValue());
             }
+            cartItems.add(item);
+        }
+        // Lưu cartItems trực tiếp vào session cho trường hợp "Mua lại"
+        session.setAttribute("selectedItemsFromReorder", cartItems);
+    } else {
+        // Nếu không có dữ liệu từ query string, lấy từ giỏ hàng
+        CartDAO cartDAO = new CartDAO();
+        Cart cart;
+        if (user != null) {
+            cart = cartDAO.getCartByUserId(user.getId());
         } else {
-            // Nếu không có dữ liệu từ query string, lấy từ giỏ hàng
-            CartDAO cartDAO = new CartDAO();
-            Cart cart;
-            if (user != null) {
-                cart = cartDAO.getCartByUserId(user.getId());
-            } else {
-                cart = cartDAO.getCartFromCookies(request);
-            }
+            cart = cartDAO.getCartFromCookies(request);
+        }
 
-            List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
-            List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
+        List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
+        List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
-            if (selectedItemIds != null && selectedQuantities != null && cart != null) {
-                for (CartItem item : cart.getItems()) {
-                    for (int i = 0; i < selectedItemIds.size(); i++) {
-                        if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
-                            item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
-                            cartItems.add(item);
-                            break;
-                        }
+        if (selectedItemIds != null && selectedQuantities != null && cart != null) {
+            for (CartItem item : cart.getItems()) {
+                for (int i = 0; i < selectedItemIds.size(); i++) {
+                    if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
+                        item.setQuantity(Integer.parseInt(selectedQuantities.get(i)));
+                        cartItems.add(item);
+                        break;
                     }
                 }
             }
         }
-
-        if (cartItems.isEmpty()) {
-            response.sendRedirect("cartdetail");
-            return;
-        }
-
-        // Tính toán subtotal
-        double subtotal = 0;
-        for (CartItem item : cartItems) {
-            subtotal += item.getProductPrice() * item.getQuantity();
-        }
-
-        // Lấy địa chỉ giao hàng
-        List<UserAddress> addresses;
-        if (user != null) {
-            addresses = userDAO.getUserAddresses(user.getId());
-        } else {
-            addresses = getGuestAddressesFromCookie(request);
-        }
-
-        // Lấy thông tin giảm giá từ session
-        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
-        Double discountAmount = (Double) session.getAttribute("cartDiscount");
-
-        // Thiết lập phí vận chuyển mặc định
-        double shippingFee = (subtotal > 500000) ? 0.0 : 30000.0;
-
-        // Lưu dữ liệu vào request
-        request.setAttribute("selectedItems", cartItems);
-        request.setAttribute("addresses", addresses);
-        request.setAttribute("subtotal", subtotal);
-        request.setAttribute("discount", discountAmount);
-        request.setAttribute("appliedCoupon", appliedCoupon);
-        request.setAttribute("shippingFee", shippingFee);
-
-        // Nếu là khách vãng lai, lấy email từ cookie hoặc để trống để người dùng nhập
-        if (user == null) {
-            String guestEmail = getGuestEmailFromCookie(request);
-            request.setAttribute("guestEmail", guestEmail);
-        }
-
-        request.getRequestDispatcher("cartcontact.jsp").forward(request, response);
     }
+
+    if (cartItems.isEmpty()) {
+        response.sendRedirect("cartdetail");
+        return;
+    }
+
+    // Tính toán subtotal
+    double subtotal = 0;
+    for (CartItem item : cartItems) {
+        subtotal += item.getProductPrice() * item.getQuantity();
+    }
+
+    // Lấy địa chỉ giao hàng
+    List<UserAddress> addresses;
+    if (user != null) {
+        addresses = userDAO.getUserAddresses(user.getId());
+    } else {
+        addresses = getGuestAddressesFromCookie(request);
+    }
+
+    // Lấy thông tin giảm giá từ session
+    String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+    Double discountAmount = (Double) session.getAttribute("cartDiscount");
+
+    // Thiết lập phí vận chuyển mặc định
+    double shippingFee = (subtotal > 500000) ? 0.0 : 30000.0;
+
+    // Lưu dữ liệu vào request
+    request.setAttribute("selectedItems", cartItems);
+    request.setAttribute("addresses", addresses);
+    request.setAttribute("subtotal", subtotal);
+    request.setAttribute("discount", discountAmount);
+    request.setAttribute("appliedCoupon", appliedCoupon);
+    request.setAttribute("shippingFee", shippingFee);
+
+    // Nếu là khách vãng lai, lấy email từ cookie hoặc để trống để người dùng nhập
+    if (user == null) {
+        String guestEmail = getGuestEmailFromCookie(request);
+        request.setAttribute("guestEmail", guestEmail);
+    }
+
+    request.getRequestDispatcher("cartcontact.jsp").forward(request, response);
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.

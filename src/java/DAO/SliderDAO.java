@@ -351,6 +351,5 @@ public class SliderDAO extends DBContext {
 
     public static void main(String[] args) {
         SliderDAO sliderDAO = new SliderDAO();
-        // Test code can be added here for debugging purposes
     }
 }

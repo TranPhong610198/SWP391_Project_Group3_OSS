@@ -14,6 +14,7 @@ import java.util.Date;
 
 @WebServlet(name = "SalesReportServlet", urlPatterns = {"/sale/report"})
 public class SalesReportServlet extends HttpServlet {
+
     private SalesReportDAO salesReportDAO;
 
     @Override
@@ -21,49 +22,43 @@ public class SalesReportServlet extends HttpServlet {
         salesReportDAO = new SalesReportDAO();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate, endDate;
-        
+
         try {
-            // Get view parameter (optional)
-           
-            
-            // Try to parse dates from request, otherwise use default (current month)
+
             String startParam = request.getParameter("startDate");
             String endParam = request.getParameter("endDate");
-            
+
             if (startParam != null && endParam != null) {
                 startDate = sdf.parse(startParam);
                 endDate = sdf.parse(endParam);
             } else {
-                // Default to current month
+
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
                 startDate = cal.getTime();
-                
+
                 cal.set(java.util.Calendar.DAY_OF_MONTH, cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
                 endDate = cal.getTime();
             }
-            
-            // Generate sales report
+
             SalesReport report = salesReportDAO.generateSalesReport(startDate, endDate);
-            
-            // Set attributes for JSP
+
             request.setAttribute("salesReport", report);
             request.setAttribute("startDate", sdf.format(startDate));
             request.setAttribute("endDate", sdf.format(endDate));
-            
-            // Forward to the single JSP
+
             request.getRequestDispatcher("/sale/salereport.jsp").forward(request, response);
-            
+
         } catch (ParseException e) {
             throw new ServletException("Invalid date format", e);
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
     }

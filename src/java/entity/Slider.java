@@ -3,22 +3,22 @@ package entity;
 import java.sql.Date;
 
 public class Slider {
+
     private int id;
     private String title;
-    private String image_url;        // Changed from imageUrl
-    private String link;     // Changed from link
+    private String image_url;
+    private String link;
     private String status;
-    private int display_order;    // Already matches
-    private String notes; 
-    private int postId;     // Bài đăng liên kết với slider
+    private int display_order;
+    private String notes;
+    private int postId;
     private int productId;
-    // Changed from notes
 
     public Slider() {
     }
 
-    public Slider(int id, String title, String image_url, String link, String status, 
-                 int display_order, String notes, int postId, int productId) {
+    public Slider(int id, String title, String image_url, String link, String status,
+            int display_order, String notes, int postId, int productId) {
         this.id = id;
         this.title = title;
         this.image_url = image_url;
@@ -26,11 +26,9 @@ public class Slider {
         this.status = status;
         this.display_order = display_order;
         this.notes = notes;
-         this.postId = postId;
+        this.postId = postId;
         this.productId = productId;
     }
-
-    // Getters and Setters
 
     public int getId() {
         return id;
@@ -87,7 +85,7 @@ public class Slider {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-    
+
     public int getPostId() {
         return postId;
     }
@@ -103,5 +101,5 @@ public class Slider {
     public void setProductId(int productId) {
         this.productId = productId;
     }
-      
+
 }

@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${slider.title} - Chi tiết thanh trượt</title>
+        <title>${slider.title} - Chi Tiết Thanh Trượt</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <style>
@@ -102,10 +102,8 @@
         <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
 
-        <!-- Sidebar Toggle Button -->
         <button class="btn btn-primary sidebar-toggle">
             <i class="fas fa-bars"></i>
         </button>
@@ -123,7 +121,6 @@
                     </div>
                 </c:if>
 
-                <!-- Add this success message alert -->
                 <c:if test="${success != null}">
                     <div class="alert alert-success" role="alert">
                         <i class="fas fa-check-circle me-2"></i>${success}
@@ -131,7 +128,6 @@
                 </c:if>
 
                 <div class="row">
-                    <!-- Slider Preview Section -->
                     <div class="col-lg-6">
                         <div class="card h-100">
                             <div class="card-header">
@@ -158,14 +154,12 @@
                         </div>
                     </div>
 
-                    <!-- Edit Form Section -->
                     <div class="col-lg-6">
                         <div class="card h-100">
                             <div class="card-header">
                                 <i class="fas fa-pencil-alt me-2"></i>Chỉnh sửa thanh trượt
                             </div>
                             <div class="card-body">
-                                <!-- Replace the existing form in sliderdetail.jsp with this form -->
                                 <form id="sliderForm" method="POST" action="${pageContext.request.contextPath}/marketing/detailSlider" 
                                       enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="${slider.getId()}">
@@ -185,72 +179,40 @@
                                     </div>
 
                                     <div class="mb-3">
-    <div class="row">
-        <div class="col-md-6">
-            <label for="postSelect" class="form-label fw-bold">Chọn bài đăng đã xuất bản:</label>
-            <select id="postSelect" name="selectedPost" class="form-select" onchange="toggleSelection('post')">
-                <option value="">-- Chọn bài đăng --</option>
-                <c:forEach var="post" items="${publishedPosts}">
-                    <option value="${post.id}" ${slider.postId == post.id ? 'selected' : ''}>${post.title}</option>
-                </c:forEach>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label for="productSelect" class="form-label fw-bold">Chọn sản phẩm đang bán:</label>
-            <select id="productSelect" name="selectedProduct" class="form-select" onchange="toggleSelection('product')">
-                <option value="">-- Chọn sản phẩm --</option>
-                <c:forEach var="product" items="${activeProducts}">
-                    <option value="${product.id}" ${slider.productId == product.id ? 'selected' : ''}>${product.title}</option>
-                </c:forEach>
-            </select>
-        </div>
-    </div>
-    
-</div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="postSelect" class="form-label fw-bold">Chọn bài đăng đã xuất bản:</label>
+                                                <select id="postSelect" name="selectedPost" class="form-select" onchange="toggleSelection('post')">
+                                                    <option value="">-- Chọn bài đăng --</option>
+                                                    <c:forEach var="post" items="${publishedPosts}">
+                                                        <option value="${post.id}" ${slider.postId == post.id ? 'selected' : ''}>${post.title}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="productSelect" class="form-label fw-bold">Chọn sản phẩm đang bán:</label>
+                                                <select id="productSelect" name="selectedProduct" class="form-select" onchange="toggleSelection('product')">
+                                                    <option value="">-- Chọn sản phẩm --</option>
+                                                    <c:forEach var="product" items="${activeProducts}">
+                                                        <option value="${product.id}" ${slider.productId == product.id ? 'selected' : ''}>${product.title}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                        </div>
 
-<script>
-function toggleSelection(selected) {
-    if (selected === 'post') {
-        // If post is selected with a valid value, clear product
-        if (document.getElementById('postSelect').value !== '') {
-            document.getElementById('productSelect').value = '';
-        }
-    } else if (selected === 'product') {
-        // If product is selected with a valid value, clear post
-        if (document.getElementById('productSelect').value !== '') {
-            document.getElementById('postSelect').value = '';
-        }
-    }
-}
+                                    </div>
 
-function resetSelections() {
-    // Reset both dropdown selections
-    document.getElementById('postSelect').value = '';
-    document.getElementById('productSelect').value = '';
-}
-
-// Initialize the form to handle the existing state
-document.addEventListener("DOMContentLoaded", function() {
-    // If either dropdown has a value on page load, make sure the other is empty
-    if (document.getElementById('postSelect').value !== '') {
-        document.getElementById('productSelect').value = '';
-    } else if (document.getElementById('productSelect').value !== '') {
-        document.getElementById('postSelect').value = '';
-    }
-});
-</script>
-
-                                               <div class="mb-3">
-                                                   <label for="display_order" class="form-label fw-bold">Thứ tự hiển thị</label>
-                                                   <input type="number" class="form-control" id="display_order" name="display_order" 
-                                                          value="${slider.getDisplay_order()}" required min="1">
-                                                   <small class="text-muted">
-                                                       Thứ tự hiển thị đã tồn tại: 
-                                                       <c:forEach items="${existingOrders}" var="order" varStatus="status">
-                                                           ${order}<c:if test="${!status.last}">, </c:if>
-                                                       </c:forEach>
-                                                   </small>
-                                               </div>
+                                    <div class="mb-3">
+                                        <label for="display_order" class="form-label fw-bold">Thứ tự hiển thị</label>
+                                        <input type="number" class="form-control" id="display_order" name="display_order" 
+                                               value="${slider.getDisplay_order()}" required min="1">
+                                        <small class="text-muted">
+                                            Thứ tự hiển thị đã tồn tại: 
+                                            <c:forEach items="${existingOrders}" var="order" varStatus="status">
+                                                ${order}<c:if test="${!status.last}">, </c:if>
+                                            </c:forEach>
+                                        </small>
+                                    </div>
 
                                     <div class="mb-3">
                                         <label for="notes" class="form-label fw-bold">Ghi chú</label>
@@ -361,9 +323,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Display order warning
     const displayOrderInput = document.getElementById("display_order");
     const existingOrders = [
-        <c:forEach items="${existingOrders}" var="order" varStatus="status">
-            ${order}<c:if test="${!status.last}">,</c:if>
-        </c:forEach>
+            <c:forEach items="${existingOrders}" var="order" varStatus="status">
+                ${order}<c:if test="${!status.last}">,</c:if>
+            </c:forEach>
     ];
 
     displayOrderInput.addEventListener("input", function() {
@@ -393,8 +355,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 height: 400
             });
 
-// Simple CKEditor validation
-// CKEditor validation for notes field
             $(document).ready(function () {
                 // Initialize CKEditor
                 var editor = CKEDITOR.replace('notes', {
@@ -459,6 +419,36 @@ displayOrderInput.addEventListener("input", function() {
 });
             
         </script>
+        <script>
+        function toggleSelection(selected) {
+            if (selected === 'post') {
+                // If post is selected with a valid value, clear product
+                if (document.getElementById('postSelect').value !== '') {
+                    document.getElementById('productSelect').value = '';
+                }
+            } else if (selected === 'product') {
+                // If product is selected with a valid value, clear post
+                if (document.getElementById('productSelect').value !== '') {
+                    document.getElementById('postSelect').value = '';
+                }
+            }
+        }
 
+        function resetSelections() {
+            // Reset both dropdown selections
+            document.getElementById('postSelect').value = '';
+            document.getElementById('productSelect').value = '';
+        }
+
+        // Initialize the form to handle the existing state
+        document.addEventListener("DOMContentLoaded", function() {
+            // If either dropdown has a value on page load, make sure the other is empty
+            if (document.getElementById('postSelect').value !== '') {
+                document.getElementById('productSelect').value = '';
+            } else if (document.getElementById('productSelect').value !== '') {
+                document.getElementById('postSelect').value = '';
+            }
+        });
+        </script>
     </body>
 </html>

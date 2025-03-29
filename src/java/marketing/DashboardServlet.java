@@ -16,83 +16,77 @@ import java.util.Map;
 
 @WebServlet(name = "DashboardServlet", urlPatterns = {"/marketing/dashboard"})
 public class DashboardServlet extends HttpServlet {
-    
-    @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    
-    // Parse date range parameters, default to last 7 days if not provided
-    Date startDate = getStartDate(request);
-    Date endDate = getEndDate(request);
-    
-    // Get dashboard statistics
-    DashboardDAO dashboardDAO = new DashboardDAO();
-    DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
-    
-    // Ensure these methods are called directly here, not relying on getDashboardStatsssss
-    Map<String, Integer> productsByCategory = dashboardDAO.getProductsByCategory();
-    Map<Integer, Integer> feedbackByRating = dashboardDAO.getFeedbackByRating();
-    
-    stats.setProductsByCategory(productsByCategory);
-    stats.setFeedbackByRating(feedbackByRating);
 
-    // Set attributes for JSP
-    request.setAttribute("stats", stats);
-    request.setAttribute("startDateStr", formatDate(startDate));
-    request.setAttribute("endDateStr", formatDate(endDate));
-    
-    // Explicitly set these as separate attributes for easier access in JSP
-    request.setAttribute("productsByCategory", productsByCategory);
-    request.setAttribute("feedbackByRating", feedbackByRating);
-    request.setAttribute("customerContactStats", stats.getCustomerContactStats());
-    request.setAttribute("topVIPCustomers", stats.getTopVIPCustomers());
-    
-    // Forward to JSP
-    request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);
-}
-    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Date startDate = getStartDate(request);
+        Date endDate = getEndDate(request);
+
+        DashboardDAO dashboardDAO = new DashboardDAO();
+        DashboardStats stats = dashboardDAO.getDashboardStats(startDate, endDate);
+
+        Map<String, Integer> productsByCategory = dashboardDAO.getProductsByCategory();
+        Map<Integer, Integer> feedbackByRating = dashboardDAO.getFeedbackByRating();
+
+        stats.setProductsByCategory(productsByCategory);
+        stats.setFeedbackByRating(feedbackByRating);
+
+        request.setAttribute("stats", stats);
+        request.setAttribute("startDateStr", formatDate(startDate));
+        request.setAttribute("endDateStr", formatDate(endDate));
+
+        request.setAttribute("productsByCategory", productsByCategory);
+        request.setAttribute("feedbackByRating", feedbackByRating);
+        request.setAttribute("customerContactStats", stats.getCustomerContactStats());
+        request.setAttribute("topVIPCustomers", stats.getTopVIPCustomers());
+
+        request.getRequestDispatcher("/marketing/mktdashboard.jsp").forward(request, response);
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Handle any form submissions (like date range changes)
+
         doGet(request, response);
     }
-    
+
     private Date getStartDate(HttpServletRequest request) {
         String startDateStr = request.getParameter("startDate");
         if (startDateStr != null && !startDateStr.isEmpty()) {
             try {
                 return parseDate(startDateStr);
             } catch (ParseException e) {
-                // Ignore parsing errors and use default
+
             }
         }
-        
+
         // Default: 7 days ago
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -7);
         return cal.getTime();
     }
-    
+
     private Date getEndDate(HttpServletRequest request) {
         String endDateStr = request.getParameter("endDate");
         if (endDateStr != null && !endDateStr.isEmpty()) {
             try {
                 return parseDate(endDateStr);
             } catch (ParseException e) {
-                // Ignore parsing errors and use default
+
             }
         }
-        
+
         // Default: today
         return new Date();
     }
-    
+
     private Date parseDate(String dateStr) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.parse(dateStr);
     }
-    
+
     private String formatDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);

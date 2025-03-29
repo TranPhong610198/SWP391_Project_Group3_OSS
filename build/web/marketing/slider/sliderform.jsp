@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create New Slider</title>
+        <title>Thêm Thanh Trượt</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
@@ -133,7 +133,6 @@
         <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
         
         <button class="btn btn-primary sidebar-toggle">
@@ -263,7 +262,7 @@
             titleCharCount.textContent = titleInput.value.length;
         });
     });
-</script>
+        </script>
         <script>
             $(document).ready(function () {
                 // Toggle sidebar
@@ -349,6 +348,6 @@
         }
     });
 });
-</script>
+        </script>
     </body>
 </html>

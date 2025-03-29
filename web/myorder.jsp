@@ -673,6 +673,12 @@
                 <c:forEach items="${orders}" var="order">
                     <div class="order-card">
                         <div class="order-header">
+                            <c:if test="${order.status == 'pending_pay'}">
+                                <div class="alert alert-warning mt-3">
+                                    Đơn hàng sẽ tự động bị hủy nếu không thanh toán trong vòng 3 ngày kể từ 
+                                    <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>.
+                                </div>
+                            </c:if>
                             <div>
                                 <div class="order-id">Đơn hàng #${order.orderCode}</div>
                                 <div class="order-date">Ngày đặt: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></div>

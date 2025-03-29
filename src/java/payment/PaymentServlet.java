@@ -180,7 +180,7 @@ public class PaymentServlet extends HttpServlet {
             if (order == null) {
                 throw new Exception("Không tìm thấy đơn hàng trong session hoặc database");
             }
-
+            
             if (order.getId() == 0) {
                 order = orderDAO.createOrder(order);
             }
@@ -196,7 +196,7 @@ public class PaymentServlet extends HttpServlet {
                 emptyCart.setItems(new ArrayList<>());
                 cartDAO.saveCartToCookies(response, emptyCart);
             }
-
+            
             if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
                 // Thanh toán thành công
                 orderDAO.updatePaymentStatus(order.getId(), "completed");

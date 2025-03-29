@@ -26,10 +26,10 @@ import java.util.List;
  */
 @WebServlet(name = "DetailPostServlet", urlPatterns = {"/marketing/detailPost"})
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,    // 1 MB
-    maxFileSize = 1024 * 1024 * 10,      // 10 MB
-    maxRequestSize = 1024 * 1024 * 15,   // 15 MB
-    location = ""
+        fileSizeThreshold = 1024 * 1024, // 1 MB
+        maxFileSize = 1024 * 1024 * 10, // 10 MB
+        maxRequestSize = 1024 * 1024 * 15, // 15 MB
+        location = ""
 )
 public class PostDetailServlet extends HttpServlet {
 
@@ -78,7 +78,6 @@ public class PostDetailServlet extends HttpServlet {
             PostDAO postDAO = new PostDAO();
             Post p = postDAO.getPostById(postId);
 
-
             request.setAttribute("post", p);
             request.getRequestDispatcher("/marketing/post/postdetail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
@@ -106,8 +105,7 @@ public class PostDetailServlet extends HttpServlet {
         String content = request.getParameter("content");
         String status = request.getParameter("status");
         Date updatedAt = new Date(System.currentTimeMillis());
-        
-        // Nếu bất kỳ trường nào bị để trống, báo lỗi
+
         if (title.isEmpty() || summary.isEmpty() || content.isEmpty() || status.isEmpty()) {
             request.setAttribute("error", "Tất cả các trường không được để trống.");
             request.setAttribute("post", new Post(id, title, oldThumbnail, summary, content, status, updatedAt));
@@ -115,7 +113,7 @@ public class PostDetailServlet extends HttpServlet {
             return;
         }
         Part thumbnailPart = request.getPart("thumbnail");
-        String thumbnail = oldThumbnail; // Giữ ảnh cũ mặc định
+        String thumbnail = oldThumbnail;
         boolean isFeatured = request.getParameter("isFeatured") != null;
         try {
             Part filePart = request.getPart("thumbnail");
@@ -125,10 +123,10 @@ public class PostDetailServlet extends HttpServlet {
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
                 }
-                
+
                 String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
                 String filePath = uploadPath + File.separator + fileName;
-                
+
                 filePart.write(filePath);
                 thumbnail = "uploads/post/" + fileName;
             }
@@ -137,32 +135,28 @@ public class PostDetailServlet extends HttpServlet {
         }
 
         PostDAO postDAO = new PostDAO();
-    Post oldPost = postDAO.getPostById(id);
+        Post oldPost = postDAO.getPostById(id);
 
-    // Kiểm tra nếu không có thay đổi gì
-    if (oldPost.getTitle().equals(title) && 
-        oldPost.getSummary().equals(summary) && 
-        oldPost.getContent().equals(content) && 
-        oldPost.getStatus().equals(status) && 
-        oldPost.getThumbnail().equals(thumbnail) && 
-        oldPost.isIsFeatured() == isFeatured) {
-        response.sendRedirect("postList");
-        return;
-    }
-    
+        if (oldPost.getTitle().equals(title)
+                && oldPost.getSummary().equals(summary)
+                && oldPost.getContent().equals(content)
+                && oldPost.getStatus().equals(status)
+                && oldPost.getThumbnail().equals(thumbnail)
+                && oldPost.isIsFeatured() == isFeatured) {
+            response.sendRedirect("postList");
+            return;
+        }
+
         Post post = new Post(id, title, thumbnail, summary, content, status, updatedAt);
         post.setIsFeatured(isFeatured);
-        
+
         boolean isUpdated = postDAO.updatePost(post);
 
-        //Post p = postDAO.getPostById(id);
-
-
         if (isUpdated) {
-            // Lưu thông báo thành công vào session thay vì request
-        request.getSession().setAttribute("success", "Bài đăng đã được cập nhật thành công.");
-        // Chuyển hướng về trang danh sách bài đăng
-        response.sendRedirect("postList");
+
+            request.getSession().setAttribute("success", "Bài đăng đã được cập nhật thành công.");
+
+            response.sendRedirect("postList");
         } else {
 
             request.setAttribute("post", oldPost);

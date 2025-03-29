@@ -8,41 +8,34 @@ import java.util.Map;
 
 public class SalesReport {
 
-    // Sales Overview
     private int totalOrders;
     private BigDecimal totalRevenue;
     private BigDecimal averageOrderValue;
     private int totalCustomers;
     private int totalProducts;
 
-    // Time-based metrics
     private Map<String, BigDecimal> dailyRevenue;
     private Map<String, BigDecimal> monthlyRevenue;
     private Map<String, Integer> ordersPerDay;
     private Map<String, Integer> ordersPerMonth;
 
-    // Product performance
     private List<ProductPerformance> topProducts;
     private Map<String, BigDecimal> revenueByCategoryMap;
     private Map<String, Integer> ordersByCategoryMap;
 
-    // Customer metrics
     private int newCustomers;
     private int returningCustomers;
     private Map<String, Integer> customersByGender;
     private List<CustomerPerformance> topCustomers;
 
-    // Order processing
     private Map<String, Integer> ordersByStatus;
     private double averageFulfillmentTime; // in hours
 
-    // Date range for the report
     private Date startDate;
     private Date endDate;
 
-    // Default constructor
     public SalesReport() {
-        // Khởi tạo các giá trị mặc định nếu cần
+
         this.totalOrders = 0;
         this.totalRevenue = BigDecimal.ZERO;
         this.averageOrderValue = BigDecimal.ZERO;
@@ -53,7 +46,6 @@ public class SalesReport {
         this.averageFulfillmentTime = 0.0;
     }
 
-    // Full constructor
     public SalesReport(int totalOrders, BigDecimal totalRevenue, BigDecimal averageOrderValue,
             int totalCustomers, int totalProducts, Map<String, BigDecimal> dailyRevenue,
             Map<String, BigDecimal> monthlyRevenue, Map<String, Integer> ordersPerDay,
@@ -84,7 +76,6 @@ public class SalesReport {
         this.endDate = endDate;
     }
 
-    // Inner classes (ProductPerformance and CustomerPerformance) remain unchanged
     public static class ProductPerformance {
 
         private int productId;
@@ -94,9 +85,8 @@ public class SalesReport {
         private BigDecimal totalRevenue;
         private Map<String, Integer> sizeDistribution;
         private Map<String, Integer> colorDistribution;
-         private Map<String, Integer> variantDistribution = new HashMap<>();
+        private Map<String, Integer> variantDistribution = new HashMap<>();
 
-        // Getters and setters (unchanged)
         public int getProductId() {
             return productId;
         }
@@ -152,15 +142,14 @@ public class SalesReport {
         public void setColorDistribution(Map<String, Integer> colorDistribution) {
             this.colorDistribution = colorDistribution;
         }
-        
-        public Map<String, Integer> getVariantDistribution() {
-        return variantDistribution;
-    }
 
-    // Setter cho variantDistribution
-    public void setVariantDistribution(Map<String, Integer> variantDistribution) {
-        this.variantDistribution = variantDistribution;
-    }
+        public Map<String, Integer> getVariantDistribution() {
+            return variantDistribution;
+        }
+
+        public void setVariantDistribution(Map<String, Integer> variantDistribution) {
+            this.variantDistribution = variantDistribution;
+        }
     }
 
     public static class CustomerPerformance {
@@ -174,7 +163,6 @@ public class SalesReport {
         private Date firstOrderDate;
         private Date lastOrderDate;
 
-        // Getters and setters (unchanged)
         public int getUserId() {
             return userId;
         }
@@ -240,7 +228,6 @@ public class SalesReport {
         }
     }
 
-    // Getters and Setters (unchanged)
     public int getTotalOrders() {
         return totalOrders;
     }

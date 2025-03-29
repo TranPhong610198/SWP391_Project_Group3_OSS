@@ -24,7 +24,7 @@ public class MKTReportServlet extends HttpServlet {
         
         String selectedTable = request.getParameter("selectedTable");
         if (selectedTable == null) {
-            selectedTable = "kpi"; // Mặc định là KPI Tổng quan
+            selectedTable = "kpi"; 
         }
         
         MarketingReportDAO reportDAO = new MarketingReportDAO();

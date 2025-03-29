@@ -54,29 +54,35 @@ public class CartCompletion extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
+    User user = (User) session.getAttribute("acc");
 
-        // Kiểm tra đơn hàng đã hoàn tất từ PaymentServlet
-        Order completedOrder = (Order) session.getAttribute("completed_order");
-        if (completedOrder != null) {
-            prepareOrderAttributes(request, completedOrder);
-            session.removeAttribute("completed_order");
-            request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
-            return;
-        }
+    // Kiểm tra đơn hàng đã hoàn tất từ PaymentServlet
+    Order completedOrder = (Order) session.getAttribute("completed_order");
+    if (completedOrder != null) {
+        prepareOrderAttributes(request, completedOrder);
+        session.removeAttribute("completed_order");
+        request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
+        return;
+    }
 
-        // Lấy thông tin từ session
-        String addressId = (String) session.getAttribute("shipping_address_id");
-        String shippingMethod = (String) session.getAttribute("shipping_method");
-        Double shippingFee = (Double) session.getAttribute("shipping_fee");
-        String paymentMethod = (String) session.getAttribute("payment_method");
+    // Lấy thông tin từ session
+    String addressId = (String) session.getAttribute("shipping_address_id");
+    String shippingMethod = (String) session.getAttribute("shipping_method");
+    Double shippingFee = (Double) session.getAttribute("shipping_fee");
+    String paymentMethod = (String) session.getAttribute("payment_method");
 
-        if (addressId == null || shippingMethod == null || shippingFee == null || paymentMethod == null) {
-            response.sendRedirect("cartdetail");
-            return;
-        }
+    if (addressId == null || shippingMethod == null || shippingFee == null || paymentMethod == null) {
+        response.sendRedirect("cartdetail");
+        return;
+    }
 
-        // Lấy danh sách sản phẩm đã chọn
+    // Kiểm tra nếu là trường hợp "Mua lại"
+    List<CartItem> selectedItems = (List<CartItem>) session.getAttribute("selectedItemsFromReorder");
+    if (selectedItems != null) {
+        // Trường hợp "Mua lại" - sử dụng selectedItems trực tiếp từ session
+        session.removeAttribute("selectedItemsFromReorder"); // Xóa sau khi sử dụng
+    } else {
+        // Trường hợp thông thường - lấy từ giỏ hàng
         List<String> selectedItemIds = (List<String>) session.getAttribute("selectedItemIds");
         List<String> selectedQuantities = (List<String>) session.getAttribute("selectedQuantities");
 
@@ -90,7 +96,7 @@ public class CartCompletion extends HttpServlet {
             response.sendRedirect("cartdetail");
             return;
         }
-        List<CartItem> selectedItems = new ArrayList<>();
+        selectedItems = new ArrayList<>();
         for (CartItem item : cart.getItems()) {
             for (int i = 0; i < selectedItemIds.size(); i++) {
                 if (String.valueOf(item.getId()).equals(selectedItemIds.get(i))) {
@@ -105,72 +111,73 @@ public class CartCompletion extends HttpServlet {
             response.sendRedirect("cartdetail");
             return;
         }
+    }
 
-        UserAddress shippingAddress = getShippingAddress(user, addressId, request);
-        if (shippingAddress == null) {
-            response.sendRedirect("cartcontact");
-            return;
-        }
+    UserAddress shippingAddress = getShippingAddress(user, addressId, request);
+    if (shippingAddress == null) {
+        response.sendRedirect("cartcontact");
+        return;
+    }
 
-        // Tính toán tổng tiền
-        double subtotal = 0;
-        for (CartItem item : selectedItems) {
-            subtotal += item.getProductPrice() * item.getQuantity();
-        }
-        // Kiểm tra lại phí vận chuyển dựa trên subtotal
-        if (subtotal > 500000) {
-            shippingFee = 0.0; // Miễn phí vận chuyển nếu subtotal > 500k
+    // Tính toán tổng tiền
+    double subtotal = 0;
+    for (CartItem item : selectedItems) {
+        subtotal += item.getProductPrice() * item.getQuantity();
+    }
+    // Kiểm tra lại phí vận chuyển dựa trên subtotal
+    if (subtotal > 500000) {
+        shippingFee = 0.0; // Miễn phí vận chuyển nếu subtotal > 500k
+    } else {
+        shippingFee = "express".equals(shippingMethod) ? 45000.0 : 30000.0;
+    }
+
+    Double discountAmount = (Double) session.getAttribute("cartDiscount");
+    String appliedCoupon = (String) session.getAttribute("appliedCoupon");
+    double total = subtotal - (discountAmount != null ? discountAmount : 0) + shippingFee;
+
+    // Tạo đối tượng Order
+    Order order = new Order();
+    if (user != null) {
+        order.setUserId(user.getId());
+        order.setRecipientEmail((String) session.getAttribute("user_email"));
+    } else {
+        order.setRecipientEmail((String) session.getAttribute("guest_email"));
+    }
+
+    String orderCode = "ORD" + System.currentTimeMillis() + (int) (Math.random() * 1000);
+    order.setOrderCode(orderCode);
+    order.setStatus("bank".equals(paymentMethod) ? "pending_pay" : "pending");
+    order.setTotal(total);
+    order.setRecipientName(shippingAddress.getRecipientName());
+    order.setPhone(shippingAddress.getPhone());
+    order.setAddress(shippingAddress.getAddress());
+    order.setItems(selectedItems);
+    order.setShippingMethod(shippingMethod);
+    order.setPaymentMethod(paymentMethod);
+    order.setShippingFee(shippingFee);
+    order.setPaymentStatus("pending_pay");
+    if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
+        order.setDiscountAmount(discountAmount);
+        order.setCouponCode(appliedCoupon);
+    }
+
+    // Xử lý theo phương thức thanh toán
+    if ("bank".equals(paymentMethod)) {
+        session.setAttribute("pending_order", order);
+        response.sendRedirect("payment");
+        return;
+    } else if ("cod".equals(paymentMethod)) {
+        Order savedOrder = orderDAO.createOrder(order);
+        if (savedOrder != null) {
+            prepareOrderAttributes(request, savedOrder);
+            clearCartAndSession(request, response, user, selectedItems, session);
+            request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
         } else {
-            shippingFee = "express".equals(shippingMethod) ? 45000.0 : 30000.0;
-        }
-
-        Double discountAmount = (Double) session.getAttribute("cartDiscount");
-        String appliedCoupon = (String) session.getAttribute("appliedCoupon");
-        double total = subtotal - (discountAmount != null ? discountAmount : 0) + shippingFee;
-
-        // Tạo đối tượng Order
-        Order order = new Order();
-        if (user != null) {
-            order.setUserId(user.getId());
-            order.setRecipientEmail((String) session.getAttribute("user_email"));
-        } else {
-            order.setRecipientEmail((String) session.getAttribute("guest_email"));
-        }
-
-        String orderCode = "ORD" + System.currentTimeMillis() + (int) (Math.random() * 1000);
-        order.setOrderCode(orderCode);
-        order.setStatus("bank".equals(paymentMethod) ? "pending_pay" : "pending");
-        order.setTotal(total);
-        order.setRecipientName(shippingAddress.getRecipientName());
-        order.setPhone(shippingAddress.getPhone());
-        order.setAddress(shippingAddress.getAddress());
-        order.setItems(selectedItems);
-        order.setShippingMethod(shippingMethod);
-        order.setPaymentMethod(paymentMethod);
-        order.setShippingFee(shippingFee);
-        order.setPaymentStatus("pending_pay");
-        if (discountAmount != null && discountAmount > 0 && appliedCoupon != null) {
-            order.setDiscountAmount(discountAmount);
-            order.setCouponCode(appliedCoupon);
-        }
-
-        // Xử lý theo phương thức thanh toán
-        if ("bank".equals(paymentMethod)) {
-            session.setAttribute("pending_order", order);
-            response.sendRedirect("payment");
-            return;
-        } else if ("cod".equals(paymentMethod)) {
-            Order savedOrder = orderDAO.createOrder(order);
-            if (savedOrder != null) {
-                prepareOrderAttributes(request, savedOrder);
-                clearCartAndSession(request, response, user, selectedItems, session);
-                request.getRequestDispatcher("cartcompletion.jsp").forward(request, response);
-            } else {
-                request.setAttribute("error", "Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
-                request.getRequestDispatcher("cartdetail").forward(request, response);
-            }
+            request.setAttribute("error", "Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
+            request.getRequestDispatcher("cartdetail").forward(request, response);
         }
     }
+}
 
     // Phương thức hỗ trợ để gán các thuộc tính cho request
     private void prepareOrderAttributes(HttpServletRequest request, Order order) {

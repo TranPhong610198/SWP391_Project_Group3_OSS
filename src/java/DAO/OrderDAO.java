@@ -982,4 +982,56 @@ public class OrderDAO extends DBContext {
         }
         return false;
     }
+    public void checkAndCancelExpiredPendingPayOrders() {
+    Connection conn = null;
+    PreparedStatement stmtSelect = null;
+    PreparedStatement stmtUpdate = null;
+    ResultSet rs = null;
+
+    try {
+        conn = connection;
+        conn.setAutoCommit(false);
+
+        // Lấy tất cả đơn hàng pending_pay quá 3 ngày
+        String sqlSelect = "SELECT id, user_id, created_at FROM orders " +
+                          "WHERE status = 'pending_pay' AND " +
+                          "DATEDIFF(day, created_at, GETDATE()) >= 3";
+        
+        stmtSelect = conn.prepareStatement(sqlSelect);
+        rs = stmtSelect.executeQuery();
+
+        while (rs.next()) {
+            int orderId = rs.getInt("id");
+            int userId = rs.getInt("user_id");
+
+            // Hủy đơn hàng
+            boolean cancelled = cancelOrder(orderId, userId);
+            if (cancelled) {
+                System.out.println("Automatically cancelled expired order: " + orderId);
+            } else {
+                System.out.println("Failed to cancel expired order: " + orderId);
+            }
+        }
+
+        conn.commit();
+    } catch (SQLException e) {
+        System.out.println("Error checking expired orders: " + e.getMessage());
+        try {
+            if (conn != null) {
+                conn.rollback();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Rollback failed: " + ex.getMessage());
+        }
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (stmtSelect != null) stmtSelect.close();
+            if (stmtUpdate != null) stmtUpdate.close();
+            if (conn != null) conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            System.out.println("Error closing resources: " + e.getMessage());
+        }
+    }
+}
 }

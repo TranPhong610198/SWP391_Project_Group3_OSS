@@ -5,35 +5,35 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blog Posts</title>
+        <title>Danh Sách Bài Đăng</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .post-card {
                 height: 100%;
                 transition: transform 0.3s;
                 border: none;
                 box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             }
-            
+
             .post-card:hover {
                 transform: translateY(-5px);
             }
-            
+
             .post-image {
                 height: 200px;
                 object-fit: cover;
             }
-            
+
             .post-meta {
                 font-size: 0.9rem;
                 color: #6c757d;
             }
-            
+
             .post-summary {
                 font-size: 0.95rem;
                 color: #495057;
@@ -42,21 +42,21 @@
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
-            
+
             .latest-post-card {
                 transition: background-color 0.3s;
             }
-            
+
             .latest-post-card:hover {
                 background-color: #f8f9fa;
             }
-            
+
             .latest-post-image {
                 width: 80px;
                 height: 80px;
                 object-fit: cover;
             }
-            
+
             .search-box {
                 background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(10px);
@@ -65,14 +65,14 @@
                 margin-bottom: 30px;
                 box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             }
-            
+
             .pagination .page-link {
                 color: #0d6efd;
                 border: none;
                 margin: 0 3px;
                 border-radius: 5px;
             }
-            
+
             .pagination .page-item.active .page-link {
                 background-color: #0d6efd;
                 color: white;
@@ -80,9 +80,8 @@
         </style>
     </head>
     <body>
-        <!-- Include the header -->
         <jsp:include page="/header.jsp" />
-        
+
         <div class="container py-5">
             <!-- Search Section -->
             <div class="search-box mb-4">
@@ -103,10 +102,9 @@
             </div>
 
             <div class="row">
-                <!-- Main Content -->
                 <div class="col-lg-8">
                     <h2 class="mb-4">Tất cả bài đăng</h2>
-                    
+
                     <div class="row g-4">
                         <c:choose>
                             <c:when test="${not empty posts}">
@@ -153,7 +151,6 @@
                         </c:choose>
                     </div>
 
-                    <!-- Pagination -->
                     <nav class="mt-5">
                         <ul class="pagination justify-content-center">
                             <c:if test="${currentPage > 1}">
@@ -181,7 +178,6 @@
                     </nav>
                 </div>
 
-                <!-- Sidebar -->
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header bg-white">
@@ -222,10 +218,8 @@
                 </div>
             </div>
         </div>
-                        
-        <jsp:include page="chat.jsp" />    
 
-        <!-- Include the footer -->
+        <jsp:include page="chat.jsp" />
         <jsp:include page="/footer.jsp" />
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

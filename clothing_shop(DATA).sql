@@ -224,8 +224,6 @@ INSERT [dbo].[categories] ([id], [name], [description], [parent_id], [level], [s
 GO
 SET IDENTITY_INSERT [dbo].[categories] OFF
 GO
-USE [clothing_shop]
-GO
 SET IDENTITY_INSERT [dbo].[products] ON 
 GO
 INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_price], [sale_price], [thumbnail], [status], [is_combo], [combo_group_id], [created_at], [updated_at]) VALUES (1, N'Áo sơ mi trắng', 12, N'<p><strong>Áo Sơ Mi Trắng – Thanh Lịch, Đơn Giản, Dễ Phối Đồ</strong></p>
@@ -568,7 +566,6 @@ INSERT [dbo].[products] ([id], [title], [category_id], [description], [original_
 GO
 SET IDENTITY_INSERT [dbo].[products] OFF
 GO
-
 SET IDENTITY_INSERT [dbo].[product_sizes] ON 
 GO
 INSERT [dbo].[product_sizes] ([id], [product_id], [size]) VALUES (1, 1, N'S')
@@ -1169,7 +1166,7 @@ INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [sto
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (117, 15, 52, 33, 30, CAST(N'2025-03-01T05:32:04.3800000' AS DateTime2))
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (118, 16, 53, 34, 50, CAST(N'2025-03-01T05:30:33.9566667' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (118, 16, 53, 34, 49, CAST(N'2025-03-01T05:30:33.9566667' AS DateTime2))
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (119, 16, 54, 34, 70, CAST(N'2025-03-01T05:30:24.7866667' AS DateTime2))
 GO
@@ -1381,7 +1378,7 @@ INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [sto
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (223, 29, 92, 69, 49, CAST(N'2025-03-01T05:06:43.1100000' AS DateTime2))
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (224, 29, 93, 69, 65, CAST(N'2025-03-01T05:06:48.2166667' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (224, 29, 93, 69, 65, CAST(N'2025-03-29T20:08:25.3533333' AS DateTime2))
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (225, 29, 94, 69, 55, CAST(N'2025-03-01T05:06:53.3000000' AS DateTime2))
 GO
@@ -1403,7 +1400,7 @@ INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [sto
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (234, 29, 95, 71, 35, CAST(N'2025-03-01T05:07:06.8766667' AS DateTime2))
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (235, 30, 96, 72, 29, CAST(N'2025-03-01T04:44:23.9066667' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (235, 30, 96, 72, 28, CAST(N'2025-03-01T04:44:23.9066667' AS DateTime2))
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (236, 30, 97, 72, 39, CAST(N'2025-03-01T04:44:30.8933333' AS DateTime2))
 GO
@@ -1411,7 +1408,7 @@ INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [sto
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (238, 30, 99, 72, 25, CAST(N'2025-03-01T04:57:45.6966667' AS DateTime2))
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (239, 30, 96, 73, 25, CAST(N'2025-03-01T05:05:25.7800000' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (239, 30, 96, 73, 24, CAST(N'2025-03-01T05:05:25.7800000' AS DateTime2))
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (240, 30, 97, 73, 35, CAST(N'2025-03-01T05:06:23.2533333' AS DateTime2))
 GO
@@ -1419,7 +1416,7 @@ INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [sto
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (242, 30, 99, 73, 20, CAST(N'2025-03-01T05:06:29.0633333' AS DateTime2))
 GO
-INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (243, 31, 100, 74, 39, CAST(N'2025-03-01T04:26:19.1566667' AS DateTime2))
+INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (243, 31, 100, 74, 38, CAST(N'2025-03-01T04:26:19.1566667' AS DateTime2))
 GO
 INSERT [dbo].[product_variants] ([id], [product_id], [size_id], [color_id], [stock_quantity], [last_restock_date]) VALUES (244, 31, 101, 74, 55, CAST(N'2025-03-01T04:26:17.3833333' AS DateTime2))
 GO
@@ -1479,7 +1476,257 @@ INSERT [dbo].[cart_items] ([id], [cart_id], [product_id], [variant_id], [quantit
 GO
 INSERT [dbo].[cart_items] ([id], [cart_id], [product_id], [variant_id], [quantity]) VALUES (3, 3, 3, 3, 1)
 GO
+INSERT [dbo].[cart_items] ([id], [cart_id], [product_id], [variant_id], [quantity]) VALUES (6, 5, 31, 246, 1)
+GO
 SET IDENTITY_INSERT [dbo].[cart_items] OFF
+GO
+SET IDENTITY_INSERT [dbo].[orders] ON 
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (1, 4, N'pending', CAST(1050000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241428405538', CAST(N'2025-03-29T16:43:48.4100000' AS DateTime2), CAST(N'2025-03-29T16:43:48.4100000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (2, 4, N'shipping', CAST(711000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241470259289', CAST(N'2025-03-29T16:44:30.2566667' AS DateTime2), CAST(N'2025-03-29T16:44:48.7100000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (3, 4, N'processing', CAST(530000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241514599980', CAST(N'2025-03-29T16:45:14.6000000' AS DateTime2), CAST(N'2025-03-29T16:45:23.3066667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (4, 4, N'completed', CAST(1300000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241570395435', CAST(N'2025-03-29T16:46:10.3933333' AS DateTime2), CAST(N'2025-03-29T16:46:57.8066667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (5, 4, N'returned', CAST(225000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241646245155', CAST(N'2025-03-29T16:47:26.2466667' AS DateTime2), CAST(N'2025-03-29T16:47:58.3800000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (6, 4, N'completed', CAST(252000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241725948883', CAST(N'2025-03-29T16:48:45.9466667' AS DateTime2), CAST(N'2025-03-29T16:49:21.6766667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (7, 4, N'completed', CAST(510000.00 AS Decimal(10, 2)), N'Nguyễn Thi B', N'user123@gmail.com', N'0866046585', N'thôn 4, Phường Duyệt Trung, Thành phố Cao Bằng, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743241840947177', CAST(N'2025-03-29T16:50:40.9466667' AS DateTime2), CAST(N'2025-03-29T16:51:17.9600000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (8, 4, N'completed', CAST(830000.00 AS Decimal(10, 2)), N'Nguyễn Văn C', N'user123@gmail.com', N'0961004959', N'thôn 5, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743241990370593', CAST(N'2025-03-29T16:53:10.3700000' AS DateTime2), CAST(N'2025-03-29T16:53:57.3333333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (9, 6, N'completed', CAST(1430000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242141730751', CAST(N'2025-03-29T16:55:41.7300000' AS DateTime2), CAST(N'2025-03-29T16:56:07.8400000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (10, 6, N'completed', CAST(580000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242411259913', CAST(N'2025-03-29T17:00:11.2600000' AS DateTime2), CAST(N'2025-03-29T17:01:10.2233333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (11, 6, N'pending', CAST(180000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242501646465', CAST(N'2025-03-29T17:01:41.6466667' AS DateTime2), CAST(N'2025-03-29T17:01:41.6466667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (12, 6, N'processing', CAST(260000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242522880742', CAST(N'2025-03-29T17:02:02.8800000' AS DateTime2), CAST(N'2025-03-29T17:02:13.7933333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (13, 8, N'completed', CAST(1380000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242625696490', CAST(N'2025-03-29T17:03:45.6933333' AS DateTime2), CAST(N'2025-03-29T17:04:09.4933333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (14, 8, N'shipping', CAST(180000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242680246480', CAST(N'2025-03-29T17:04:40.2466667' AS DateTime2), CAST(N'2025-03-29T17:04:59.4266667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (15, 8, N'cancelled', CAST(445000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242748011878', CAST(N'2025-03-29T17:05:48.0100000' AS DateTime2), CAST(N'2025-03-29T17:06:00.9800000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (16, 8, N'returned', CAST(295000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242790299989', CAST(N'2025-03-29T17:06:30.3000000' AS DateTime2), CAST(N'2025-03-29T17:06:52.3733333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (17, 12, N'completed', CAST(900000.00 AS Decimal(10, 2)), N'Nguyen Hong Hanh', N'GuYuan@gmail.com', N'0961004935', N'thôn 5, Xã Quảng Khê, Huyện Ba Bể, Tỉnh Bắc Kạn', NULL, NULL, N'ORD1743242886766576', CAST(N'2025-03-29T17:08:06.7633333' AS DateTime2), CAST(N'2025-03-29T17:08:40.9600000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (18, 12, N'completed', CAST(3230000.00 AS Decimal(10, 2)), N'Nguyen Hong Hanh', N'GuYuan@gmail.com', N'0961004935', N'thôn 5, Xã Quảng Khê, Huyện Ba Bể, Tỉnh Bắc Kạn', NULL, NULL, N'ORD1743243013931542', CAST(N'2025-03-29T17:10:13.9300000' AS DateTime2), CAST(N'2025-03-29T17:10:40.6600000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (19, 12, N'cancelled', CAST(550000.00 AS Decimal(10, 2)), N'Nguyen Hong Hanh', N'GuYuan@gmail.com', N'0961004935', N'thôn 5, Xã Quảng Khê, Huyện Ba Bể, Tỉnh Bắc Kạn', NULL, NULL, N'ORD1743243064277146', CAST(N'2025-03-29T17:11:04.2766667' AS DateTime2), CAST(N'2025-03-29T17:11:08.6900000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (20, 7, N'completed', CAST(578000.00 AS Decimal(10, 2)), N'Nguyễn Thi D', N'XiaoDing@gmail.com', N'0866046543', N'thôn 3, Phường Ngọc Hà, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743245078046293', CAST(N'2025-03-29T17:44:38.0466667' AS DateTime2), CAST(N'2025-03-29T17:45:39.6066667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (21, 7, N'completed', CAST(1770000.00 AS Decimal(10, 2)), N'Nguyễn Thi D', N'XiaoDing@gmail.com', N'0866046543', N'thôn 3, Phường Ngọc Hà, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743245281309826', CAST(N'2025-03-29T17:48:01.3066667' AS DateTime2), CAST(N'2025-03-29T17:48:29.0633333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (22, 6, N'completed', CAST(268000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD174324554941174', CAST(N'2025-03-29T17:52:29.4100000' AS DateTime2), CAST(N'2025-03-29T17:52:50.5066667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (23, 4, N'pending_pay', CAST(480000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD17432534094115', CAST(N'2025-03-29T20:03:29.4166667' AS DateTime2), CAST(N'2025-03-29T20:03:29.4766667' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (24, 4, N'processing', CAST(225000.00 AS Decimal(10, 2)), N'Nguyễn Văn C', N'user123@gmail.com', N'0961004959', N'thôn 5, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743253488997649', CAST(N'2025-03-29T20:04:48.9966667' AS DateTime2), CAST(N'2025-03-29T20:04:49.0233333' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (25, 4, N'completed', CAST(237000.00 AS Decimal(10, 2)), N'Nguyễn Văn C', N'user123@gmail.com', N'0961004959', N'thôn 5, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743253560350921', CAST(N'2025-03-29T20:06:00.3500000' AS DateTime2), CAST(N'2025-03-29T20:06:27.8500000' AS DateTime2))
+GO
+INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (26, 4, N'returned', CAST(180000.00 AS Decimal(10, 2)), N'Nguyễn Thi B', N'user123@gmail.com', N'0866046585', N'thôn 4, Phường Duyệt Trung, Thành phố Cao Bằng, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743253679026823', CAST(N'2025-03-29T20:07:59.0233333' AS DateTime2), CAST(N'2025-03-29T20:08:25.3466667' AS DateTime2))
+GO
+SET IDENTITY_INSERT [dbo].[orders] OFF
+GO
+SET IDENTITY_INSERT [dbo].[order_items] ON 
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (1, 1, 32, N'Quần kaki nam', N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'28 - Xanh navy', 3, CAST(350000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (2, 1, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'2-4 - Trắng họa tiết', 1, CAST(150000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (3, 2, 11, N'Quần short siêu nhân', N'https://img.alicdn.com/imgextra/i3/350427093/O1CN01JDrMyz22GdnbaZ9Y6_!!350427093.jpg_600x600.jpg_.webp', N'2-4 - Xanh', 1, CAST(550000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (4, 2, 6, N'Quần short cotton', N'https://ardilla.com.vn/wp-content/uploads/2022/03/TB1601QST.jpg', N'2-4 - Xanh navy', 2, CAST(120000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (5, 3, 14, N'Quần jogger thể thao', N'https://thegioidotap.vn/wp-content/uploads/2020/12/quan-dai-the-thao-nam-jogger-sg10-3.jpg', N'S - Xám', 2, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (6, 4, 10, N'Giày sneaker', N'https://bizweb.dktcdn.net/thumb/large/100/041/044/products/48f5343d-9f9a-4ed2-aa02-de2ad1f4fabc-jpeg.jpg?v=1694597357733', N'39 - Đen', 2, CAST(400000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (7, 4, 9, N'Giày thể thao', N'https://img.mwc.com.vn/giay-thoi-trang?w=480&h=510&FileInput=/Resources/Product/2024/09/22/z5855779313414_2914371405362ca7f474791328971969.jpg', N'39 - Trắng', 1, CAST(500000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (8, 5, 28, N'Dép lào nam cao cấp', N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'39 - Nâu', 1, CAST(180000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (9, 6, 30, N'Nhẫn bạc đính đá zircon', N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'6 - Bạc', 1, CAST(230000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (10, 7, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'S - Xám', 2, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (11, 8, 12, N'Áo sơ mi xanh', N'https://pos.nvncdn.com/a36e05-151378/ps/20230712_TkKQqMtkUO.jpeg', N'L - Xanh', 2, CAST(200000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (12, 8, 22, N'Áo sơ mi nam kẻ sọc', N'https://aoxuanhe.com/upload/product/axh-111/ao-so-mi-nam-ke-soc-xanh-duong-1.jpg', N'M - Trắng sọc đen', 1, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (13, 8, 1, N'Áo sơ mi trắng', N'https://product.hstatic.net/1000333436/product/tx_03696_da789ffaa68d42d3b2ad129b099e15ae_master.jpg', N'M - Xanh nhạt', 2, CAST(200000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (14, 9, 32, N'Quần kaki nam', N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'30 - Xanh navy', 2, CAST(350000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (15, 9, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'M - Xám', 1, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (16, 9, 4, N'Chân váy denim', N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'L - Xanh đậm', 1, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (17, 9, 25, N'Túi đeo chéo nữ mini', N'https://image.kacana.vn/images/product/tui-cheo-dung-dien-thoai-va-tien-you-2811-1720436440.jpg', N'Onesize - Đen', 1, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (18, 10, 3, N'Đầm hoa mùa hè', N'https://file.hstatic.net/200000503583/file/vay-hoa-mua-he__11__c2791afbbda941238c114b00b403ec57.jpg', N'M - Hoa đỏ', 1, CAST(400000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (19, 10, 28, N'Dép lào nam cao cấp', N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'39 - Đen', 1, CAST(180000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (20, 11, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'2-4 - Xanh da trời họa tiết', 1, CAST(150000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (21, 12, 30, N'Nhẫn bạc đính đá zircon', N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'5 - Bạc', 1, CAST(230000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (22, 13, 14, N'Quần jogger thể thao', N'https://thegioidotap.vn/wp-content/uploads/2020/12/quan-dai-the-thao-nam-jogger-sg10-3.jpg', N'M - Xám', 2, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (23, 13, 32, N'Quần kaki nam', N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'34 - Be', 2, CAST(350000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (24, 13, 28, N'Dép lào nam cao cấp', N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'40 - Nâu', 1, CAST(180000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (25, 14, 5, N'Áo thun siêu nhân', N'https://target.scene7.com/is/image/Target/GUEST_1079d260-d8e2-4d6e-b757-7dd7254ddda5?wid=800&hei=800&qlt=80&fmt=webp', N'2-4 - Xanh', 1, CAST(150000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (26, 15, 15, N'Đầm maxi hoa nhí', N'https://vayfashion.com/wp-content/uploads/2022/05/2c7cf97edbac2d98f120bf85c824f1aa.jpg', N'S - Hồng họa tiết hoa trắng', 1, CAST(420000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (27, 16, 25, N'Túi đeo chéo nữ mini', N'https://image.kacana.vn/images/product/tui-cheo-dung-dien-thoai-va-tien-you-2811-1720436440.jpg', N'Onesize - Đen', 1, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (28, 17, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'2-4 - Xanh da trời họa tiết', 4, CAST(150000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (29, 17, 5, N'Áo thun siêu nhân', N'https://target.scene7.com/is/image/Target/GUEST_1079d260-d8e2-4d6e-b757-7dd7254ddda5?wid=800&hei=800&qlt=80&fmt=webp', N'4-6 - Đỏ', 2, CAST(150000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (30, 18, 2, N'Quần tây đen', N'https://product.hstatic.net/200000053174/product/20_bddc67b2b01a4fc6a89b6d5ca1e78b33_master.jpg', N'M - Đen', 3, CAST(300000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (31, 18, 3, N'Đầm hoa mùa hè', N'https://file.hstatic.net/200000503583/file/vay-hoa-mua-he__11__c2791afbbda941238c114b00b403ec57.jpg', N'S - Hoa đỏ', 4, CAST(400000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (32, 18, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'M - Xám', 1, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (33, 18, 4, N'Chân váy denim', N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'M - Đen', 1, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (34, 18, 1, N'Áo sơ mi trắng', N'https://product.hstatic.net/1000333436/product/tx_03696_da789ffaa68d42d3b2ad129b099e15ae_master.jpg', N'M - Trắng', 1, CAST(200000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (35, 19, 11, N'Quần short siêu nhân', N'https://img.alicdn.com/imgextra/i3/350427093/O1CN01JDrMyz22GdnbaZ9Y6_!!350427093.jpg_600x600.jpg_.webp', N'2-4 - Xanh', 1, CAST(550000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (36, 20, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'S - Đen', 1, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (37, 20, 4, N'Chân váy denim', N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'M - Xanh đậm', 1, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (38, 20, 26, N'Bông tai bạc hình giọt nước', N'https://lili.vn/wp-content/uploads/2021/12/Bong-tai-bac-nu-ma-bach-kim-dinh-da-CZ-hinh-giot-nuoc-LILI_416496_13.jpg', N'Onesize - Bạc', 1, CAST(150000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (39, 21, 13, N'Áo khoác bomber nam', N'https://ginstore.com.vn/files/sanpham/1885/1/png/ao-khoac-bomber-local-brand-rg-butterfly-varsity-jacket-nam-nu-tay-da-vasity-bong-chay-form-rong-unisex.png', N'S - Đen', 1, CAST(450000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (40, 21, 17, N'Váy công chúa cho bé gái', N'https://tutupetti.com/wp-content/uploads/2023/07/dam_dep_cho_be_du_tiec_04.jpg', N'4-6 - Hồng pastel', 1, CAST(320000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (41, 21, 15, N'Đầm maxi hoa nhí', N'https://vayfashion.com/wp-content/uploads/2022/05/2c7cf97edbac2d98f120bf85c824f1aa.jpg', N'S - Trắng họa tiết hoa xanh', 1, CAST(420000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (42, 21, 21, N'Kính mát thời trang', N'https://hoyahc.vn/wp-content/uploads/2022/01/kinh-redex-kinh-mat.jpg', N'Onesize - Đen', 1, CAST(200000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (43, 21, 19, N'Dây chuyền bạc nữ', N'https://pos.nvncdn.com/211f76-106986/ps/20240805_RdCu2zj3rc.jpeg', N'40cm - Bạc', 1, CAST(250000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (44, 21, 20, N'Giày cao gót nữ', N'https://img.mwc.com.vn/giay-thoi-trang?w=480&h=510&FileInput=/Resources/Product/2024/09/20/z5850479583248_27cb755c82bd913bc95a09019f771777.jpg', N'35 - Kem', 1, CAST(380000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (45, 22, 22, N'Áo sơ mi nam kẻ sọc', N'https://aoxuanhe.com/upload/product/axh-111/ao-so-mi-nam-ke-soc-xanh-duong-1.jpg', N'S - Xanh nhạt sọc trắng', 1, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (46, 23, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'S - Đen', 1, CAST(280000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (47, 23, 30, N'Nhẫn bạc đính đá zircon', N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'5 - Bạc', 1, CAST(230000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (48, 24, 16, N'Áo thun unisex', N'https://sure.vn/wp-content/uploads/2024/08/7-1-scaled.jpg', N'S - Trắng', 1, CAST(180000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (49, 25, 30, N'Nhẫn bạc đính đá zircon', N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'5 - Vàng hồng', 1, CAST(230000.00 AS Decimal(10, 2)))
+GO
+INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (50, 26, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'4-6 - Trắng họa tiết', 1, CAST(150000.00 AS Decimal(10, 2)))
+GO
+SET IDENTITY_INSERT [dbo].[order_items] OFF
+GO
+SET IDENTITY_INSERT [dbo].[feedback] ON 
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (1, 30, 12, 5, N'Quần tây đen chất lượng rất tốt, vải dày dặn nhưng vẫn thoáng mát, không bị nhăn nhiều. Form quần chuẩn, lên dáng đẹp, rất phù hợp để đi làm hoặc đi tiệc. Giao hàng nhanh, đóng gói cẩn thận. Mình sẽ tiếp tục ủng hộ shop!', N'approved', CAST(N'2025-03-29T17:22:11.5233333' AS DateTime2), CAST(N'2025-03-29T17:54:40.1633333' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (2, 31, 12, 4, N'Váy đẹp, đường may chắc chắn, chất vải mịn. Tuy nhiên, mình đặt size hơi chật một chút, lần sau mình sẽ chọn size lớn hơn. Nhìn chung rất đáng mua!', N'approved', CAST(N'2025-03-29T17:22:11.5433333' AS DateTime2), CAST(N'2025-03-29T17:56:39.7266667' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (3, 32, 12, 3, N'Váy đẹp, chất vải mềm mịn, đường may chắc chắn. Tuy nhiên, phần lưng hơi rộng so với dáng người mình, phải bóp lại một chút. Nhưng tổng thể vẫn rất đáng mua!', N'approved', CAST(N'2025-03-29T17:22:11.5500000' AS DateTime2), CAST(N'2025-03-29T17:56:51.6433333' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (4, 33, 12, 2, N'Chân váy denim có form đẹp nhưng chất vải cứng và hơi thô, mặc không thoải mái lắm. Mình đặt size S nhưng phần eo hơi rộng, phải chỉnh lại. Giao hàng khá lâu so với dự kiến. Hy vọng shop cải thiện chất lượng và dịch vụ!', N'approved', CAST(N'2025-03-29T17:22:11.5566667' AS DateTime2), CAST(N'2025-03-29T17:56:47.4100000' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (5, 34, 12, 5, N'Áo sơ mi trắng đẹp xuất sắc! Chất vải mềm, mịn, không quá mỏng, mặc rất thoải mái. Form áo chuẩn, lên dáng thanh lịch, phù hợp cả đi làm và đi chơi. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng, sẽ ủng hộ shop lần sau!', N'approved', CAST(N'2025-03-29T17:22:11.5600000' AS DateTime2), CAST(N'2025-03-29T17:56:43.9533333' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (6, 28, 12, 5, N'Áo thun cho bé siêu dễ thương! Chất vải mềm mịn, co giãn tốt, thấm hút mồ hôi nên bé mặc rất thoải mái. Hình in sắc nét, không bị bong tróc sau khi giặt. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng, sẽ mua thêm mẫu khác cho bé!', N'approved', CAST(N'2025-03-29T17:23:29.9666667' AS DateTime2), CAST(N'2025-03-29T17:54:36.8333333' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (7, 29, 12, 3, N'Áo thun siêu nhân thiết kế đẹp, hình in rõ nét nhưng chất vải hơi mỏng so với mong đợi. Sau khi giặt vài lần, màu có hơi phai nhẹ. Giao hàng đúng hẹn, nhưng mong shop cải thiện chất lượng vải hơn!"
+', N'approved', CAST(N'2025-03-29T17:23:29.9733333' AS DateTime2), CAST(N'2025-03-29T17:54:31.2766667' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (8, 18, 6, 4, N'Đầm hoa thiết kế xinh, họa tiết dễ thương, rất phù hợp cho mùa hè. Tuy nhiên, chất vải hơi mỏng và nhăn nhiều, phải ủi kỹ trước khi mặc. Form váy cũng rộng hơn so với size mình chọn. Giao hàng nhanh, nhưng mong shop cải thiện chất lượng vải hơn!', N'approved', CAST(N'2025-03-29T17:26:23.8400000' AS DateTime2), CAST(N'2025-03-29T17:54:27.4100000' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (9, 19, 6, 5, N'Dép rất êm chân, đế dày dặn và bám tốt, đi lâu không bị đau. Chất liệu bền, không có mùi khó chịu. Thiết kế đơn giản nhưng sang trọng, rất đáng tiền. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng!', N'approved', CAST(N'2025-03-29T17:26:23.8600000' AS DateTime2), CAST(N'2025-03-29T17:54:23.0566667' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (10, 14, 6, 4, N'Quần kaki chất vải tốt, dày dặn nhưng vẫn thoáng mát, mặc khá thoải mái. Form quần chuẩn, đường may chắc chắn. Tuy nhiên, màu sắc thực tế hơi khác so với hình ảnh. Giao hàng nhanh, shop tư vấn nhiệt tình. Nhìn chung rất hài lòng!', N'approved', CAST(N'2025-03-29T17:28:21.6100000' AS DateTime2), CAST(N'2025-03-29T17:54:19.9366667' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (11, 15, 6, 3, N'Chân váy có thiết kế xinh, form ổn nhưng chất vải hơi mỏng và dễ nhăn. Đường may chưa thực sự chắc chắn, mặc vài lần có dấu hiệu bung chỉ nhẹ. Giao hàng đúng hẹn. Mong shop cải thiện chất lượng hơn!', N'approved', CAST(N'2025-03-29T17:28:21.6133333' AS DateTime2), CAST(N'2025-03-29T17:54:17.9933333' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (12, 16, 6, 3, N'Chân váy denim có thiết kế đẹp, dễ phối đồ. Tuy nhiên, chất vải hơi cứng và form không ôm dáng như mong đợi. Màu sắc cũng hơi khác so với hình ảnh. Giao hàng nhanh nhưng mong shop cải thiện chất lượng vải hơn!', N'approved', CAST(N'2025-03-29T17:28:21.6200000' AS DateTime2), CAST(N'2025-03-29T17:54:15.6400000' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (13, 17, 6, 5, N'"Túi mini siêu xinh, nhỏ gọn nhưng đựng được khá nhiều đồ. Chất liệu đẹp, da mềm mịn, đường may chắc chắn. Dây đeo vừa vặn, có thể điều chỉnh linh hoạt. Phối đồ rất dễ dàng, phù hợp cho cả đi chơi và dạo phố. Giao hàng nhanh, đóng gói cẩn thận. Rất ưng ý!', N'approved', CAST(N'2025-03-29T17:28:21.6200000' AS DateTime2), CAST(N'2025-03-29T17:54:13.7066667' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (14, 39, 7, 3, N'Áo khoác bomber có thiết kế đẹp, kiểu dáng trẻ trung. Tuy nhiên, chất vải hơi mỏng hơn so với mong đợi, mặc mùa lạnh không đủ ấm. Đường may ổn nhưng khóa kéo hơi cứng. Giao hàng đúng hẹn. Mong shop cải thiện chất lượng hơn!', N'approved', CAST(N'2025-03-29T17:51:07.7933333' AS DateTime2), CAST(N'2025-03-29T17:54:11.1800000' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (15, 40, 7, 5, N'Váy công chúa siêu đẹp, bé nhà mình rất thích! Chất vải mềm mịn, không gây ngứa hay khó chịu. Thiết kế bồng bềnh, màu sắc đúng như hình, đường may chắc chắn. Mặc lên nhìn yêu lắm! Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng!', N'approved', CAST(N'2025-03-29T17:51:07.8133333' AS DateTime2), CAST(N'2025-03-29T17:54:07.0966667' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (16, 41, 7, 4, N'Đầm maxi hoa nhí rất xinh, thiết kế nhẹ nhàng, nữ tính. Chất vải mềm, thoáng mát, mặc mùa hè rất dễ chịu. Tuy nhiên, váy hơi dài hơn so với mong đợi, phải chỉnh lại một chút. Giao hàng nhanh, đóng gói cẩn thận. Nhìn chung rất hài lòng!', N'approved', CAST(N'2025-03-29T17:51:07.8133333' AS DateTime2), CAST(N'2025-03-29T17:54:09.1333333' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (17, 42, 7, 2, N'Kính mát có thiết kế đẹp nhưng chất lượng chưa tốt. Gọng kính hơi lỏng, đeo lâu không thoải mái. Tròng kính chống nắng không hiệu quả như mong đợi. Giao hàng đúng hẹn nhưng sản phẩm chưa thực sự ưng ý. Mong shop cải thiện chất lượng hơn!', N'approved', CAST(N'2025-03-29T17:51:07.8200000' AS DateTime2), CAST(N'2025-03-29T17:54:04.9000000' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (18, 43, 7, 4, N'Dây chuyền bạc đẹp, thiết kế tinh tế và sang trọng. Chất liệu sáng, đeo không bị kích ứng da. Tuy nhiên, dây hơi mỏng hơn so với tưởng tượng, cần giữ gìn cẩn thận. Giao hàng nhanh, đóng gói cẩn thận. Nhìn chung rất ưng ý!', N'approved', CAST(N'2025-03-29T17:51:07.8233333' AS DateTime2), CAST(N'2025-03-29T17:54:02.6400000' AS DateTime2))
+GO
+INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (19, 44, 7, 5, N'Giày cao gót cực đẹp, đi rất êm chân, không bị đau dù mang cả ngày. Chất liệu tốt, đường may chắc chắn, thiết kế thanh lịch và dễ phối đồ. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng, sẽ ủng hộ shop lần sau!', N'approved', CAST(N'2025-03-29T17:51:07.8266667' AS DateTime2), CAST(N'2025-03-29T17:54:00.9266667' AS DateTime2))
+GO
+SET IDENTITY_INSERT [dbo].[feedback] OFF
+GO
+SET IDENTITY_INSERT [dbo].[feedback_reply] ON 
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (1, 19, 3, N'Cảm ơn chị đã dành thời gian đánh giá sản phẩm! 💖 Shop rất vui khi biết chị hài lòng với đôi giày cao gót – vừa đẹp, vừa êm chân! ✨ Chúng em luôn nỗ lực mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tuyệt vời nhất. Hy vọng sẽ tiếp tục được phục vụ chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, đừng ngại liên hệ với shop nhé!❤️❤️', CAST(N'2025-03-29T17:58:46.1566667' AS DateTime2), CAST(N'2025-03-29T17:58:46.1566667' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (2, 18, 3, N'**Phản hồi từ Shop:**  
+
+"Cảm ơn chị đã tin tưởng và dành những lời khen cho sản phẩm của shop! 💖 Rất vui khi chị hài lòng với thiết kế và chất lượng của dây chuyền bạc. ✨ Shop sẽ tiếp tục cải thiện để mang đến những sản phẩm ngày càng hoàn thiện hơn. Nếu cần tư vấn thêm về cách bảo quản dây chuyền để luôn sáng đẹp, chị cứ nhắn shop nhé! Hy vọng sẽ được phục vụ chị trong những lần mua sắm tiếp theo! ❤️"  
+', CAST(N'2025-03-29T17:59:18.0233333' AS DateTime2), CAST(N'2025-03-29T17:59:18.0233333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (3, 17, 3, N'Cảm ơn anh/chị đã dành thời gian chia sẻ ý kiến về sản phẩm! 🙏 Shop rất tiếc khi sản phẩm chưa đáp ứng hoàn toàn mong đợi của anh/chị. Chúng em ghi nhận góp ý về chất lượng kính và sẽ làm việc với nhà cung cấp để cải thiện tốt hơn. Nếu anh/chị cần hỗ trợ đổi trả hoặc có bất kỳ thắc mắc nào, vui lòng liên hệ với shop để được hỗ trợ nhanh nhất ạ. Rất mong có cơ hội phục vụ anh/chị tốt hơn trong lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T17:59:34.6433333' AS DateTime2), CAST(N'2025-03-29T17:59:34.6433333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (4, 15, 3, N'Cảm ơn chị đã tin tưởng và dành những lời khen cho sản phẩm của shop! 💖 Rất vui khi bé nhà mình yêu thích chiếc váy công chúa này! 👗✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và đáng yêu nhất cho các bé. Hy vọng sẽ tiếp tục được phục vụ chị và bé trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T17:59:52.5233333' AS DateTime2), CAST(N'2025-03-29T17:59:52.5233333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (5, 16, 3, N'"Cảm ơn chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi chị ưng ý với thiết kế và chất liệu của đầm maxi hoa nhí. 🌸✨ Shop ghi nhận góp ý về độ dài váy và sẽ xem xét để cải thiện hơn trong những mẫu sau. Hy vọng sẽ tiếp tục được phục vụ chị trong những lần mua sắm tiếp theo. Nếu cần hỗ trợ gì thêm, chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:00:07.5200000' AS DateTime2), CAST(N'2025-03-29T18:00:07.5200000' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (6, 14, 3, N'Cảm ơn anh/chị đã dành thời gian chia sẻ đánh giá! 🙏 Rất vui khi anh/chị ưng ý với thiết kế trẻ trung của áo khoác bomber. ✨ Shop ghi nhận góp ý về chất vải và khóa kéo, và sẽ làm việc với nhà cung cấp để cải thiện chất lượng tốt hơn. Nếu cần hỗ trợ thêm, anh/chị cứ nhắn shop nhé! Hy vọng sẽ có cơ hội phục vụ anh/chị trong những lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T18:00:26.0566667' AS DateTime2), CAST(N'2025-03-29T18:00:26.0566667' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (7, 12, 3, N'Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị ưng ý với thiết kế của chân váy denim. Shop ghi nhận góp ý về chất vải và form dáng, và sẽ xem xét để cải thiện hơn trong những mẫu sau. ✨ Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo. Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:00:44.2233333' AS DateTime2), CAST(N'2025-03-29T18:00:44.2233333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (8, 13, 3, N'Cảm ơn anh/chị đã tin tưởng và dành những lời khen cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chiếc túi mini – vừa xinh xắn, tiện lợi lại dễ phối đồ. 👜✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tốt nhất. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, đừng ngại nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:03.4733333' AS DateTime2), CAST(N'2025-03-29T18:01:03.4733333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (9, 11, 3, N'Cảm ơn anh/chị đã dành thời gian chia sẻ đánh giá! 💖 Rất vui khi anh/chị ưng ý với thiết kế của chân váy. Shop ghi nhận góp ý về chất vải và đường may, và sẽ làm việc với nhà cung cấp để cải thiện chất lượng tốt hơn. ✨ Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo. Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:19.6366667' AS DateTime2), CAST(N'2025-03-29T18:01:19.6366667' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (10, 10, 3, N'Cảm ơn anh/chị đã tin tưởng và dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với chất vải, form dáng và sự tư vấn nhiệt tình từ shop. 🛍️✨ Shop ghi nhận góp ý về màu sắc và sẽ cố gắng cải thiện hình ảnh sản phẩm để khách hàng có trải nghiệm mua sắm tốt hơn. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:36.0066667' AS DateTime2), CAST(N'2025-03-29T18:01:36.0066667' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (11, 9, 3, N'Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với đôi dép – vừa êm chân, bền đẹp lại thoải mái khi sử dụng. 👣✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tốt nhất. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, đừng ngại nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:53.8200000' AS DateTime2), CAST(N'2025-03-29T18:01:53.8200000' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (12, 8, 3, N'Cảm ơn anh/chị đã chia sẻ đánh giá chi tiết về sản phẩm! 💖 Rất vui khi anh/chị ưng ý với thiết kế và họa tiết của đầm hoa. 🌸✨ Shop ghi nhận góp ý về chất vải và form dáng, và sẽ làm việc với nhà cung cấp để cải thiện chất lượng tốt hơn. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:02:18.8900000' AS DateTime2), CAST(N'2025-03-29T18:02:18.8900000' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (13, 7, 3, N'Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với thiết kế và hình in của áo thun siêu nhân. 🦸✨ Shop ghi nhận góp ý về chất vải và độ bền màu, và sẽ làm việc với nhà cung cấp để cải thiện hơn trong những mẫu sau. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, anh/chị cứ nhắn shop nhé! ❤️"Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với thiết kế và hình in của áo thun siê', CAST(N'2025-03-29T18:02:37.6566667' AS DateTime2), CAST(N'2025-03-29T18:02:37.6566667' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (14, 6, 3, N'Cảm ơn anh/chị đã tin tưởng và ủng hộ sản phẩm của shop! 💖 Rất vui khi bé nhà mình mặc áo thun thoải mái và ưng ý với chất lượng sản phẩm. 👕✨ Shop luôn cố gắng mang đến những mẫu áo dễ thương, chất liệu tốt nhất cho bé yêu. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:02:57.6466667' AS DateTime2), CAST(N'2025-03-29T18:02:57.6466667' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (15, 5, 3, N'Cảm ơn anh/chị đã dành những lời khen tuyệt vời cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất vải, form dáng và sự thanh lịch của áo sơ mi trắng. 👔✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tốt nhất. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:03:17.1533333' AS DateTime2), CAST(N'2025-03-29T18:03:17.1533333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (16, 4, 3, N'Cảm ơn anh/chị đã chia sẻ đánh giá chi tiết về sản phẩm! 💖 Rất tiếc khi chân váy chưa hoàn toàn đáp ứng mong đợi của anh/chị. Shop ghi nhận góp ý về chất vải, form dáng và thời gian giao hàng để cải thiện tốt hơn trong tương lai. ✨ Nếu anh/chị cần hỗ trợ thêm về size hoặc bất kỳ vấn đề gì, đừng ngại liên hệ với shop nhé! Hy vọng sẽ có cơ hội phục vụ anh/chị tốt hơn trong lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T18:03:40.1700000' AS DateTime2), CAST(N'2025-03-29T18:03:40.1700000' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (17, 3, 3, N'Cảm ơn anh/chị đã tin tưởng và dành lời khen cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất vải và đường may của váy. ✨ Shop ghi nhận góp ý về form dáng để cải thiện hơn trong những mẫu sau. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:03:55.8633333' AS DateTime2), CAST(N'2025-03-29T18:03:55.8633333' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (18, 2, 3, N'Cảm ơn anh/chị đã tin tưởng và đánh giá sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất vải và đường may của váy. ✨ Nếu cần tư vấn kỹ hơn về size để chọn được sản phẩm phù hợp nhất, anh/chị cứ nhắn shop nhé! Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T18:04:10.7900000' AS DateTime2), CAST(N'2025-03-29T18:04:10.7900000' AS DateTime2))
+GO
+INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (19, 1, 3, N'Cảm ơn anh/chị đã tin tưởng và dành lời khen cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất lượng vải, form dáng và sự tiện dụng của quần tây đen. 👖✨ Shop luôn cố gắng mang đến những sản phẩm tốt nhất để khách hàng có trải nghiệm mua sắm tuyệt vời. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:04:27.9233333' AS DateTime2), CAST(N'2025-03-29T18:04:27.9233333' AS DateTime2))
+GO
+SET IDENTITY_INSERT [dbo].[feedback_reply] OFF
 GO
 SET IDENTITY_INSERT [dbo].[posts] ON 
 GO
@@ -1527,7 +1774,7 @@ INSERT [dbo].[customer_contact_history] ([id], [user_id], [customer_type], [emai
 GO
 INSERT [dbo].[customer_contact_history] ([id], [user_id], [customer_type], [email], [full_name], [gender], [mobile], [total_purchases], [total_spend], [updated_at]) VALUES (2, 4, N'normal', N'user123@gmail.com', N'Nguyễn Thi B', N'male', N'0866046585', 1, CAST(510000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T16:51:17.9633333' AS DateTime2))
 GO
-INSERT [dbo].[customer_contact_history] ([id], [user_id], [customer_type], [email], [full_name], [gender], [mobile], [total_purchases], [total_spend], [updated_at]) VALUES (3, 4, N'normal', N'user123@gmail.com', N'Nguyễn Văn C', N'male', N'0961004959', 1, CAST(830000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T16:53:57.3500000' AS DateTime2))
+INSERT [dbo].[customer_contact_history] ([id], [user_id], [customer_type], [email], [full_name], [gender], [mobile], [total_purchases], [total_spend], [updated_at]) VALUES (3, 4, N'vip', N'user123@gmail.com', N'Nguyễn Văn C', N'male', N'0961004959', 2, CAST(1067000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T20:06:27.8700000' AS DateTime2))
 GO
 INSERT [dbo].[customer_contact_history] ([id], [user_id], [customer_type], [email], [full_name], [gender], [mobile], [total_purchases], [total_spend], [updated_at]) VALUES (4, 6, N'vip', N'user321@gmail.com', N'Nguyen Hanh Nhan', N'male', N'0866046598', 3, CAST(2278000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T17:52:50.5100000' AS DateTime2))
 GO
@@ -1586,54 +1833,6 @@ GO
 INSERT [dbo].[messages] ([id], [sender_id], [receiver_id], [content], [image_url], [is_read], [created_at]) VALUES (9, 3, 4, N'shop có mẫu quần tây kaki ạ', N'/fashionshop/uploads/message/e9f600d9-a0ac-45b8-b851-0d360414883a.webp', 0, CAST(N'2025-03-29T18:09:24.5300000' AS DateTime2))
 GO
 SET IDENTITY_INSERT [dbo].[messages] OFF
-GO
-SET IDENTITY_INSERT [dbo].[orders] ON 
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (1, 4, N'pending', CAST(1050000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241428405538', CAST(N'2025-03-29T16:43:48.4100000' AS DateTime2), CAST(N'2025-03-29T16:43:48.4100000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (2, 4, N'shipping', CAST(711000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241470259289', CAST(N'2025-03-29T16:44:30.2566667' AS DateTime2), CAST(N'2025-03-29T16:44:48.7100000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (3, 4, N'processing', CAST(530000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241514599980', CAST(N'2025-03-29T16:45:14.6000000' AS DateTime2), CAST(N'2025-03-29T16:45:23.3066667' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (4, 4, N'completed', CAST(1300000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241570395435', CAST(N'2025-03-29T16:46:10.3933333' AS DateTime2), CAST(N'2025-03-29T16:46:57.8066667' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (5, 4, N'returned', CAST(225000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241646245155', CAST(N'2025-03-29T16:47:26.2466667' AS DateTime2), CAST(N'2025-03-29T16:47:58.3800000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (6, 4, N'completed', CAST(252000.00 AS Decimal(10, 2)), N'Nguyễn Văn A', N'user123@gmail.com', N'0866046581', N'thôn 1, Xã Ngọc Hồi, Huyện Thanh Trì, Thành phố Hà Nội', NULL, NULL, N'ORD1743241725948883', CAST(N'2025-03-29T16:48:45.9466667' AS DateTime2), CAST(N'2025-03-29T16:49:21.6766667' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (7, 4, N'completed', CAST(510000.00 AS Decimal(10, 2)), N'Nguyễn Thi B', N'user123@gmail.com', N'0866046585', N'thôn 4, Phường Duyệt Trung, Thành phố Cao Bằng, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743241840947177', CAST(N'2025-03-29T16:50:40.9466667' AS DateTime2), CAST(N'2025-03-29T16:51:17.9600000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (8, 4, N'completed', CAST(830000.00 AS Decimal(10, 2)), N'Nguyễn Văn C', N'user123@gmail.com', N'0961004959', N'thôn 5, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743241990370593', CAST(N'2025-03-29T16:53:10.3700000' AS DateTime2), CAST(N'2025-03-29T16:53:57.3333333' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (9, 6, N'completed', CAST(1430000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242141730751', CAST(N'2025-03-29T16:55:41.7300000' AS DateTime2), CAST(N'2025-03-29T16:56:07.8400000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (10, 6, N'completed', CAST(580000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242411259913', CAST(N'2025-03-29T17:00:11.2600000' AS DateTime2), CAST(N'2025-03-29T17:01:10.2233333' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (11, 6, N'pending', CAST(180000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242501646465', CAST(N'2025-03-29T17:01:41.6466667' AS DateTime2), CAST(N'2025-03-29T17:01:41.6466667' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (12, 6, N'processing', CAST(260000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD1743242522880742', CAST(N'2025-03-29T17:02:02.8800000' AS DateTime2), CAST(N'2025-03-29T17:02:13.7933333' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (13, 8, N'completed', CAST(1380000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242625696490', CAST(N'2025-03-29T17:03:45.6933333' AS DateTime2), CAST(N'2025-03-29T17:04:09.4933333' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (14, 8, N'shipping', CAST(180000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242680246480', CAST(N'2025-03-29T17:04:40.2466667' AS DateTime2), CAST(N'2025-03-29T17:04:59.4266667' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (15, 8, N'cancelled', CAST(445000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242748011878', CAST(N'2025-03-29T17:05:48.0100000' AS DateTime2), CAST(N'2025-03-29T17:06:00.9800000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (16, 8, N'returned', CAST(295000.00 AS Decimal(10, 2)), N'Nguyen Van Anh', N'Medusa@gmail.com', N'0866046585', N'thôn 4, Phường Trần Phú, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743242790299989', CAST(N'2025-03-29T17:06:30.3000000' AS DateTime2), CAST(N'2025-03-29T17:06:52.3733333' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (17, 12, N'completed', CAST(900000.00 AS Decimal(10, 2)), N'Nguyen Hong Hanh', N'GuYuan@gmail.com', N'0961004935', N'thôn 5, Xã Quảng Khê, Huyện Ba Bể, Tỉnh Bắc Kạn', NULL, NULL, N'ORD1743242886766576', CAST(N'2025-03-29T17:08:06.7633333' AS DateTime2), CAST(N'2025-03-29T17:08:40.9600000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (18, 12, N'completed', CAST(3230000.00 AS Decimal(10, 2)), N'Nguyen Hong Hanh', N'GuYuan@gmail.com', N'0961004935', N'thôn 5, Xã Quảng Khê, Huyện Ba Bể, Tỉnh Bắc Kạn', NULL, NULL, N'ORD1743243013931542', CAST(N'2025-03-29T17:10:13.9300000' AS DateTime2), CAST(N'2025-03-29T17:10:40.6600000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (19, 12, N'cancelled', CAST(550000.00 AS Decimal(10, 2)), N'Nguyen Hong Hanh', N'GuYuan@gmail.com', N'0961004935', N'thôn 5, Xã Quảng Khê, Huyện Ba Bể, Tỉnh Bắc Kạn', NULL, NULL, N'ORD1743243064277146', CAST(N'2025-03-29T17:11:04.2766667' AS DateTime2), CAST(N'2025-03-29T17:11:08.6900000' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (20, 7, N'completed', CAST(578000.00 AS Decimal(10, 2)), N'Nguyễn Thi D', N'XiaoDing@gmail.com', N'0866046543', N'thôn 3, Phường Ngọc Hà, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743245078046293', CAST(N'2025-03-29T17:44:38.0466667' AS DateTime2), CAST(N'2025-03-29T17:45:39.6066667' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (21, 7, N'completed', CAST(1770000.00 AS Decimal(10, 2)), N'Nguyễn Thi D', N'XiaoDing@gmail.com', N'0866046543', N'thôn 3, Phường Ngọc Hà, Thành phố Hà Giang, Tỉnh Hà Giang', NULL, NULL, N'ORD1743245281309826', CAST(N'2025-03-29T17:48:01.3066667' AS DateTime2), CAST(N'2025-03-29T17:48:29.0633333' AS DateTime2))
-GO
-INSERT [dbo].[orders] ([id], [user_id], [status], [total_amount], [recipient_name], [recipient_email], [recipient_phone], [recipient_address], [shipping_code], [shiping_name], [notes], [created_at], [updated_at]) VALUES (22, 6, N'completed', CAST(268000.00 AS Decimal(10, 2)), N'Nguyen Hanh Nhan', N'user321@gmail.com', N'0866046598', N'thôn 6, Xã Mông Ân, Huyện Bảo Lâm, Tỉnh Cao Bằng', NULL, NULL, N'ORD174324554941174', CAST(N'2025-03-29T17:52:29.4100000' AS DateTime2), CAST(N'2025-03-29T17:52:50.5066667' AS DateTime2))
-GO
-SET IDENTITY_INSERT [dbo].[orders] OFF
 GO
 SET IDENTITY_INSERT [dbo].[order_history] ON 
 GO
@@ -1781,189 +1980,41 @@ INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes],
 GO
 INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (72, 22, 5, N'completed', N'Cập nhật trạng thái thành completed', CAST(N'2025-03-29T17:52:50.5066667' AS DateTime2))
 GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (73, 23, 4, N'pending', N'Đơn hàng mới được tạo', CAST(N'2025-03-29T20:03:29.4500000' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (74, 23, 1, N'pending_pay', N'Đang chờ thanh toán', CAST(N'2025-03-29T20:03:29.4733333' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (75, 23, 4, N'pending_pay', NULL, CAST(N'2025-03-29T20:03:29.4766667' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (76, 24, 4, N'pending', N'Đơn hàng mới được tạo', CAST(N'2025-03-29T20:04:49.0066667' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (77, 24, 1, N'pending_pay', N'Đã thanh toán thành công', CAST(N'2025-03-29T20:04:49.0233333' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (78, 24, 4, N'processing', NULL, CAST(N'2025-03-29T20:04:49.0233333' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (79, 25, 4, N'pending', N'Đơn hàng mới được tạo', CAST(N'2025-03-29T20:06:00.3500000' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (80, 25, 1, N'pending_pay', N'Đã thanh toán thành công', CAST(N'2025-03-29T20:06:00.3633333' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (81, 25, 4, N'processing', NULL, CAST(N'2025-03-29T20:06:00.3633333' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (82, 25, 1, N'shipping', N'Cập nhật trạng thái thành shipping', CAST(N'2025-03-29T20:06:22.0566667' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (83, 25, 1, N'completed', N'Cập nhật trạng thái thành completed', CAST(N'2025-03-29T20:06:27.8533333' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (84, 26, 4, N'pending', N'Đơn hàng mới được tạo', CAST(N'2025-03-29T20:07:59.0366667' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (85, 26, 1, N'pending_pay', N'Đã thanh toán thành công', CAST(N'2025-03-29T20:07:59.0500000' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (86, 26, 4, N'processing', NULL, CAST(N'2025-03-29T20:07:59.0500000' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (87, 26, 1, N'shipping', N'Cập nhật trạng thái thành shipping', CAST(N'2025-03-29T20:08:20.0000000' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (88, 26, 1, N'returned', N'Cập nhật trạng thái thành returned', CAST(N'2025-03-29T20:08:25.3466667' AS DateTime2))
+GO
+INSERT [dbo].[order_history] ([id], [order_id], [updated_by], [status], [notes], [updated_at]) VALUES (89, 23, 1, N'pending_pay', N'Đang chờ thanh toán', CAST(N'2025-03-29T20:16:52.6333333' AS DateTime2))
+GO
 SET IDENTITY_INSERT [dbo].[order_history] OFF
-GO
-SET IDENTITY_INSERT [dbo].[order_items] ON 
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (1, 1, 32, N'Quần kaki nam', N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'28 - Xanh navy', 3, CAST(350000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (2, 1, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'2-4 - Trắng họa tiết', 1, CAST(150000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (3, 2, 11, N'Quần short siêu nhân', N'https://img.alicdn.com/imgextra/i3/350427093/O1CN01JDrMyz22GdnbaZ9Y6_!!350427093.jpg_600x600.jpg_.webp', N'2-4 - Xanh', 1, CAST(550000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (4, 2, 6, N'Quần short cotton', N'https://ardilla.com.vn/wp-content/uploads/2022/03/TB1601QST.jpg', N'2-4 - Xanh navy', 2, CAST(120000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (5, 3, 14, N'Quần jogger thể thao', N'https://thegioidotap.vn/wp-content/uploads/2020/12/quan-dai-the-thao-nam-jogger-sg10-3.jpg', N'S - Xám', 2, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (6, 4, 10, N'Giày sneaker', N'https://bizweb.dktcdn.net/thumb/large/100/041/044/products/48f5343d-9f9a-4ed2-aa02-de2ad1f4fabc-jpeg.jpg?v=1694597357733', N'39 - Đen', 2, CAST(400000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (7, 4, 9, N'Giày thể thao', N'https://img.mwc.com.vn/giay-thoi-trang?w=480&h=510&FileInput=/Resources/Product/2024/09/22/z5855779313414_2914371405362ca7f474791328971969.jpg', N'39 - Trắng', 1, CAST(500000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (8, 5, 28, N'Dép lào nam cao cấp', N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'39 - Nâu', 1, CAST(180000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (9, 6, 30, N'Nhẫn bạc đính đá zircon', N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'6 - Bạc', 1, CAST(230000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (10, 7, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'S - Xám', 2, CAST(280000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (11, 8, 12, N'Áo sơ mi xanh', N'https://pos.nvncdn.com/a36e05-151378/ps/20230712_TkKQqMtkUO.jpeg', N'L - Xanh', 2, CAST(200000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (12, 8, 22, N'Áo sơ mi nam kẻ sọc', N'https://aoxuanhe.com/upload/product/axh-111/ao-so-mi-nam-ke-soc-xanh-duong-1.jpg', N'M - Trắng sọc đen', 1, CAST(280000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (13, 8, 1, N'Áo sơ mi trắng', N'https://product.hstatic.net/1000333436/product/tx_03696_da789ffaa68d42d3b2ad129b099e15ae_master.jpg', N'M - Xanh nhạt', 2, CAST(200000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (14, 9, 32, N'Quần kaki nam', N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'30 - Xanh navy', 2, CAST(350000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (15, 9, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'M - Xám', 1, CAST(280000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (16, 9, 4, N'Chân váy denim', N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'L - Xanh đậm', 1, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (17, 9, 25, N'Túi đeo chéo nữ mini', N'https://image.kacana.vn/images/product/tui-cheo-dung-dien-thoai-va-tien-you-2811-1720436440.jpg', N'Onesize - Đen', 1, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (18, 10, 3, N'Đầm hoa mùa hè', N'https://file.hstatic.net/200000503583/file/vay-hoa-mua-he__11__c2791afbbda941238c114b00b403ec57.jpg', N'M - Hoa đỏ', 1, CAST(400000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (19, 10, 28, N'Dép lào nam cao cấp', N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'39 - Đen', 1, CAST(180000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (20, 11, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'2-4 - Xanh da trời họa tiết', 1, CAST(150000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (21, 12, 30, N'Nhẫn bạc đính đá zircon', N'https://lili.vn/wp-content/uploads/2021/08/Nhan-bac-dinh-da-Zircon-Royal-LILI_499436_2.jpg', N'5 - Bạc', 1, CAST(230000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (22, 13, 14, N'Quần jogger thể thao', N'https://thegioidotap.vn/wp-content/uploads/2020/12/quan-dai-the-thao-nam-jogger-sg10-3.jpg', N'M - Xám', 2, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (23, 13, 32, N'Quần kaki nam', N'https://vulcano.sgp1.digitaloceanspaces.com/media/18894/quan-khaki-3001t-vulcano01.webp', N'34 - Be', 2, CAST(350000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (24, 13, 28, N'Dép lào nam cao cấp', N'https://cf.shopee.vn/file/c6d1c6eb69fc0f5b382006d61baf5856', N'40 - Nâu', 1, CAST(180000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (25, 14, 5, N'Áo thun siêu nhân', N'https://target.scene7.com/is/image/Target/GUEST_1079d260-d8e2-4d6e-b757-7dd7254ddda5?wid=800&hei=800&qlt=80&fmt=webp', N'2-4 - Xanh', 1, CAST(150000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (26, 15, 15, N'Đầm maxi hoa nhí', N'https://vayfashion.com/wp-content/uploads/2022/05/2c7cf97edbac2d98f120bf85c824f1aa.jpg', N'S - Hồng họa tiết hoa trắng', 1, CAST(420000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (27, 16, 25, N'Túi đeo chéo nữ mini', N'https://image.kacana.vn/images/product/tui-cheo-dung-dien-thoai-va-tien-you-2811-1720436440.jpg', N'Onesize - Đen', 1, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (28, 17, 29, N'Áo thun trẻ em hoạt hình', N'https://product.hstatic.net/1000387570/product/ao_sieu_nhan_dai_tay_be_trai_xanh_1_29b6db9d6dab4e649d6d1528a1cef68d_master.jpg', N'2-4 - Xanh da trời họa tiết', 4, CAST(150000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (29, 17, 5, N'Áo thun siêu nhân', N'https://target.scene7.com/is/image/Target/GUEST_1079d260-d8e2-4d6e-b757-7dd7254ddda5?wid=800&hei=800&qlt=80&fmt=webp', N'4-6 - Đỏ', 2, CAST(150000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (30, 18, 2, N'Quần tây đen', N'https://product.hstatic.net/200000053174/product/20_bddc67b2b01a4fc6a89b6d5ca1e78b33_master.jpg', N'M - Đen', 3, CAST(300000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (31, 18, 3, N'Đầm hoa mùa hè', N'https://file.hstatic.net/200000503583/file/vay-hoa-mua-he__11__c2791afbbda941238c114b00b403ec57.jpg', N'S - Hoa đỏ', 4, CAST(400000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (32, 18, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'M - Xám', 1, CAST(280000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (33, 18, 4, N'Chân váy denim', N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'M - Đen', 1, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (34, 18, 1, N'Áo sơ mi trắng', N'https://product.hstatic.net/1000333436/product/tx_03696_da789ffaa68d42d3b2ad129b099e15ae_master.jpg', N'M - Trắng', 1, CAST(200000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (35, 19, 11, N'Quần short siêu nhân', N'https://img.alicdn.com/imgextra/i3/350427093/O1CN01JDrMyz22GdnbaZ9Y6_!!350427093.jpg_600x600.jpg_.webp', N'2-4 - Xanh', 1, CAST(550000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (36, 20, 31, N'Chân váy xếp ly dáng ngắn', N'https://down-vn.img.susercontent.com/file/55791d774c509649738b1bb8aba06a7d', N'S - Đen', 1, CAST(280000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (37, 20, 4, N'Chân váy denim', N'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-luaj8uf2in1bf1', N'M - Xanh đậm', 1, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (38, 20, 26, N'Bông tai bạc hình giọt nước', N'https://lili.vn/wp-content/uploads/2021/12/Bong-tai-bac-nu-ma-bach-kim-dinh-da-CZ-hinh-giot-nuoc-LILI_416496_13.jpg', N'Onesize - Bạc', 1, CAST(150000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (39, 21, 13, N'Áo khoác bomber nam', N'https://ginstore.com.vn/files/sanpham/1885/1/png/ao-khoac-bomber-local-brand-rg-butterfly-varsity-jacket-nam-nu-tay-da-vasity-bong-chay-form-rong-unisex.png', N'S - Đen', 1, CAST(450000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (40, 21, 17, N'Váy công chúa cho bé gái', N'https://tutupetti.com/wp-content/uploads/2023/07/dam_dep_cho_be_du_tiec_04.jpg', N'4-6 - Hồng pastel', 1, CAST(320000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (41, 21, 15, N'Đầm maxi hoa nhí', N'https://vayfashion.com/wp-content/uploads/2022/05/2c7cf97edbac2d98f120bf85c824f1aa.jpg', N'S - Trắng họa tiết hoa xanh', 1, CAST(420000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (42, 21, 21, N'Kính mát thời trang', N'https://hoyahc.vn/wp-content/uploads/2022/01/kinh-redex-kinh-mat.jpg', N'Onesize - Đen', 1, CAST(200000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (43, 21, 19, N'Dây chuyền bạc nữ', N'https://pos.nvncdn.com/211f76-106986/ps/20240805_RdCu2zj3rc.jpeg', N'40cm - Bạc', 1, CAST(250000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (44, 21, 20, N'Giày cao gót nữ', N'https://img.mwc.com.vn/giay-thoi-trang?w=480&h=510&FileInput=/Resources/Product/2024/09/20/z5850479583248_27cb755c82bd913bc95a09019f771777.jpg', N'35 - Kem', 1, CAST(380000.00 AS Decimal(10, 2)))
-GO
-INSERT [dbo].[order_items] ([id], [order_id], [product_id], [product_name], [product_image], [variant_name], [quantity], [unit_price_at_order]) VALUES (45, 22, 22, N'Áo sơ mi nam kẻ sọc', N'https://aoxuanhe.com/upload/product/axh-111/ao-so-mi-nam-ke-soc-xanh-duong-1.jpg', N'S - Xanh nhạt sọc trắng', 1, CAST(280000.00 AS Decimal(10, 2)))
-GO
-SET IDENTITY_INSERT [dbo].[order_items] OFF
-GO
-SET IDENTITY_INSERT [dbo].[feedback] ON 
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (1, 30, 12, 5, N'Quần tây đen chất lượng rất tốt, vải dày dặn nhưng vẫn thoáng mát, không bị nhăn nhiều. Form quần chuẩn, lên dáng đẹp, rất phù hợp để đi làm hoặc đi tiệc. Giao hàng nhanh, đóng gói cẩn thận. Mình sẽ tiếp tục ủng hộ shop!', N'approved', CAST(N'2025-03-29T17:22:11.5233333' AS DateTime2), CAST(N'2025-03-29T17:54:40.1633333' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (2, 31, 12, 4, N'Váy đẹp, đường may chắc chắn, chất vải mịn. Tuy nhiên, mình đặt size hơi chật một chút, lần sau mình sẽ chọn size lớn hơn. Nhìn chung rất đáng mua!', N'approved', CAST(N'2025-03-29T17:22:11.5433333' AS DateTime2), CAST(N'2025-03-29T17:56:39.7266667' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (3, 32, 12, 3, N'Váy đẹp, chất vải mềm mịn, đường may chắc chắn. Tuy nhiên, phần lưng hơi rộng so với dáng người mình, phải bóp lại một chút. Nhưng tổng thể vẫn rất đáng mua!', N'approved', CAST(N'2025-03-29T17:22:11.5500000' AS DateTime2), CAST(N'2025-03-29T17:56:51.6433333' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (4, 33, 12, 2, N'Chân váy denim có form đẹp nhưng chất vải cứng và hơi thô, mặc không thoải mái lắm. Mình đặt size S nhưng phần eo hơi rộng, phải chỉnh lại. Giao hàng khá lâu so với dự kiến. Hy vọng shop cải thiện chất lượng và dịch vụ!', N'approved', CAST(N'2025-03-29T17:22:11.5566667' AS DateTime2), CAST(N'2025-03-29T17:56:47.4100000' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (5, 34, 12, 5, N'Áo sơ mi trắng đẹp xuất sắc! Chất vải mềm, mịn, không quá mỏng, mặc rất thoải mái. Form áo chuẩn, lên dáng thanh lịch, phù hợp cả đi làm và đi chơi. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng, sẽ ủng hộ shop lần sau!', N'approved', CAST(N'2025-03-29T17:22:11.5600000' AS DateTime2), CAST(N'2025-03-29T17:56:43.9533333' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (6, 28, 12, 5, N'Áo thun cho bé siêu dễ thương! Chất vải mềm mịn, co giãn tốt, thấm hút mồ hôi nên bé mặc rất thoải mái. Hình in sắc nét, không bị bong tróc sau khi giặt. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng, sẽ mua thêm mẫu khác cho bé!', N'approved', CAST(N'2025-03-29T17:23:29.9666667' AS DateTime2), CAST(N'2025-03-29T17:54:36.8333333' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (7, 29, 12, 3, N'Áo thun siêu nhân thiết kế đẹp, hình in rõ nét nhưng chất vải hơi mỏng so với mong đợi. Sau khi giặt vài lần, màu có hơi phai nhẹ. Giao hàng đúng hẹn, nhưng mong shop cải thiện chất lượng vải hơn!"
-', N'approved', CAST(N'2025-03-29T17:23:29.9733333' AS DateTime2), CAST(N'2025-03-29T17:54:31.2766667' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (8, 18, 6, 4, N'Đầm hoa thiết kế xinh, họa tiết dễ thương, rất phù hợp cho mùa hè. Tuy nhiên, chất vải hơi mỏng và nhăn nhiều, phải ủi kỹ trước khi mặc. Form váy cũng rộng hơn so với size mình chọn. Giao hàng nhanh, nhưng mong shop cải thiện chất lượng vải hơn!', N'approved', CAST(N'2025-03-29T17:26:23.8400000' AS DateTime2), CAST(N'2025-03-29T17:54:27.4100000' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (9, 19, 6, 5, N'Dép rất êm chân, đế dày dặn và bám tốt, đi lâu không bị đau. Chất liệu bền, không có mùi khó chịu. Thiết kế đơn giản nhưng sang trọng, rất đáng tiền. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng!', N'approved', CAST(N'2025-03-29T17:26:23.8600000' AS DateTime2), CAST(N'2025-03-29T17:54:23.0566667' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (10, 14, 6, 4, N'Quần kaki chất vải tốt, dày dặn nhưng vẫn thoáng mát, mặc khá thoải mái. Form quần chuẩn, đường may chắc chắn. Tuy nhiên, màu sắc thực tế hơi khác so với hình ảnh. Giao hàng nhanh, shop tư vấn nhiệt tình. Nhìn chung rất hài lòng!', N'approved', CAST(N'2025-03-29T17:28:21.6100000' AS DateTime2), CAST(N'2025-03-29T17:54:19.9366667' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (11, 15, 6, 3, N'Chân váy có thiết kế xinh, form ổn nhưng chất vải hơi mỏng và dễ nhăn. Đường may chưa thực sự chắc chắn, mặc vài lần có dấu hiệu bung chỉ nhẹ. Giao hàng đúng hẹn. Mong shop cải thiện chất lượng hơn!', N'approved', CAST(N'2025-03-29T17:28:21.6133333' AS DateTime2), CAST(N'2025-03-29T17:54:17.9933333' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (12, 16, 6, 3, N'Chân váy denim có thiết kế đẹp, dễ phối đồ. Tuy nhiên, chất vải hơi cứng và form không ôm dáng như mong đợi. Màu sắc cũng hơi khác so với hình ảnh. Giao hàng nhanh nhưng mong shop cải thiện chất lượng vải hơn!', N'approved', CAST(N'2025-03-29T17:28:21.6200000' AS DateTime2), CAST(N'2025-03-29T17:54:15.6400000' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (13, 17, 6, 5, N'"Túi mini siêu xinh, nhỏ gọn nhưng đựng được khá nhiều đồ. Chất liệu đẹp, da mềm mịn, đường may chắc chắn. Dây đeo vừa vặn, có thể điều chỉnh linh hoạt. Phối đồ rất dễ dàng, phù hợp cho cả đi chơi và dạo phố. Giao hàng nhanh, đóng gói cẩn thận. Rất ưng ý!', N'approved', CAST(N'2025-03-29T17:28:21.6200000' AS DateTime2), CAST(N'2025-03-29T17:54:13.7066667' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (14, 39, 7, 3, N'Áo khoác bomber có thiết kế đẹp, kiểu dáng trẻ trung. Tuy nhiên, chất vải hơi mỏng hơn so với mong đợi, mặc mùa lạnh không đủ ấm. Đường may ổn nhưng khóa kéo hơi cứng. Giao hàng đúng hẹn. Mong shop cải thiện chất lượng hơn!', N'approved', CAST(N'2025-03-29T17:51:07.7933333' AS DateTime2), CAST(N'2025-03-29T17:54:11.1800000' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (15, 40, 7, 5, N'Váy công chúa siêu đẹp, bé nhà mình rất thích! Chất vải mềm mịn, không gây ngứa hay khó chịu. Thiết kế bồng bềnh, màu sắc đúng như hình, đường may chắc chắn. Mặc lên nhìn yêu lắm! Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng!', N'approved', CAST(N'2025-03-29T17:51:07.8133333' AS DateTime2), CAST(N'2025-03-29T17:54:07.0966667' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (16, 41, 7, 4, N'Đầm maxi hoa nhí rất xinh, thiết kế nhẹ nhàng, nữ tính. Chất vải mềm, thoáng mát, mặc mùa hè rất dễ chịu. Tuy nhiên, váy hơi dài hơn so với mong đợi, phải chỉnh lại một chút. Giao hàng nhanh, đóng gói cẩn thận. Nhìn chung rất hài lòng!', N'approved', CAST(N'2025-03-29T17:51:07.8133333' AS DateTime2), CAST(N'2025-03-29T17:54:09.1333333' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (17, 42, 7, 2, N'Kính mát có thiết kế đẹp nhưng chất lượng chưa tốt. Gọng kính hơi lỏng, đeo lâu không thoải mái. Tròng kính chống nắng không hiệu quả như mong đợi. Giao hàng đúng hẹn nhưng sản phẩm chưa thực sự ưng ý. Mong shop cải thiện chất lượng hơn!', N'approved', CAST(N'2025-03-29T17:51:07.8200000' AS DateTime2), CAST(N'2025-03-29T17:54:04.9000000' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (18, 43, 7, 4, N'Dây chuyền bạc đẹp, thiết kế tinh tế và sang trọng. Chất liệu sáng, đeo không bị kích ứng da. Tuy nhiên, dây hơi mỏng hơn so với tưởng tượng, cần giữ gìn cẩn thận. Giao hàng nhanh, đóng gói cẩn thận. Nhìn chung rất ưng ý!', N'approved', CAST(N'2025-03-29T17:51:07.8233333' AS DateTime2), CAST(N'2025-03-29T17:54:02.6400000' AS DateTime2))
-GO
-INSERT [dbo].[feedback] ([id], [order_item_id], [user_id], [rating], [comment], [status], [created_at], [updated_at]) VALUES (19, 44, 7, 5, N'Giày cao gót cực đẹp, đi rất êm chân, không bị đau dù mang cả ngày. Chất liệu tốt, đường may chắc chắn, thiết kế thanh lịch và dễ phối đồ. Giao hàng nhanh, đóng gói cẩn thận. Rất hài lòng, sẽ ủng hộ shop lần sau!', N'approved', CAST(N'2025-03-29T17:51:07.8266667' AS DateTime2), CAST(N'2025-03-29T17:54:00.9266667' AS DateTime2))
-GO
-SET IDENTITY_INSERT [dbo].[feedback] OFF
-GO
-SET IDENTITY_INSERT [dbo].[feedback_reply] ON 
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (1, 19, 3, N'Cảm ơn chị đã dành thời gian đánh giá sản phẩm! 💖 Shop rất vui khi biết chị hài lòng với đôi giày cao gót – vừa đẹp, vừa êm chân! ✨ Chúng em luôn nỗ lực mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tuyệt vời nhất. Hy vọng sẽ tiếp tục được phục vụ chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, đừng ngại liên hệ với shop nhé!❤️❤️', CAST(N'2025-03-29T17:58:46.1566667' AS DateTime2), CAST(N'2025-03-29T17:58:46.1566667' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (2, 18, 3, N'**Phản hồi từ Shop:**  
-
-"Cảm ơn chị đã tin tưởng và dành những lời khen cho sản phẩm của shop! 💖 Rất vui khi chị hài lòng với thiết kế và chất lượng của dây chuyền bạc. ✨ Shop sẽ tiếp tục cải thiện để mang đến những sản phẩm ngày càng hoàn thiện hơn. Nếu cần tư vấn thêm về cách bảo quản dây chuyền để luôn sáng đẹp, chị cứ nhắn shop nhé! Hy vọng sẽ được phục vụ chị trong những lần mua sắm tiếp theo! ❤️"  
-', CAST(N'2025-03-29T17:59:18.0233333' AS DateTime2), CAST(N'2025-03-29T17:59:18.0233333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (3, 17, 3, N'Cảm ơn anh/chị đã dành thời gian chia sẻ ý kiến về sản phẩm! 🙏 Shop rất tiếc khi sản phẩm chưa đáp ứng hoàn toàn mong đợi của anh/chị. Chúng em ghi nhận góp ý về chất lượng kính và sẽ làm việc với nhà cung cấp để cải thiện tốt hơn. Nếu anh/chị cần hỗ trợ đổi trả hoặc có bất kỳ thắc mắc nào, vui lòng liên hệ với shop để được hỗ trợ nhanh nhất ạ. Rất mong có cơ hội phục vụ anh/chị tốt hơn trong lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T17:59:34.6433333' AS DateTime2), CAST(N'2025-03-29T17:59:34.6433333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (4, 15, 3, N'Cảm ơn chị đã tin tưởng và dành những lời khen cho sản phẩm của shop! 💖 Rất vui khi bé nhà mình yêu thích chiếc váy công chúa này! 👗✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và đáng yêu nhất cho các bé. Hy vọng sẽ tiếp tục được phục vụ chị và bé trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T17:59:52.5233333' AS DateTime2), CAST(N'2025-03-29T17:59:52.5233333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (5, 16, 3, N'"Cảm ơn chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi chị ưng ý với thiết kế và chất liệu của đầm maxi hoa nhí. 🌸✨ Shop ghi nhận góp ý về độ dài váy và sẽ xem xét để cải thiện hơn trong những mẫu sau. Hy vọng sẽ tiếp tục được phục vụ chị trong những lần mua sắm tiếp theo. Nếu cần hỗ trợ gì thêm, chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:00:07.5200000' AS DateTime2), CAST(N'2025-03-29T18:00:07.5200000' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (6, 14, 3, N'Cảm ơn anh/chị đã dành thời gian chia sẻ đánh giá! 🙏 Rất vui khi anh/chị ưng ý với thiết kế trẻ trung của áo khoác bomber. ✨ Shop ghi nhận góp ý về chất vải và khóa kéo, và sẽ làm việc với nhà cung cấp để cải thiện chất lượng tốt hơn. Nếu cần hỗ trợ thêm, anh/chị cứ nhắn shop nhé! Hy vọng sẽ có cơ hội phục vụ anh/chị trong những lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T18:00:26.0566667' AS DateTime2), CAST(N'2025-03-29T18:00:26.0566667' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (7, 12, 3, N'Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị ưng ý với thiết kế của chân váy denim. Shop ghi nhận góp ý về chất vải và form dáng, và sẽ xem xét để cải thiện hơn trong những mẫu sau. ✨ Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo. Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:00:44.2233333' AS DateTime2), CAST(N'2025-03-29T18:00:44.2233333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (8, 13, 3, N'Cảm ơn anh/chị đã tin tưởng và dành những lời khen cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chiếc túi mini – vừa xinh xắn, tiện lợi lại dễ phối đồ. 👜✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tốt nhất. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, đừng ngại nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:03.4733333' AS DateTime2), CAST(N'2025-03-29T18:01:03.4733333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (9, 11, 3, N'Cảm ơn anh/chị đã dành thời gian chia sẻ đánh giá! 💖 Rất vui khi anh/chị ưng ý với thiết kế của chân váy. Shop ghi nhận góp ý về chất vải và đường may, và sẽ làm việc với nhà cung cấp để cải thiện chất lượng tốt hơn. ✨ Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo. Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:19.6366667' AS DateTime2), CAST(N'2025-03-29T18:01:19.6366667' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (10, 10, 3, N'Cảm ơn anh/chị đã tin tưởng và dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với chất vải, form dáng và sự tư vấn nhiệt tình từ shop. 🛍️✨ Shop ghi nhận góp ý về màu sắc và sẽ cố gắng cải thiện hình ảnh sản phẩm để khách hàng có trải nghiệm mua sắm tốt hơn. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:36.0066667' AS DateTime2), CAST(N'2025-03-29T18:01:36.0066667' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (11, 9, 3, N'Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với đôi dép – vừa êm chân, bền đẹp lại thoải mái khi sử dụng. 👣✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tốt nhất. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, đừng ngại nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:01:53.8200000' AS DateTime2), CAST(N'2025-03-29T18:01:53.8200000' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (12, 8, 3, N'Cảm ơn anh/chị đã chia sẻ đánh giá chi tiết về sản phẩm! 💖 Rất vui khi anh/chị ưng ý với thiết kế và họa tiết của đầm hoa. 🌸✨ Shop ghi nhận góp ý về chất vải và form dáng, và sẽ làm việc với nhà cung cấp để cải thiện chất lượng tốt hơn. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:02:18.8900000' AS DateTime2), CAST(N'2025-03-29T18:02:18.8900000' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (13, 7, 3, N'Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với thiết kế và hình in của áo thun siêu nhân. 🦸✨ Shop ghi nhận góp ý về chất vải và độ bền màu, và sẽ làm việc với nhà cung cấp để cải thiện hơn trong những mẫu sau. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần hỗ trợ gì, anh/chị cứ nhắn shop nhé! ❤️"Cảm ơn anh/chị đã dành thời gian đánh giá sản phẩm! 💖 Rất vui khi anh/chị hài lòng với thiết kế và hình in của áo thun siê', CAST(N'2025-03-29T18:02:37.6566667' AS DateTime2), CAST(N'2025-03-29T18:02:37.6566667' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (14, 6, 3, N'Cảm ơn anh/chị đã tin tưởng và ủng hộ sản phẩm của shop! 💖 Rất vui khi bé nhà mình mặc áo thun thoải mái và ưng ý với chất lượng sản phẩm. 👕✨ Shop luôn cố gắng mang đến những mẫu áo dễ thương, chất liệu tốt nhất cho bé yêu. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:02:57.6466667' AS DateTime2), CAST(N'2025-03-29T18:02:57.6466667' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (15, 5, 3, N'Cảm ơn anh/chị đã dành những lời khen tuyệt vời cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất vải, form dáng và sự thanh lịch của áo sơ mi trắng. 👔✨ Shop luôn cố gắng mang đến những sản phẩm chất lượng và trải nghiệm mua sắm tốt nhất. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:03:17.1533333' AS DateTime2), CAST(N'2025-03-29T18:03:17.1533333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (16, 4, 3, N'Cảm ơn anh/chị đã chia sẻ đánh giá chi tiết về sản phẩm! 💖 Rất tiếc khi chân váy chưa hoàn toàn đáp ứng mong đợi của anh/chị. Shop ghi nhận góp ý về chất vải, form dáng và thời gian giao hàng để cải thiện tốt hơn trong tương lai. ✨ Nếu anh/chị cần hỗ trợ thêm về size hoặc bất kỳ vấn đề gì, đừng ngại liên hệ với shop nhé! Hy vọng sẽ có cơ hội phục vụ anh/chị tốt hơn trong lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T18:03:40.1700000' AS DateTime2), CAST(N'2025-03-29T18:03:40.1700000' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (17, 3, 3, N'Cảm ơn anh/chị đã tin tưởng và dành lời khen cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất vải và đường may của váy. ✨ Shop ghi nhận góp ý về form dáng để cải thiện hơn trong những mẫu sau. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:03:55.8633333' AS DateTime2), CAST(N'2025-03-29T18:03:55.8633333' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (18, 2, 3, N'Cảm ơn anh/chị đã tin tưởng và đánh giá sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất vải và đường may của váy. ✨ Nếu cần tư vấn kỹ hơn về size để chọn được sản phẩm phù hợp nhất, anh/chị cứ nhắn shop nhé! Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! ❤️', CAST(N'2025-03-29T18:04:10.7900000' AS DateTime2), CAST(N'2025-03-29T18:04:10.7900000' AS DateTime2))
-GO
-INSERT [dbo].[feedback_reply] ([id], [feedback_id], [user_id], [comment], [created_at], [updated_at]) VALUES (19, 1, 3, N'Cảm ơn anh/chị đã tin tưởng và dành lời khen cho sản phẩm của shop! 💖 Rất vui khi anh/chị hài lòng với chất lượng vải, form dáng và sự tiện dụng của quần tây đen. 👖✨ Shop luôn cố gắng mang đến những sản phẩm tốt nhất để khách hàng có trải nghiệm mua sắm tuyệt vời. Hy vọng sẽ tiếp tục được phục vụ anh/chị trong những lần mua sắm tiếp theo! Nếu cần tư vấn thêm, anh/chị cứ nhắn shop nhé! ❤️', CAST(N'2025-03-29T18:04:27.9233333' AS DateTime2), CAST(N'2025-03-29T18:04:27.9233333' AS DateTime2))
-GO
-SET IDENTITY_INSERT [dbo].[feedback_reply] OFF
 GO
 SET IDENTITY_INSERT [dbo].[payments] ON 
 GO
@@ -2010,6 +2061,14 @@ GO
 INSERT [dbo].[payments] ([id], [order_id], [payment_method], [payment_status], [transaction_id], [created_at]) VALUES (21, 21, N'cod', N'completed', NULL, CAST(N'2025-03-29T17:48:29.0666667' AS DateTime2))
 GO
 INSERT [dbo].[payments] ([id], [order_id], [payment_method], [payment_status], [transaction_id], [created_at]) VALUES (22, 22, N'cod', N'completed', NULL, CAST(N'2025-03-29T17:52:50.5066667' AS DateTime2))
+GO
+INSERT [dbo].[payments] ([id], [order_id], [payment_method], [payment_status], [transaction_id], [created_at]) VALUES (23, 23, N'bank_transfer', N'pending', NULL, CAST(N'2025-03-29T20:03:29.4366667' AS DateTime2))
+GO
+INSERT [dbo].[payments] ([id], [order_id], [payment_method], [payment_status], [transaction_id], [created_at]) VALUES (24, 24, N'bank_transfer', N'completed', NULL, CAST(N'2025-03-29T20:04:49.0066667' AS DateTime2))
+GO
+INSERT [dbo].[payments] ([id], [order_id], [payment_method], [payment_status], [transaction_id], [created_at]) VALUES (25, 25, N'bank_transfer', N'completed', NULL, CAST(N'2025-03-29T20:06:27.8533333' AS DateTime2))
+GO
+INSERT [dbo].[payments] ([id], [order_id], [payment_method], [payment_status], [transaction_id], [created_at]) VALUES (26, 26, N'bank_transfer', N'refunded', NULL, CAST(N'2025-03-29T20:08:25.3500000' AS DateTime2))
 GO
 SET IDENTITY_INSERT [dbo].[payments] OFF
 GO
@@ -2059,17 +2118,25 @@ INSERT [dbo].[shipping] ([id], [order_id], [shipping_provider], [tracking_number
 GO
 INSERT [dbo].[shipping] ([id], [order_id], [shipping_provider], [tracking_number], [estimated_delivery], [delivered_at]) VALUES (22, 22, N'J&T Express', N'ExpSUP5435', CAST(N'2025-04-03' AS Date), NULL)
 GO
+INSERT [dbo].[shipping] ([id], [order_id], [shipping_provider], [tracking_number], [estimated_delivery], [delivered_at]) VALUES (23, 23, N'Standard Delivery', N'TEMP-23-1743253409442', CAST(N'2025-04-03' AS Date), NULL)
+GO
+INSERT [dbo].[shipping] ([id], [order_id], [shipping_provider], [tracking_number], [estimated_delivery], [delivered_at]) VALUES (24, 24, N'Express Delivery', N'TEMP-24-1743253489007', CAST(N'2025-03-31' AS Date), NULL)
+GO
+INSERT [dbo].[shipping] ([id], [order_id], [shipping_provider], [tracking_number], [estimated_delivery], [delivered_at]) VALUES (25, 25, N'VNExpress', N'VNE1532289965255', CAST(N'2025-04-03' AS Date), NULL)
+GO
+INSERT [dbo].[shipping] ([id], [order_id], [shipping_provider], [tracking_number], [estimated_delivery], [delivered_at]) VALUES (26, 26, N'VNExpress', N'VNE153228996524', CAST(N'2025-04-03' AS Date), NULL)
+GO
 SET IDENTITY_INSERT [dbo].[shipping] OFF
 GO
 SET IDENTITY_INSERT [dbo].[coupons] ON 
 GO
-INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (1, N'ABC123XYZ', N'percentage', CAST(10.00 AS Decimal(10, 2)), CAST(50000.00 AS Decimal(10, 2)), CAST(100000.00 AS Decimal(10, 2)), 50, 3, CAST(N'2025-06-30T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
+INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (1, N'ABC123XYZ', N'percentage', CAST(10.00 AS Decimal(10, 2)), CAST(50000.00 AS Decimal(10, 2)), CAST(100000.00 AS Decimal(10, 2)), 50, 4, CAST(N'2025-06-30T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
 GO
 INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (2, N'DEF456UVW', N'fixed', CAST(20000.00 AS Decimal(10, 2)), CAST(100000.00 AS Decimal(10, 2)), CAST(0.00 AS Decimal(10, 2)), 100, 1, CAST(N'2025-07-31T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
 GO
 INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (3, N'GHI789RST', N'percentage', CAST(15.00 AS Decimal(10, 2)), CAST(75000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), 75, 3, CAST(N'2025-08-31T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
 GO
-INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (4, N'JKL012PQR', N'fixed', CAST(30000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), NULL, 200, 0, CAST(N'2025-09-30T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
+INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (4, N'JKL012PQR', N'fixed', CAST(30000.00 AS Decimal(10, 2)), CAST(150000.00 AS Decimal(10, 2)), CAST(0.00 AS Decimal(10, 2)), 200, 1, CAST(N'2025-09-30T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
 GO
 INSERT [dbo].[coupons] ([id], [code], [discount_type], [discount_value], [min_order_amount], [max_discount], [usage_limit], [used_count], [expiry_date], [activation_date], [created_at], [coupon_type], [status]) VALUES (5, N'MNO345NOP', N'percentage', CAST(20.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), CAST(200000.00 AS Decimal(10, 2)), 50, 0, CAST(N'2025-10-31T23:59:59.0000000' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), CAST(N'2025-02-19T13:42:03.3666667' AS DateTime2), N'normal', N'active')
 GO
@@ -2118,6 +2185,10 @@ GO
 INSERT [dbo].[order_coupons] ([id], [order_id], [coupon_id], [user_email], [discount_applied], [created_at]) VALUES (10, 21, 7, N'XiaoDing@gmail.com', CAST(250000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T17:48:01.3500000' AS DateTime2))
 GO
 INSERT [dbo].[order_coupons] ([id], [order_id], [coupon_id], [user_email], [discount_applied], [created_at]) VALUES (11, 22, 3, N'user321@gmail.com', CAST(42000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T17:52:29.4133333' AS DateTime2))
+GO
+INSERT [dbo].[order_coupons] ([id], [order_id], [coupon_id], [user_email], [discount_applied], [created_at]) VALUES (12, 23, 4, N'user123@gmail.com', CAST(30000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T20:03:29.4400000' AS DateTime2))
+GO
+INSERT [dbo].[order_coupons] ([id], [order_id], [coupon_id], [user_email], [discount_applied], [created_at]) VALUES (13, 25, 1, N'user123@gmail.com', CAST(23000.00 AS Decimal(10, 2)), CAST(N'2025-03-29T20:06:00.3500000' AS DateTime2))
 GO
 SET IDENTITY_INSERT [dbo].[order_coupons] OFF
 GO
