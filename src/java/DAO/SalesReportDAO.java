@@ -434,6 +434,4 @@ private void getProductVariantDistribution(SalesReport.ProductPerformance produc
     }
 }
 
-
-    // Other existing methods (getSalesOverview, getTimeBasedMetrics, getProductPerformance) remain the same
 }

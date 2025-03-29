@@ -3,6 +3,7 @@ import DAO.OrderSaleDAO;
 import entity.OrderStatusCount;
 import entity.CategorySales;
 import entity.DailySalesData;
+import entity.PaymentMethodSales;
 import entity.SalesOverview;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -72,7 +73,15 @@ public class SaleDashboardServlet extends HttpServlet {
         // Get daily sales data
         List<DailySalesData> dailySalesData = orderDAO.getDailySalesData(startDate, endDate);
         request.setAttribute("dailySalesData", dailySalesData);
-        
+        List<PaymentMethodSales> paymentMethodSales = orderDAO.getSalesByPaymentMethod();
+    request.setAttribute("paymentMethodSales", paymentMethodSales);
+    
+    // Calculate total payment method amount for percentage calculation
+    BigDecimal totalPaymentAmount = BigDecimal.ZERO;
+    for (PaymentMethodSales payment : paymentMethodSales) {
+        totalPaymentAmount = totalPaymentAmount.add(payment.getTotalAmount());
+    }
+    request.setAttribute("totalPaymentAmount", totalPaymentAmount);
         request.getRequestDispatcher("/sale/saledashboard.jsp").forward(request, response);
     }
 }

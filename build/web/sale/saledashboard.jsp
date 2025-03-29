@@ -51,10 +51,12 @@
             align-items: center;
             justify-content: center;
         }
+        .bg-pending-pay { background: #ff9800; }
         .bg-pending { background: #ffca2c; }
         .bg-processing { background: #007bff; }
-        .bg-shipped { background: #28a745; }
+        .bg-shipping { background: #28a745; }
         .bg-completed { background: #17a2b8; }
+        .bg-returned { background: #9c27b0; }
         .bg-cancelled { background: #dc3545; }
         .chart-container {
             position: relative;
@@ -178,6 +180,10 @@
                         <div class="card-body">
                             <div class="row text-center">
                                 <div class="col">
+                                    <div class="status-badge bg-pending-pay mb-2"><i class="fas fa-wallet me-1"></i> Chờ Thanh Toán</div>
+                                    <h4 class="text-dark">${salesOverview.pendingPayOrders}</h4>
+                                </div>
+                                <div class="col">
                                     <div class="status-badge bg-pending mb-2"><i class="fas fa-clock me-1"></i> Đang Phê Duyệt</div>
                                     <h4 class="text-dark">${salesOverview.pendingOrders}</h4>
                                 </div>
@@ -186,16 +192,25 @@
                                     <h4 class="text-dark">${salesOverview.processingOrders}</h4>
                                 </div>
                                 <div class="col">
-                                    <div class="status-badge bg-shipped mb-2"><i class="fas fa-shipping-fast me-1"></i> Đã Giao</div>
-                                    <h4 class="text-dark">${salesOverview.shippedOrders}</h4>
+                                    <div class="status-badge bg-shipping mb-2"><i class="fas fa-shipping-fast me-1"></i> Đang Giao</div>
+                                    <h4 class="text-dark">${salesOverview.shippingOrders}</h4>
                                 </div>
+                            </div>
+                            <div class="row text-center mt-4">
                                 <div class="col">
                                     <div class="status-badge bg-completed mb-2"><i class="fas fa-check-circle me-1"></i> Đã Hoàn Thành</div>
                                     <h4 class="text-dark">${salesOverview.completedOrders}</h4>
                                 </div>
                                 <div class="col">
+                                    <div class="status-badge bg-returned mb-2"><i class="fas fa-undo-alt me-1"></i> Đã Trả Lại</div>
+                                    <h4 class="text-dark">${salesOverview.returnedOrders}</h4>
+                                </div>
+                                <div class="col">
                                     <div class="status-badge bg-cancelled mb-2"><i class="fas fa-times-circle me-1"></i> Đã Hủy</div>
                                     <h4 class="text-dark">${salesOverview.cancelledOrders}</h4>
+                                </div>
+                                <div class="col">
+                                    <!-- Empty column for balance -->
                                 </div>
                             </div>
                         </div>
@@ -279,6 +294,51 @@
                 </div>
             </div>
 
+            <!-- Sales by Payment Method Table -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Doanh Số Theo Phương Thức Thanh Toán</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Phương Thức Thanh Toán</th>
+                                            <th>Số Lượng Đơn Hàng</th>
+                                            <th>Doanh Thu</th>
+                                            <th>% Tổng Doanh Thu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${paymentMethodSales}" var="payment">
+                                            <tr>
+                                                <td>${payment.paymentMethod}</td>
+                                                <td>${payment.orderCount}</td>
+                                                <td><fmt:formatNumber value="${payment.totalAmount}" type="currency" currencySymbol="VNĐ" /></td>
+                                                <td>
+                                                    <div class="progress">
+                                                        <div class="progress-bar" role="progressbar" 
+                                                             style="width: ${(payment.totalAmount / totalPaymentAmount) * 100}%" 
+                                                             aria-valuenow="${(payment.totalAmount / totalPaymentAmount) * 100}" 
+                                                             aria-valuemin="0" aria-valuemax="100">
+                                                            <fmt:formatNumber value="${(payment.totalAmount / totalPaymentAmount) * 100}" 
+                                                                             type="number" maxFractionDigits="1"/>%
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Sales by Category Table -->
             <div class="row">
                 <div class="col-12">
@@ -338,6 +398,13 @@
                 data: {
                     labels: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">'${status.orderDate}'${!loop.last ? ',' : ''}</c:forEach>],
                     datasets: [{
+                        label: 'Chờ Thanh Toán',
+                        data: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">${status.pendingPayCount}${!loop.last ? ',' : ''}</c:forEach>],
+                        borderColor: '#ff9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.2)',
+                        tension: 0.3,
+                        fill: true
+                    }, {
                         label: 'Đang Phê Duyệt',
                         data: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">${status.pendingCount}${!loop.last ? ',' : ''}</c:forEach>],
                         borderColor: '#ffca2c',
@@ -352,8 +419,8 @@
                         tension: 0.3,
                         fill: true
                     }, {
-                        label: 'Đã Giao',
-                        data: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">${status.shippedCount}${!loop.last ? ',' : ''}</c:forEach>],
+                        label: 'Đang Giao',
+                        data: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">${status.shippingCount}${!loop.last ? ',' : ''}</c:forEach>],
                         borderColor: '#28a745',
                         backgroundColor: 'rgba(40, 167, 69, 0.2)',
                         tension: 0.3,
@@ -363,6 +430,13 @@
                         data: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">${status.completedCount}${!loop.last ? ',' : ''}</c:forEach>],
                         borderColor: '#17a2b8',
                         backgroundColor: 'rgba(23, 162, 184, 0.2)',
+                        tension: 0.3,
+                        fill: true
+                    }, {
+                        label: 'Đã Trả Lại',
+                        data: [<c:forEach items="${orderStatusCounts}" var="status" varStatus="loop">${status.returnedCount}${!loop.last ? ',' : ''}</c:forEach>],
+                        borderColor: '#9c27b0',
+                        backgroundColor: 'rgba(156, 39, 176, 0.2)',
                         tension: 0.3,
                         fill: true
                     }, {
@@ -429,10 +503,10 @@
             const statusDistChart = new Chart(statusDistCtx, {
                 type: 'pie',
                 data: {
-                    labels: ['Đang Phê Duyệt', 'Đang Xử Lý', 'Đã Giao', 'Đã Hoàn Thành', 'Đã Hủy'],
+                    labels: ['Chờ Thanh Toán', 'Đang Phê Duyệt', 'Đang Xử Lý', 'Đang Giao', 'Đã Hoàn Thành', 'Đã Trả Lại', 'Đã Hủy'],
                     datasets: [{
-                        data: [${salesOverview.pendingOrders}, ${salesOverview.processingOrders}, ${salesOverview.shippedOrders}, ${salesOverview.completedOrders}, ${salesOverview.cancelledOrders}],
-                        backgroundColor: ['#ffca2c', '#007bff', '#28a745', '#17a2b8', '#dc3545']
+                        data: [${salesOverview.pendingPayOrders}, ${salesOverview.pendingOrders}, ${salesOverview.processingOrders}, ${salesOverview.shippingOrders}, ${salesOverview.completedOrders}, ${salesOverview.returnedOrders}, ${salesOverview.cancelledOrders}],
+                        backgroundColor: ['#ff9800', '#ffca2c', '#007bff', '#28a745', '#17a2b8', '#9c27b0', '#dc3545']
                     }]
                 },
                 options: {

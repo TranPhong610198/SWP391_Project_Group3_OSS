@@ -7,6 +7,7 @@ import entity.OrderStatusCount;
 import entity.CategorySales;
 import entity.DailySalesData;
 import Context.DBContext;
+import entity.PaymentMethodSales;
 import entity.SalesOverview;
 
 import java.sql.*;
@@ -120,17 +121,23 @@ public class OrderSaleDAO extends DBContext {
                 int count = rs.getInt("count");
                 
                 switch (status) {
+                    case "pending_pay":
+                        stats.setPendingPayOrders(count);
+                        break;
                     case "pending":
                         stats.setPendingOrders(count);
                         break;
                     case "processing":
                         stats.setProcessingOrders(count);
                         break;
-                    case "shipped":
-                        stats.setShippedOrders(count);
+                    case "shipping":
+                        stats.setShippingOrders(count);
                         break;
                     case "completed":
                         stats.setCompletedOrders(count);
+                        break;
+                    case "returned":
+                        stats.setReturnedOrders(count);
                         break;
                     case "cancelled":
                         stats.setCancelledOrders(count);
@@ -249,17 +256,23 @@ public int getCompletedSalesQuantity() {
                 }
                 
                 switch (status) {
+                    case "pending_pay":
+                        statusCount.setPendingPayCount(count);
+                        break;
                     case "pending":
                         statusCount.setPendingCount(count);
                         break;
                     case "processing":
                         statusCount.setProcessingCount(count);
                         break;
-                    case "shipped":
-                        statusCount.setShippedCount(count);
+                    case "shipping":
+                        statusCount.setShippingCount(count);
                         break;
                     case "completed":
                         statusCount.setCompletedCount(count);
+                        break;
+                    case "returned":
+                        statusCount.setReturnedCount(count);
                         break;
                     case "cancelled":
                         statusCount.setCancelledCount(count);
@@ -408,6 +421,39 @@ public int getCompletedSalesQuantity() {
         return salesData;
     }
     
+    /**
+ * Get sales data grouped by payment method
+ * @return List of PaymentMethodSales objects
+ */
+    public List<PaymentMethodSales> getSalesByPaymentMethod() {
+        List<PaymentMethodSales> paymentMethodSales = new ArrayList<>();
+
+        String sql = "SELECT p.payment_method, " +
+                       "COUNT(*) AS order_count, " +
+                       "SUM(o.total_amount) AS total_amount " +
+                       "FROM orders o " +
+                       "JOIN payments p ON o.id = p.order_id " +
+                       "WHERE o.status = 'completed' " +
+                       "GROUP BY p.payment_method " +
+                       "ORDER BY total_amount DESC";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                PaymentMethodSales payment = new PaymentMethodSales();
+                payment.setPaymentMethod(rs.getString("payment_method"));
+                payment.setOrderCount(rs.getInt("order_count"));
+                payment.setTotalAmount(rs.getBigDecimal("total_amount"));
+                paymentMethodSales.add(payment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return paymentMethodSales;
+    }
     /**
      * Helper method to map ResultSet to Order object
      * @param rs ResultSet containing order data

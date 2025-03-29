@@ -3,10 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package entity;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 /**
  *
  * @author DELL
@@ -15,10 +13,12 @@ import java.time.LocalDate;
  * Entity class representing sales overview statistics
  */
 public class SalesOverview {
+    private int pendingPayOrders;
     private int pendingOrders;
     private int processingOrders;
-    private int shippedOrders;
+    private int shippingOrders;
     private int completedOrders;
+    private int returnedOrders;
     private int cancelledOrders;
     private BigDecimal totalRevenue;
     private int totalSales;
@@ -32,6 +32,14 @@ public class SalesOverview {
     }
     
     // Getters and Setters
+    public int getPendingPayOrders() {
+        return pendingPayOrders;
+    }
+    
+    public void setPendingPayOrders(int pendingPayOrders) {
+        this.pendingPayOrders = pendingPayOrders;
+    }
+    
     public int getPendingOrders() {
         return pendingOrders;
     }
@@ -48,12 +56,12 @@ public class SalesOverview {
         this.processingOrders = processingOrders;
     }
     
-    public int getShippedOrders() {
-        return shippedOrders;
+    public int getShippingOrders() {
+        return shippingOrders;
     }
     
-    public void setShippedOrders(int shippedOrders) {
-        this.shippedOrders = shippedOrders;
+    public void setShippingOrders(int shippingOrders) {
+        this.shippingOrders = shippingOrders;
     }
     
     public int getCompletedOrders() {
@@ -62,6 +70,14 @@ public class SalesOverview {
     
     public void setCompletedOrders(int completedOrders) {
         this.completedOrders = completedOrders;
+    }
+    
+    public int getReturnedOrders() {
+        return returnedOrders;
+    }
+    
+    public void setReturnedOrders(int returnedOrders) {
+        this.returnedOrders = returnedOrders;
     }
     
     public int getCancelledOrders() {
@@ -114,5 +130,10 @@ public class SalesOverview {
     
     public void setCompletedSalesQuantity(int completedSalesQuantity) {
         this.completedSalesQuantity = completedSalesQuantity;
+    }
+    
+    public int getTotalOrders() {
+        return pendingPayOrders + pendingOrders + processingOrders + shippingOrders + 
+               completedOrders + returnedOrders + cancelledOrders;
     }
 }
