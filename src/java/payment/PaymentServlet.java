@@ -134,92 +134,101 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
-    private void processVNPayReturn(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            Map<String, String> vnp_Params = getParameterMap(request);
-            String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+   private void processVNPayReturn(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        Map<String, String> vnp_Params = getParameterMap(request);
+        String vnp_SecureHash = request.getParameter("vnp_SecureHash");
 
-            if (vnp_SecureHash == null) {
-                throw new Exception("Missing secure hash from VNPay response");
-            }
-
-            vnp_Params.remove("vnp_SecureHash");
-            vnp_Params.remove("vnp_SecureHashType");
-
-            String vnp_TxnRef = request.getParameter("vnp_TxnRef");
-            String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
-            String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
-            String vnp_Amount = request.getParameter("vnp_Amount");
-            String vnp_OrderInfo = request.getParameter("vnp_OrderInfo");
-
-            HttpSession session = request.getSession();
-            Order order = (Order) session.getAttribute("pending_order");
-
-            boolean isValidHash = validateVNPayHash(vnp_Params, vnp_SecureHash);
-            boolean isValidTransaction = false;
-
-            if (order != null) {
-                String cleanOrderCode = order.getOrderCode().replaceAll("[^a-zA-Z0-9]", "");
-                isValidTransaction = cleanOrderCode.equals(vnp_TxnRef)
-                        && String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
-            } else {
-                String orderCode = vnp_OrderInfo.replace("Thanh toan don hang ", "");
-                List<Order> orders = orderDAO.getAllOrders();
-                for (Order o : orders) {
-                    if (orderCode.equals(o.getOrderCode())) {
-                        order = o;
-                        break;
-                    }
-                }
-                if (order != null) {
-                    isValidTransaction = String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
-                }
-            }
-
-            if (order == null) {
-                throw new Exception("Không tìm thấy đơn hàng trong session hoặc database");
-            }
-
-            if (order.getId() == 0) {
-                order = orderDAO.createOrder(order);
-            }
-
-            Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
-            DAO.CartDAO cartDAO = new DAO.CartDAO();
-            if (userId != null) {
-                for (CartItem item : order.getItems()) {
-                    cartDAO.deleteCartItem(request, response, item.getId(), userId);
-                }
-            } else {
-                Cart emptyCart = new Cart();
-                emptyCart.setItems(new ArrayList<>());
-                cartDAO.saveCartToCookies(response, emptyCart);
-            }
-
-            if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
-                // Thanh toán thành công
-                orderDAO.updatePaymentStatus(order.getId(), "completed");
-                orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
-                order.setPaymentStatus("completed");
-            } else {
-                // Thanh toán thất bại
-                orderDAO.updatePaymentStatus(order.getId(), "pending"); // Sửa thành "pending"
-                orderDAO.updateOrderStatus(order.getId(), "pending_pay", order.getUserId());
-                order.setPaymentStatus("pending");
-            }
-
-            session.setAttribute("completed_order", order);
-            session.removeAttribute("pending_order");
-            response.sendRedirect("cartcompletion");
-
-        } catch (Exception e) {
-            System.out.println("Exception in processVNPayReturn: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Đã xảy ra lỗi khi xử lý kết quả thanh toán: " + e.getMessage());
-            request.getRequestDispatcher("cartcompletion").forward(request, response);
+        if (vnp_SecureHash == null) {
+            throw new Exception("Missing secure hash from VNPay response");
         }
+
+        vnp_Params.remove("vnp_SecureHash");
+        vnp_Params.remove("vnp_SecureHashType");
+
+        String vnp_TxnRef = request.getParameter("vnp_TxnRef");
+        String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
+        String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
+        String vnp_Amount = request.getParameter("vnp_Amount");
+        String vnp_OrderInfo = request.getParameter("vnp_OrderInfo");
+
+        HttpSession session = request.getSession();
+        Order order = (Order) session.getAttribute("pending_order");
+
+        boolean isValidHash = validateVNPayHash(vnp_Params, vnp_SecureHash);
+        boolean isValidTransaction = false;
+
+        if (order != null) {
+            String cleanOrderCode = order.getOrderCode().replaceAll("[^a-zA-Z0-9]", "");
+            isValidTransaction = cleanOrderCode.equals(vnp_TxnRef)
+                    && String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
+        } else {
+            String orderCode = vnp_OrderInfo.replace("Thanh toan don hang ", "");
+            List<Order> orders = orderDAO.getAllOrders();
+            for (Order o : orders) {
+                if (orderCode.equals(o.getOrderCode())) {
+                    order = o;
+                    break;
+                }
+            }
+            if (order != null) {
+                isValidTransaction = String.valueOf((long) (order.getTotal() * 100)).equals(vnp_Amount);
+            }
+        }
+
+        if (order == null) {
+            throw new Exception("Không tìm thấy đơn hàng trong session hoặc database");
+        }
+
+        // Kiểm tra nếu đơn hàng đã bị hủy do hết hạn
+        Order currentOrderState = orderDAO.getOrderById(order.getId());
+        if ("cancelled".equals(currentOrderState.getStatus())) {
+            session.removeAttribute("pending_order");
+            request.setAttribute("errorMessage", "Đơn hàng đã bị hủy do quá thời gian thanh toán (3 ngày).");
+            request.getRequestDispatcher("cartcompletion").forward(request, response);
+            return;
+        }
+
+        if (order.getId() == 0) {
+            order = orderDAO.createOrder(order);
+        }
+
+        Integer userId = order.getUserId() > 0 ? order.getUserId() : null;
+        DAO.CartDAO cartDAO = new DAO.CartDAO();
+        if (userId != null) {
+            for (CartItem item : order.getItems()) {
+                cartDAO.deleteCartItem(request, response, item.getId(), userId);
+            }
+        } else {
+            Cart emptyCart = new Cart();
+            emptyCart.setItems(new ArrayList<>());
+            cartDAO.saveCartToCookies(response, emptyCart);
+        }
+
+        if (isValidHash && isValidTransaction && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
+            // Thanh toán thành công
+            orderDAO.updatePaymentStatus(order.getId(), "completed");
+            orderDAO.updateOrderStatus(order.getId(), "processing", order.getUserId());
+            order.setPaymentStatus("completed");
+        } else {
+            // Thanh toán thất bại
+            orderDAO.updatePaymentStatus(order.getId(), "pending");
+            orderDAO.updateOrderStatus(order.getId(), "pending_pay", order.getUserId());
+            order.setPaymentStatus("pending");
+        }
+
+        session.setAttribute("completed_order", order);
+        session.removeAttribute("pending_order");
+        response.sendRedirect("cartcompletion");
+
+    } catch (Exception e) {
+        System.out.println("Exception in processVNPayReturn: " + e.getMessage());
+        e.printStackTrace();
+        request.setAttribute("errorMessage", "Đã xảy ra lỗi khi xử lý kết quả thanh toán: " + e.getMessage());
+        request.getRequestDispatcher("cartcompletion").forward(request, response);
     }
+}
 
     private String buildVNPayUrl(Map<String, String> vnp_Params) throws Exception {
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
