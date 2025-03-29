@@ -37,7 +37,7 @@
                 font-size: 1.5rem;
             }
 
-            .avatar-container {
+            .avatar-container1 {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -45,7 +45,7 @@
                 padding: 20px;
             }
 
-            .avatar-container img {
+            .avatar-container1 img {
                 width: 180px;
                 height: 180px;
                 object-fit: cover;
@@ -55,7 +55,7 @@
                 transition: transform 0.3s ease-in-out;
             }
 
-            .avatar-container img:hover {
+            .avatar-container1 img:hover {
                 transform: scale(1.05);
             }
 
@@ -159,7 +159,7 @@
                                     <input type="hidden" name="id" value="${user.id}">
 
                                     <div class="row">
-                                        <div class="col-md-4 avatar-container">
+                                        <div class="col-md-4 avatar-container1">
                                             <img src="${(user.avatar.contains('https')) ? user.avatar : pageContext.request.contextPath.concat('/').concat(user.avatar)}" 
                                                  alt="avatar" id="avatar-preview"
                                                  onerror="this.src='https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'">
