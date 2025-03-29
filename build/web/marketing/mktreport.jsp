@@ -185,7 +185,7 @@
 
                 <!-- 1. COUPON REPORT -->
                 <c:if test="${reportType == 'overview' || reportType == 'coupon'}">
-                    <div class="report-section bg-white" id="couponReportSection">
+                    <div class="report-section bg-white" id="couponReportSection" style="border: 5px solid #006666;">
                         <div class="report-header">
                             <div>
                                 <h2>Báo cáo phiếu giảm giả</h2>
@@ -315,7 +315,7 @@
 
                 <!-- 2. FEEDBACK REPORT -->
 <c:if test="${reportType == 'overview' || reportType == 'feedback'}">
-    <div class="report-section bg-white" id="feedbackReportSection">
+    <div class="report-section bg-white" id="feedbackReportSection" style="border: 5px solid #006666;">
         <div class="report-header">
             <div>
                 <h2>Báo cáo đánh giá</h2>
@@ -530,7 +530,7 @@
 
                 <!-- 3. PRODUCT REPORT -->
 <c:if test="${reportType == 'overview' || reportType == 'product'}">
-    <div class="report-section bg-white" id="productReportSection">
+    <div class="report-section bg-white" id="productReportSection" style="border: 5px solid #006666;">
         <div class="report-header">
             <div>
                 <h2>Báo cáo sản phẩm</h2>
@@ -598,10 +598,10 @@
         <!-- Bảng Sản phẩm Tăng giá Cao Nhất -->
         <div class="table-container <c:if test="${selectedTable == 'priceIncrease'}">active</c:if>" id="priceIncreaseTableContainer">
             <div class="table-responsive">
-                <c:if test="${empty productsWithHighestPriceIncrease}">
-                    <p class="text-center text-danger">Không có sản phẩm nào tăng giá!</p>
-                </c:if>
-                <table class="table table-bordered" id="priceIncreaseTable" <c:if test="${not empty productsWithHighestPriceIncrease}">style="display:block;"</c:if>>
+            <c:if test="${empty productsWithHighestPriceIncrease}">
+                <p class="text-center text-danger">Không có sản phẩm nào tăng giá!</p>
+            </c:if>
+            <table class="table table-bordered" id="priceIncreaseTable" <c:if test="${not empty productsWithHighestPriceIncrease}">style="display:block;"</c:if>>
                     <thead>
                         <tr>
                             <th>Tên sản phẩm</th>
@@ -611,53 +611,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${productsWithHighestPriceIncrease}" var="product">
-                            <tr>
-                                <td>${product.title}</td>
-                                <td>$<fmt:formatNumber value="${product.original_price}" pattern="#,##0.00" /></td>
-                                <td>$<fmt:formatNumber value="${product.sale_price}" pattern="#,##0.00" /></td>
-                                <td><span class="text-danger"><fmt:formatNumber value="${product.increase_percentage}" pattern="#,##0.0" />%</span></td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
+                    <c:forEach items="${productsWithHighestPriceIncrease}" var="product">
+                        <tr>
+                            <td>${product.title}</td>
+                            <td><fmt:formatNumber value="${product.original_price}" pattern="#,###" /> VNĐ</td>
+                            <td><fmt:formatNumber value="${product.sale_price}" pattern="#,###" /> VNĐ</td>
+                            <td><span class="text-danger"><fmt:formatNumber value="${product.increase_percentage}" pattern="#,##0.0" />%</span></td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
         </div>
 
-        <!-- Bảng Top 10 Sản phẩm Tổng hợp -->
-<!--        <div class="table-container <c:if test="${selectedTable == 'combinedMetrics'}">active</c:if>" id="combinedMetricsTableContainer">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="combinedMetricsTable">
-                    <thead>
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Điểm đánh giá trung bình</th>
-                            <th>Số đánh giá</th>
-                            <th>Số lượng bán</th>
-                            <th>Tồn kho</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:choose>
-                            <c:when test="${not empty combinedProductMetrics}">
-                                <c:forEach items="${combinedProductMetrics}" var="product">
-                                    <tr>
-                                        <td>${product.title}</td>
-                                        <td><fmt:formatNumber value="${product.avg_rating}" pattern="#,##0.0" /></td>
-                                        <td>${product.review_count}</td>
-                                        <td>${product.total_sold}</td>
-                                        <td>${product.stock_quantity}</td>
-                                    </tr>
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <tr><td colspan="5" class="text-center">No data available</td></tr>
-                            </c:otherwise>
-                        </c:choose>
-                    </tbody>
-                </table>
-            </div>
-        </div>-->
 
         <!-- Bảng Đề xuất -->
         <div class="table-container <c:if test="${selectedTable == 'recommendations'}">active</c:if>" id="productRecommendationsTableContainer">
@@ -673,23 +639,23 @@
                         <tr>
                             <td>Danh mục tốt nhất</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${not empty revenueByCategory && revenueByCategory.size() > 0}">
-                                        <c:set var="topCategory" value="" />
-                                        <c:set var="topRevenue" value="0" />
-                                        <c:forEach items="${revenueByCategory}" var="entry">
-                                            <c:if test="${entry.revenue > topRevenue}">
-                                                <c:set var="topCategory" value="${entry.name}" />
-                                                <c:set var="topRevenue" value="${entry.revenue}" />
-                                            </c:if>
-                                        </c:forEach>
-                                        Danh mục <strong>${topCategory}</strong> dẫn đầu với doanh thu $<fmt:formatNumber value="${topRevenue}" pattern="#,##0.00" />. Mở rộng dòng sản phẩm này.
-                                    </c:when>
-                                    <c:otherwise>
-                                        Chưa có dữ liệu doanh thu theo danh mục.
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
+                            <c:choose>
+                                <c:when test="${not empty revenueByCategory && revenueByCategory.size() > 0}">
+                                    <c:set var="topCategory" value="" />
+                                    <c:set var="topRevenue" value="0" />
+                                    <c:forEach items="${revenueByCategory}" var="entry">
+                                        <c:if test="${entry.revenue > topRevenue}">
+                                            <c:set var="topCategory" value="${entry.name}" />
+                                            <c:set var="topRevenue" value="${entry.revenue}" />
+                                        </c:if>
+                                    </c:forEach>
+                                    Danh mục <strong>${topCategory}</strong> dẫn đầu với doanh thu <fmt:formatNumber value="${topRevenue}" pattern="#,###" /> VNĐ. Mở rộng dòng sản phẩm này.
+                                </c:when>
+                                <c:otherwise>
+                                    Chưa có dữ liệu doanh thu theo danh mục.
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         </tr>
                         <tr>
                             <td>Bổ sung hàng tồn kho</td>
@@ -730,7 +696,7 @@
 </c:if>
 
                 <c:if test="${reportType == 'overview' || reportType == 'inventory'}">
-    <div class="report-section bg-white" id="inventoryReportSection">
+    <div class="report-section bg-white" id="inventoryReportSection" style="border: 5px solid #006666;">
         <div class="report-header">
             <div>
                 <h2>Báo cáo kho</h2>
@@ -935,7 +901,7 @@
 </c:if>
 
                 <c:if test="${reportType == 'overview' || reportType == 'slider'}">
-    <div class="report-section bg-white" id="sliderReportSection">
+    <div class="report-section bg-white" id="sliderReportSection" style="border: 5px solid #006666;">
         <div class="report-header">
             <div>
                 <h2>Báo cáo thanh trượt</h2>
@@ -1062,7 +1028,7 @@
 </c:if>
 
                 <c:if test="${reportType == 'overview' || reportType == 'post'}">
-    <div class="report-section bg-white" id="postReportSection">
+    <div class="report-section bg-white" id="postReportSection" style="border: 5px solid #006666;">
         <div class="report-header">
             <div>
                 <h2>Báo cáo bài đăng</h2>
