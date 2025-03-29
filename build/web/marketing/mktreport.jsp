@@ -178,10 +178,7 @@
 <!-- Main content area with margin for sidebar -->
 <div class="main-content" style="margin-left: 250px; padding: 20px;">
                 <h1 class="mb-4">Báo cáo tiếp thị</h1>
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <strong>Chào mừng đến với Báo cáo tiếp thị!</strong>    ->   Tìm hiểu sâu hơn về tất cả các hoạt động tiếp thị nền tảng.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                
 
                 <!-- 1. COUPON REPORT -->
                 <c:if test="${reportType == 'overview' || reportType == 'coupon'}">
@@ -189,7 +186,7 @@
                         <div class="report-header">
                             <div>
                                 <h2>Báo cáo phiếu giảm giả</h2>
-                                <p class="text-muted">Phân tích phiếu giảm giá và hiệu suất của chúng</p>
+                                
                             </div>
                             <button class="btn btn-export" id="exportCouponBtn"><i class="fas fa-file-export me-1"></i> Xuất Excel</button>
                         </div>
@@ -319,7 +316,6 @@
         <div class="report-header">
             <div>
                 <h2>Báo cáo đánh giá</h2>
-                <p class="text-muted">Phản hồi của khách hàng và phân tích đánh giá sản phẩm</p>
             </div>
             <button class="btn btn-export" id="exportFeedbackBtn"><i class="fas fa-file-export me-1"></i> Xuất Excel</button>
         </div>
@@ -534,7 +530,7 @@
         <div class="report-header">
             <div>
                 <h2>Báo cáo sản phẩm</h2>
-                <p class="text-muted">Phân tích hiệu suất sản phẩm và doanh số</p>
+                
             </div>
             <button class="btn btn-export" id="exportProductBtn"><i class="fas fa-file-export me-1"></i> Xuất Excel</button>
         </div>
@@ -700,7 +696,7 @@
         <div class="report-header">
             <div>
                 <h2>Báo cáo kho</h2>
-                <p class="text-muted">Mức tồn kho và số liệu quản lý hàng tồn kho</p>
+                
             </div>
             <button class="btn btn-export" id="exportInventoryBtn"><i class="fas fa-file-export me-1"></i> Xuất Excel</button>
         </div>
@@ -905,7 +901,7 @@
         <div class="report-header">
             <div>
                 <h2>Báo cáo thanh trượt</h2>
-                <p class="text-muted">Số liệu hiệu suất biểu ngữ và thanh trượt</p>
+               
             </div>
             <button class="btn btn-export" id="exportSliderBtn"><i class="fas fa-file-export me-1"></i> Xuất Excel</button>
         </div>
@@ -1032,7 +1028,7 @@
         <div class="report-header">
             <div>
                 <h2>Báo cáo bài đăng</h2>
-                <p class="text-muted">Số liệu hiệu suất của blog và nội dung</p>
+                
             </div>
             <button class="btn btn-export" id="exportPostBtn"><i class="fas fa-file-export me-1"></i> Xuất Excel</button>
         </div>
