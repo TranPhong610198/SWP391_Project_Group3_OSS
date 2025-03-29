@@ -136,7 +136,7 @@
                                     <i class="bi bi-people fa-2x"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted text-uppercase fw-bold small">Tổng Khách Hàng</div>
+                                    <div class="text-muted text-uppercase fw-bold small">Tổng Người Dùng</div>
                                     <div class="h4 mb-0 fw-bold text-dark">${stats.totalCustomers}</div>
                                     <div class="mt-2 small">
                                         <span class="badge bg-success">${stats.activeCustomers} Đang hoạt động</span>
