@@ -388,8 +388,8 @@ public class CustomerDAO extends DBContext {
                 if (updatedAt != null) {
                     customer.setUpdatedAt(updatedAt.toLocalDateTime());
                 }
+                return customer;
             }
-            return customer;
         } catch (SQLException e) {
             System.out.println(e);
         }

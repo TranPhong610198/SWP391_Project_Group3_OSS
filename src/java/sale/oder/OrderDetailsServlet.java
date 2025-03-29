@@ -141,6 +141,7 @@ public class OrderDetailsServlet extends HttpServlet {
                 orderDAO.updatePayStatus(orderId, "completed");
                 Customer tempCus = customerDAO.getCusdByEmailPhone(order.getRecipientEmail(), order.getPhone());
                 if (tempCus != null) {
+                    System.out.println(tempCus.toString());
                     customerDAO.updateCustomerPurchaseStats(tempCus.getId(), BigDecimal.valueOf(order.getTotal()), updatedBy);
                     if (tempCus.getTotalSpend().doubleValue() + order.getTotal() >= 1000000) {
                         customerDAO.updateCustomerType(tempCus.getId(), "vip");
