@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blog Posts Management</title>
+        <title>Danh Sách Bài Đăng</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
@@ -168,7 +168,6 @@
         </style>
     </head>
     <body>
-        <!-- Include the sidebar -->
         <jsp:include page="../sidebar.jsp" />
         
         <button class="btn btn-primary sidebar-toggle">
@@ -234,8 +233,6 @@
                     </div>
                 </div>
 
-
-                <!-- Posts Table -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
@@ -309,8 +306,6 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <!-- Hiển thị số bài đăng (vẫn nằm bên trái) -->
                 <!-- Pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-muted small">
