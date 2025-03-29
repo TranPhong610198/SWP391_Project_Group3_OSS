@@ -227,7 +227,7 @@
                 </div>
 
                 <div class="footer-section">
-                    <h3>Địa chỉ shop</h3>
+                    <h3>Địa chỉ cửa hàng</h3>
                     <div class="footer-map">
                         <div id="map" style="width: 100%; height: 200px;"></div>
                         <script>

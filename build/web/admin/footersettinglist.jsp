@@ -182,8 +182,8 @@
                             <div class="col-md-3">
                                 <select name="status" class="form-select">
                                     <option value="">Tất cả trạng thái</option>
-                                    <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Active</option>
-                                    <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                    <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Hoạt động</option>
+                                    <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
