@@ -390,29 +390,36 @@ public class AdminReportDAO extends DBContext {
                 + "    COUNT(DISTINCT p.id) AS 'Tổng số sản phẩm', "
                 + "    COALESCE(SUM(pv.stock_quantity), 0) AS 'Tổng tồn kho', "
                 + "    COUNT(DISTINCT CASE WHEN pv.stock_quantity <= 10 AND p.status = 'active' THEN p.id END) AS 'Sản phẩm tồn thấp', "
-                + "    COALESCE(SUM(oi.quantity), 0) AS 'Tổng số lượng bán ra', "
-                + "    COALESCE(SUM(oi.quantity * oi.unit_price_at_order), 0) AS 'Tổng doanh thu', "
-                + "    COUNT(DISTINCT CASE WHEN oi.quantity >= 50 THEN p.id END) AS 'Sản phẩm bán chạy' "
+                + "    COALESCE((SELECT SUM(oi.quantity) FROM order_items oi "
+                + "      JOIN orders o ON oi.order_id = o.id "
+                + "      JOIN products prod ON oi.product_id = prod.id "
+                + "      WHERE o.status = 'completed' AND prod.status = p.status), 0) AS 'Tổng số lượng bán ra', "
+                + "    COALESCE((SELECT SUM(oi.quantity * oi.unit_price_at_order) FROM order_items oi "
+                + "      JOIN orders o ON oi.order_id = o.id "
+                + "      JOIN products prod ON oi.product_id = prod.id "
+                + "      WHERE o.status = 'completed' AND prod.status = p.status), 0) AS 'Tổng doanh thu', "
+                + "    (SELECT COUNT(DISTINCT product_id) FROM "
+                + "      (SELECT oi2.product_id, SUM(oi2.quantity) as total_qty "
+                + "        FROM order_items oi2 "
+                + "        JOIN orders o2 ON oi2.order_id = o2.id "
+                + "        JOIN products p2 ON oi2.product_id = p2.id "
+                + "        WHERE o2.status = 'completed' AND p2.status = p.status "
+                + "        GROUP BY oi2.product_id "
+                + "        HAVING SUM(oi2.quantity) >= 50) as bestsellers) AS 'Sản phẩm bán chạy' "
                 + "FROM products p "
                 + "LEFT JOIN product_variants pv ON p.id = pv.product_id "
-                + "LEFT JOIN order_items oi ON p.id = oi.product_id "
-                + "LEFT JOIN orders o ON oi.order_id = o.id AND o.status = 'completed' "
                 + "WHERE 1=1"
         );
-
         if (!"all".equals(statusFilter)) {
             sql.append(" AND p.status = ?");
         }
-
         sql.append(" GROUP BY p.status ORDER BY p.status");
-
         try {
             PreparedStatement st = connection.prepareStatement(sql.toString());
             if (!"all".equals(statusFilter)) {
                 st.setString(1, statusFilter);
             }
             ResultSet rs = st.executeQuery();
-
             while (rs.next()) {
                 ProductInventoryReport report = new ProductInventoryReport();
                 report.setStatus(rs.getString("Trạng thái sản phẩm"));
