@@ -493,13 +493,13 @@
                                 <p><strong>Trạng thái:</strong>
                                     <c:choose>
                                         <c:when test="${feedback.status == 'approved'}">
-                                            <span class="badge badge-status badge-active">Đã duyệt</span>
+                                            <span class="badge badge-status badge-active">Hiện</span>
                                         </c:when>
                                         <c:when test="${feedback.status == 'rejected'}">
-                                            <span class="badge badge-status badge-expired">Từ chối</span>
+                                            <span class="badge badge-status badge-expired">Ẩn</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="badge badge-status badge-discount-type">Chờ duyệt</span>
+                                            <span class="badge badge-status badge-discount-type">Chưa xem</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </p>

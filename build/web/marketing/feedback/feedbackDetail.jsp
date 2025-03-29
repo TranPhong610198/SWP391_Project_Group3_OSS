@@ -352,9 +352,9 @@
                             <div class="col-md-2">
                                 <select class="form-select" name="filterStatus">
                                     <option value="">Tất cả trạng thái</option>
-                                    <option value="pending" ${filterStatus == 'pending' ? 'selected' : ''}>Chờ duyệt</option>
-                                    <option value="approved" ${filterStatus == 'approved' ? 'selected' : ''}>Đã duyệt</option>
-                                    <option value="rejected" ${filterStatus == 'rejected' ? 'selected' : ''}>Từ chối</option>
+                                    <option value="pending" ${filterStatus == 'pending' ? 'selected' : ''}>Chưa xem</option>
+                                    <option value="approved" ${filterStatus == 'approved' ? 'selected' : ''}>Hiện</option>
+                                    <option value="rejected" ${filterStatus == 'rejected' ? 'selected' : ''}>Ẩn</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -462,13 +462,13 @@
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${feedback.status == 'approved'}">
-                                                                <span class="badge badge-status badge-active">Đã duyệt</span>
+                                                                <span class="badge badge-status badge-active">Hiện</span>
                                                             </c:when>
                                                             <c:when test="${feedback.status == 'rejected'}">
-                                                                <span class="badge badge-status badge-expired">Từ chối</span>
+                                                                <span class="badge badge-status badge-expired">Ẩn</span>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="badge badge-status badge-discount-type">Chờ duyệt</span>
+                                                                <span class="badge badge-status badge-discount-type">Chưa xem</span>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
@@ -479,9 +479,9 @@
                                                                 <input type="hidden" name="id" value="${feedback.id}">
                                                                 <input type="hidden" name="productId" value="${feedback.productId}">
                                                                 <select name="status" onchange="this.form.submit()">
-                                                                    <option value="pending" ${feedback.status == 'pending' ? 'selected' : ''}>Chờ duyệt</option>
-                                                                    <option value="approved" ${feedback.status == 'approved' ? 'selected' : ''}>Đã duyệt</option>
-                                                                    <option value="rejected" ${feedback.status == 'rejected' ? 'selected' : ''}>Từ chối</option>
+                                                                    <option value="pending" ${feedback.status == 'pending' ? 'selected' : ''}>Chưa xem</option>
+                                                                    <option value="approved" ${feedback.status == 'approved' ? 'selected' : ''}>Hiện</option>
+                                                                    <option value="rejected" ${feedback.status == 'rejected' ? 'selected' : ''}>Ẩn</option>
                                                                 </select>
                                                             </form>
                                                         </div>
