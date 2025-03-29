@@ -412,6 +412,23 @@ public class ProductDAO extends DBContext {
         }
         return false;
     }
+    
+        //Kiểm tra sản phẩm có từng được đặt hay không
+    public boolean hasOrders(int productId) {
+        String query = "SELECT COUNT(*) FROM order_items oi "
+                + "JOIN orders o ON oi.order_id = o.id "
+                + "WHERE oi.product_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     //Kiểm tra sản phẩm còn tồn hàng không    
     public boolean hasStock(int productId) {

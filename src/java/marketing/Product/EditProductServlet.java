@@ -97,10 +97,6 @@ public class EditProductServlet extends HttpServlet {
                 return;
             }
 
-            if (productDAO.hasProcessOrders(productId)) {
-                response.sendRedirect("editproduct?id=" + productId + "&alert=ER1_OP");
-                return;
-            }
 
             String uploadPath = request.getServletContext().getRealPath("/" + UPLOAD_DIR);
             File uploadDir = new File(uploadPath);
@@ -176,6 +172,7 @@ public class EditProductServlet extends HttpServlet {
                 String thumbnail = product.getThumbnail();
                 if (thumbnailPart != null && thumbnailPart.getSize() > 0) {
                     if (thumbnail != null && !thumbnail.isEmpty()) {
+                        if (!productDAO.hasOrders(productId)) // kiểm tra đã từng đc đặt chưa nếu r thì ko cho xóa ảnh
                         deleteImage(thumbnail, uploadPath);
                     }
                     thumbnail = saveImage(thumbnailPart, request);

@@ -137,7 +137,7 @@ public class ListProductServlet extends HttpServlet {
                         sql.append(" ORDER BY p.sale_price DESC");
                         break;
                     case "newest":
-                        sql.append(" ORDER BY p.created_at DESC");
+                        sql.append(" ORDER BY p.id DESC");
                         break;
                     default:
                         sql.append(" ORDER BY p.combo_group_id, p.is_combo DESC, p.id DESC");
